@@ -92,7 +92,7 @@ au VimEnter *                   set showcmd
 set mousehide
 set mouse=a " }}}
 set bg=dark
-colo candycode
+colo candycode_mod
 set scrolloff=5               " keep at least 5 lines above/below
 set sidescrolloff=5           " keep at least 5 lines left/right
 set autoread

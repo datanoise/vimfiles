@@ -1,8 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =6
-let g:netrw_dirhist_1='/Users/kent/Rep/vim/src/MacVim'
-let g:netrw_dirhist_2='/Users/kent'
-let g:netrw_dirhist_3='/Users/kent/Work/kmm_edi'
-let g:netrw_dirhist_4='/Users/kent/Work/philips'
-let g:netrw_dirhist_5='/usr/local/lib/ruby/gems/1.8/gems/sinatra-0.3.2'
-let g:netrw_dirhist_6='/Users/kent/Rep/compass'

@@ -1,0 +1,3 @@
+My Vim config files, heavily targeted toward MacVim.
+
+Clone these files to your ~/.vim directory and link ~/.vimrc to ~/.vim/vimrc file.

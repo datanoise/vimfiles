@@ -157,6 +157,7 @@ map <silent> <leader>bc :FuzzyFinderMruCmd<CR>
 map <silent> <leader>[  :TlistOpen<CR>
 map <silent> <leader>v  :TlistOpen<CR>
 map <silent> <leader>o  :exec 'NERDTree' . expand('%:p:h')<CR>
+map <silent> <leader>d  :NERDTree<CR>
 nnoremap <silent> <leader>yr :YRShow<CR>
 nnoremap <silent> <leader>rc :RandomCS<CR>
 map <silent> <F3> :cn<CR>
@@ -185,6 +186,7 @@ nnoremap <silent> <leader>P P'[v']=
 nnoremap Y y$
 nnoremap z- 1z=
 nnoremap [l [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
+nnoremap <F2> <C-w><C-w>
 au FileType help nnoremap <buffer> q :bd<CR>
 au FileType help nnoremap <buffer> <Space> Lzz
 au FileType help nnoremap <buffer> u Hzz

@@ -98,7 +98,8 @@ else
 endif
 " highlight StatusLine    guifg=Black   guibg=#aabbee gui=bold ctermfg=Black ctermbg=White  cterm=bold
 highlight StatusLine    guifg=#CCCCCC guibg=#202020 gui=none ctermfg=white ctermbg=darkgray cterm=NONE
-highlight StatusLineNC  guifg=#444444 guibg=#aaaaaa gui=none ctermfg=Black ctermbg=Grey   cterm=none
+" highlight StatusLineNC  guifg=#444444 guibg=#aaaaaa gui=none ctermfg=Black ctermbg=Grey   cterm=none
+hi StatusLineNC         guifg=black   guibg=#202020 gui=NONE ctermfg=blue  ctermbg=darkgray cterm=NONE
 "if &t_Co == 256
     "highlight StatusLine ctermbg=117
 "else

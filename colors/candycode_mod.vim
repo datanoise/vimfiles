@@ -68,8 +68,10 @@ hi PmenuThumb   guifg=NONE          guibg=#cccccc       gui=NONE
             " \   ctermfg=black       ctermbg=white       cterm=bold
 hi StatusLine   guifg=#CCCCCC       guibg=#202020       gui=none    
             \   ctermfg=white       ctermbg=darkgray    cterm=NONE
-hi StatusLineNC guifg=#444444       guibg=#c2bfa5       gui=NONE    
-            \   ctermfg=darkgray    ctermbg=white       cterm=NONE
+" hi StatusLineNC guifg=#444444       guibg=#c2bfa5       gui=NONE    
+            " \   ctermfg=darkgray    ctermbg=white       cterm=NONE
+hi StatusLineNC guifg=black         guibg=#202020       gui=NONE
+            \   ctermfg=blue        ctermbg=darkgray    cterm=NONE
 hi WildMenu     guifg=#ffffff       guibg=#133293       gui=bold
             \   ctermfg=white       ctermbg=darkblue    cterm=bold
 hi VertSplit    guifg=#c2bfa5       guibg=#c2bfa5       gui=NONE

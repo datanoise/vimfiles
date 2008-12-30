@@ -208,7 +208,6 @@ au FileType ruby iabbrev rb! #!<esc>:r !which ruby<cr>kgJo<C-W><C-R>=Eatchar('\s
 " Section: Plugin settings {{{1
 " --------------------------------------------------
 let c_comment_strings = 1 " I like highlighting strings inside C comments
-let g:SuperTabRetainCompletionType = 2 " retain tab completion type until the insert mode is on
 
 let Tlist_Close_On_Select = 1
 let Tlist_Enable_Fold_Column = 0
@@ -220,9 +219,13 @@ let g:dbext_default_history_file = $HOME."/.dbext_history"
 let g:yankring_history_file = '.yankring_history'
 let g:DrChipTopLvlMenu = "Plugin."
 
+" NERD_tree settings
 let NERDTreeQuitOnOpen = 1 " Close NERDTree when a file is opened
-let g:NERDShutUp = 1
+let g:NERDTreeHijackNetrw = 0
 let g:NERDTreeMapActivateNode = '<Enter>'
+
+" NERD_commenter settings
+let g:NERDShutUp = 1
 let NERDSpaceDelims=1 " Add an extra space to comment delimiters
 
 " let g:NERDSnippets_key="<C-l>"

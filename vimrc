@@ -216,7 +216,6 @@ let TList_Auto_Update = 0 " Don't autoupdate tags, I use 'u' command for that
 
 let g:proj_flags = "imstc"
 let g:dbext_default_history_file = $HOME."/.dbext_history"
-let g:yankring_history_file = '.yankring_history'
 let g:DrChipTopLvlMenu = "Plugin."
 
 " NERD_tree settings

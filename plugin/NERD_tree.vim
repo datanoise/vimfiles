@@ -3018,7 +3018,6 @@ function! s:bindMappings()
     nnoremap <silent> <buffer> <2-leftmouse> :call <SID>activateNode(0)<cr>
 
     exec "nnoremap <silent> <buffer> ". g:NERDTreeMapActivateNode . " :call <SID>activateNode(0)<cr>"
-    exec "nnoremap <silent> <buffer> o :call <SID>activateNode(0)<cr>"
     exec "nnoremap <silent> <buffer> ". g:NERDTreeMapOpenSplit ." :call <SID>openEntrySplit(0)<cr>"
 
     exec "nnoremap <silent> <buffer> ". g:NERDTreeMapPreview ." :call <SID>previewNode(0)<cr>"

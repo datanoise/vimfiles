@@ -188,9 +188,6 @@ nnoremap z- 1z=
 nnoremap [l [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
 nnoremap <F2> <C-w><C-w>
 au FileType help nnoremap <buffer> q :bd<CR>
-au FileType help nnoremap <buffer> <Space> Lzz
-au FileType help nnoremap <buffer> u Hzz
-au FileType ruby inoremap <C-l> <Space>=><Space>
 au FileType html nmap <silent> <D-r> :sil !open %<cr>
 
 

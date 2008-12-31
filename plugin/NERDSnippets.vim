@@ -25,6 +25,10 @@ if !exists("g:NERDSnippets_key")
     let g:NERDSnippets_key = "<tab>"
 endif
 
+if !exists("g:NERDSnippets_tab_complete")
+    let g:NERDSnippets_tab_complete = 1
+endif
+
 if !exists("g:NERDSnippets_marker_start")
     let g:NERDSnippets_marker_start = '<+'
 endif
@@ -126,7 +130,11 @@ function! NERDSnippets_SwitchRegion(allowAppend)
     catch /NERDSnippets.NoMarkersFoundError/
         if s:appendTab && a:allowAppend
             if g:NERDSnippets_key == "<tab>"
-                return "\<tab>"
+                if g:NERDSnippets_tab_complete
+                    return "\<c-n>"
+                else
+                    return "\<tab>"
+                endif
             endif
         endif
         "we were called from normal mode so return to normal and move the

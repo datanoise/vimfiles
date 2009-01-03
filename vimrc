@@ -97,6 +97,7 @@ set scrolloff=5               " keep at least 5 lines above/below
 set sidescrolloff=5           " keep at least 5 lines left/right
 set autoread
 set hidden
+set title
 if exists("&macmeta")
   set macmeta " on Mac use Option key as Meta
 endif
@@ -104,7 +105,7 @@ set foldmethod=marker
 set vb t_vb= " no visual bell or beep, damn it
 " that makes it work on Windows too
 if has("win32")
-  au VimEnter *                 set vb t_vb=
+  au VimEnter * set vb t_vb=
 endif
 set tags+=../tags,../../tags,../../../tags,../../../../tags,./tmp/tags
 set cpoptions+=d

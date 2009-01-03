@@ -140,7 +140,8 @@ hi Comment      guifg=#ff9922       guibg=NONE          gui=NONE
 
 hi Constant     guifg=#ff6050       guibg=NONE          gui=NONE
             \   ctermfg=red         ctermbg=NONE        cterm=NONE
-hi Boolean      guifg=#ff6050       guibg=NONE          gui=bold  
+
+hi Boolean      guifg=#ff6050       guibg=NONE          gui=bold
             \   ctermfg=red         ctermbg=NONE        cterm=bold
 
 hi Identifier   guifg=#eecc44       guibg=NONE          gui=NONE
@@ -155,7 +156,7 @@ hi PreProc      guifg=#bb88dd       guibg=NONE          gui=NONE
 hi Type         guifg=#4093cc       guibg=NONE          gui=bold
             \   ctermfg=lightblue   ctermbg=NONE        cterm=bold
 
-hi Special      guifg=#9999aa       guibg=NONE          gui=bold  
+hi Special      guifg=#9999aa       guibg=NONE          gui=bold
             \   ctermfg=lightgray   ctermbg=NONE        cterm=bold
 
 hi Underlined   guifg=#80a0ff       guibg=NONE          gui=underline

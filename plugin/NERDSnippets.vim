@@ -130,7 +130,7 @@ function! NERDSnippets_SwitchRegion(allowAppend)
     catch /NERDSnippets.NoMarkersFoundError/
         if s:appendTab && a:allowAppend
             if g:NERDSnippets_key == "<tab>"
-                if g:NERDSnippets_tab_complete
+                if g:NERDSnippets_tab_complete && match(getline('.')[col('.')-2], '\w') != -1
                     return "\<c-n>"
                 else
                     return "\<tab>"

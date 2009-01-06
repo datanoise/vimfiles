@@ -9,5 +9,6 @@ function! Browser ()
   :endif
   let line = escape (line, "#?&;|%")
   exec ':silent !open ' . "\"" . line . "\""
+  redraw!
 endfunction
-map <leader>w :call Browser ()<CR>
+map <leader>u :call Browser ()<CR>

@@ -1,4 +1,4 @@
-"{{{ Ruby block delimiter conversion: do end <=> { }
+"Ruby block delimiter conversion: do end <=> { }
 "Copyright © 2005 Mauricio Fernandez
 "Subject to same licensing terms as Ruby.
 " requires matchit and friends 

@@ -145,7 +145,6 @@ function! SwitchPrevBuf()
     echo "No buffer to switch to"
   endif
 endfunction
-" nmap <silent> <C-tab> :b#<cr>
 nmap <silent> <C-tab> :call SwitchPrevBuf()<cr>
 map <silent> <leader>br :FuzzyFinderTextMate<CR>
 map <silent> <leader>bR :FuzzyFinderTextMateClear<CR>
@@ -168,9 +167,6 @@ map <silent> <D-[> :cp<CR>
 imap <silent> <M-Enter> <C-O>A<Enter>
 nnoremap <leader>ss :%s/^\s\+$//<CR>
 nnoremap <leader>sa :%s/\s\+$//<CR>
-" <space> toggles folds opened and closed
-" nnoemap <space> za
-" <space> in visual mode creates a fold over the marked range
 vnoremap <space> zf
 " insert modeline
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
@@ -232,6 +228,7 @@ let g:fuzzy_ignore = "*.png;*.jpg;*.gif;tmp/**"
 let g:rubycomplete_buffer_loading = 1
 let g:rubycomplete_rails = 1
 let g:rubycomplete_classes_in_global = 1
+
 let g:CSApprox_verbose_level = 0 " to shut it up
 
 " Section: Ruby initialization section {{{1

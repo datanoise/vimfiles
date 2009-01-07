@@ -1,14 +1,22 @@
+" if exists("g:loaded_url")
+  " finish
+" endif
+" let g:loaded_url = 1
+
 function! Browser ()
-  let line0 = getline (".")
-  let line = matchstr (line0, "http:[^[:space:]()<>]*")
-  if line==""
-    let line = matchstr (line0, "ftp:[^[:space:]()<>]*")
-  endif
-  if line==""
-    let line = matchstr (line0, "file:[^[:space:]()<>]*")
-  endif
-  let line = escape (line, "#?&;|%")
-  exec ':silent !open ' . "\"" . line . "\""
+  let line = getline (".")
+  let basic_pattern = ":[^[:space:]()<>]*"
+  let protocols = ["http", "ftp", "file"]
+  for protocol in protocols
+    let pattern = protocol . basic_pattern
+    let url = matchstr(line, pattern)
+    if url != ""
+      let url = escape(url, "#?&;|%")
+      exec ':silent !open ' . "\"" . url . "\""
+      break
+    endif
+  endfor
   redraw!
 endfunction
-map <leader>u :call Browser ()<CR>
+
+noremap <silent> <leader>u :call Browser ()<CR>

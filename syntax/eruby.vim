@@ -60,6 +60,9 @@ exe 'syn region  erubyBlock      matchgroup=erubyDelimiter start="<%\{1,'.b:erub
 exe 'syn region  erubyExpression matchgroup=erubyDelimiter start="<%\{1,'.b:eruby_nest_level.'\}="       end="-\=%>" contains=@rubyTop	     containedin=ALLBUT,@erbRegions'
 exe 'syn region  erubyComment    matchgroup=erubyDelimiter start="<%\{1,'.b:eruby_nest_level.'\}#"       end="-\=%>" contains=rubyTodo,@Spell containedin=ALLBUT,@erbRegions keepend'
 
+syn include @htmlJavaScript syntax/javascript.vim
+syn region erubyJavascript matchgroup=erubyDelimiter start="^\/\{2}\s\++\{2}\s\+javascript" end="^\/\s\+-\{2}" contains=@htmlJavaScript
+
 " Define the default highlighting.
 " For version 5.7 and earlier: only when not done already
 " For version 5.8 and later: only when an item doesn't have highlighting yet

@@ -19,6 +19,14 @@ function! s:HighlightError()
   syntax clear
   syntax match Error  /^.*$/
 endfunction
+
+function! s:ExistsPrompt(line, prompt)
+  return  strlen(a:line) >= strlen(a:prompt) && a:line[:strlen(a:prompt) -1] ==# a:prompt
+endfunction
+
+function! s:RemovePrompt(line, prompt)
+  return a:line[(s:ExistsPrompt(a:line, a:prompt) ? strlen(a:prompt) : 0):]
+endfunction
 " ------------------------------------------------------------------------------------
 " }}}
 " ====================================================================================
@@ -103,7 +111,7 @@ RUBY
   function! g:FuzzyFinderMode.TextMate.complete(findstart, base)
     if a:findstart
       return 0
-    elseif  !self.exists_prompt(a:base) || len(self.remove_prompt(a:base)) < self.min_length
+    elseif  !s:ExistsPrompt(a:base, self.prompt) || len(s:RemovePrompt(a:base, self.prompt)) < self.min_length
       return []
     endif
     call s:HighlightPrompt(self.prompt, self.prompt_highlight)
@@ -117,7 +125,7 @@ RUBY
     endif
 
     ruby << RUBY
-      text = VIM.evaluate('self.remove_prompt(a:base)')
+      text = VIM.evaluate('s:RemovePrompt(a:base, self.prompt)')
       limit = VIM.evaluate('l:limit').to_i
 
       matches = finder.find(text, limit)

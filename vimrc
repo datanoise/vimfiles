@@ -167,7 +167,6 @@ map <silent> <D-[> :cp<CR>
 imap <silent> <M-Enter> <C-O>A<Enter>
 nnoremap <leader>ss :%s/^\s\+$//<CR>
 nnoremap <leader>sa :%s/\s\+$//<CR>
-vnoremap <space> zf
 " insert modeline
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
 nnoremap <C-J> <C-D>

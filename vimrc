@@ -116,7 +116,7 @@ set complete-=i
 " do not display :into screen at startup
 set shortmess+=I
 set grepprg=ack\ -a\ --ignore-dir=log\ --ignore-dir=tmp\ $*\\\|grep\ -v\ '^tags'
-set completeopt=menu,longest,preview " don't hide completion menu when typing
+set completeopt=longest,menu,preview " don't hide completion menu when typing
 set clipboard+=unnamed
 au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs
 

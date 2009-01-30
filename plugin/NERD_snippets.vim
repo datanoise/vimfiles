@@ -92,7 +92,7 @@ function! NERDSnippets_ExpandSnippet()
     if snippet != ''
         let s:appendTab = 0
         let s:topOfSnippet = line('.')
-        let snippet = "\<c-w>" . snippet
+        let snippet = "\<c-o>ciw" . snippet
     else
         let s:appendTab = 1
     endif
@@ -410,10 +410,13 @@ function! s:parseSnippetFile(path)
 
     let i = 0
     while i < len(lines)
-        "remove leading whitespace and add \<CR> to the end of the lines
+        "add \<CR> to the end of the lines, but not the last line
         if i < len(lines)-1
-            let lines[i] = substitute(lines[i], '^\s*\(.*\)$', '\1' . "\<CR>", "")
+            let lines[i] = substitute(lines[i], '$', '\1' . "\<CR>", "")
         endif
+
+        "remove leading whitespace
+        let lines[i] = substitute(lines[i], '^\s*', '', '')
 
         "make \<C-R>= function in the templates
         let lines[i] = substitute(lines[i], '\c\\<c-r>=', "\<c-r>=", "g")

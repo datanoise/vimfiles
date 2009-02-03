@@ -100,12 +100,14 @@ set mouse=a " }}}
 set keymap=russian-jcuken
 set iminsert=0
 set imsearch=-1
-" NOTE: patched VIM version required
-set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ
-set langmap+=фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
-set langmap+=Ж:
-set langmap+=Б<
-set langmap+=Ю>
+if has('mac')
+  " NOTE: patched VIM version required
+  set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ
+  set langmap+=фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
+  set langmap+=Ж:
+  set langmap+=Б<
+  set langmap+=Ю>
+endif
 " }}}
 set bg=dark
 colo candycode_mod

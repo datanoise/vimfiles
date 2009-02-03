@@ -4,7 +4,7 @@ command! NERDSnippetReload :exec ":source " . s:script_file|echomsg 'NERDSnippet
 
 call NERDSnippetsReset()
 
-source ~/.vim/snippets/support_functions.vim
+source `= split(&runtimepath, ',')[0] . '/snippets/support_functions.vim'`
 
 
 call NERDSnippetsFromDirectory("~/.vim/snippets")

@@ -239,8 +239,6 @@ let g:NERDTreeMapActivateNode = '<Enter>'
 let g:NERDShutUp = 1
 let NERDSpaceDelims=1 " Add an extra space to comment delimiters
 
-" let g:NERDSnippets_key="<C-l>"
-
 let g:fuzzy_ignore = "*.png;*.jpg;*.gif;tmp/**"
 
 let g:rubycomplete_buffer_loading = 1
@@ -248,11 +246,3 @@ let g:rubycomplete_rails = 1
 let g:rubycomplete_classes_in_global = 1
 
 let g:CSApprox_verbose_level = 0 " to shut it up
-
-" Section: Ruby initialization section {{{1
-" --------------------------------------------------
-compiler ruby         " Enable compiler support for ruby
-autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
-source `= split(&runtimepath, ',')[0] . '/plugin/ruby_block_cmd.vim'`
-
-

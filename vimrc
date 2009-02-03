@@ -176,7 +176,6 @@ map <silent> <leader>[  :TlistOpen<CR>
 map <silent> <leader>v  :TlistOpen<CR>
 map <silent> <leader>o  :exec 'NERDTree' . expand('%:p:h')<CR>
 map <silent> <leader>d  :NERDTree<CR>
-nnoremap <silent> <leader>yr :YRShow<CR>
 nnoremap <silent> <leader>rc :RandomCS<CR>
 map <silent> <F3> :cn<CR>
 map <silent> <S-F3> :cp<CR>

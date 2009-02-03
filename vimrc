@@ -96,7 +96,8 @@ au VimEnter * set showcmd
 " mouse options {{{2
 set mousehide
 set mouse=a " }}}
-" keymap options {{{2
+" encoding & keymap options {{{2
+set encoding=utf-8
 set keymap=russian-jcuken
 set iminsert=0
 set imsearch=-1

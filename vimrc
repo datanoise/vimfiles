@@ -91,7 +91,7 @@ set wildmode=full
 set wildignore=*.o,*.bundle
 set showcmd
 " the above doesn't always work. the below enforces it
-au VimEnter *                   set showcmd
+au VimEnter * set showcmd
 " }}}
 " mouse options {{{2
 set mousehide
@@ -106,7 +106,6 @@ set langmap+=фисвуапршолдьтщзйкыегмцчня;abcdefghijklmn
 set langmap+=Ж:
 set langmap+=Б<
 set langmap+=Ю>
-set langmap+=[~
 " }}}
 set bg=dark
 colo candycode_mod
@@ -136,7 +135,6 @@ set grepprg=ack\ -a\ --ignore-dir=log\ --ignore-dir=tmp\ $*\\\|grep\ -v\ '^tags'
 set completeopt=longest,menu,preview " don't hide completion menu when typing
 set clipboard+=unnamed
 au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs
-
 
 
 " Section: Keybindings {{{1
@@ -204,7 +202,6 @@ au FileType help nnoremap <buffer> q :bd<CR>
 au FileType html nmap <silent> <D-r> :sil !open %<cr>
 
 
-
 " Section: Commands && Abbrivations {{{1
 " --------------------------------------------------
 func! Eatchar(pat)
@@ -215,6 +212,7 @@ cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
 " NOTE: that doesn't work in MacVim gui mode if sudo requests a password!!!
 command! -bar -nargs=0 SudoW   :exe "write !sudo tee % >/dev/null"|silent edit!
 au FileType ruby iabbrev rb! #!<esc>:r !which ruby<cr>kgJo<C-W><C-R>=Eatchar('\s')<cr>
+
 
 " Section: Plugin settings {{{1
 " --------------------------------------------------

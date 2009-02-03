@@ -118,5 +118,5 @@ endfunction
 
 au FileType ruby vmap <buffer> <Leader>B :call <SID>RubyBlockSwitchDelimiters()<cr>
 au FileType ruby nmap <buffer> <Leader>B :call <SID>RubyBlockSwitchDelimiters()<cr>
-" command! -range B <line1>,<line2>call <SID>RubyBlockSwitchDelimiters()
+au FileType ruby command! -buffer -range B <line1>,<line2>call <SID>RubyBlockSwitchDelimiters()
 

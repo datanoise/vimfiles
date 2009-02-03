@@ -66,7 +66,12 @@ if has('cscope')
 endif " }}}
 " line breaks settings {{{2
 set linebreak
-set showbreak=» " }}}
+set showbreak=» 
+if exists('&breakindent')
+  " NOTE: patched VIM version required
+  set breakindent
+endif
+" }}}
 " invisible chars display options {{{2
 set list
 au FileType help                setlocal nolist
@@ -91,6 +96,18 @@ au VimEnter *                   set showcmd
 " mouse options {{{2
 set mousehide
 set mouse=a " }}}
+" keymap options {{{2
+set keymap=russian-jcuken
+set iminsert=0
+set imsearch=-1
+" NOTE: patched VIM version required
+set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ
+set langmap+=фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
+set langmap+=Ж:
+set langmap+=Б<
+set langmap+=Ю>
+set langmap+=[~
+" }}}
 set bg=dark
 colo candycode_mod
 set scrolloff=5               " keep at least 5 lines above/below
@@ -119,6 +136,7 @@ set grepprg=ack\ -a\ --ignore-dir=log\ --ignore-dir=tmp\ $*\\\|grep\ -v\ '^tags'
 set completeopt=longest,menu,preview " don't hide completion menu when typing
 set clipboard+=unnamed
 au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs
+
 
 
 " Section: Keybindings {{{1
@@ -185,6 +203,7 @@ nnoremap [l [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
 nnoremap <F2> <C-w><C-w>
 au FileType help nnoremap <buffer> q :bd<CR>
 au FileType html nmap <silent> <D-r> :sil !open %<cr>
+
 
 
 " Section: Commands && Abbrivations {{{1

@@ -47,7 +47,6 @@ function! GetCurDir()
   let result = substitute(result, '^.\+\ze.\{30,}', '<', '')
   return '('.result.')'
 endfunction
-"set statusline=[%n]\ %<%.99f\ %h%w%m%r%y%{GetColorSchemeIdicator()}%{GetCurDir()}%=%-16(\ %l,%c-%v\ %)%P
 set statusline=[%n]%m\ %<%.99f\ %{GetCurDir()}\ %h%w%r%y%=%-16(\ %l,%c-%v\ %)%P " }}}
 " cscope settings {{{2
 if has('cscope')
@@ -74,8 +73,8 @@ endif
 " }}}
 " invisible chars display options {{{2
 set list
-au FileType help                setlocal nolist
-au FileType otl                 setlocal nolist
+au FileType help  setlocal nolist
+au FileType otl   setlocal nolist
 if has("win32")
   set listchars=tab:>-,trail:-
 else
@@ -102,7 +101,7 @@ set keymap=russian-jcuken
 set iminsert=0
 set imsearch=-1
 if has('mac')
-  " NOTE: patched VIM version required
+  " NOTE: patched VIM version is required
   set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ
   set langmap+=фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
   set langmap+=Ж:

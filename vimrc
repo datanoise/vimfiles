@@ -164,23 +164,23 @@ function! SwitchPrevBuf()
   endif
 endfunction
 nmap <silent> <C-tab> :call SwitchPrevBuf()<cr>
-map <silent> <leader>br :FuzzyFinderTextMate<CR>
-map <silent> <leader>bR :FuzzyFinderTextMateClear<CR>
-map <silent> <leader>bb :FuzzyFinderBuffer<CR>
-map <silent> <leader>bf :FuzzyFinderFile<CR>
-map <silent> <leader>bd :FuzzyFinderDir<CR>
-map <silent> <leader>bt :FuzzyFinderTag<CR>
-map <silent> <leader>bl :FuzzyFinderMruFile<CR>
-map <silent> <leader>bc :FuzzyFinderMruCmd<CR>
-map <silent> <leader>[  :TlistOpen<CR>
-map <silent> <leader>v  :TlistOpen<CR>
-map <silent> <leader>o  :exec 'NERDTree' . expand('%:p:h')<CR>
-map <silent> <leader>d  :NERDTree<CR>
+nnoremap <silent> <leader>br :FuzzyFinderTextMate<CR>
+nnoremap <silent> <leader>bR :FuzzyFinderTextMateClear<CR>
+nnoremap <silent> <leader>bb :FuzzyFinderBuffer<CR>
+nnoremap <silent> <leader>bf :FuzzyFinderFile<CR>
+nnoremap <silent> <leader>bd :FuzzyFinderDir<CR>
+nnoremap <silent> <leader>bt :FuzzyFinderTag<CR>
+nnoremap <silent> <leader>bl :FuzzyFinderMruFile<CR>
+nnoremap <silent> <leader>bc :FuzzyFinderMruCmd<CR>
+nnoremap <silent> <leader>[  :TlistOpen<CR>
+nnoremap <silent> <leader>o  :exec 'NERDTree' . expand('%:p:h')<CR>
+nnoremap <silent> <leader>i  :NERDTree<CR>
+nnoremap <silent> <leader>v `[v`]
 nnoremap <silent> <leader>rc :RandomCS<CR>
-map <silent> <F3> :cn<CR>
-map <silent> <S-F3> :cp<CR>
-map <silent> <D-]> :cn<CR>
-map <silent> <D-[> :cp<CR>
+nnoremap <silent> <F3> :cn<CR>
+nnoremap <silent> <S-F3> :cp<CR>
+nnoremap <silent> <D-]> :cn<CR>
+nnoremap <silent> <D-[> :cp<CR>
 imap <silent> <M-Enter> <C-O>A<Enter>
 nnoremap <leader>ss :%s/^\s\+$//<CR>
 nnoremap <leader>sa :%s/\s\+$//<CR>

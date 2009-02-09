@@ -32,7 +32,7 @@ endif " }}}
 set incsearch
 set nohlsearch
 set smartcase " case-sensitive search when using camel case search criteria
-set ignorecase " }}}
+" }}}
 " status line options {{{2
 set laststatus=2
 function! GetColorSchemeIdicator()

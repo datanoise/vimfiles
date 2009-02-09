@@ -18,7 +18,9 @@ set shiftwidth=2
 set softtabstop=4
 set smartindent
 set smarttab
-set expandtab " }}}
+set expandtab
+" }}}
+
 " backup options {{{2
 set nobackup
 if has("win32")
@@ -27,12 +29,15 @@ if has("win32")
 else
   set backupdir=/tmp
   set directory=/tmp
-endif " }}}
+endif
+" }}}
+
 " search options {{{2
 set incsearch
 set nohlsearch
 set smartcase " case-sensitive search when using camel case search criteria
 " }}}
+
 " status line options {{{2
 set laststatus=2
 function! GetColorSchemeIdicator()
@@ -47,7 +52,9 @@ function! GetCurDir()
   let result = substitute(result, '^.\+\ze.\{30,}', '<', '')
   return '('.result.')'
 endfunction
-set statusline=[%n]%m\ %<%.99f\ %{GetCurDir()}\ %h%w%r%y%=%-16(\ %l,%c-%v\ %)%P " }}}
+set statusline=[%n]%m\ %<%.99f\ %{GetCurDir()}\ %h%w%r%y%=%-16(\ %l,%c-%v\ %)%P
+" }}}
+
 " cscope settings {{{2
 if has('cscope')
   set cscopequickfix=s-,c-,d-,i-,t-,e-
@@ -63,14 +70,16 @@ if has('cscope')
   endif
   set csverb
 endif " }}}
+
 " line breaks settings {{{2
 set linebreak
-set showbreak=» 
+set showbreak=»
 if exists('&breakindent')
   " NOTE: patched VIM version required
   set breakindent
 endif
 " }}}
+
 " invisible chars display options {{{2
 set list
 au FileType help  setlocal nolist
@@ -84,6 +93,7 @@ set listchars+=extends:>,precedes:<
 if version >= 700
   set listchars+=nbsp:+
 endif  " }}}
+
 " wild options {{{2
 set wildmenu
 set wildmode=full
@@ -92,9 +102,12 @@ set showcmd
 " the above doesn't always work. the below enforces it
 au VimEnter * set showcmd
 " }}}
+
 " mouse options {{{2
 set mousehide
-set mouse=a " }}}
+set mouse=a
+" }}}
+
 " encoding & keymap options {{{2
 set encoding=utf-8
 set keymap=russian-jcuken
@@ -109,6 +122,8 @@ if has('mac')
   set langmap+=Ю>
 endif
 " }}}
+
+" uncategorized options {{{2
 set bg=dark
 colo candycode_mod
 set scrolloff=5               " keep at least 5 lines above/below
@@ -137,6 +152,7 @@ set grepprg=ack\ -a\ --ignore-dir=log\ --ignore-dir=tmp\ $*\\\|grep\ -v\ '^tags'
 set completeopt=longest,menu,preview " don't hide completion menu when typing
 set clipboard+=unnamed
 au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs
+"}}}
 
 
 " Section: Keybindings {{{1

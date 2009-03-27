@@ -114,7 +114,6 @@ set keymap=russian-jcuken
 set iminsert=0
 set imsearch=-1
 if has('mac')
-  " NOTE: patched VIM version is required
   set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ
   set langmap+=фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
   set langmap+=Ж:

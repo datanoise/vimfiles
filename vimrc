@@ -15,7 +15,7 @@ filetype plugin on    " Enable filetype-specific plugins
 " tab options {{{2
 set tabstop=8
 set shiftwidth=2
-set softtabstop=4
+set softtabstop=2
 set smartindent
 set smarttab
 set expandtab
@@ -235,6 +235,7 @@ au FileType ruby iabbrev rb! #!<esc>:r !which ruby<cr>kgJo<C-W><C-R>=Eatchar('\s
 " Section: Plugin settings {{{1
 " --------------------------------------------------
 let c_comment_strings = 1 " I like highlighting strings inside C comments
+let g:SuperTabKey = "\<c-n>" " enable keyword completion for snipMate plugin
 
 let Tlist_Close_On_Select = 1
 let Tlist_Enable_Fold_Column = 0

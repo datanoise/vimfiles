@@ -234,7 +234,6 @@ au FileType ruby iabbrev rb! #!<esc>:r !which ruby<cr>kgJo<C-W><C-R>=Eatchar('\s
 " Section: Plugin settings {{{1
 " --------------------------------------------------
 let c_comment_strings = 1 " I like highlighting strings inside C comments
-let g:SuperTabKey = "\<c-n>" " enable keyword completion for snipMate plugin
 
 let Tlist_Close_On_Select = 1
 let Tlist_Enable_Fold_Column = 0
@@ -261,3 +260,6 @@ let g:rubycomplete_rails = 1
 let g:rubycomplete_classes_in_global = 1
 
 let g:CSApprox_verbose_level = 0 " to shut it up
+
+" snipMate settings
+let g:SuperTabKey = "\<c-n>" " enable TAB keyword completion

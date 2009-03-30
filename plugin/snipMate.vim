@@ -99,38 +99,8 @@ fun! ExtractSnipsFile(file)
 endf
 
 fun! ResetSnippets()
-	let s:snippets = {} | let s:multi_snips = {} | let g:did_ft = {} | let g:did_scope_ft = {}
+	let s:snippets = {} | let s:multi_snips = {} | let g:did_ft = {}
 endf
-
-let g:did_scope_ft = {}
-fun! GetSnippetsForScope(dir, scope)
-	if has_key(g:did_scope_ft, &ft) && index(g:did_scope_ft[&ft], a:scope) != -1
-		return
-	endif
-	call GetSnippets(a:dir, &ft)
-	call GetSnippets(a:dir, a:scope)
-
-	if has_key(s:snippets, a:scope)
-		if !has_key(s:snippets, &ft) | let s:snippets[&ft] = {} | endif
-		for key in keys(s:snippets[a:scope])
-			if !has_key(s:snippets[&ft], key)
-				let s:snippets[&ft][key] = s:snippets[a:scope][key]
-			endif
-		endfor
-	endif
-	if has_key(s:snippets, a:scope)
-		if !has_key(s:multi_snips, &ft) | let s:multi_snips[&ft] = {} | endif
-		for key in keys(s:multi_snips[a:scope])
-			if has_key(s:multi_snips[&ft], key)
-				let s:multi_snips[&ft][key] += s:multi_snips[a:scope][key]
-			else
-				let s:multi_snips[&ft][key] = s:multi_snips[a:scope][key]
-			endif
-		endfor
-	endif
-	if !has_key(g:did_scope_ft, &ft) | let g:did_scope_ft[&ft] = [] | endif
-	let g:did_scope_ft[&ft] += [a:scope]
-endfun
 
 let g:did_ft = {}
 fun! GetSnippets(dir, filetype)
@@ -145,8 +115,17 @@ fun! GetSnippets(dir, filetype)
 			call ExtractSnipsFile(path)
 		endfor
 		let g:did_ft[ft] = 1
+		call SnipUseFiletype(a:dir, a:filetype, a:filetype)
 	endfor
 endf
+
+let g:ft_aliases = {}
+fun! SnipUseFiletype(dir, alias, filetype)
+	if !has_key(g:ft_aliases, a:alias) | let g:ft_aliases[a:alias] = [] | endif
+	if index(g:ft_aliases[a:alias], a:filetype) != -1 | return | endif
+	call GetSnippets(a:dir, a:filetype)
+	call add(g:ft_aliases[a:alias], a:filetype)
+endfun
 
 fun! TriggerSnippet()
 	if exists('g:SuperTabMappingForward')
@@ -169,8 +148,13 @@ fun! TriggerSnippet()
 
 	let word = matchstr(getline('.'), '\S\+\%'.col('.').'c')
 	for scope in [bufnr('%')] + split(&ft, '\.') + ['_']
-		let trigger = s:GetSnippet(word, scope)
-		if exists('g:snippet') | break | endif
+		if has_key(g:ft_aliases, scope)
+			for ft in g:ft_aliases[scope]
+				let trigger = s:GetSnippet(word, ft)
+				if exists('g:snippet') | break | endif
+			endfor
+			if exists('g:snippet') | break | endif
+		endif
 	endfor
 
 	" If word is a trigger for a snippet, delete the trigger & expand the snippet.
@@ -184,6 +168,8 @@ fun! TriggerSnippet()
 	elseif exists('SuperTabKey')
 		call feedkeys(SuperTabKey)
 		return ''
+	elseif exists('g:SnipKeywordCompletion') && match(getline('.')[col('.')-2], '\w') != -1
+		return g:SnipKeywordCompletion
 	endif
 	return "\<tab>"
 endf

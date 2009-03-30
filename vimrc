@@ -262,4 +262,4 @@ let g:rubycomplete_classes_in_global = 1
 let g:CSApprox_verbose_level = 0 " to shut it up
 
 " snipMate settings
-let g:SuperTabKey = "\<c-n>" " enable TAB keyword completion
+let g:SnipKeywordCompletion = "\<c-n>" " enable TAB keyword completion

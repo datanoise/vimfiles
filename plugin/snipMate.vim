@@ -140,6 +140,9 @@ fun! TriggerSnippet()
 		if exists('SuperTabKey')
 			call feedkeys(SuperTabKey) | return ''
 		endif
+		if exists('g:SnipKeywordCompletion')
+			return g:SnipKeywordCompletion
+		endif
 		call feedkeys("\<esc>a", 'n') " Close completion menu
 		call feedkeys("\<tab>") | return ''
 	endif

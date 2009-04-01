@@ -13,7 +13,7 @@
 if &cp || exists("g:autoloaded_rails")
   finish
 endif
-let g:autoloaded_rails = '3.3'
+let g:autoloaded_rails = '3.4'
 
 let s:cpo_save = &cpo
 set cpo&vim
@@ -4384,7 +4384,7 @@ function! s:SetBasePath()
   endif
   let path += ['app/*', 'vendor', 'vendor/plugins/*/lib', 'vendor/plugins/*/test', 'vendor/rails/*/lib', 'vendor/rails/*/test']
   call map(path,'rails#app().path(v:val)')
-  let &l:path = s:pathjoin('.',rails#app().path(),path,old_path)
+  let &l:path = s:pathjoin('.',[rails#app().path()],path,old_path)
 endfunction
 
 function! s:BufSettings()

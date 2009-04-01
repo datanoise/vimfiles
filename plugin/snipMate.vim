@@ -99,7 +99,7 @@ fun! ExtractSnipsFile(file)
 endf
 
 fun! ResetSnippets()
-	let s:snippets = {} | let s:multi_snips = {} | let g:did_ft = {}
+	let s:snippets = {} | let s:multi_snips = {} | let g:did_ft = {} | let g:ft_aliases = {}
 endf
 
 let g:did_ft = {}
@@ -120,11 +120,16 @@ fun! GetSnippets(dir, filetype)
 endf
 
 let g:ft_aliases = {}
-fun! SnipUseFiletype(dir, alias, filetype)
+fun! SnipUseFiletype(dir, alias, ...)
 	if !has_key(g:ft_aliases, a:alias) | let g:ft_aliases[a:alias] = [] | endif
-	if index(g:ft_aliases[a:alias], a:filetype) != -1 | return | endif
-	call GetSnippets(a:dir, a:filetype)
-	call add(g:ft_aliases[a:alias], a:filetype)
+	let index = 1
+	while index <= a:0
+		let filetype = a:{index}
+		let index += 1
+		if index(g:ft_aliases[a:alias], filetype) != -1 | continue | endif
+		call GetSnippets(a:dir, filetype)
+		call add(g:ft_aliases[a:alias], filetype)
+	endwhile
 endfun
 
 fun! TriggerSnippet()

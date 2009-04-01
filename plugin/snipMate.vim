@@ -155,9 +155,10 @@ fun! TriggerSnippet()
 	if exists('g:snipPos') | return snipMate#jumpTabStop() | endif
 
 	let word = matchstr(getline('.'), '\S\+\%'.col('.').'c')
-	for scope in [bufnr('%')] + split(&ft, '\.') + ['_']
+	for scope in split(&ft, '\.') + ['_']
 		if has_key(g:ft_aliases, scope)
 			for ft in g:ft_aliases[scope]
+				if !s:CheckScope(ft) | continue | endif
 				let trigger = s:GetSnippet(word, ft)
 				if exists('g:snippet') | break | endif
 			endfor
@@ -198,6 +199,13 @@ fun s:GetSnippet(word, scope)
 	endw
 	return word
 endf
+
+" Check that it is an appropriate scope to expand the snippet
+fun s:CheckScope(scope)
+	let syn_name = synIDattr(synID(line('.'), col('.'), 1), 'name')
+	if a:scope == '_' || syn_name == '' | return 1 | endif
+	return match(syn_name, a:scope) != -1
+endfun
 
 fun s:ChooseSnippet(scope, trigger)
 	let snippet = []

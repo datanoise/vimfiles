@@ -152,6 +152,8 @@ set completeopt=longest,menu,preview " don't hide completion menu when typing
 set clipboard+=unnamed
 au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs
 au FileType ruby setlocal completefunc=syntaxcomplete#Complete
+" save undo point when leaving vim window
+autocmd CursorHoldI * call feedkeys("\<C-G>u", "nt")
 "}}}
 
 

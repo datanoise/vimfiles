@@ -151,6 +151,7 @@ set grepprg=ack\ -a\ --ignore-dir=log\ --ignore-dir=tmp\ $*\\\|grep\ -v\ '^tags'
 set completeopt=longest,menu,preview " don't hide completion menu when typing
 set clipboard+=unnamed
 au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs
+au FileType ruby setlocal completefunc=syntaxcomplete#Complete
 "}}}
 
 
@@ -215,6 +216,8 @@ nnoremap Y y$
 nnoremap z- 1z=
 nnoremap [l [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
 nnoremap <F2> <C-w><C-w>
+" don't insert <CR> on <Enter> when completion menu is visible
+inoremap <Enter> <c-r>= pumvisible() ? "\<lt>c-y>" : "\<lt>enter>"<cr>
 au FileType help nnoremap <buffer> q :bd<CR>
 au FileType html nmap <silent> <D-r> :sil !open %<cr>
 

@@ -130,8 +130,8 @@ snippet base
 snippet r
 	<br`Close()[1:]`>
 snippet div
-	<div id="${1:name}">
-		${2}
+	<div ${1:id}="${2:name}">
+		${3}
 	</div>
 # Embed QT Movie
 snippet movie
@@ -188,3 +188,7 @@ snippet textarea
 	<textarea name="${1:Name}" rows="${2:8}" cols="${3:40}">${4}</textarea>${5}
 snippet ahref
 	<a href="${1:url}">${2:title}</a>${3}
+snippet <
+	<${1:div}${2: }>
+		${3}
+	</$1>

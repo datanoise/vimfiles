@@ -50,7 +50,8 @@ elseif maparg('<CR>','i') =~ '<CR>'
     exe "imap <script> <CR>      ".maparg('<CR>','i')."<SID>DiscretionaryEnd"
 else
     imap <C-X><CR> <CR><Plug>AlwaysEnd
-    imap <CR>      <CR><Plug>DiscretionaryEnd
+    " imap <CR>      <CR><Plug>DiscretionaryEnd
+    imap <CR> <C-R>=pumvisible() ? "\<lt>c-y>" : "\<lt>CR>"<CR><Plug>DiscretionaryEnd
 endif
 
 if maparg('<M-o>','i') == ''

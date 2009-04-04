@@ -218,8 +218,6 @@ nnoremap Y y$
 nnoremap z- 1z=
 nnoremap [l [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
 nnoremap <F2> <C-w><C-w>
-" don't insert <CR> on <Enter> when completion menu is visible
-inoremap <Enter> <c-r>= pumvisible() ? "\<lt>c-y>" : "\<lt>enter>"<cr>
 au FileType help nnoremap <buffer> q :bd<CR>
 au FileType html nmap <silent> <D-r> :sil !open %<cr>
 
@@ -234,6 +232,7 @@ cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
 " NOTE: that doesn't work in MacVim gui mode if sudo requests a password!!!
 command! -bar -nargs=0 SudoW   :exe "write !sudo tee % >/dev/null"|silent edit!
 au FileType ruby iabbrev rb! #!<esc>:r !which ruby<cr>kgJo<C-W><C-R>=Eatchar('\s')<cr>
+au FileType ruby inoremap <buffer> <c-l> <c-r>= pumvisible() ? "\<lt>c-l>" : " => "<cr>
 
 
 " Section: Plugin settings {{{1

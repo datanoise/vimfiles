@@ -15,6 +15,9 @@ let s:pairs = {}
 " parameter.
 fun! AddPair(openChar, closeChar, ...)
 	let char = a:closeChar == '' ? a:openChar : a:closeChar
+	if strlen(char) == 2 && char[0] == '\'
+		let char = char[1]
+	endif
 	if a:0 && a:1
 		if !exists('b:pairs') | let b:pairs = s:pairs | endif
 		let b:pairs[char] = 0 | let buffer = ' <buffer> '

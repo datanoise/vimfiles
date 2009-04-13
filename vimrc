@@ -152,6 +152,7 @@ set completeopt=longest,menu,preview " don't hide completion menu when typing
 set clipboard+=unnamed
 au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs
 au FileType ruby setlocal completefunc=syntaxcomplete#Complete
+au FileType scala compiler scala
 " save undo point when leaving vim window
 autocmd CursorHoldI * call feedkeys("\<C-G>u", "nt")
 "}}}
@@ -222,7 +223,8 @@ nnoremap <F2> <C-w><C-w>
 au FileType help nnoremap <buffer> q :bd<CR>
 au FileType html nmap <silent> <D-r> :sil !open %<cr>
 au FileType ruby inoremap <buffer> <c-l> <c-r>= pumvisible() ? "\<lt>c-l>" : " => "<cr>
-
+nnoremap <F4> :sil make %<cr><c-l>:cc<cr>
+nnoremap <D-u> :ToggleTransparancy<cr>
 
 " Section: Commands && Abbrivations {{{1
 " --------------------------------------------------
@@ -238,6 +240,14 @@ func! SynName()
   echo synIDattr(synID(line('.'), col('.'), 0), 'name')
 endfunc
 command! SynName :call SynName()
+function! ToggleTransparancy()
+  if &transparency != 0
+    set transparency&
+  else
+    set transparency=10
+  endif
+endfunction
+command! ToggleTransparancy call ToggleTransparancy()
 
 
 " Section: Plugin settings {{{1
@@ -257,6 +267,8 @@ let g:DrChipTopLvlMenu = "Plugin."
 let NERDTreeQuitOnOpen = 1 " Close NERDTree when a file is opened
 let g:NERDTreeHijackNetrw = 0
 let g:NERDTreeMapActivateNode = '<Enter>'
+let NERDTreeIgnore=['\.o$', '\~$', '\.class$']
+
 
 " NERD_commenter settings
 let g:NERDShutUp = 1

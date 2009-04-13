@@ -3,6 +3,31 @@ snippet class
 		${3}
 	}
 snippet pack
-	package {
-		${1}
+	package ${1:Package} {
+		${2}
+	}
+snippet obj
+	object ${1:Object} {
+		${2}
+	}
+snippet main
+	object ${1:AppName} {
+		def main(args: Array[String]) {
+			${2}
+		}
+	}
+snippet appl
+	object ${1:AppName} extends Application {
+		${2}
+	}
+snippet def
+	def ${1:method}(${2:args}) =
+		${3}
+snippet defm
+	def ${1:method}(${2:args}) = {
+		${3}
+	}
+snippet trait
+	trait ${1:Trait} {
+		${2}
 	}

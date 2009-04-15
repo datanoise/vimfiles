@@ -160,7 +160,7 @@ set completeopt=longest,menu,preview " don't hide completion menu when typing
 set clipboard+=unnamed
 au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs
 au FileType ruby setlocal completefunc=syntaxcomplete#Complete
-au FileType scala compiler scala
+au FileType scala,ruby exe 'compiler '. expand('<amatch>')
 " save undo point when leaving vim window
 autocmd CursorHoldI * call feedkeys("\<C-G>u", "nt")
 "}}}
@@ -221,7 +221,6 @@ nnoremap [l [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
 nnoremap <F2> <C-w><C-w>
 nnoremap <F4> :sil make %<cr><c-l>:cc<cr>
 nnoremap <D-u> :ToggleTransparancy<cr>
-nnoremap <space> <c-d>
 function! SwitchPrevBuf() 
   if bufloaded(bufname("#")) != 0 exec "b#" | else echo "No buffer to switch to" | endif
 endfunction

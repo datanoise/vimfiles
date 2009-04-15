@@ -15,8 +15,6 @@ endif
 let loaded_snips = 1
 if !exists('snips_author') | let snips_author = 'Me' | endif
 
-au FileType objc,cpp,cs let &ft = expand('<amatch>').'.c'
-au FileType xhtml let &ft = 'xhtml.html'
 au BufRead,BufNewFile *.snippets\= set ft=snippet
 au FileType snippet setl noet fdm=indent
 

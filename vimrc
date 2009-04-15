@@ -33,9 +33,12 @@ endif
 " }}}
 
 " search options {{{2
+" always use incremental search
 set incsearch
+" no search highlighting by default, use <leader>h if needed
 set nohlsearch
-set smartcase " case-sensitive search when using camel case search criteria
+" case-sensitive search when using camel case search criteria
+set smartcase
 " }}}
 
 " status line options {{{2
@@ -75,15 +78,13 @@ endif " }}}
 set linebreak
 set showbreak=»
 if exists('&breakindent')
-  " NOTE: patched VIM version required
+  " NOTE: patched VIM version is required for this to work
   set breakindent
 endif
 " }}}
 
 " invisible chars display options {{{2
 set list
-au FileType help  setlocal nolist
-au FileType otl   setlocal nolist
 if has("win32")
   set listchars=tab:>-,trail:-
 else
@@ -92,19 +93,23 @@ endif
 set listchars+=extends:>,precedes:<
 if version >= 700
   set listchars+=nbsp:+
-endif  " }}}
+endif
+au FileType help  setlocal nolist
+au FileType otl   setlocal nolist
+" }}}
 
 " wild options {{{2
 set wildmenu
 set wildmode=full
 set wildignore=*.o,*.bundle
 set showcmd
-" the above doesn't always work. the below enforces it
+" the above doesn't always work. the following enforces it
 au VimEnter * set showcmd
 " }}}
 
 " mouse options {{{2
 set mousehide
+" enable mouse in the terminal
 set mouse=a
 " }}}
 
@@ -125,9 +130,9 @@ endif
 " uncategorized options {{{2
 set bg=dark
 colo candycode_mod
-set scrolloff=5               " keep at least 5 lines above/below
-set sidescrolloff=5           " keep at least 5 lines left/right
-set autoread
+set scrolloff=5      " keep at least 5 lines above/below
+set sidescrolloff=5  " keep at least 5 lines left/right
+set autoread         " disable annoying confirmations
 set hidden
 set title
 if exists("&macmeta")
@@ -147,7 +152,10 @@ set ttimeoutlen=100  " Make Esc work faster
 set complete-=i
 " do not display :into screen at startup
 set shortmess+=I
-set grepprg=ack\ -a\ --ignore-dir=log\ --ignore-dir=tmp\ $*\\\|grep\ -v\ '^tags'
+if executable('ack')
+  " always use ack for faster searching
+  set grepprg=ack\ -a\ --ignore-dir=log\ --ignore-dir=tmp\ $*\\\|grep\ -v\ '^tags'
+endif
 set completeopt=longest,menu,preview " don't hide completion menu when typing
 set clipboard+=unnamed
 au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs
@@ -171,18 +179,12 @@ if has("cscope")
   nmap <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
   nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
 endif
+
 nmap ,sv :source ~/.vimrc
 nmap ,sg :source ~/.gvimrc
 nmap ,vv :e ~/.vimrc
 nmap ,vg :e ~/.gvimrc
-function! SwitchPrevBuf()
-  if bufloaded(bufname("#")) != 0
-    exec "b#"
-  else
-    echo "No buffer to switch to"
-  endif
-endfunction
-nmap <silent> <C-tab> :call SwitchPrevBuf()<cr>
+
 nnoremap <silent> <leader>br :FuzzyFinderTextMate<CR>
 nnoremap <silent> <leader>bR :FuzzyFinderTextMateClear<CR>
 nnoremap <silent> <leader>bb :FuzzyFinderBuffer<CR>
@@ -194,38 +196,45 @@ nnoremap <silent> <leader>bc :FuzzyFinderMruCmd<CR>
 nnoremap <silent> <leader>[  :TlistOpen<CR>
 nnoremap <silent> <leader>o  :exec 'NERDTree' . expand('%:p:h')<CR>
 nnoremap <silent> <leader>i  :NERDTree<CR>
+" visual select of the last pasted text
 nnoremap <silent> <leader>v `[v`]
-nnoremap <silent> <leader>rc :RandomCS<CR>
-nnoremap <silent> <F3> :cn<CR>
-nnoremap <silent> <S-F3> :cp<CR>
-nnoremap <silent> <D-]> :cn<CR>
-nnoremap <silent> <D-[> :cp<CR>
-imap <silent> <M-Enter> <C-O>A<Enter>
-nnoremap <leader>ss :%s/^\s\+$//<CR>
-nnoremap <leader>sa :%s/\s\+$//<CR>
-" insert modeline
-inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
-inoremap <C-Space> <C-N>
-nnoremap <C-J> <C-D>
-nnoremap <C-K> <C-U>
-nnoremap <C-e> 4<C-e>
-nnoremap <C-y> 4<C-y>
 nnoremap <silent> <leader>h :set hlsearch!<CR>
 nnoremap <silent> <leader>l :setlocal list!<CR>
 nnoremap <silent> <leader>n :set nu!<CR>
 " indented paste
 nnoremap <silent> <leader>p p'[v']=
 nnoremap <silent> <leader>P P'[v']=
+nnoremap <silent> <leader>ss :%s/^\s\+$//<CR>
+nnoremap <silent> <leader>sa :%s/\s\+$//<CR>
+
+nnoremap <silent> <F3> :cn<CR>
+nnoremap <silent> <S-F3> :cp<CR>
+nnoremap <silent> ,] :cn<CR>
+nnoremap <silent> ,[ :cp<CR>
+nnoremap <C-J> <C-D>
+nnoremap <C-K> <C-U>
+nnoremap <C-e> 4<C-e>
+nnoremap <C-y> 4<C-y>
 nnoremap Y y$
 nnoremap z- 1z=
 nnoremap [l [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
 nnoremap <F2> <C-w><C-w>
+nnoremap <F4> :sil make %<cr><c-l>:cc<cr>
+nnoremap <D-u> :ToggleTransparancy<cr>
+nnoremap <space> <c-d>
+function! SwitchPrevBuf() 
+  if bufloaded(bufname("#")) != 0 exec "b#" | else echo "No buffer to switch to" | endif
+endfunction
+nnoremap <silent> <C-tab> :call SwitchPrevBuf()<cr>
+
+" insert modeline
+inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
+inoremap <silent> <M-Enter> <C-O>A<Enter>
+inoremap <silent> <tab> <c-n>
+
 au FileType help nnoremap <buffer> q :bd<CR>
 au FileType html nmap <silent> <D-r> :sil !open %<cr>
 au FileType ruby inoremap <buffer> <c-l> <c-r>= pumvisible() ? "\<lt>c-l>" : " => "<cr>
-nnoremap <F4> :sil make %<cr><c-l>:cc<cr>
-nnoremap <D-u> :ToggleTransparancy<cr>
-inoremap <silent> <tab> <c-n>
 
 " Section: Commands && Abbrivations {{{1
 " --------------------------------------------------
@@ -237,18 +246,21 @@ cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
 " NOTE: that doesn't work in MacVim gui mode if sudo requests a password!!!
 command! -bar -nargs=0 SudoW   :exe "write !sudo tee % >/dev/null"|silent edit!
 au FileType ruby iabbrev rb! #!<esc>:r !which ruby<cr>kgJo<C-W><C-R>=Eatchar('\s')<cr>
+" display name of the syntax ID at the cursor
 func! SynName()
   echo synIDattr(synID(line('.'), col('.'), 0), 'name')
 endfunc
 command! SynName :call SynName()
-function! ToggleTransparancy()
-  if &transparency != 0
-    set transparency&
-  else
-    set transparency=10
-  endif
-endfunction
-command! ToggleTransparancy call ToggleTransparancy()
+if exists('&transparency')
+  function! ToggleTransparancy()
+    if &transparency != 0
+      set transparency&
+    else
+      set transparency=10
+    endif
+  endfunction
+  command! ToggleTransparancy call ToggleTransparancy()
+endif
 
 
 " Section: Plugin settings {{{1

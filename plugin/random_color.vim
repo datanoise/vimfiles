@@ -18,3 +18,4 @@ EOR
 endfunction
 
 command! RandomCS call <SID>RandomCS()
+nnoremap <silent> <leader>rc :RandomCS<CR>

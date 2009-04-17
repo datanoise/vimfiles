@@ -234,6 +234,7 @@ inoremap <silent> <tab> <c-n>
 au FileType help nnoremap <buffer> q :bd<CR>
 au FileType html nmap <silent> <D-r> :sil !open %<cr>
 au FileType ruby inoremap <buffer> <c-l> <c-r>= pumvisible() ? "\<lt>c-l>" : " => "<cr>
+au FileType ruby nnoremap <buffer> <F5> :!ruby %<cr>
 
 " Section: Commands && Abbrivations {{{1
 " --------------------------------------------------

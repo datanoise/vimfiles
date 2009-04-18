@@ -398,6 +398,8 @@ dbext-tutorial-dbi	dbext.txt	/*dbext-tutorial-dbi*
 dbext.txt	dbext.txt	/*dbext.txt*
 dbext.vim	dbext.txt	/*dbext.vim*
 ds	surround.txt	/*ds*
+ft-ruby-omni	ft-ruby-omni.txt	/*ft-ruby-omni*
+ft-ruby-syntax	ft-ruby-syntax.txt	/*ft-ruby-syntax*
 g:CSApprox_approximator_function	CSApprox.txt	/*g:CSApprox_approximator_function*
 g:CSApprox_attr_map	CSApprox.txt	/*g:CSApprox_attr_map*
 g:CSApprox_eterm	CSApprox.txt	/*g:CSApprox_eterm*
@@ -618,6 +620,7 @@ rails-tabs	rails.txt	/*rails-tabs*
 rails-template-types	rails.txt	/*rails-template-types*
 rails-vim-integration	rails.txt	/*rails-vim-integration*
 rails.txt	rails.txt	/*rails.txt*
+ruby.vim	ft-ruby-syntax.txt	/*ruby.vim*
 showmarks	showmarks.txt	/*showmarks*
 showmarks-changelog	showmarks.txt	/*showmarks-changelog*
 showmarks-commands	showmarks.txt	/*showmarks-commands*

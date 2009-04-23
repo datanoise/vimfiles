@@ -6,7 +6,9 @@ endif
 let s:did_snips_mappings = 1
 
 ino <silent> <s-tab> <c-r>= TriggerSnippet()<cr>
+ino <silent> <c-b> <c-r>= TriggerSnippet()<cr>
 snor <silent> <s-tab> <esc>i<right><c-r>=TriggerSnippet()<cr>
+snor <silent> <c-b> <esc>i<right><c-r>=TriggerSnippet()<cr>
 snor <bs> b<bs>
 snor ' b<bs>'
 snor <right> <esc>a

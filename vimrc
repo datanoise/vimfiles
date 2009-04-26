@@ -146,7 +146,7 @@ if has("win32")
 endif
 set tags+=../tags,../../tags,../../../tags,../../../../tags,./tmp/tags
 set cpoptions+=d
-set timeoutlen=3000 " A little bit more time for macros
+set timeoutlen=2000 " A little bit more time for macros
 set ttimeoutlen=100  " Make Esc work faster
 " do not search included files, it's a way too slow
 set complete-=i
@@ -274,16 +274,11 @@ endif
 
 " Section: Plugin settings {{{1
 " --------------------------------------------------
-let c_comment_strings = 1 " I like highlighting strings inside C comments
-
+" TagList settings
 let Tlist_Close_On_Select = 1
 let Tlist_Enable_Fold_Column = 0
 let Tlist_Show_One_File = 1
 let TList_Auto_Update = 0 " Don't autoupdate tags, I use 'u' command for that
-
-let g:proj_flags = "imstc"
-let g:dbext_default_history_file = $HOME."/.dbext_history"
-let g:DrChipTopLvlMenu = "Plugin."
 
 " NERD_tree settings
 let NERDTreeQuitOnOpen = 1 " Close NERDTree when a file is opened
@@ -291,18 +286,21 @@ let g:NERDTreeHijackNetrw = 0
 let g:NERDTreeMapActivateNode = '<Enter>'
 let NERDTreeIgnore=['\.o$', '\~$', '\.class$']
 
-
 " NERD_commenter settings
 let g:NERDShutUp = 1
 let NERDSpaceDelims=1 " Add an extra space to comment delimiters
 
-let g:fuzzy_ignore = "*.png;*.jpg;*.gif;tmp/**"
+" Ignore binary, temprary and log files
+let g:fuzzy_ignore = "*.png;*.jpg;*.gif;*.o;*.class;tmp/**;log/**"
 
+" Rubycomplete plugin settings
 let g:rubycomplete_buffer_loading = 1
 let g:rubycomplete_rails = 1
 let g:rubycomplete_classes_in_global = 1
 
+" Misc settings
+let g:proj_flags = "imstc"
+let g:dbext_default_history_file = $HOME."/.dbext_history"
+let g:DrChipTopLvlMenu = "Plugin."
 let g:CSApprox_verbose_level = 0 " to shut it up
-
-" snipMate settings
-let g:SnipKeywordCompletion = "\<c-n>" " enable TAB keyword completion
+let c_comment_strings = 1 " I like highlighting strings inside C comments

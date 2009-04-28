@@ -505,6 +505,8 @@ class VimRubyCompletion
 
 
     return ret
+  rescue
+    return []
   end
 
   def add_rails_columns( cls )

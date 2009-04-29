@@ -8,6 +8,9 @@ au BufNewFile,BufRead *.builder,*.rxml,*.rjs,*.prawn		set filetype=ruby
 au BufNewFile,BufRead [rR]akefile,*.rake		set filetype=ruby
 au BufNewFile,BufRead [sS]itefile			set filetype=ruby
 
+" Rack
+autocmd BufNewFile,BufRead *.ru setf ruby
+
 " Rantfile
 au BufNewFile,BufRead [rR]antfile,*.rant		set filetype=ruby
 

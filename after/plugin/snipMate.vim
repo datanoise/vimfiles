@@ -23,6 +23,7 @@ call GetSnippets(snippets_dir, '_') " Get global snippets
 
 au FileType * if &ft != 'help' | call GetSnippets(snippets_dir, &ft) | endif
 au FileType eruby call SnipUseFiletype(snippets_dir, &ft, 'html', 'ruby')
+au FileType rack call SnipUseFiletype(snippets_dir, &ft, 'ruby')
 au FileType xhtml call SnipUseFiletype(snippets_dir, &ft, 'html')
 au FileType objc,cpp,cs call SnipUseFiletype(snippets_dir, &ft, 'c')
 " vim:noet:sw=4:ts=4:ft=vim

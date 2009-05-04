@@ -216,4 +216,4 @@ fun s:ChooseSnippet(scope, trigger)
 	let num = inputlist(snippet) - 1
 	return num == -1 ? '' : s:multi_snips[a:scope][a:trigger][num][1]
 endf
-" vim:noet:sw=4:ts=4:ft=vim
+" vim:noet:sw=4:ts=4:ft=vim:nolist

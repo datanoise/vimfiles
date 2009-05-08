@@ -130,6 +130,9 @@ endif
 " uncategorized options {{{2
 set bg=dark
 colo candycode_mod
+if exists('&mc')
+  set mc=81
+endif
 set scrolloff=5      " keep at least 5 lines above/below
 set sidescrolloff=5  " keep at least 5 lines left/right
 set autoread         " disable annoying confirmations

@@ -72,6 +72,7 @@
 :TextobjFoldDefaultKeyMappings	textobj-fold.txt	/*:TextobjFoldDefaultKeyMappings*
 :TextobjFunctionDefaultKeyMappings	textobj-function.txt	/*:TextobjFunctionDefaultKeyMappings*
 :TextobjIndentDefaultKeyMappings	textobj-indent.txt	/*:TextobjIndentDefaultKeyMappings*
+:TextobjLastpatDefaultKeyMappings	textobj-lastpat.txt	/*:TextobjLastpatDefaultKeyMappings*
 :TlistAddFiles	taglist.txt	/*:TlistAddFiles*
 :TlistAddFilesRecursive	taglist.txt	/*:TlistAddFilesRecursive*
 :TlistClose	taglist.txt	/*:TlistClose*
@@ -111,6 +112,8 @@
 <Plug>(textobj-function-i)	textobj-function.txt	/*<Plug>(textobj-function-i)*
 <Plug>(textobj-indent-a)	textobj-indent.txt	/*<Plug>(textobj-indent-a)*
 <Plug>(textobj-indent-i)	textobj-indent.txt	/*<Plug>(textobj-indent-i)*
+<Plug>(textobj-lastpat-N)	textobj-lastpat.txt	/*<Plug>(textobj-lastpat-N)*
+<Plug>(textobj-lastpat-n)	textobj-lastpat.txt	/*<Plug>(textobj-lastpat-n)*
 AND	dbext.txt	/*AND*
 Align-copyright	Align.txt	/*Align-copyright*
 CSApprox.txt	CSApprox.txt	/*CSApprox.txt*
@@ -435,6 +438,7 @@ g:textobj_entire_no_default_key_mappings	textobj-entire.txt	/*g:textobj_entire_n
 g:textobj_fold_no_default_key_mappings	textobj-fold.txt	/*g:textobj_fold_no_default_key_mappings*
 g:textobj_function_no_default_key_mappings	textobj-function.txt	/*g:textobj_function_no_default_key_mappings*
 g:textobj_indent_no_default_key_mappings	textobj-indent.txt	/*g:textobj_indent_no_default_key_mappings*
+g:textobj_lastpat_no_default_key_mappings	textobj-lastpat.txt	/*g:textobj_lastpat_no_default_key_mappings*
 i_CTRL-G_S	surround.txt	/*i_CTRL-G_S*
 i_CTRL-G_s	surround.txt	/*i_CTRL-G_s*
 ingres	dbext.txt	/*ingres*
@@ -739,6 +743,15 @@ textobj-indent-interface	textobj-indent.txt	/*textobj-indent-interface*
 textobj-indent-introduction	textobj-indent.txt	/*textobj-indent-introduction*
 textobj-indent-mappings	textobj-indent.txt	/*textobj-indent-mappings*
 textobj-indent.txt	textobj-indent.txt	/*textobj-indent.txt*
+textobj-lastpat	textobj-lastpat.txt	/*textobj-lastpat*
+textobj-lastpat-bugs	textobj-lastpat.txt	/*textobj-lastpat-bugs*
+textobj-lastpat-changelog	textobj-lastpat.txt	/*textobj-lastpat-changelog*
+textobj-lastpat-contents	textobj-lastpat.txt	/*textobj-lastpat-contents*
+textobj-lastpat-customizing	textobj-lastpat.txt	/*textobj-lastpat-customizing*
+textobj-lastpat-interface	textobj-lastpat.txt	/*textobj-lastpat-interface*
+textobj-lastpat-introduction	textobj-lastpat.txt	/*textobj-lastpat-introduction*
+textobj-lastpat-mappings	textobj-lastpat.txt	/*textobj-lastpat-mappings*
+textobj-lastpat.txt	textobj-lastpat.txt	/*textobj-lastpat.txt*
 textobj-user	textobj-user.txt	/*textobj-user*
 textobj-user-bugs	textobj-user.txt	/*textobj-user-bugs*
 textobj-user-changelog	textobj-user.txt	/*textobj-user-changelog*

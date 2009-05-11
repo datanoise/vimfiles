@@ -43,15 +43,17 @@ if !exists('*g:textobj_function_ruby_select')
     endif
   endfunction
 
-  let b:textobj_function_select = function('g:textobj_function_ruby_select')
-
-  if exists('b:undo_ftplugin')
-    let b:undo_ftplugin .= '|'
-  else
-    let b:undo_ftplugin = ''
-  endif
-  let b:undo_ftplugin .= 'unlet b:textobj_function_select'
 endif
 
+if !exists('b:textobj_function_select')
+  let b:textobj_function_select = function('g:textobj_function_ruby_select')
+end
+
+if exists('b:undo_ftplugin')
+  let b:undo_ftplugin .= '|'
+else
+  let b:undo_ftplugin = ''
+endif
+let b:undo_ftplugin .= 'unlet b:textobj_function_select'
 " __END__
 " vim: foldmethod=marker

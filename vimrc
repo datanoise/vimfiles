@@ -198,7 +198,6 @@ nnoremap <silent> <leader>bl :FuzzyFinderMruFile<CR>
 nnoremap <silent> <leader>bc :FuzzyFinderMruCmd<CR>
 nnoremap <silent> <leader>[  :TlistOpen<CR>
 nnoremap <silent> <leader>o  :exec 'NERDTree' . expand('%:p:h')<CR>
-nnoremap <silent> <leader>i  :NERDTree<CR>
 " visual select of the last pasted text
 nnoremap <silent> <leader>v `[v`]
 nnoremap <silent> <leader>h :set hlsearch!<CR>
@@ -214,6 +213,7 @@ nnoremap <silent> <F3> :cn<CR>
 nnoremap <silent> <S-F3> :cp<CR>
 nnoremap <silent> ,] :cn<CR>
 nnoremap <silent> ,[ :cp<CR>
+nnoremap <silent> ,o A<CR>
 nnoremap <C-J> <C-D>
 nnoremap <C-K> <C-U>
 nnoremap <C-e> 4<C-e>

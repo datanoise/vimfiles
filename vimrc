@@ -213,11 +213,11 @@ nnoremap <silent> <F3> :cn<CR>
 nnoremap <silent> <S-F3> :cp<CR>
 nnoremap <silent> ,] :cn<CR>
 nnoremap <silent> ,[ :cp<CR>
-nnoremap <silent> ,o A<CR>
 nnoremap <C-J> <C-D>
 nnoremap <C-K> <C-U>
 nnoremap <C-e> 4<C-e>
 nnoremap <C-y> 4<C-y>
+nmap <silent> ,o A<CR>
 nnoremap Y y$
 nnoremap z- 1z=
 nnoremap [l [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>

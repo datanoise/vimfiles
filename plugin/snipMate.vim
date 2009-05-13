@@ -1,6 +1,6 @@
 " File:          snipMate.vim
 " Author:        Michael Sanders
-" Version:       0.77
+" Version:       0.81
 " Description:   snipMate.vim implements some of TextMate's snippets features in
 "                Vim. A snippet is a piece of often-typed text that you can
 "                insert into your document using a trigger word followed by a "<tab>".
@@ -19,13 +19,10 @@ au BufRead,BufNewFile *.snippets\= set ft=snippet
 au FileType snippet setl noet fdm=indent
 
 let s:snippets = {} | let s:multi_snips = {}
+let s:ignore_dups = 0
 
 if !exists('snippets_dir')
-	let snippets_dir = $HOME.(has('win16') || has('win32') || has('win64') ?
-					\ '\vimfiles\snippets\' : '/.vim/snippets/')
-	if !isdirectory(snippets_dir)
-		let snippets_dir = fnamemodify(finddir('snippets', &rtp), ':p')
-	endif
+	let snippets_dir = substitute(globpath(&rtp, 'snippets/'), "\n", ',', 'g')
 endif
 
 fun! MakeSnip(scope, trigger, content, ...)
@@ -36,8 +33,10 @@ fun! MakeSnip(scope, trigger, content, ...)
 		let {var}[a:scope][a:trigger] = multisnip ? [[a:1, a:content]] : a:content
 	elseif multisnip | let {var}[a:scope][a:trigger] += [[a:1, a:content]]
 	else
-		echom 'Warning in snipMate.vim: Snippet '.a:trigger.' is already defined.'
-				\ .' See :h multi_snip for help on snippets with multiple matches.'
+		if !s:ignore_dups
+			echom 'Warning in snipMate.vim: Snippet '.a:scope.':'.a:trigger.' is already defined.'
+						\ .' See :h multi_snip for help on snippets with multiple matches.'
+		endif
 	endif
 endf
 
@@ -68,21 +67,20 @@ fun s:ProcessFile(file, ft, ...)
 			\  : MakeSnip(a:ft, keyword, text)
 endf
 
-fun! ExtractSnipsFile(file)
+fun! ExtractSnipsFile(file, ft)
 	if !filereadable(a:file) | return | endif
 	let text = readfile(a:file)
-	let ft = fnamemodify(a:file, ':t:r:s?-.*??')
 	let inSnip = 0
 	for line in text + ["\n"]
 		if inSnip && (line == '' || strpart(line, 0, 1) == "\t")
 			let content .= strpart(line, 1)."\n"
 			continue
 		elseif inSnip
-			call MakeSnip(ft, trigger, content[:-2], name)
+			call MakeSnip(a:ft, trigger, content[:-2], name)
 			let inSnip = 0
 		endif
 
-		if stridx(line, 'snippet') == 0
+		if line[:6] == 'snippet'
 			let inSnip = 1
 			let trigger = strpart(line, 8)
 			let name = ''
@@ -97,38 +95,45 @@ fun! ExtractSnipsFile(file)
 endf
 
 fun! ResetSnippets()
-	let s:snippets = {} | let s:multi_snips = {} | let g:did_ft = {} | let g:ft_aliases = {}
+	let s:snippets = {} | let s:multi_snips = {} | let s:did_ft = {}
 endf
 
-let g:did_ft = {}
-fun! GetSnippets(dir, filetype)
-	for ft in split(a:filetype, '\.')
-		if has_key(g:did_ft, ft) | continue | endif
-		for path in split(globpath(a:dir, ft.'/')."\n".
-						\ globpath(a:dir, ft.'-*/'), "\n")
-			call ExtractSnips(path, ft)
-		endfor
-		for path in split(globpath(a:dir, ft.'.snippets')."\n".
-						\ globpath(a:dir, ft.'-*.snippets'), "\n")
-			call ExtractSnipsFile(path)
-		endfor
-		let g:did_ft[ft] = 1
-		call SnipUseFiletype(a:dir, a:filetype, a:filetype)
+let s:did_ft = {}
+let g:snipmate_aliases = {
+			\ 'objc': ['c'],
+			\ 'cpp':  ['c'],
+			\ 'cs':   ['c'],
+			\ 'xhtml': ['html'],
+			\ 'eruby': ['ruby', 'html'],
+			\ 'rack' : ['ruby'],
+			\ }
+fun! GetSnippets(dir, filetypes)
+	for ft in split(a:filetypes, '\.')
+		if has_key(s:did_ft, ft) | continue | endif
+		call s:DefineSnips(a:dir, ft, ft)
+		if has_key(g:snipmate_aliases, ft)
+			let scopes = g:snipmate_aliases[ft]
+			let s:ignore_dups = 1
+			for scope in scopes
+				call s:DefineSnips(a:dir, scope, ft)
+			endfor
+			let s:ignore_dups = 0
+		endif
+		let s:did_ft[ft] = 1
 	endfor
 endf
 
-let g:ft_aliases = {}
-fun! SnipUseFiletype(dir, alias, ...)
-	if !has_key(g:ft_aliases, a:alias) | let g:ft_aliases[a:alias] = [] | endif
-	let index = 1
-	while index <= a:0
-		let filetype = a:{index}
-		let index += 1
-		if index(g:ft_aliases[a:alias], filetype) != -1 | continue | endif
-		call GetSnippets(a:dir, filetype)
-		call add(g:ft_aliases[a:alias], filetype)
-	endwhile
-endfun
+" Define "aliasft" snippets for the filetype "realft".
+fun s:DefineSnips(dir, aliasft, realft)
+	for path in split(globpath(a:dir, a:aliasft.'/')."\n".
+					\ globpath(a:dir, a:aliasft.'-*/'), "\n")
+		call ExtractSnips(path, a:realft)
+	endfor
+	for path in split(globpath(a:dir, a:aliasft.'.snippets')."\n".
+					\ globpath(a:dir, a:aliasft.'-*.snippets'), "\n")
+		call ExtractSnipsFile(path, a:realft)
+	endfor
+endf
 
 fun! TriggerSnippet()
 	if exists('g:SuperTabMappingForward')
@@ -143,9 +148,6 @@ fun! TriggerSnippet()
 		if exists('SuperTabKey')
 			call feedkeys(SuperTabKey) | return ''
 		endif
-		if exists('g:SnipKeywordCompletion')
-			return g:SnipKeywordCompletion
-		endif
 		call feedkeys("\<esc>a", 'n') " Close completion menu
 		call feedkeys("\<tab>") | return ''
 	endif
@@ -153,30 +155,20 @@ fun! TriggerSnippet()
 	if exists('g:snipPos') | return snipMate#jumpTabStop() | endif
 
 	let word = matchstr(getline('.'), '\S\+\%'.col('.').'c')
-	for scope in split(&ft, '\.') + ['_']
-		if has_key(g:ft_aliases, scope)
-			for ft in g:ft_aliases[scope]
-				if !s:CheckScope(ft) | continue | endif
-				let trigger = s:GetSnippet(word, ft)
-				if exists('g:snippet') | break | endif
-			endfor
-			if exists('g:snippet') | break | endif
+	for scope in [bufnr('%')] + split(&ft, '\.') + ['_']
+		let [trigger, snippet] = s:GetSnippet(word, scope)
+		" If word is a trigger for a snippet, delete the trigger & expand
+		" the snippet.
+		if snippet != ''
+			let col = col('.') - len(trigger)
+			sil exe 's/\V'.escape(trigger, '/').'\%#//'
+			return snipMate#expandSnip(snippet, col)
 		endif
 	endfor
 
-	" If word is a trigger for a snippet, delete the trigger & expand the snippet.
-	if exists('g:snippet')
-		if g:snippet == '' " If user cancelled a multi snippet, quit.
-			unl g:snippet | return ''
-		endif
-		let col = col('.') - len(trigger)
-		sil exe 's/'.escape(trigger, '.^$/\*[]').'\%#//'
-		return snipMate#expandSnip(col)
-	elseif exists('SuperTabKey')
+	if exists('SuperTabKey')
 		call feedkeys(SuperTabKey)
 		return ''
-	elseif exists('g:SnipKeywordCompletion') && match(getline('.')[col('.')-2], '\w') != -1
-		return g:SnipKeywordCompletion
 	endif
 	return "\<tab>"
 endf
@@ -184,26 +176,20 @@ endf
 " Check if word under cursor is snippet trigger; if it isn't, try checking if
 " the text after non-word characters is (e.g. check for "foo" in "bar.foo")
 fun s:GetSnippet(word, scope)
-	let word = a:word
-	wh !exists('g:snippet')
+	let word = a:word | let snippet = ''
+	while snippet == ''
 		if exists('s:snippets["'.a:scope.'"]["'.escape(word, '\"').'"]')
-			let g:snippet = s:snippets[a:scope][word]
+			let snippet = s:snippets[a:scope][word]
 		elseif exists('s:multi_snips["'.a:scope.'"]["'.escape(word, '\"').'"]')
-			let g:snippet = s:ChooseSnippet(a:scope, word)
+			let snippet = s:ChooseSnippet(a:scope, word)
+			if snippet == '' | break | endif
 		else
 			if match(word, '\W') == -1 | break | endif
 			let word = substitute(word, '.\{-}\W', '', '')
 		endif
 	endw
-	return word
+	return [word, snippet]
 endf
-
-" Check that it is an appropriate scope to expand the snippet
-fun s:CheckScope(scope)
-	let syn_name = synIDattr(synID(line('.'), col('.'), 1), 'name')
-	if a:scope == '_' || syn_name == '' | return 1 | endif
-	return match(syn_name, a:scope) != -1
-endfun
 
 fun s:ChooseSnippet(scope, trigger)
 	let snippet = []
@@ -216,4 +202,33 @@ fun s:ChooseSnippet(scope, trigger)
 	let num = inputlist(snippet) - 1
 	return num == -1 ? '' : s:multi_snips[a:scope][a:trigger][num][1]
 endf
-" vim:noet:sw=4:ts=4:ft=vim:nolist
+
+fun ShowAvailableSnips()
+	let word = matchstr(getline('.'), '\S\+\%'.col('.').'c')
+	let words = [word]
+	if stridx(word, '.')
+		let words += split(word, '\.', 1)
+	endif
+	let matchpos = 0
+	let matches = []
+	for scope in [bufnr('%')] + split(&ft, '\.') + ['_']
+		let triggers = exists('s:snippets["'.scope.'"]') ? keys(s:snippets[scope]) : []
+		if exists('s:multi_snips["'.scope.'"]')
+			let triggers += keys(s:multi_snips[scope])
+		endif
+		for trigger in triggers
+			for word in words
+				if word == ''
+					let matches += [trigger] " Show all matches if word is empty
+				elseif trigger =~ '^'.word
+					let matches += [trigger]
+					let len = len(word)
+					if len > matchpos | let matchpos = len | endif
+				endif
+			endfor
+		endfor
+	endfor
+	call complete(col('.') - matchpos, matches)
+	return ''
+endf
+" vim:noet:sw=4:ts=4:ft=vim

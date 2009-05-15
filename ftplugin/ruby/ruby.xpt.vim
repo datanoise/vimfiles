@@ -528,8 +528,8 @@ min { |`element1^, `element2^| `cursor^ }
 
 
 XPT mod hint=module\ ..\ ..\ end
-XSET module name|post=RubyCamelCase()
-module `module name^
+XSET module|post=RubyCamelCase()
+module `module^
 `cursor^
 end
 

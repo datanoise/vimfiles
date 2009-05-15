@@ -42,7 +42,7 @@ if !hlID('XPTCurrentItem') && g:xptemplate_hl
   hi XPTCurrentItem ctermbg=darkgreen gui=none guifg=#d59619 guibg=#efdfc1
 endif
 if !hlID('XPTIgnoredMark') && g:xptemplate_hl
-  hi XPTIgnoredMark cterm=none term=none ctermbg=black ctermfg=darkgrey gui=none guifg=black guibg=darkgray
+  hi XPTIgnoredMark cterm=none term=none ctermbg=black ctermfg=darkgrey gui=none guifg=#dddddd guibg=white
 endif
 
 

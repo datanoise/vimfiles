@@ -1,6 +1,6 @@
 " XPTEMPLATE ENGIE:
 "   code template engine
-" VERSION: 0.3.7.12
+" VERSION: 0.3.7.13
 " BY: drdr.xp | drdr.xp@gmail.com
 "
 " MARK USED:
@@ -616,6 +616,7 @@ fun! XPTemplateStart(pos, ...) " {{{
 
 
     call s:PushSetting('&l:ve')
+    let &l:ve = "all"
 
     " leave 1 char at last to avoid the bug when 'virtualedit' is not set with
     " 'onemore'

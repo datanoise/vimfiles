@@ -408,6 +408,12 @@ XSET what.post=RubyEachBrace()
 XSET _=RubyEachPair()
 each_`what^|`_^| `cursor^ }
 
+XPT ead hint=each\ do\ |..|\ end
+each do` |`arg`|^
+`# body^
+end
+`cursor^
+
 
 XPT fdir hint=File.dirname\\(..)
 XSET _=

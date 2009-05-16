@@ -653,7 +653,7 @@ task :`task name^` => [`deps...`]^ do
 end
 
 
-XPT tc hint=require\ 'test/unit'\ ...\ class\ Test..\ <\ Test::Unit:TestCase\ ...
+XPT tc hint=require\ 'test/unit'\ ...\ class\ Test..\ <\ Test::Unit::TestCase\ ...
 XSET block=# block
 XSET name|post=RubySnakeCase()
 XSET ClassName=RubyCamelCase(R("module"))
@@ -663,8 +663,8 @@ XSET def...|post=\n\n  def test_`name^`(`args`)^\n    `block^\n  end`\n\n  `def.
 require "test/unit"
 require "`module^"
 
-class Test`ClassName^ < Test::Unit:TestCase
-  def test_`name^`(`args`)^
+class Test`ClassName^ < Test::Unit::TestCase
+  def test_`name^
     `block^
   end`
 

@@ -1171,15 +1171,15 @@ endfunction "}}}
 fun! s:HighLightItem(name, switchon) " {{{
     let xp = s:Ctx().tmpl.ptn
     if a:switchon
-        let ptn = substitute(xp.itemContentPattern, "NAME", a:name, "")
+        " let ptn = xp.itemMarkLPattern
+        " exe "2match XPTIgnoredMark /". ptn ."/"
 
-        let ptn = xp.itemMarkLPattern
-        exe "2match XPTIgnoredMark /". ptn ."/"
+        " let ptn = xp.itemMarkRPattern
+        " exe "3match XPTIgnoredMark /". ptn ."/"
 
-        let ptn = xp.itemMarkRPattern
-        exe "3match XPTIgnoredMark /". ptn ."/"
+        exe "3match XPTIgnoredMark /". xp.item ."/"
     else
-        exe "2match none"
+        " exe "2match none"
         exe "3match none"
     endif
 endfunction " }}}

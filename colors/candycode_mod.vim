@@ -4,7 +4,7 @@
 
 set background=dark
 highlight clear
-let g:colors_name="candycode"
+let g:colors_name="candycode_mod"
 
 let save_cpo = &cpo
 set cpo&vim
@@ -159,7 +159,7 @@ hi Special      guifg=#9999aa       guibg=NONE          gui=bold
 
 hi Underlined   guifg=#80a0ff       guibg=NONE          gui=underline
             \   ctermfg=NONE        ctermbg=NONE        cterm=underline
-            \   term=underline 
+            \   term=underline
 
 hi Ignore       guifg=#888888       guibg=NONE          gui=NONE
             \   ctermfg=darkgray    ctermbg=NONE        cterm=NONE
@@ -170,6 +170,15 @@ hi Error        guifg=#ffffff       guibg=#ff0000       gui=NONE
 hi Todo         guifg=#ffffff       guibg=#ee7700       gui=bold
             \   ctermfg=black       ctermbg=yellow      cterm=bold
 
+hi XPTIgnoredMark
+            \   guifg=#CCCCCC       guibg=#202020       gui=NONE
+            \   ctermfg=white       ctermbg=yellow      cterm=NONE
+
+hi TemplateItem
+            \   ctermbg=black gui=none guifg=white guibg=black
+
+hi TemplateMark
+            \   ctermbg=black gui=none guifg=white guibg=black
 " }}}
 
 let &cpo = save_cpo

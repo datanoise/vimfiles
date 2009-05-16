@@ -313,8 +313,3 @@ let g:DrChipTopLvlMenu = "Plugin."
 let g:CSApprox_verbose_level = 0 " to shut it up
 let c_comment_strings = 1 " I like highlighting strings inside C comments
 
-hi XPTIgnoredMark
-      \ cterm=none term=none ctermbg=black ctermfg=darkgrey
-      \ gui=none guifg=darkgrey guibg=black
-hi TemplateItem
-      \ ctermbg=black gui=none guifg=white guibg=black

@@ -1472,7 +1472,9 @@ fun! s:ApplyDelayed() "{{{
         if isrep
 
             " adjust indent
-            let indent = indent(s:Xtl(ctx.pos.curpos)[0])
+            " let indent = indent(s:Xtl(ctx.pos.curpos)[0])
+            " CHANGED: my rules of indent
+            let indent = indent('.')
             let indentspaces = repeat(' ', indent)
             let post = substitute( post, "\n", "\n" . indentspaces, 'g' )
 

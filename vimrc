@@ -183,6 +183,7 @@ if has("cscope")
   nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
 endif
 
+nmap ,ss :w<CR>
 nmap ,sv :source ~/.vimrc
 nmap ,sg :source ~/.gvimrc
 nmap ,vv :e ~/.vimrc

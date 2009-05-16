@@ -727,7 +727,12 @@ g:XPTfuncs()   g:XPTvars()
 
 							     *xpt-changes-log*
 : > <
-==== 0.3.7.11 ====
+==== 0.3.7.14 ====
+Fixed:2009 May 17	indent problem with perl. caused by perl indent expression.
+Fixed:2009 May 16	fix indent for default value and post filter
+Added:2009 May 16	multi line XSET : XSETm varname= {lines of codes} XSETm END. Get away annoying "\n"
+Fixed:2009 May 16	bug of typing '\' becoming '\\'
+==== 0.3.7.13 ====
 Added:2009 May 15	fullname and name both for tepmlate functions
 Added:2009 May 15	mechanism to expand template in item. 'Trigger("name")'
 Fixed:2009 May 15	cursor at last causes it deletes 1 char before.

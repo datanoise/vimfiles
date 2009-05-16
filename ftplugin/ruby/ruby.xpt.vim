@@ -659,7 +659,7 @@ XSET name|post=RubySnakeCase()
 XSET ClassName=RubyCamelCase(R("module"))
 XSET ClassName.post=RubyCamelCase()
 XSET args|post=RubyMethodArgs()
-XSET def...|post=\n\n  def test_`name^`(`args`)^\n    `block^\n  end`\n\n  `def...^
+XSET def...|post=\n\ndef test_`name^\n  `block^\nend`\n\n`def...^
 require "test/unit"
 require "`module^"
 

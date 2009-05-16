@@ -38,27 +38,9 @@ endfunction
 " ================================= Snippets ===================================
 XPTemplateDef
 
-XPT namespace hint=namespace\ {}
-namespace `name^
-{
-    `cursor^
-}
-
-
-XPT main hint=main\ (argc,\ argv)
-int main(int argc, char *argv[])
-{
-    `cursor^
-    return 0;
-}
-
-
-XPT fun=..\ ..\ (..)
-`int^ `name^(`_^^)
-{
-    `cursor^
-}
-
+XPT all  hint=stl\ begin..end
+`v^.begin(), `v^.end(), `cursor^
+ 
 
 XPT class   hint=class+ctor
 class `className^
@@ -84,6 +66,49 @@ private:
 `className^::`className^( const `className^ &cpy )
 {
 }
+
+
+XPT fun=..\ ..\ (..)
+`int^ `name^(`_^^)
+{
+    `cursor^
+}
+
+
+XPT inf hint=open\ input.txt\ and\ iitr
+ifstream inf("`input.txt^",ios_base::in);
+istreambuf_iterator `string^ iitr(`inf^);
+
+
+XPT namespace hint=namespace\ {}
+namespace `name^
+{
+    `cursor^
+}
+
+
+XPT main hint=main\ (argc,\ argv)
+int main(int argc, char *argv[])
+{
+    `cursor^
+    return 0;
+}
+
+
+"all STL headers and namespace std
+XPT stl hint=STL\ headers\ and\ namespace\ std
+#include <iostream>
+#include <ios>
+#include <fstream>
+#include <iterator>  //required for istream_iterator
+#include <list>
+#include <vector>
+#include <algorithm>
+#include <cassert>
+#include <string>
+#include <stdexcept> //-- for out_of_range definition
+
+using namespace std;
 
 
 XPT templateclass   hint=template\ <>\ class

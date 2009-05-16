@@ -1,6 +1,6 @@
 " XPTEMPLATE ENGIE:
 "   code template engine
-" VERSION: 0.3.7.13
+" VERSION: 0.3.7.14
 " BY: drdr.xp | drdr.xp@gmail.com
 "
 " MARK USED:
@@ -17,10 +17,14 @@
 " "}}}
 "
 " TODOLIST: "{{{
+" TODO snippets bundle
+" TODO test more : char before snippet, char after, last cursor position,
+" expected mode() when cursor stopped to wait for input
+" TODO block context check
+" TODO $BRACKETSTYLE caused indent problem
 " TODO in window initially being selected or visual?
 " TODO in windows & in select mode to trigger wrapped or normal?
 " TODO auto crash
-" TODO $BRACKETSTYLE caused indent problem
 " TODO nested repetition in expandable
 " TODO change on previous item
 " TODO ordered item
@@ -64,6 +68,7 @@ runtime plugin/xptemplate.conf.vim
 let s:selectAction = "\<esc>gv\<C-g>"
 let s:escapeHead   = '\v(\\*)\V'
 let s:unescapeHead = '\v(\\*)\1\\?\V'
+" let s:escaped      = '\v(\\*)\1\\\V'
 let s:ep           = '\%(' . '\%(\[^\\]\|\^\)' . '\%(\\\\\)\*' . '\)' . '\@<='
 let s:escaped      = '\%(' . '\%(\[^\\]\|\^\)' . '\%(\\\\\)\*' . '\)' . '\@<=' . '\\'
 
@@ -117,6 +122,13 @@ let s:f = {}
 let g:XPT = s:f
 
 
+fun! s:SelectAction() "{{{
+    if &l:slm =~ 'cmd'
+        return "\<esc>gv"
+    else
+        return "\<esc>gv\<C-g>"
+    endif
+endfunction "}}}
 
 fun! s:XPTemplateInit( filename, ... ) "{{{
     if !exists( 'b:xpt_loaded' )
@@ -371,12 +383,74 @@ fun! s:XPTemplateParse(lines) "{{{
     let post = {}
     let start = 1
     while start < len(lines)
-        if lines[start] =~# '^XSET\s\+'
-            let item = matchstr(lines[start], '^XSET\s\+\zs.*')
+        if lines[start] =~# '^XSET\%[m]\s\+'
+            let item = matchstr(lines[start], '^XSET\%[m]\s\+\zs.*')
 
             let key = matchstr(item, '[^=]*\ze=')
+
+            if key == ''
+                let start += 1
+                continue
+            endif
+
             let val = matchstr(item, '=\zs.*')
+
+            " TODO can not input '\\n'
             let val = substitute(val, '\\n', "\n", 'g')
+
+            " deal with multi line value of XSET {{{
+            if lines[start] =~# '^XSETm' 
+
+
+                " non-escaped end symbol
+                let endPattern = '\V' . s:ep . 'XSETm END\$'
+
+                if val =~# endPattern " Special case : end mark at the same line
+                    let val = matchstr( val, '.\{-}\ze' . endPattern )
+
+                else " really it is a multi line item
+
+                    " current line has been fetched already. 
+                    let start += 1
+
+                    " get lines upto 'XSETm END'
+                    let mvals = []
+                    while 1 
+
+
+                        let line = lines[start]
+
+
+                        if line =~# endPattern 
+                            " let start -= 1 " move cursor to last line of current XSET element 
+                            let line = matchstr( line, '.\{-}\ze' . endPattern )
+                            let mvals += [line]
+                            break
+
+                        elseif line =~# '^XSET'
+                            let start -= 1 " move cursor to last line of current XSET element 
+                            break
+                        endif
+
+                        " TODO can not input \XSET
+                        if line =~# '^\\XSET\%[m]'
+                            let line = line[ 1 : ]
+                        endif
+
+                        let mvals += [ line ]
+
+                        let start += 1
+
+                    endwhile
+
+
+                    let val .= "\n" . join(mvals, "\n")
+
+                endif
+
+            endif "}}}
+
+
 
             let keytype = matchstr(key, '\V'.s:ep.'|\zs\.\{-}\$')
             if keytype == ""
@@ -395,7 +469,9 @@ fun! s:XPTemplateParse(lines) "{{{
                 throw "unknown key type:".keytype
             endif
 
-        elseif lines[start] =~# '^\\XSET'
+
+            " TODO can not input \XSET
+        elseif lines[start] =~# '^\\XSET\%[m]' " escaped XSET or XSETm 
             let lines[start] = lines[start][1:]
             break
         else
@@ -674,6 +750,7 @@ fun! s:XPTemplateFinish(...) "{{{
     exe "silent! %snomagic/\\V" .s:TmplRange() . s:unescapeHead . xp.r . '/\1' . xp.r . '/g'
 
     " format template text
+    redraw!
     call s:Format(1)
 
     call cursor(l, toEnd + len(getline(l)))
@@ -949,6 +1026,35 @@ fun! s:GetValueInfo(end) "{{{
     return [r0, r1, r2]
 endfunction "}}}
 
+fun! s:ClearCommonIndent( str, firstLineIndent ) "{{{
+    let min = a:firstLineIndent
+    " protect the last line break
+    let list = split(a:str . ";", "\n")
+    for line in list[ 1 : ]
+        
+        let indentWidth = len( matchstr( line, '^\s*' ) )
+
+        let min = min( [ min, indentWidth ] )
+    endfor
+
+
+    let pattern = '\n\s\{' . min . '}'
+
+    return substitute( a:str, pattern, "\n", 'g' )
+
+    " let ptn = '\s\{' . min . '}'
+
+    let result = [list]
+    for line in list[]
+        let result += [ line[ min : ] ]
+    endfor
+
+    let str = join(result, "\n")
+
+    return str[ : -2 ] " remove last ';' which protect \n
+
+endfunction "}}}
+
 fun! s:BuildValues(isItemRange) "{{{
     let x = s:Data()
     let ctx = s:Ctx()
@@ -1005,6 +1111,10 @@ fun! s:BuildValues(isItemRange) "{{{
             " let fullname = substitute(fullname, xp.lft, '', 'g')
             let name = s:GetContentBetween(np1, np2)
             let val = s:GetContentBetween([vinfo[0][0], vinfo[0][1]+len(xp.r)], vinfo[1])
+
+            " clear common indent
+            let val = s:ClearCommonIndent( val, indent( vinfo[0][0] ) )
+
 
 
             " [default_value, is_delayed]
@@ -1244,6 +1354,15 @@ else
     " noop
     com! XPTrmLast echo
 endif
+
+fun! s:XPTvisual()
+    if &l:slm =~ 'cmd'
+	normal! v\<C-g>
+    else
+	normal! v
+    endif
+endfunction
+
 if &selectmode =~ 'cmd'
     com! XPTvisual normal! v\<C-g>
     com! XPToldVisual normal! gv\<C-g>
@@ -1271,7 +1390,7 @@ fun! s:GetRangeBetween(p1, p2, ...) "{{{
     endif
 
     call cursor(p1)
-    XPTvisual
+    call s:XPTvisual()
     call cursor(p2)
     normal! v
 
@@ -1352,6 +1471,11 @@ fun! s:ApplyDelayed() "{{{
 
         if isrep
 
+            " adjust indent
+            let indent = indent(s:Xtl(ctx.pos.curpos)[0])
+            let indentspaces = repeat(' ', indent)
+            let post = substitute( post, "\n", "\n" . indentspaces, 'g' )
+
             call s:Replace(s:Xtl(ctx.pos.curpos), typed, post)
             call s:ApplyPredefined('typed')
             call cursor(s:Xtl(ctx.pos.curpos))
@@ -1413,7 +1537,6 @@ fun! s:SelectNextItem(...) "{{{
 
     if postaction != ''
         return postaction
-        " return s:selectAction
 
     else
         call cursor(s:Xbr(ctx.pos.editpos))
@@ -1751,7 +1874,7 @@ fun! s:InitItem() " {{{
             if obj.action == 'expandTmpl' && has_key( obj, 'tmplName' )
                 call s:Replace(s:Xtl(xpos.editpos), s:Xbr(xpos.editpos), '')
                 call XPTemplateStart(0, {'startPos' : getpos(".")[1:2], 'tmplName' : obj.tmplName})
-                return '' 
+                return '' " no post action, just stay in insert mode 
 
             else " other action
 
@@ -1763,6 +1886,10 @@ fun! s:InitItem() " {{{
             let str = obj
         endif
 
+        " adjust indent
+        let indent = indent(s:Xtl(xpos.curpos)[0])
+        let indentspaces = repeat(' ', indent)
+        let str = substitute( str, "\n", "\n" . indentspaces, 'g' )
 
         " call s:Replace(s:Xtl(xpos.curpos), ctx.name, str)
         call s:Replace(s:Xtl(xpos.editpos), s:Xbr(xpos.editpos), str)
@@ -1825,7 +1952,7 @@ fun! s:InitItem() " {{{
     else
         let ctl = s:CTL(x)
         let cbr = s:CBR(x)
-        return ( ctl[0] < cbr[0] || ctl[0] == cbr[0] && ctl[1] < cbr[1] ) ? s:selectAction : ''
+        return ( ctl[0] < cbr[0] || ctl[0] == cbr[0] && ctl[1] < cbr[1] ) ? s:SelectAction() : ''
     endif
 
 endfunction " }}}
@@ -2130,7 +2257,7 @@ fun! s:ApplyMap() " {{{
     exe "snoremap ".g:xptemplate_to_right." <esc>`>a"
     exe "inoremap <buffer> ".xp.l.' \'.xp.l
     exe "inoremap <buffer> ".xp.r.' \'.xp.r
-    inoremap <buffer> \ \\
+    " inoremap <buffer> \ \\
 
 endfunction " }}}
 
@@ -2149,7 +2276,7 @@ fun! s:ClearMap() " {{{
     exe "sunmap ".g:xptemplate_to_right
     exe "iunmap <buffer> ".xp.l
     exe "iunmap <buffer> ".xp.r
-    iunmap <buffer> \
+    " iunmap <buffer> \
 endfunction " }}}
 
 fun! s:StartAppend() " {{{
@@ -2580,7 +2707,7 @@ fun! s:Replace(p, c, rep) "{{{
 
 
             call cursor(start)
-            XPTvisual
+            call s:XPTvisual()
             call cursor(end)
             normal! d
             silent! normal! zO

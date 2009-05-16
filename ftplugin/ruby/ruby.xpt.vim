@@ -86,7 +86,7 @@ let s:assert_map = {
 
 
 fun! RubyAssertPopupSort(a, b)
-  return a:a.word > a:b.word
+  return a:a.word == a:b.word ? 0 : a:a.word < a:b.word ? -1 : 1
 endfunction
 
 fun! s:f.RubyAssertPopup() "{{{
@@ -133,7 +133,7 @@ endfunction "}}}
 XPTemplateDef
 XPT BEG hint=BEGIN\ {\ ..\ }
 BEGIN {
-`cursor^
+  `cursor^
 }
 
 
@@ -141,13 +141,13 @@ XPT Comp hint=include\ Comparable\ def\ <=>\ ...
 include Comparable
 
 def <=>(other)
-`cursor^
+  `cursor^
 end
 
 
 XPT END hint=END\ {\ ..\ }
 END {
-`cursor^
+  `cursor^
 }
 
 
@@ -155,7 +155,7 @@ XPT Enum hint=include\ Enumerable\ def\ each\ ...
 include Enumerable
 
 def each(&block)
-`cursor^
+  `cursor^
 end
 
 
@@ -223,7 +223,7 @@ any? { |`element^| `cursor^ }
 
 XPT app hint=if\ __FILE__\ ==\ $PROGRAM_NAME\ ...
 if __FILE__ == $PROGRAM_NAME
-`cursor^
+  `cursor^
 end
 
 
@@ -266,7 +266,7 @@ XSET times=10_000
 TESTS = `times^
 
 Benchmark.bmbm do |result|
-`cursor^
+  `cursor^
 end
 
 
@@ -287,7 +287,7 @@ classify { |`element^| `cursor^ }
 XPT cl hint=class\ ..\ end
 XSET ClassName.post=RubyCamelCase()
 class `ClassName^
-`cursor^
+  `cursor^
 end
 
 
@@ -308,7 +308,7 @@ XPT cli hint=class\ ..\ def\ initialize\\(..)\ ...
 XSET ClassName.post=RubyCamelCase()
 XSET args|post=RubyMethodArgs()
 XSET block=# block
-XSET def...|post=\n\n  def `name^`(`args`)^\n    `block^\n  end`\n\n  `def...^
+XSET def...|post=\n\ndef `name^`(`args`)^\n  `block^\nend`\n\n`def...^
 XSET name|post=RubySnakeCase()
 class `ClassName^
   def initialize`(`args`)^
@@ -322,7 +322,7 @@ end
 XPT cls hint=class\ <<\ ..\ end
 XSET self=self
 class << `self^
-`cursor^
+  `cursor^
 end
 
 
@@ -345,7 +345,7 @@ XPT def hint=def\ ..\ end
 XSET method|post=RubySnakeCase()
 XSET args|post=RubyMethodArgs()
 def `method^`(`args`)^
-`cursor^
+  `cursor^
 end
 
 
@@ -360,13 +360,13 @@ def_delegators :`del obj^, :`del methods^
 XPT defi hint=def\ initialize\ ..\ end
 XSET args|post=RubyMethodArgs()
 def initialize`(`args`)^
-`cursor^
+  `cursor^
 end
 
 
 XPT defmm hint=def\ method_missing\\(..)\ ..\ end
 def method_missing(meth, *args, &block)
-`cursor^
+  `cursor^
 end
 
 
@@ -374,15 +374,14 @@ XPT defs hint=def\ self...\ end
 XSET method.post=RubySnakeCase()
 XSET args|post=RubyMethodArgs()
 def self.`method^`(`args`)^
-`cursor^
+  `cursor^
 end
 
 
 XPT deft hint=def\ test_..\ ..\ end
 XSET name|post=RubySnakeCase()
-XSET args|post=RubyMethodArgs()
-def test_`name^`(`args`)^
-`cursor^
+def test_`name^
+  `cursor^
 end
 
 
@@ -407,7 +406,7 @@ Dir.glob('`dir^') { |`f^| `cursor^ }
 XPT do hint=do\ |..|\ ..\ end
 XSET args|post=RubyBlockArgs()
 do` |`args`|^
-`^
+  `^
 end
 
 
@@ -512,7 +511,7 @@ XSET content=
 
 XPT loop hint=loop\ do\ ...\ end
 loop do
-`cursor^
+  `cursor^
 end
 
 XPT map hint=map\ {\ |..|\ ..\ }
@@ -530,13 +529,13 @@ min { |`element1^, `element2^| `cursor^ }
 XPT mod hint=module\ ..\ ..\ end
 XSET module|post=RubyCamelCase()
 module `module^
-`cursor^
+  `cursor^
 end
 
 
 XPT modf hint=module\ ..\ module_function\ ..\ end
-XSET module name|post=RubyCamelCase()
-module `module name^
+XSET module|post=RubyCamelCase()
+module `module^
   module_function
 
   `cursor^
@@ -546,7 +545,7 @@ end
 XPT nam hint=Rake\ Namespace
 XSET ns=fileRoot()
 namespace :`ns^ do
-`cursor^
+  `cursor^
 end
 
 
@@ -613,7 +612,7 @@ select { |`element^| `cursor^ }
 
 
 XPT sinc hint=class\ <<\ self;\ self;\ end
-class << self; self; end
+class << self; self end
 
 
 XPT sor hint=sort\ {\ |..|\ ..\ }
@@ -639,7 +638,7 @@ XPT subcl hint=class\ ..\ <\ ..\ end
 XSET ClassName.post=RubyCamelCase()
 XSET Parent.post=RubyCamelCase()
 class `ClassName^ < `Parent^
-`cursor^
+  `cursor^
 end
 
 
@@ -649,7 +648,7 @@ XSET taskn...|post=, :`task^`, `taskn...^
 XSET deps...|post= => [:`task^`, `taskn...^]
 desc "`task description^"
 task :`task name^` => [`deps...`]^ do
-`cursor^
+  `cursor^
 end
 
 
@@ -688,19 +687,19 @@ transaction(`_^) { `cursor^ }
 XPT unif hint=Unix\ Filter
 XSET line=line
 ARGF.each_line do |`line^|
-`cursor^
+  `cursor^
 end
 
 
 XPT unless hint=unless\ ..\ end
 unless `boolean cond^
-`cursor^
+  `cursor^
 end
 
 
 XPT until hint=until\ ..\ end
 until `boolean cond^
-`cursor^
+  `cursor^
 end
 
 
@@ -728,7 +727,7 @@ end
 
 XPT while hint=while\ ..\ end
 while `boolean cond^
-`cursor^
+  `cursor^
 end
 
 

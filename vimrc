@@ -224,8 +224,12 @@ nnoremap [l [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
 nnoremap <F2> <C-w><C-w>
 nnoremap <F4> :sil make %<cr><c-l>:cc<cr>
 nnoremap <D-u> :ToggleTransparancy<cr>
-function! SwitchPrevBuf() 
-  if bufloaded(bufname("#")) != 0 exec "b#" | else echo "No buffer to switch to" | endif
+function! SwitchPrevBuf()
+  if bufloaded(bufname("#")) != 0
+    exec "b#"
+  else
+    echo "No buffer to switch to"
+  endif
 endfunction
 nnoremap <silent> <C-tab> :call SwitchPrevBuf()<cr>
 
@@ -307,3 +311,9 @@ let g:dbext_default_history_file = $HOME."/.dbext_history"
 let g:DrChipTopLvlMenu = "Plugin."
 let g:CSApprox_verbose_level = 0 " to shut it up
 let c_comment_strings = 1 " I like highlighting strings inside C comments
+
+hi XPTIgnoredMark
+      \ cterm=none term=none ctermbg=black ctermfg=darkgrey
+      \ gui=none guifg=darkgrey guibg=black
+hi TemplateItem
+      \ ctermbg=black gui=none guifg=white guibg=black

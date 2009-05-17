@@ -1,6 +1,6 @@
 " XPTEMPLATE ENGIE:
 "   code template engine
-" VERSION: 0.3.7.14
+" VERSION: 0.3.7.16
 " BY: drdr.xp | drdr.xp@gmail.com
 "
 " MARK USED:
@@ -1761,7 +1761,8 @@ fun! s:FindNextItem(flag) "{{{
         call cursor(p)
         let ptn = s:Rng_to_TmplEnd() . xp.item
 
-        let p = searchpos(ptn, "n")
+        " loose search. wrap search, or wrap to select current cursor item
+        let p = searchpos(ptn, "nw")
 
         call cursor(p0)
     endif

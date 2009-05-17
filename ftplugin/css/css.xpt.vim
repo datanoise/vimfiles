@@ -14,9 +14,24 @@ XPTinclude
     \ _common/common
 
 " ========================= Function and Variables =============================
+fun! s:f.Trim() "{{{
+   s/ \s\+/ /eg
+   s/\s\+;/;/e
+endfunction "}}}
 " ================================= Snippets ===================================
 
 XPTemplateDef 
+
+
+XPT border2 hint=border
+XSET thick=Choose([' ','thin', 'thick', 'medium'])
+XSET thick|post=SV('^\s*$', '', 'g')
+XSET kind=Choose([' ','none', 'hidden', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset'])
+XSET kind|post=SV('^\s*$', '', 'g')
+XSET color=Choose([' ','rgb(', '#', 'transparent'])
+XSET color|post=SV('^\s*$', '', 'g')
+border:` `thick^` `kind^` `color^;
+
 XPT backrep hint=background-repeat
 XSET rep=Choose([' ','repeat', 'repeat-x','repeat-y','no-repeat'])
 background-repeat `rep^;

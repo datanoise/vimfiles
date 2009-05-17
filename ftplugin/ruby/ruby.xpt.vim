@@ -15,13 +15,13 @@ XPTinclude
 " ========================= Function and Variables =============================
 
 fun! s:f.RubyCamelCase(...) "{{{
-  let str = a:0 == 0 ? s:f.V() : a:1
+  let str = a:0 == 0 ? self.V() : a:1
   let r = substitute(substitute(str, "[\/ _]", ' ', 'g'), '\<.', '\u&', 'g')
   return substitute(r, " ", '', 'g')
 endfunction "}}}
 
 fun! s:f.RubySnakeCase(...) "{{{
-  let str = a:0 == 0 ? s:f.V() : a:1
+  let str = a:0 == 0 ? self.V() : a:1
   return substitute(str," ",'_','g')
 endfunction "}}}
 
@@ -43,7 +43,7 @@ fun! s:f.RubyEachPopup() "{{{
 endfunction "}}}
 
 fun! s:f.RubyEachBrace() "{{{
-  let v = s:f.V()
+  let v = self.V()
 
   if v =~# 'each_slice\|each_cons'
     return v.'(`val^3^)'
@@ -98,7 +98,7 @@ fun! s:f.RubyAssertPopup() "{{{
 endfunction "}}}
 
 fun! RubyAssertMethod() "{{{
-  let v = s:f.V()
+  let v = self.V()
   if has_key(s:assert_map, v)
     return v . s:assert_map[v]
   else
@@ -112,7 +112,7 @@ fun! s:f.RubyClassAttrPopup() "{{{
 endfunction "}}}
 
 fun! s:f.RubyBlockArgs() "{{{
-  let v = s:f.V()
+  let v = self.V()
   if v == ''
     return ''
   else
@@ -121,7 +121,7 @@ fun! s:f.RubyBlockArgs() "{{{
 endfunction "}}}
 
 fun! s:f.RubyMethodArgs() "{{{
-  let v = s:f.V()
+  let v = self.V()
   if v == ''
     return ''
   else

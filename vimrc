@@ -205,8 +205,8 @@ nnoremap <silent> <leader>h :set hlsearch!<CR>
 nnoremap <silent> <leader>l :setlocal list!<CR>
 nnoremap <silent> <leader>n :set nu!<CR>
 " indented paste
-nnoremap <silent> <leader>p p'[v']=
-nnoremap <silent> <leader>P P'[v']=
+nnoremap <silent> <leader>p p:'[,']normal ==<CR>
+nnoremap <silent> <leader>P P:'[,']normal ==<CR>
 nnoremap <silent> <leader>ss :%s/^\s\+$//<CR>
 nnoremap <silent> <leader>sa :%s/\s\+$//<CR>
 

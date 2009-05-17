@@ -291,6 +291,14 @@ class `ClassName^
 end
 
 
+XPT clp hint=class\ ..\ <\ ..\ end
+XSET ClassName.post=RubyCamelCase()
+XSET Parent.post=RubyCamelCase()
+class `ClassName^ < `Parent^
+  `cursor^
+end
+
+
 XPT cld hint=class\ ..\ <\ DelegateClass\ ..\ end
 XSET ClassName.post=RubyCamelCase()
 XSET ParentClass.post=RubyCamelCase()
@@ -634,14 +642,6 @@ XSET match=m
 sub(/`pattern^/) { |`match^| `cursor^ }
 
 
-XPT subcl hint=class\ ..\ <\ ..\ end
-XSET ClassName.post=RubyCamelCase()
-XSET Parent.post=RubyCamelCase()
-class `ClassName^ < `Parent^
-  `cursor^
-end
-
-
 XPT tas hint=Rake\ Task
 XSET task name|post=RubySnakeCase()
 XSET taskn...|post=, :`task^`, `taskn...^
@@ -747,3 +747,7 @@ XPT y syn=comment hint=:yields:
 XPT zip hint=zip\\(..)\ {\ |..|\ ..\ }
 XSET row=row
 zip(`enum^) { |`row^| `cursor^ }
+
+XPT h hint=hash :key => :value
+:`key^ => `cursor^
+

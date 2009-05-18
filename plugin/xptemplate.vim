@@ -1876,8 +1876,7 @@ fun! s:InitItem() " {{{
 
             if obj.action == 'expandTmpl' && has_key( obj, 'tmplName' )
                 call s:Replace(s:Xtl(xpos.editpos), s:Xbr(xpos.editpos), '')
-                call XPTemplateStart(0, {'startPos' : getpos(".")[1:2], 'tmplName' : obj.tmplName})
-                return '' " no post action, just stay in insert mode 
+                return XPTemplateStart(0, {'startPos' : getpos(".")[1:2], 'tmplName' : obj.tmplName})
 
             else " other action
 

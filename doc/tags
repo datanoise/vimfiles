@@ -617,6 +617,7 @@ g:xptemplate_show_stack	xptemplate.txt	/*g:xptemplate_show_stack*
 g:xptemplate_strip_left	xptemplate.txt	/*g:xptemplate_strip_left*
 g:xptemplate_to_right	xptemplate.txt	/*g:xptemplate_to_right*
 g:xptemplate_vars	xptemplate.txt	/*g:xptemplate_vars*
+greplace.txt	greplace.txt	/*greplace.txt*
 i_CTRL-G_S	surround.txt	/*i_CTRL-G_S*
 i_CTRL-G_s	surround.txt	/*i_CTRL-G_s*
 i_CTRL-\	xptemplate.txt	/*i_CTRL-\\*

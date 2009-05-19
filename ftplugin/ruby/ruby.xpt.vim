@@ -97,7 +97,7 @@ fun! s:f.RubyAssertPopup() "{{{
   return sort(list, 'RubyAssertPopupSort')
 endfunction "}}}
 
-fun! RubyAssertMethod() "{{{
+fun! s:f.RubyAssertMethod() "{{{
   let v = self.V()
   if has_key(s:assert_map, v)
     return v . s:assert_map[v]

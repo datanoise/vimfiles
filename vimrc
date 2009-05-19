@@ -246,7 +246,7 @@ function MyTabOrCompletion()
   endif
 endfunction
 inoremap <silent> <tab> <c-r>=MyTabOrCompletion()<cr>
-inoremap <c-\> <c-^>
+inoremap <c-_> <c-^>
 
 au FileType help nnoremap <buffer> q :bd<CR>
 au FileType html nmap <silent> <D-r> :sil !open %<cr>

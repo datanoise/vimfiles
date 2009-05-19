@@ -53,7 +53,7 @@ fun! s:f.RubyEachBrace() "{{{
 endfunction "}}}
 
 fun! s:f.RubyEachPair() "{{{
-  let v = s:f.R('each_what')
+  let v = self.R('each_what')
   if v =~# 'each_pair'
     return '`el1^, `el2^'
   else
@@ -116,7 +116,7 @@ fun! s:f.RubyBlockArgs() "{{{
   if v == ''
     return ''
   else
-    return ' |' . s:f.S(s:f.S(v,"^ ", ''), "|", "", 'g') . "`, `arg..^ExpandIfNotEmpty(', ', 'arg..')^^" . '|'
+    return ' |' . self.S(self.S(v,"^ ", ''), "|", "", 'g') . "`, `arg..^ExpandIfNotEmpty(', ', 'arg..')^^" . '|'
   endif 
 endfunction "}}}
 
@@ -125,7 +125,7 @@ fun! s:f.RubyMethodArgs() "{{{
   if v == ''
     return ''
   else
-    return '(' . s:f.S(v, "\[(\|)\]","") . "`, `arg..^ExpandIfNotEmpty(', ', 'arg..')^^" . ')'
+    return '(' . self.S(v, "\[(\|)\]","") . "`, `arg..^ExpandIfNotEmpty(', ', 'arg..')^^" . ')'
   endif 
 endfunction "}}}
 

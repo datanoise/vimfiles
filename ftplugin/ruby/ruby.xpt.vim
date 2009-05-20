@@ -85,7 +85,7 @@ let s:assert_map = {
       \}
 
 
-fun! RubyAssertPopupSort(a, b)
+fun! s:RubyAssertPopupSort(a, b)
   return a:a.word == a:b.word ? 0 : a:a.word < a:b.word ? -1 : 1
 endfunction
 
@@ -94,7 +94,7 @@ fun! s:f.RubyAssertPopup() "{{{
   for [k, v] in items(s:assert_map)
     let list += [{ 'word' : k, 'menu' : 'assert_' . k . substitute(v, '`.\{-}^', '..', 'g') }]
   endfor
-  return sort(list, 'RubyAssertPopupSort')
+  return sort(list, 's:RubyAssertPopupSort')
 endfunction "}}}
 
 fun! s:f.RubyAssertMethod() "{{{

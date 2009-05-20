@@ -345,7 +345,7 @@ end
 
 XPT clstr hint=..\ =\ Struct.new\ ...
 XSETm do...|post= do
-`cursor^
+  `cursor^
 end
 XSETm END
 XSET ClassName|post=RubyCamelCase()
@@ -368,7 +368,7 @@ XPT def hint=def\ ..\ end
 XSET method|post=RubySnakeCase()
 XSET arg..|post=RepeatInsideEdges(', ')
 def `method^`(`arg..`)^
-`cursor^
+  `cursor^
 end
 
 
@@ -383,7 +383,7 @@ def_delegators :`del obj^, :`del methods^
 XPT defi hint=def\ initialize\ ..\ end
 XSET arg..|post=RepeatInsideEdges(', ')
 def initialize`(`arg..`)^
-`cursor^
+  `cursor^
 end
 
 
@@ -397,7 +397,7 @@ XPT defs hint=def\ self...\ end
 XSET method.post=RubySnakeCase()
 XSET arg..|post=RepeatInsideEdges(', ')
 def self.`method^`(`arg..`)^
-`cursor^
+  `cursor^
 end
 
 
@@ -429,7 +429,7 @@ Dir.glob('`dir^') { |`f^| `cursor^ }
 XPT do hint=do\ |..|\ ..\ end
 XSET arg..|post=RepeatInsideEdges(', ')
 do` |`arg..`|^
-`^
+  `^
 end
 
 
@@ -498,7 +498,7 @@ Hash.new { |`hash^,`key^| `hash^[`key^] = `cursor^ }
 XPT if hint=if\ ..\ elsif\ ..\ else\ ..\ end
 XSETm else...|post=
 else
-`cursor^XSETm END
+  `cursor^XSETm END
 XSETm elsif...|post=
 elsif `boolean exp^
   `block^`
@@ -557,7 +557,7 @@ min { |`element1^, `element2^| `cursor^ }
 XPT mod hint=module\ ..\ ..\ end
 XSET module name|post=RubyCamelCase()
 module `module name^
-`cursor^
+  `cursor^
 end
 
 
@@ -668,7 +668,7 @@ XSET task name|post=RubySnakeCase()
 XSET dep..|post=RepeatInsideEdges(', :')
 desc "`task description^"
 task :`task name^` => [:`dep..`]^ do
-`cursor^
+  `cursor^
 end
 
 
@@ -762,6 +762,7 @@ XPT y syn=comment hint=:yields:
 XPT zip hint=zip\\(..)\ {\ |..|\ ..\ }
 XSET row=row
 zip(`enum^) { |`row^| `cursor^ }
+
 
 XPT h hint=hash :key => :value
 :`key^ => `cursor^

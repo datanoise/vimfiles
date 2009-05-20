@@ -38,9 +38,19 @@ endfunction
 " ================================= Snippets ===================================
 XPTemplateDef
 
-XPT all  hint=stl\ begin..end
+XPT all  hint=...begin,\ ...end,
 `v^.begin(), `v^.end(), `cursor^
  
+
+XPT vector hint=std::vector<..>\ ..;
+std::vector<`type^> `var^;
+`cursor^
+
+
+XPT map hint=std::map<..,..>\ ..;
+std::map<`typeKey^,`val^>   `name^;
+`cursor^
+
 
 XPT class   hint=class+ctor
 class `className^
@@ -66,7 +76,7 @@ private:
 `className^::`className^( const `className^ &cpy )
 {
 }
-
+..XPT
 
 XPT fun=..\ ..\ (..)
 `int^ `name^(`_^^)
@@ -75,17 +85,12 @@ XPT fun=..\ ..\ (..)
 }
 
 
-XPT inf hint=open\ input.txt\ and\ iitr
-ifstream inf("`input.txt^",ios_base::in);
-istreambuf_iterator `string^ iitr(`inf^);
-
-
 XPT namespace hint=namespace\ {}
 namespace `name^
 {
     `cursor^
 }
-
+..XPT
 
 XPT main hint=main\ (argc,\ argv)
 int main(int argc, char *argv[])
@@ -93,23 +98,6 @@ int main(int argc, char *argv[])
     `cursor^
     return 0;
 }
-
-
-"all STL headers and namespace std
-XPT stl hint=STL\ headers\ and\ namespace\ std
-#include <iostream>
-#include <ios>
-#include <fstream>
-#include <iterator>  //required for istream_iterator
-#include <list>
-#include <vector>
-#include <algorithm>
-#include <cassert>
-#include <string>
-#include <stdexcept> //-- for out_of_range definition
-
-using namespace std;
-
 
 XPT templateclass   hint=template\ <>\ class
 template
@@ -140,7 +128,7 @@ template <`templateParam^>
 `className^<`_^cleanTempl(R('templateParam'))^^>::`className^( const `className^ &cpy )
 {
 }
-
+..XPT
 
 XPT try hint=try\ ...\ catch...
 try

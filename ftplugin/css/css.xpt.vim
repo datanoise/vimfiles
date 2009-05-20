@@ -14,24 +14,9 @@ XPTinclude
     \ _common/common
 
 " ========================= Function and Variables =============================
-fun! s:f.Trim() "{{{
-   s/ \s\+/ /eg
-   s/\s\+;/;/e
-endfunction "}}}
 " ================================= Snippets ===================================
 
 XPTemplateDef 
-
-
-XPT border2 hint=border
-XSET thick=Choose([' ','thin', 'thick', 'medium'])
-XSET thick|post=SV('^\s*$', '', 'g')
-XSET kind=Choose([' ','none', 'hidden', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset'])
-XSET kind|post=SV('^\s*$', '', 'g')
-XSET color=Choose([' ','rgb(', '#', 'transparent'])
-XSET color|post=SV('^\s*$', '', 'g')
-border:` `thick^` `kind^` `color^;
-
 XPT backrep hint=background-repeat
 XSET rep=Choose([' ','repeat', 'repeat-x','repeat-y','no-repeat'])
 background-repeat `rep^;
@@ -44,39 +29,55 @@ azimuth: `azim^;
 
 XPT backpos hint=background-position
 XSET horiz=Choose([' ','left', 'center', 'right'])
+XSET horiz|post=SV('^\s*$', '', 'g')
 XSET vert=Choose([' ','top', 'center', 'bottom'])
-background-position: `vert^ `horiz^;
+XSET vert|post=SV('^\s*$', '', 'g')
+background-position:` `vert`^` `horiz`^;
 
 XPT border hint=border
 XSET thick=Choose([' ','thin', 'thick', 'medium'])
+XSET thick|post=SV('^\s*$', '', 'g')
 XSET kind=Choose([' ','none', 'hidden', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset'])
+XSET kind|post=SV('^\s*$', '', 'g')
 XSET color=Choose([' ','rgb(', '#', 'transparent'])
-border: `thick^ `kind^ `color^;
-
+XSET color|post=SV('^\s*$', '', 'g')
+border:` `thick`^`kind^` `color^; 
 
 XPT bordertop hint=border-top
 XSET thick=Choose([' ','thin', 'thick', 'medium'])
+XSET thick|post=SV('^\s*$', '', 'g')
 XSET kind=Choose([' ','none', 'hidden', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset'])
+XSET kind|post=SV('^\s*$', '', 'g')
 XSET color=Choose([' ','rgb(', '#', 'transparent'])
-border-top: `thick^ `kind^ `color^;
+XSET color|post=SV('^\s*$', '', 'g')
+border-top:` `thick`^` `kind`^` `color`^;
 
 XPT borderbottom hint=border-bottom
 XSET thick=Choose([' ','thin', 'thick', 'medium'])
+XSET thick|post=SV('^\s*$', '', 'g')
 XSET kind=Choose([' ','none', 'hidden', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset'])
+XSET kind|post=SV('^\s*$', '', 'g')
 XSET color=Choose([' ','rgb(', '#', 'transparent'])
-border-bottom: `thick^ `kind^ `color^;
+XSET color|post=SV('^\s*$', '', 'g')
+border-bottom:` `thick`^` `kind`^` `color`^;
 
 XPT borderleft hint=border-left
 XSET thick=Choose([' ','thin', 'thick', 'medium'])
+XSET thick|post=SV('^\s*$', '', 'g')
 XSET kind=Choose([' ','none', 'hidden', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset'])
+XSET kind|post=SV('^\s*$', '', 'g')
 XSET color=Choose([' ','rgb(', '#', 'transparent'])
-border-left: `thick^ `kind^ `color^;
+XSET color|post=SV('^\s*$', '', 'g')
+border-left:` `thick`^` `kind`^` `color`^;
 
 XPT borderright hint=border-right
 XSET thick=Choose([' ','thin', 'thick', 'medium'])
+XSET thick|post=SV('^\s*$', '', 'g')
 XSET kind=Choose([' ','none', 'hidden', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset'])
+XSET kind|post=SV('^\s*$', '', 'g')
 XSET color=Choose([' ','rgb(', '#', 'transparent'])
-border-right: `thick^ `kind^ `color^;
+XSET color|post=SV('^\s*$', '', 'g')
+border-right:` `thick`^` `kind`^` `color`^;
 
 XPT backgroundattachment hint=background-attachment
 XSET selec=Choose([' ','scroll', 'fixed'])
@@ -215,9 +216,12 @@ font-weight: `selec^;
 
 XPT font hint=font
 XSET kind=Choose([' ','normal', 'italic', 'oblique', 'small-caps', 'bold', 'bolder', 'lighter'])
+XSET kind|post=SV('^\s*$', '', 'g')
 XSET size=Choose([' ','xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large', 'larger', 'smaller'])
+XSET size|post=SV('^\s*$', '', 'g')
 XSET font=Choose([' ','sans-serif', 'serif', 'monospace', 'cursive', 'fantasy', 'caption', 'icon', 'menu', 'message-box', 'small-caption', 'status-bar'])
-font: `kind^ `size^ `font^;
+XSET font|post=SV('^\s*$', '', 'g')
+font:` `kind`^` `size`^` `font`^;
 
 
 XPT letterspacing hint=letter-spacing
@@ -271,9 +275,12 @@ min-width: `selec^;
 
 XPT outline hint=outline
 XSET color=Choose([' ','rgb(', '#'])
+XSET color|post=SV('^\s*$', '', 'g')
 XSET style=Choose([' ','none', 'hidden', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset'])
+XSET style|post=SV('^\s*$', '', 'g')
 XSET width=Choose([' ','thin', 'thick', 'medium'])
-outline: `width^ `style^ `color^;
+XSET width|post=SV('^\s*$', '', 'g')
+outline:` `width`^` `style`^` `color`^;
 
 XPT outlinecolor hint=outline-color
 XSET selec=Choose([' ','rgb(', '#'])

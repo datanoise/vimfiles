@@ -157,5 +157,5 @@ function! FuzzyFinderTextMateLauncher(initial_text, partial_matching)
     call InstantiateTextMateMode()
     let s:loaded = 1
   endif
-  call g:FuzzyFinderMode.TextMate.launch(a:initial_text, a:partial_matching)
+  call g:FuzzyFinderMode.TextMate.launch_base(a:initial_text, a:partial_matching)
 endfunction

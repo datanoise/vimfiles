@@ -356,10 +356,6 @@ XSET attr..|post=RepeatInsideEdges(', :')
 XPT col hint=collect\ {\ ..\ }
 collect { |`obj^| `cursor^ }
 
-XPT comma hint=..,\ .., \...
-XSET arg..|post=ExpandIfNotEmpty(', ', 'arg..')
-`arg..^
-
 XPT deec hint=Deep\ copy
 Marshal.load(Marshal.dump(`obj^))
 

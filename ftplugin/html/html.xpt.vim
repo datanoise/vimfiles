@@ -104,9 +104,6 @@ XPT html hint=<html><head>..<head><body>...
     <link rel="stylesheet" type="text/css" href="" />
     <style></style>
     <title>`title^E('%:r')^</title>
-    <script language="javascript" type="text/javascript">
-      <!-- -->
-    </script>
   </head>
   <body>
     `cursor^
@@ -150,3 +147,7 @@ XPT a_ hint=<a\ href="">\ SEL\ </a>
 <a href="">`wrapped^</a>
 
 
+XPT input hint=<input\ type="">\ VAL\ </input>
+XSET type=Choose(["text", "submit", "hidden", "button"])
+XSET id...|post= id="`^"
+<input type="`type^" name="`name^" value="`value^"`id...^>

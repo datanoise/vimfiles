@@ -60,6 +60,7 @@ au FileType vim call DeletePair('"')
 au FileType css call AddPair(':', ';', 1)
 " au FileType ruby call AddPair('/', '')
 au FileType ruby call AddPair('\|', '')
+au FileType xpt.vim call AddPair('`', '^')
 
 " Only autocompletes if no characters are in front of the cursor.
 fun s:OpenPair(char)

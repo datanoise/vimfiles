@@ -148,6 +148,6 @@ XPT a_ hint=<a\ href="">\ SEL\ </a>
 
 
 XPT input hint=<input\ type="">\ VAL\ </input>
-XSET type=Choose(["text", "submit", "hidden", "button"])
+XSET type=Choose(["text", "submit", "hidden", "button", "file"])
 XSET id...|post= id="`^"
 <input type="`type^" name="`name^" value="`value^"`id...^>

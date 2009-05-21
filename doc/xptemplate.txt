@@ -79,7 +79,7 @@
 		lang		: 16
 		sub		: 8
 		personal	: 0
-<	Default priority is "lang" or 0. 
+<	Default priority is "lang" or 16. 
 	
 	You can set priority for each template by using |xpt-priority-format|.
 	Or set priority for all templates in current file with
@@ -727,6 +727,17 @@ g:XPTfuncs()   g:XPTvars()
 
 							     *xpt-changes-log*
 : > <
+==== 0.3.7.17 ====
+
+Fixed:2009 May 20	redraw only for language indenting depending on syntax
+Fixed:2009 May 18	unescape \XPT in template body
+Added:2009 May 18	much more nice template popup hint : longest match, <tab> to trigger template
+Fixed:2009 May 17	escaping moved to post-filter phase
+Fixed:2009 May 17	select none when popup shown
+Fixed:2009 May 17	bug of first line indent
+Fixed:2009 May 17	bug of predefined not applying if snippet contains $BRACKETSTYLE.
+==== 0.3.7.15 ====
+Fixed:2009 May 17	bug of nowrapscan setting causing unexpected expanding.
 ==== 0.3.7.14 ====
 Fixed:2009 May 17	indent problem with perl. caused by perl indent expression.
 Fixed:2009 May 16	fix indent for default value and post filter

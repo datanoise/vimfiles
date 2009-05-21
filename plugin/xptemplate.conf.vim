@@ -33,6 +33,7 @@ call s:Default('g:xptemplate_fix',          1)
 call s:Default('g:xptemplate_vars',         '')
 call s:Default('g:xptemplate_hl',           1)
 
+call s:Default('g:xpt_post_action',           '')
 let g:XPTpvs = {}
 
 
@@ -52,11 +53,24 @@ endif
 let s:oldcpo = &cpo
 " enable <key> encoding
 set cpo-=<
+
+let g:XPTkeys = {
+      \ 'trigger' : "<C-r>=XPTemplateStart(0)<cr>", 
+      \ 'wrapTrigger' : "\"0di<C-r>=XPTemplatePreWrap(@0)<cr>", 
+      \ 'incSelTrigger' : "<C-c>`>a<C-r>=XPTemplateStart(0)<cr>", 
+      \ 'excSelTrigger' : "<C-c>`>i<C-r>=XPTemplateStart(0)<cr>", 
+      \ }
+
+inoremap <Plug>XPT.trigger <C-r>=XPTemplateStart(0)<cr>
+xnoremap <Plug>XPT.wrap.trigger "0di<C-r>=XPTemplatePreWrap(@0)<cr>
+
 exe "inoremap ".g:xptemplate_key." <C-r>=XPTemplateStart(0)<cr>"
 exe "xnoremap ".g:xptemplate_key." \"0di<C-r>=XPTemplatePreWrap(@0)<cr>"
 if &sel == 'inclusive'
+  xnoremap <Plug>XPT.selection.trigger <C-c>`>a<C-r>=XPTemplateStart(0)<cr>
   exe "snoremap ".g:xptemplate_key." <C-c>`>a<C-r>=XPTemplateStart(0)<cr>"
 else
+  xnoremap <Plug>XPT.selection.trigger <C-c>`>i<C-r>=XPTemplateStart(0)<cr>
   exe "snoremap ".g:xptemplate_key." <C-c>`>i<C-r>=XPTemplateStart(0)<cr>"
 endif
 let &cpo = s:oldcpo

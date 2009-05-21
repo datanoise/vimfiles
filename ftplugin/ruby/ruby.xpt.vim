@@ -250,7 +250,7 @@ attr`what^ :`attr..^
 XPT begin hint=begin\ ..\ rescue\ ..\ else\ ..\ end
 XSETm rescue...|post=
 rescue `exception^` => `e^
-`block^`
+  `block^`
 `rescue...^XSETm END
 XSETm else...|post=
 else

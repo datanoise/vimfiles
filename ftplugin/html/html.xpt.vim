@@ -34,6 +34,16 @@ fun! s:f.createTable(...) "{{{
 
 endfunction "}}}
 
+fun! s:f.makeIdent(ctx, ...) "{{{
+  return substitute(substitute(a:ctx, "[A-Z]", "\\l\\0", "g"), "\\s\\+", "_", "g")
+endfun "}}}
+
+fun! s:f.makeLabel(ctx, ...) "{{{
+  if self.V() != "_"
+    return self.V()
+  endif
+  return substitute(substitute(a:ctx, "_\\(.\\)", " \\U\\1", "g"), "^\\(.\\)", "\\U\\1", "g")
+endfun "}}}
 
 " ================================= Snippets ===================================
 call XPTemplatePriority('lang')
@@ -101,8 +111,7 @@ XPT html hint=<html><head>..<head><body>...
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=`encoding^utf-8^"/>
-    <link rel="stylesheet" type="text/css" href="" />
-    <style></style>
+    <link rel="stylesheet" type="text/css" href="`^" />
     <title>`title^E('%:r')^</title>
   </head>
   <body>
@@ -151,3 +160,22 @@ XPT input hint=<input\ type="">\ VAL\ </input>
 XSET type=Choose(["text", "submit", "hidden", "button", "file"])
 XSET id...|post= id="`^"
 <input type="`type^" name="`name^" value="`value^"`id...^>
+
+
+XPT style hint=<style>...</style>
+XSET media=Choose(["screen", "print", "all", "handheld"])
+<style type="text/css" media="`media^">
+  `cursor^
+</style>
+
+
+XPT fieldset hint=<fieldset>...</fieldset>
+XSET class...|post= class="`^R("id")^"
+<fieldset id="`id^"`class...^>
+  <legend>`_^makeLabel(R("id"))^^</legend>
+
+  `cursor^
+</fieldset>
+
+XPT link
+<link rel="`stylesheet^" href="`path^/stylesheets/master.css^" type="text/css" media="`media^screen^" title="`title^no title^" charset="`charset^utf-8^" />

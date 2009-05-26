@@ -216,7 +216,6 @@ nnoremap z- 1z=
 nnoremap [l [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
 nnoremap <F2> <C-w><C-w>
 nnoremap <F4> :sil make %<cr><c-l>:cc<cr>
-nnoremap <D-u> :ToggleTransparancy<cr>
 function! SwitchPrevBuf()
   if bufloaded(bufname("#")) != 0
     exec "b#"
@@ -260,16 +259,6 @@ func! SynName()
   echo synIDattr(synID(line('.'), col('.'), 0), 'name')
 endfunc
 command! SynName :call SynName()
-if exists('&transparency')
-  function! ToggleTransparancy()
-    if &transparency != 0
-      set transparency&
-    else
-      set transparency=10
-    endif
-  endfunction
-  command! ToggleTransparancy call ToggleTransparancy()
-endif
 
 
 " Section: Plugin settings {{{1

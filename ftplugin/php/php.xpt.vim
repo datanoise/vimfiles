@@ -75,4 +75,7 @@ interface `interfaceName^
     `cursor^
 }
 
-
+XPT php hint=php block
+<?php
+  `cursor^
+?>

@@ -43,13 +43,6 @@ set smartcase
 
 " status line options {{{2
 set laststatus=2
-function! GetColorSchemeIdicator()
-  if exists("g:colors_name")
-    return '[cs:'.g:colors_name.']'
-  else
-    return ""
-  endif
-endfunction
 function! GetCurDir()
   let result = substitute(getcwd(), '^'.$HOME, '~', '')
   let result = substitute(result, '^.\+\ze.\{30,}', '<', '')
@@ -239,10 +232,10 @@ inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:
 " keyword completion on <TAB>
 function MyTabOrCompletion()
   let col = col('.')-1
-  if !col || getline('.')[col-1] !~ '\k'
-    return "\<tab>"
-  else
+  if pumvisible() || col && getline('.')[col-1] =~ '\k'
     return "\<C-N>"
+  else
+    return "\<tab>"
   endif
 endfunction
 inoremap <silent> <tab> <c-r>=MyTabOrCompletion()<cr>

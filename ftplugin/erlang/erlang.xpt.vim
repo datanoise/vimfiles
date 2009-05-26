@@ -15,6 +15,16 @@ XPTinclude
 " ================================= Snippets ===================================
 XPTemplateDef
 
+
+XPT mod hint=-module\ ..
+XSET name=fileRoot()
+-module( `name^ ).
+
+
+XPT exp hint=-export\ ..
+-export( [`func^/`arity^] ).
+
+
 XPT inc hint=-include\ ..
 -include( \"`cursor^^.hrl\").
 
@@ -48,42 +58,41 @@ XPT record hint=-record\ ..,{..}
 
 XPT if hint=if\ ..\ ->\ ..\ end
 if
-   `cond^ ->
-       `body^`...^;
-   `cond2^ ->
-       `bodyn^`...^
+ `cond^ ->
+   `body^`...^;
+ `cond2^ ->
+   `bodyn^`...^
 end `cursor^
 
 
 XPT case hint=case\ ..\ of\ ..\ ->\ ..\ end
 case `matched^ of
-   `pattern^ ->
-       `body^`...^;
-   `patternn^ ->
-       `bodyn^`...^
+ `pattern^ ->
+   `body^`...^;
+ `patternn^ ->
+   `bodyn^`...^
 end `cursor^
 
 
 XPT rcv hint=receive\ ..\ ->\ ..\ end
 receive
-   `pattern^ ->
-       `body^ `...^;
-   `patternn^ ->
-       `bodyn^`...^`after...^
+ `pattern^ ->
+   `body^ `...^;
+ `patternn^ ->
+   `bodyn^`...^`after...^
 after
-    \`afterBody\^^^
+  \`afterBody\^^^
 end
-
 
 
 XPT receive hint=receive\ ..\ ->\ ..\ end
 receive
-   `pattern^ ->
-       `body^ `...^;
-   `patternn^ ->
-       `bodyn^`...^`after...^
+  `pattern^ ->
+    `body^ `...^;
+  `patternn^ ->
+    `bodyn^`...^`after...^
 after
-    \`afterBody\^^^
+  \`afterBody\^^^
 end
 
 
@@ -96,32 +105,32 @@ end `cursor^
 XPT try hint=try\ ..\ catch\ ..\ end
 try `what^
 catch
-    `excep^ -> `toRet^ `...^;
-    `except^ -> `toRet^`...^
+  `excep^ -> `toRet^ `...^;
+  `except^ -> `toRet^`...^
 `after...^after
-    \`afterBody\^^^
+  \`afterBody\^^^
 end `cursor^
 
 
 XPT tryof hint=try\ ..\ of\ ..
 try `what^ of
-   `pattern^ ->
-       `body^ `...0^;
-   `patternn^ ->
-       `bodyn^`...0^
+  `pattern^ ->
+    `body^ `...0^;
+  `patternn^ ->
+    `bodyn^`...0^
 catch
-    `excep^ -> `toRet^ `...1^;
-    `except^ -> `toRet^`...1^
+   `excep^ -> `toRet^ `...1^;
+   `except^ -> `toRet^`...1^
 `after...^after
-    \`afterBody\^^^
+   \`afterBody\^^^
 end `cursor^
 
 
-XPT function hint=f\ \(\ ..\ \)\ ->\ ..
+XPT fn hint=f\ \(\ ..\ \)\ ->\ ..
 `funName^ ( `args0^ ) `_^^ ->
-    `body0^ `...^;
+  `body0^ `...^;
 `name^R('funName')^ ( `argsn^ ) `_^^ ->
-    `bodyn^`...^
+  `bodyn^`...^
 .
 
 

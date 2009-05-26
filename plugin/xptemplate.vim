@@ -1,6 +1,6 @@
 " XPTEMPLATE ENGIE:
 "   code template engine
-" VERSION: 0.3.7.17
+" VERSION: 0.3.7.20
 " BY: drdr.xp | drdr.xp@gmail.com
 "
 " MARK USED:
@@ -17,6 +17,12 @@
 " "}}}
 "
 " TODOLIST: "{{{
+" TODO match snippet names from middle
+" TODO popup plugin
+" TODO ruby snippet:cli indent problem
+" TODO crash me!
+" TODO use i^gu to protect template
+" TODO snippets bundle and bundle selection
 " TODO crash on windows with command-history window
 " -------8<-------------------------------------
 " continuing in CursorHold Auto commands for "*"
@@ -32,15 +38,17 @@
 " -------------------------------->8-----------------
 " TODO test more : char before snippet, char after, last cursor position,
 " expected mode() when cursor stopped to wait for input
-" TODO improve item popup
 " TODO -----------------0.4--------------------
+" TODO protect register while template rendering
 " TODO implement wrapping in more natural way. nested maybe.
 " TODO like cursor, another item to finish template inmmediately is needed. the "finish" item
 " TODO hidden template or used only internally.
 " TODO 'completefunc' to re-popup item menu. Or using <tab> to force popup showing
 " TODO snippets bundle and bundle selection
 " TODO block context check
-" TODO $BRACKETSTYLE caused indent problem
+" TODO $BRACKETSTYLE caused indent problem. Readjust \n
+" TODO eval default value in-time
+" TODO expandable has to be adjuested
 " TODO in windows & in select mode to trigger wrapped or normal?
 " TODO auto crash
 " TODO nested repetition in expandable
@@ -151,6 +159,13 @@ fun! s:SelectAction() "{{{
     endif
 endfunction "}}}
 
+" which letter can be used in template name other than 'iskeyword'
+fun! XPTemplateKeyword(val) "{{{
+    let x = s:Data()
+
+    let x.keyword = '\[' . escape(a:val, '\]') . ']'
+endfunction "}}}
+
 fun! s:XPTemplateInit( filename, ... ) "{{{
     if !exists( 'b:xpt_loaded' )
         let b:xpt_loaded = {}
@@ -166,13 +181,15 @@ fun! s:XPTemplateInit( filename, ... ) "{{{
 
     for pair in a:000
 
-        let kv = split( pair, '=' )
+        " protect last '='
+        let kv = split( pair . ';', '=' )
         if len( kv ) == 1
             let kv += [ '' ]
         endif
 
         let key = kv[ 0 ]
-        let val = join( kv[ 1 : ], '=' )
+        " remove last ';'
+        let val = join( kv[ 1 : ], '=' )[ : -2 ]
 
 
         if key =~ 'prio\%[rity]'
@@ -183,6 +200,8 @@ fun! s:XPTemplateInit( filename, ... ) "{{{
 
         elseif key =~ 'indent'
             call XPTemplateIndent(val)
+        elseif key =~ 'keyword'
+            call XPTemplateKeyword(val)
 
         endif
 
@@ -345,31 +364,47 @@ fun! XPTemplate(name, str_or_ctx, ...) " {{{
 
     let name = a:name
 
-    let istr = matchstr(name, '=[^!=]*')
-    let name = substitute(name, '=[^!=]*', '', 'g')
-
     let idt = deepcopy(x.bufsetting.indent)
-    if istr != ""
-        call s:ParseIndent(idt, istr)
-    elseif has_key(ctx, 'indent')
-        call s:ParseIndent(idt, ctx.indent)
-    endif
+    " if '=' is a keyword, ignore indent setting
+    if '=' !~ '\V' . x.keyword
+        let istr = matchstr(name, '=[^!=]*')
+        let name = substitute(name, '=[^!=]*', '', 'g')
 
-
-
-    " priority 9999 is the lowest 
-    let pstr = matchstr(name, '\V!\zs\.\+\$')
-
-    if pstr != ""
-        let override_priority = s:ParsePriority(pstr)
-    elseif has_key(ctx, 'priority')
-        let override_priority = s:ParsePriority(ctx.priority)
+        if istr != ""
+            call s:ParseIndent(idt, istr)
+        elseif has_key(ctx, 'indent')
+            call s:ParseIndent(idt, ctx.indent)
+        endif
     else
-        " let override_priority = s:ParsePriority("")
-        let override_priority = x.bufsetting.priority
+        if has_key(ctx, 'indent')
+            call s:ParseIndent(idt, ctx.indent)
+        endif
     endif
 
-    let name = pstr == "" ? name : matchstr(name, '[^!]*\ze!')
+
+
+    if '!' !~ '\V' . x.keyword
+        " priority 9999 is the lowest 
+        let pstr = matchstr(name, '\V!\zs\.\+\$')
+
+        if pstr != ""
+            let override_priority = s:ParsePriority(pstr)
+        elseif has_key(ctx, 'priority')
+            let override_priority = s:ParsePriority(ctx.priority)
+        else
+            let override_priority = x.bufsetting.priority
+        endif
+
+        let name = pstr == "" ? name : matchstr(name, '[^!]*\ze!')
+
+    else
+        if has_key(ctx, 'priority')
+            let override_priority = s:ParsePriority(ctx.priority)
+        else
+            let override_priority = x.bufsetting.priority
+        endif
+    endif
+
 
 
     let hint = s:GetHint(ctx)
@@ -388,14 +423,23 @@ fun! XPTemplate(name, str_or_ctx, ...) " {{{
 
         " update longest map
 
-        let node = xt[name].wrapped ? x.wrappedNameTree : x.nameTree
+        let tree = xt[name].wrapped ? x.wrappedNameTree : x.nameTree
+        let ori_node = tree.ori
+        let lower_node = tree.lower
 
         for char in split(name, '\s*')
-            if !has_key( node, char )
-                let node[ char ] = { 'num' : 0 }
-                let node.num += 1
+            let lower = substitute(char, '.', '\l&', 'g')
+            if !has_key( ori_node, char )
+                let ori_node[ char ] = { 'num' : 0 }
+                let ori_node.num += 1
             endif
-            let node = node[ char ]
+            let ori_node = ori_node[ char ]
+
+            if !has_key( lower_node, lower )
+                let lower_node[ lower ] = { 'num' : 0 }
+                let lower_node.num += 1
+            endif
+            let lower_node = lower_node[ lower ]
         endfor
 
     endif
@@ -416,9 +460,13 @@ fun! s:XPTemplateParse(lines) "{{{
 
     let ctx = {}
     for v in p
-        let nv = split(v, '=')
+        " protect last '='
+        let nv = split(v . ';', '=')
+
         if len(nv) > 1
-            let ctx[nv[0]] = substitute(join(nv[1:],'='), '\\\(.\)', '\1', 'g')
+            " remore last ';'
+            let ctx[nv[0]] = substitute( join( nv[1:],'=' )[ : -2 ], '\\\(.\)', '\1', 'g' )
+
         endif
     endfor
 
@@ -683,112 +731,126 @@ fun! XPTemplatePreWrap(wrap) "{{{
 endfunction "}}}
 
 fun! XPTemplateStart(pos, ...) " {{{
-    let x = s:Data()
+    let reg = []
+    for idx in range(10)
+        exe 'call add(reg, @'.idx.')'
+    endfor
+    try
+        let x = s:Data()
 
-    if a:0 == 1 " exact template trigger, without depending on any input
-        let exact = 1
+        let popupOnly = ( a:0 == 1 ) && ( has_key( a:1, 'popupOnly' ) ) && a:1.popupOnly
 
-        let [lnn, startColumn] = a:1.startPos
-        let tmplname = a:1.tmplName
 
-        let cursorColumn = startColumn
+        if a:0 == 1 &&  type(a:1) == type({}) && has_key( a:1, 'tmplName' )  " exact template trigger, without depending on any input
+            let exact = 1
 
-        call cursor(lnn, startColumn)
+            let [lnn, startColumn] = a:1.startPos
+            let tmplname = a:1.tmplName
 
-    else " input mode
-        let exact = 0
+            let cursorColumn = startColumn
 
-        let cursorColumn = col(".")
+            call cursor(lnn, startColumn)
 
-        if x.wrapStartPos
+        else " input mode
+            let exact = 0
 
-            let lnn = line(".")
-            let startColumn = x.wrapStartPos
+            let cursorColumn = col(".")
 
-        else 
+            if x.wrapStartPos
 
-            let [lnn, startColumn] = searchpos('\<\w\{-}\%#', "bn")
+                let lnn = line(".")
+                let startColumn = x.wrapStartPos
 
-            if lnn == 0 || startColumn == 0
-                let [lnn, startColumn] = [line("."), col(".")]
+            else 
+
+                " TODO test escaping
+                let [lnn, startColumn] = searchpos('\V\%(\w\|'. x.keyword .'\)\+\%#', "bn")
+
+                if lnn == 0 || startColumn == 0
+                    let [lnn, startColumn] = [line("."), col(".")]
+                endif
+
             endif
+
+            let tmplname = strpart(getline(lnn), startColumn-1, cursorColumn-startColumn)
 
         endif
 
-        let tmplname = strpart(getline(lnn), startColumn-1, cursorColumn-startColumn)
-
-    endif
-
-    let x.startColumn = startColumn
+        let x.startColumn = startColumn
 
 
-    let ppr = s:Popup(tmplname, startColumn)
+        let ppr = s:Popup(tmplname, startColumn, { 'popupOnly' : popupOnly })
 
-    if has_key(ppr, 'action')
-        " popup showing, bind helper keys 
-        call s:ApplyPopupKeys()
-        return ppr.action
-    endif
+        if has_key(ppr, 'action')
+            " popup showing, bind helper keys 
+            call s:ApplyPopupKeys()
+            return ppr.action
+        endif
 
-    call s:ClearPopupKeys()
+        call s:ClearPopupKeys()
 
-    let tmplname = ppr.name
+        let tmplname = ppr.name
 
 
-    if s:Ctx().processing 
-        call s:PushCtx()
-    endif
+        if s:Ctx().processing 
+            call s:PushCtx()
+        endif
 
 
 
-    " new context
-    let ctx = s:NewCtx()
+        " new context
+        let ctx = s:NewCtx()
 
-    let ctx.phase = 'inited'
+        let ctx.phase = 'inited'
 
-    let ctx.tmpl = x.tmpls[tmplname]
-
-
-    call s:PushSetting('&l:ve')
-    let &l:ve = "all"
-
-    " leave 1 char at last to avoid the bug when 'virtualedit' is not set with
-    " 'onemore'
-    call cursor(lnn, startColumn)
-    " let len = cursorColumn - startColumn - 1 " leave the last
-    let len = cursorColumn - startColumn
-    if len >= 1
-        exe "normal! " . len . 'x'
-    endif
-
-    call cursor(lnn, startColumn)
-
-    call s:RenderTemplate(lnn, startColumn, ctx.tmpl.tmpl)
-
-    call s:PopSetting()
+        let ctx.tmpl = x.tmpls[tmplname]
 
 
-    let ctx.phase = 'rendered'
-    let ctx.processing = 1
+        call s:PushSetting('&l:ve')
+        let &l:ve = "all"
 
-    " " remove the last
-    " call cursor(s:BR(x))
-    " normal! x 
+        " leave 1 char at last to avoid the bug when 'virtualedit' is not set with
+        " 'onemore'
+        call cursor(lnn, startColumn)
+        " let len = cursorColumn - startColumn - 1 " leave the last
+        let len = cursorColumn - startColumn
+        if len >= 1
+            exe "normal! " . len . 'x'
+        endif
 
-    " call s:TopTmplRange()
-    " silent! normal! gvzO
-    " let x.curctx.pos.tmplpos.r += 1
+        call cursor(lnn, startColumn)
 
-    if empty(x.stack)
-        call s:ApplyMap()
-    endif
+        call s:RenderTemplate(lnn, startColumn, ctx.tmpl.tmpl)
 
-    let x.wrap = ''
-    let x.wrapStartPos = 0
+        call s:PopSetting()
 
 
-    let action =  s:SelectNextItem(lnn, startColumn)
-    return action.g:xpt_post_action
+        let ctx.phase = 'rendered'
+        let ctx.processing = 1
+
+        " " remove the last
+        " call cursor(s:BR(x))
+        " normal! x 
+
+        " call s:TopTmplRange()
+        " silent! normal! gvzO
+        " let x.curctx.pos.tmplpos.r += 1
+
+        if empty(x.stack)
+            call s:ApplyMap()
+        endif
+
+        let x.wrap = ''
+        let x.wrapStartPos = 0
+
+
+        let action =  s:SelectNextItem(lnn, startColumn)
+        return action.g:xpt_post_action
+    finally
+        for idx in range(10)
+            exe 'let @'.idx.' = reg['.idx.']'
+        endfor
+    endtry
 
 endfunction " }}}
 
@@ -813,18 +875,32 @@ fun! s:ShortenTmplName() "{{{
         " return "\<bs>"
     " endif
 
+    let preaction = ""
+    if pumvisible()
+        let preaction = "\<C-y>"
+    endif
 
-    let node = x.wrapStartPos ? x.wrappedNameTree : x.nameTree
+    let tree = x.wrapStartPos ? x.wrappedNameTree : x.nameTree
+
 
 
     let startpos = x.startColumn
     let name = getline(".")[ startpos - 1 : col(".") - 1 - 1 ] " previous pos, index based on 0, remove last char at least
 
 
+
+
     if name == ''
         call s:ClearPopupKeys()
-        return "\<bs>"
+        return preaction . "\<bs>"
     endif
+
+    let ignoreCase = name !~# '\u'
+
+    let node = ignoreCase ? tree.lower : tree.ori
+
+
+
 
     let last = -1
     let i = 0
@@ -832,7 +908,7 @@ fun! s:ShortenTmplName() "{{{
 
         if !has_key(node, char) " should not happen, ignored
             call s:ClearPopupKeys()
-            return "\<bs>"
+            return preaction . "\<bs>"
         endif
 
 
@@ -844,7 +920,8 @@ fun! s:ShortenTmplName() "{{{
         let i += 1
     endfor
 
-    return repeat( "\<bs>", len(name) - 1 - last )
+
+    return preaction . repeat( "\<bs>", len(name) - 1 - last )
 
 
 endfunction "}}}
@@ -866,7 +943,9 @@ fun! s:ApplyPopupKeys() "{{{
 
     " exe 'inoremap <buffer> '.g:xptemplate_nav_next  ." <C-r>=XPTacceptTmplName(1)<cr>" . g:XPTkeys.trigger
     exe 'inoremap <buffer> '.g:xptemplate_nav_next  ." <space><bs>" . g:XPTkeys.trigger
-    exe "inoremap <buffer> <bs> <C-e><C-r>=<SID>ShortenTmplName()<cr>" . g:XPTkeys.trigger
+    exe "inoremap <buffer> <bs> <C-r>=<SID>ShortenTmplName()<cr>" . g:XPTkeys.popup
+    " exe "inoremap <buffer> <bs> <space><bs><C-r>=<SID>ShortenTmplName()<cr>" . g:XPTkeys.trigger
+    " exe "inoremap <buffer> <bs> <space><bs><C-y><bs>"
 
     let b:__xpt_tmpl_popup_map = 1
 
@@ -940,7 +1019,7 @@ fun! s:XPTemplateFinish(...) "{{{
 endfunction "}}}
 
 
-fun! s:LongestMatchOfPopup(list) "{{{
+fun! s:LongestMatchOfPopup(list, ignoreCase) "{{{
     let longest = ".*"
 
     for e in a:list
@@ -949,7 +1028,7 @@ fun! s:LongestMatchOfPopup(list) "{{{
         if longest == ".*"
             let longest  = key
         else
-            while key !~# '^\V' . escape(longest, '\') && len(longest) > 0
+            while key !~ '^\V' . ( a:ignoreCase ? '\c' : '\C' ) . escape(longest, '\') && len(longest) > 0
                 let longest = longest[ : -2 ] " remove one char
             endwhile
         endif
@@ -958,9 +1037,17 @@ fun! s:LongestMatchOfPopup(list) "{{{
     return longest == '.*' ? '' : longest
 endfunction "}}}
 
-fun! s:Popup(pref, coln) "{{{
+fun! s:Popup(pref, coln, ...) "{{{
 
     let x = s:Data()
+
+    let popupOption = { 'popupOnly' : 0 }
+    if a:0 == 1
+        call extend( popupOption, a:1, 'force' )
+    endif
+
+
+
     let cmpl=[]
     let cmpl2 = []
     let dic = x.tmpls
@@ -968,14 +1055,24 @@ fun! s:Popup(pref, coln) "{{{
     let ctxs = s:SynNameStack(line("."), a:coln)
 
 
+
+    let ignoreCase = a:pref !~# '\u'
     
 
     for [ key, val ] in items(dic)
 
         " TODO filter
-        if a:pref != "" && key !~# "^".a:pref | continue | endif
-        if val.wrapped && empty(x.wrap) || !val.wrapped && !empty(x.wrap) | continue | endif
-        if has_key(val.ctx, "syn") && val.ctx.syn != '' && match(ctxs, '\c'.val.ctx.syn) == -1 | continue | endif
+        if a:pref != "" && key !~ "^" . (ignoreCase ? '\c' : '\C')  .a:pref 
+            continue 
+        endif
+
+        if val.wrapped && empty(x.wrap) || !val.wrapped && !empty(x.wrap)
+            continue
+        endif
+
+        if has_key(val.ctx, "syn") && val.ctx.syn != '' && match(ctxs, '\c'.val.ctx.syn) == -1
+            continue
+        endif
 
         " buildins come last
         if key =~# "^[A-Z]"
@@ -992,12 +1089,14 @@ fun! s:Popup(pref, coln) "{{{
 
 
 
-    if len(cmpl) == 1 || len(cmpl) > 0 && a:pref ==# cmpl[0].word
+    if !popupOption.popupOnly && ( len(cmpl) == 1 || ( len(cmpl) > 0 && a:pref ==# cmpl[0].word ) )
         let x.tmplPopupStates = ''
         return { 'name' : cmpl[0].word }
     endif
 
-    let longest = s:LongestMatchOfPopup( cmpl )
+    let longest = s:LongestMatchOfPopup( cmpl, ignoreCase )
+    let longest = a:pref . longest[ len(a:pref) : ]
+
     if longest !=# a:pref
         call s:Replace([line("."), a:coln], a:pref, longest)
     endif
@@ -1034,25 +1133,12 @@ fun! XPTpopupFix()
 
     return "\<C-n>\<C-p>"
 endfunction
+" TODO use tabstop if expandtab is not set
+fun! s:ApplyTmplIndent(str, ctx) "{{{
+    let ctx = a:ctx
+    let tmpl = a:str
 
-fun! s:RenderTemplate(l, c, tmpl) " {{{
-
-    let x = s:Data()
-    let ctx = s:Ctx()
-    let xp = s:Ctx().tmpl.ptn
-    let xpos = s:Ctx().pos
-
-    let op = [a:l, a:c]
-
-    if type(a:tmpl) == type( function("tr") )
-        let tmpl = a:tmpl()
-    else
-        let tmpl = a:tmpl
-    endif
-
-    " process indent
-    let preindent = repeat( " ", indent( "." ) )
-
+    let preindent = repeat(" ", indent("."))
     " at first, only use default indent
     if ctx.tmpl.indent.type =~# 'keep\|rate\|auto'
         if ctx.tmpl.indent.type ==# "rate"
@@ -1068,9 +1154,16 @@ fun! s:RenderTemplate(l, c, tmpl) " {{{
         " if col(".")
     endif
 
+    return tmpl
 
-    " process repetition
-    "
+endfunction "}}}
+
+fun! s:ParseRepetition(str, x) "{{{
+    let x = a:x
+    let xp = x.curctx.tmpl.ptn
+
+    let tmpl = a:str
+
     let bef = ""
     let rest = ""
     let rp = xp.lft . s:repeatPtn . xp.rt
@@ -1092,11 +1185,11 @@ fun! s:RenderTemplate(l, c, tmpl) " {{{
 
     while stack != []
 
-        let hasmatch = stack[-1]
+        let matchpos = stack[-1]
         unlet stack[-1]
 
-        let bef = tmpl[:hasmatch-1]
-        let rest = tmpl[hasmatch : ]
+        let bef = tmpl[:matchpos-1]
+        let rest = tmpl[matchpos : ]
 
         let rpt = matchstr(rest, repContPtn)
         let symbol = matchstr(rest, rp)
@@ -1105,9 +1198,10 @@ fun! s:RenderTemplate(l, c, tmpl) " {{{
         " marks
         " make nonescaped to escaped, escaped to nonescaped
         " turned back when expression evaluated
-        let rpt = escape(rpt, '\')
-        let rpt = substitute(rpt, '\V'.xp.l, '\\'.xp.l, 'g')
-        let rpt = substitute(rpt, '\V'.xp.r, '\\'.xp.r, 'g')
+        let rpt = escape(rpt, '\' . xp.l . xp.r)
+        " let rpt = escape(rpt, '\')
+        " let rpt = substitute(rpt, '\V'.xp.l, '\\'.xp.l, 'g')
+        " let rpt = substitute(rpt, '\V'.xp.r, '\\'.xp.r, 'g')
 
         let bef .= symbol . rpt . xp.r .xp.r 
         let rest = substitute(rest, repPtn, '', '')
@@ -1115,6 +1209,28 @@ fun! s:RenderTemplate(l, c, tmpl) " {{{
 
     endwhile
 
+    return tmpl
+endfunction "}}}
+
+fun! s:RenderTemplate(l, c, tmpl) " {{{
+
+    let x = s:Data()
+    let ctx = s:Ctx()
+    let xp = s:Ctx().tmpl.ptn
+    let xpos = s:Ctx().pos
+
+    let op = [a:l, a:c]
+
+    if type(a:tmpl) == type(function("tr"))
+        let tmpl = a:tmpl()
+    else
+        let tmpl = a:tmpl
+    endif
+
+    let tmpl = s:ApplyTmplIndent(tmpl, ctx)
+
+    " process repetition
+    let tmpl = s:ParseRepetition(tmpl, x)
 
     let tmpl = substitute(tmpl, '\V' . xp.lft . s:wrappedName . xp.rt, x.wrap, 'g')
 
@@ -1136,6 +1252,7 @@ fun! s:RenderTemplate(l, c, tmpl) " {{{
                 \}
 
 
+    " TODO use Replace instead
     let @0 = tmpl
     normal! "0P
     call s:TopTmplRange()
@@ -1169,9 +1286,8 @@ fun! s:RenderTemplate(l, c, tmpl) " {{{
 
     " at first, only use default indent
     " call s:Format(2)
-
-    call s:TopTmplRange()
-    silent! normal! gvzO
+    " call s:TopTmplRange()
+    " silent! normal! gvzO
 
 
 
@@ -1407,7 +1523,7 @@ fun! s:HighLightItem(name, switchon) " {{{
 
         " let ptn = xp.itemMarkRPattern
         " exe "3match XPTIgnoredMark /". ptn ."/"
-        exec "3match XPTIgnoredMark /" . xp.item . "/"
+        exe "3match XPTIgnoredMark /". xp.item ."/"
     else
         " exe "2match none"
         exe "3match none"
@@ -1644,37 +1760,47 @@ fun! s:GetRangeBetween(p1, p2, ...) "{{{
 endfunction "}}}
 
 fun! s:NextItem(flag) " {{{
-    let x = s:Data()
-    let ctx = s:Ctx()
-    let xpos = ctx.pos
+    let reg = []
+    for idx in range(10)
+        exe 'call add(reg, @'.idx.')'
+    endfor
+    try
+        let x = s:Data()
+        let ctx = s:Ctx()
+        let xpos = ctx.pos
 
-    let ctx.phase = 'post'
+        let ctx.phase = 'post'
 
-    let p0 = s:CTL(x)
+        let p0 = s:CTL(x)
 
-    let p = [line("."), col(".")]
-    let name = ctx.name
+        " let p = [line("."), col(".")]
+        let name = ctx.name
 
-    call s:HighLightItem(name, 0)
+        call s:HighLightItem(name, 0)
 
-    if a:flag ==# 'clear'
-        call s:Replace(s:Xtl(xpos.curpos), [s:Xtl(xpos.curpos), s:Xbr(xpos.curpos)], '')
-    endif
+        if a:flag ==# 'clear'
+            call s:Replace(s:Xtl(xpos.curpos), [s:Xtl(xpos.curpos), s:Xbr(xpos.curpos)], '')
+        endif
 
-    let post = s:ApplyDelayed()
+        let post = s:ApplyDelayed()
 
-    let ctx.step += [{'name' : ctx.name, 'value' : post}]
-    if ctx.name != ''
-        let ctx.namedStep[ctx.name] = post
-    endif
+        let ctx.step += [{'name' : ctx.name, 'value' : post}]
+        if ctx.name != ''
+            let ctx.namedStep[ctx.name] = post
+        endif
 
 
-    " TODO weak test
-    if ctx.name =~ "^\."
-        return s:SelectNextItem(p0[0], p0[1])
-    else
-        return s:SelectNextItem(p[0], p[1])
-    endif
+        " " TODO ???
+        " if ctx.name =~ "^\."
+        return s:SelectNextItem(p0)
+        " else
+        " return s:SelectNextItem(p[0], p[1])
+        " endif
+    finally
+        for idx in range(10)
+            exe 'let @'.idx.' = reg['.idx.']'
+        endfor
+    endtry
 
 endfunction " }}}
 
@@ -1754,17 +1880,18 @@ fun! s:SelectNextItem(...) "{{{
 
     call cursor(pos)
 
-    let p = s:FindNextItem('c')
-    if p[0:1] == [0, 0]
-        call cursor(s:BR(x))
+    " while 1
+        let p = s:FindNextItem('c')
+        if p[0:1] == [0, 0]
+            call cursor(s:BR(x))
 
-        return s:XPTemplateFinish(1)
+            return s:XPTemplateFinish(1)
 
-    endif
+        endif
+    " endwhile
 
     let ctx.fullname = p[2]
     let ctx.name = p[3]
-    " let ctx.name = p[2]
 
     if ctx.fullname ==# s:cursorName
         call cursor(p[0:1])
@@ -2119,7 +2246,7 @@ fun! s:InitItem() " {{{
                 let str = ''
             else
                 let str = type(obj[0]) == type({}) ? obj[0].word : obj[0]
-            endif
+                endif
 
         elseif type(obj) == type({}) && has_key(obj, 'action') " actions 
 
@@ -2505,6 +2632,17 @@ endfunction "}}}
 fun! s:ApplyMap() " {{{
     let xp = s:Ctx().tmpl.ptn
 
+    call g:MapPush("<bs>", "i", 1)
+    call g:MapPush("<C-w>", "i", 1)
+    call g:MapPush("<Del>", "i", 1)
+
+    call g:MapPush(g:xptemplate_nav_next  , "i", 1)
+    call g:MapPush(g:xptemplate_nav_next  , "s", 1)
+    call g:MapPush(g:xptemplate_nav_cancel, "s", 1)
+
+    call g:MapPush("<Del>", "s", 1)
+    call g:MapPush("<bs>", "s", 1)
+    call g:MapPush(g:xptemplate_to_right, "s", 1)
 
     " TODO mapstack
     inoremap <buffer> <bs> <C-r>=<SID>CheckAndBS("bs")<cr>
@@ -2512,16 +2650,12 @@ fun! s:ApplyMap() " {{{
     inoremap <buffer> <Del> <C-r>=<SID>CheckAndDel("Del")<cr>
 
     exe 'inoremap <buffer> '.g:xptemplate_nav_next  .' <C-r>=<SID>NextItem("")<cr>'
-    exe 'nnoremap <buffer> '.g:xptemplate_nav_next  .' i<C-r>=<SID>NextItem("")<cr>'
     exe 'snoremap <buffer> '.g:xptemplate_nav_next  .' <Esc>`>a<C-r>=<SID>NextItem("")<cr>'
     exe 'smap     <buffer> '.g:xptemplate_nav_cancel.' <Del><C-r>=<SID>NextItem("clear")<cr>'
 
     snoremap <buffer> <Del> <Del>i
     snoremap <buffer> <bs> <esc>`>a<bs>
-    exe "snoremap ".g:xptemplate_to_right." <esc>`>a"
-    " exe "inoremap <buffer> ".xp.l.' \'.xp.l
-    " exe "inoremap <buffer> ".xp.r.' \'.xp.r
-    " inoremap <buffer> \ \\
+    exe "snoremap <buffer> ".g:xptemplate_to_right." <esc>`>a"
 
 endfunction " }}}
 
@@ -2537,10 +2671,20 @@ fun! s:ClearMap() " {{{
 
     sunmap <buffer> <Del>
     sunmap <buffer> <bs>
-    exe "sunmap ".g:xptemplate_to_right
-    " exe "iunmap <buffer> ".xp.l
-    " exe "iunmap <buffer> ".xp.r
-    " iunmap <buffer> \
+    exe "sunmap <buffer> ".g:xptemplate_to_right
+
+
+    call g:MapPop() " call MapPush("<bs>", "i", 1)                  
+    call g:MapPop() " call MapPush("<C-w>", "i", 1)                 
+    call g:MapPop() " call MapPush("<Del>", "i", 1)                 
+
+    call g:MapPop() " call MapPush(g:xptemplate_nav_next  , "i", 1) 
+    call g:MapPop() " call MapPush(g:xptemplate_nav_next  , "s", 1) 
+    call g:MapPop() " call MapPush(g:xptemplate_nav_cancel, "s", 1) 
+
+    call g:MapPop() " call MapPush("<Del>", "s", 1)                 
+    call g:MapPop() " call MapPush("<bs>", "s", 1)                  
+    call g:MapPop() " call MapPush(g:xptemplate_to_right, "s", 1)   
 endfunction " }}}
 
 fun! s:StartAppend() " {{{
@@ -2660,14 +2804,16 @@ fun! s:Data() "{{{
         let b:xptemplateData.posStack = []
         let b:xptemplateData.stack = []
 
-        " Map the longest to a shorter one 
-        " For example there are 3 snippet : for, forr, function
-        " When typing fo<C-\>, popup list shown with "for" and "forr".
-        " Press <bs>, "or" is deleted, left 'f' and these 3 name are all
-        " shown. 
-        " This map maintains the mapping from for to f etc
-        let b:xptemplateData.nameTree = { 'num' : 0 } 
-        let b:xptemplateData.wrappedNameTree = { 'num' : 0 } 
+        " which letter can be used in template name
+        let b:xptemplateData.keyword = '\w'
+
+        " Template name search tree.
+        " One is original tree, the other is lower cased tree.
+        " Respectively for searching for longest match in case-sensitive mode and
+        " case-insensitive mode
+        let b:xptemplateData.nameTree = { 'ori' : { 'num' : 0 }, 'lower' : { 'num' : 0 } }
+        let b:xptemplateData.wrappedNameTree = { 'ori' : { 'num' : 0 }, 'lower' : { 'num' : 0 } } 
+
         let b:xptemplateData.lastPopup = { 'startpos' : 0, 'list' : [] }
         let b:xptemplateData.curctx = deepcopy(s:emptyctx)
         let b:xptemplateData.tmplPopupStates = ''

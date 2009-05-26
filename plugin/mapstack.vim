@@ -23,7 +23,7 @@ fun! s:GetCmdOutput(cmd) "{{{
 
 endfunction "}}}
 
-" critical implementation.
+" Critical implementation.
 " not sure whether it works well on each platform
 "
 " TODO Maybe use <script> mapping is better
@@ -57,7 +57,8 @@ fun! s:GetMapLine(key, mode, isbuffer) "{{{
   " the right hand part is aligned. Or 1 space separates the left part and the
   " right part
   let localmark = a:isbuffer ? '@' : ' '
-  let ptn = '\V'.a:mode.'  '.escape(a:key, '\').'\s\{-}'.'\zs\[* ]'.localmark.'\%>'.s:alignWidth.'c\S\.\{-}\$'
+  let ptn = '\V\c'.a:mode.'  '.escape(a:key, '\').'\s\{-}'.'\zs\[* ]'.localmark.'\%>'.s:alignWidth.'c\S\.\{-}\$'
+
 
   for line in lines
     if line =~? ptn
@@ -108,11 +109,13 @@ fun! g:MapPop() "{{{
     return
   endif
 
+
   if info.cont == ''
     let cmd = "silent ".info.mode.'unmap '. info.isbuf . info.key
   else
     let cmd = "silent " . info.mode . info.nore .'map '. info.isbuf . info.key . ' ' . info.cont
   endif
+
 
   exe cmd
 

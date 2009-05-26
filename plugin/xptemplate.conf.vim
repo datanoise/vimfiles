@@ -4,6 +4,12 @@ endif
 let g:__XPTEMPLATE_CONF_VIM__ = 1
 
 
+try
+  set cpoptions+=Y
+catch //
+  " do nothing
+endtry
+
 
 let s:escapeHead   = '\v(\\*)\V'
 let s:unescapeHead = '\v(\\*)\1\\?\V'
@@ -33,7 +39,8 @@ call s:Default('g:xptemplate_fix',          1)
 call s:Default('g:xptemplate_vars',         '')
 call s:Default('g:xptemplate_hl',           1)
 
-call s:Default('g:xpt_post_action',           '')
+" for test script
+call s:Default('g:xpt_post_action',         '')
 let g:XPTpvs = {}
 
 
@@ -54,25 +61,25 @@ let s:oldcpo = &cpo
 " enable <key> encoding
 set cpo-=<
 
+" 'selTrigger' used in select mode trigger, but if 'selection' changed after this
+" script loaded, incSelTrigger or excSelTrigger should be used according to
+" runtime settings.
 let g:XPTkeys = {
-      \ 'trigger' : "<C-r>=XPTemplateStart(0)<cr>", 
-      \ 'wrapTrigger' : "\"0di<C-r>=XPTemplatePreWrap(@0)<cr>", 
+      \ 'popup'       : "<C-r>=XPTemplateStart(0,{'popupOnly':1})<cr>", 
+      \ 'trigger'       : "<C-r>=XPTemplateStart(0)<cr>", 
+      \ 'wrapTrigger'   : "\"0di<C-r>=XPTemplatePreWrap(@0)<cr>", 
       \ 'incSelTrigger' : "<C-c>`>a<C-r>=XPTemplateStart(0)<cr>", 
       \ 'excSelTrigger' : "<C-c>`>i<C-r>=XPTemplateStart(0)<cr>", 
+      \ 'selTrigger'    : (&selection == 'inclusive') ?
+      \                       "<C-c>`>a<C-r>=XPTemplateStart(0)<cr>" 
+      \                     : "<C-c>`>i<C-r>=XPTemplateStart(0)<cr>", 
       \ }
 
-inoremap <Plug>XPT.trigger <C-r>=XPTemplateStart(0)<cr>
-xnoremap <Plug>XPT.wrap.trigger "0di<C-r>=XPTemplatePreWrap(@0)<cr>
 
-exe "inoremap ".g:xptemplate_key." <C-r>=XPTemplateStart(0)<cr>"
-exe "xnoremap ".g:xptemplate_key." \"0di<C-r>=XPTemplatePreWrap(@0)<cr>"
-if &sel == 'inclusive'
-  xnoremap <Plug>XPT.selection.trigger <C-c>`>a<C-r>=XPTemplateStart(0)<cr>
-  exe "snoremap ".g:xptemplate_key." <C-c>`>a<C-r>=XPTemplateStart(0)<cr>"
-else
-  xnoremap <Plug>XPT.selection.trigger <C-c>`>i<C-r>=XPTemplateStart(0)<cr>
-  exe "snoremap ".g:xptemplate_key." <C-c>`>i<C-r>=XPTemplateStart(0)<cr>"
-endif
+exe "inoremap ".g:xptemplate_key." " . g:XPTkeys.trigger
+exe "xnoremap ".g:xptemplate_key." " . g:XPTkeys.wrapTrigger
+exe "snoremap ".g:xptemplate_key." " . g:XPTkeys.selTrigger
+
 let &cpo = s:oldcpo
 
 
@@ -109,7 +116,7 @@ augroup END
 
 
 
-" checks critical setting:
+" check critical setting:
 "
 " backspace	>2 or with start
 " nocompatible

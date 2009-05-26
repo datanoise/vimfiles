@@ -200,8 +200,7 @@ nnoremap <silent> <leader>n :set nu!<CR>
 " indented paste
 nnoremap <silent> <leader>p p:'[,']normal ==<CR>
 nnoremap <silent> <leader>P P:'[,']normal ==<CR>
-nnoremap <silent> <leader>ss :%s/^\s\+$//<CR>
-nnoremap <silent> <leader>sa :%s/\s\+$//<CR>
+nnoremap <silent> <leader>ss :%s/\s\+$//<CR>
 
 nnoremap <silent> <F3> :cn<CR>
 nnoremap <silent> <S-F3> :cp<CR>

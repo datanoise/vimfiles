@@ -9,7 +9,6 @@ let [s:f, s:v] = XPTcontainer()
 " inclusion
 XPTinclude
       \ _common/common
-      \ _condition/perl.like
 
 " ========================= Function and Varaibles =============================
 
@@ -72,6 +71,22 @@ foreach my $`var^ (@`array^) {
     `cursor^
 }
 
+XPT if hint=if\ (\ ..\ )\ {\ ..\ }\ ...
+if ( `cond^ )
+{
+    `code^
+}`
+`...^
+elif ( `cond2^ )
+{
+    `body^
+}`
+`...^`
+`else...^
+else
+{
+    \`body\^
+}^^
 
 XPT package hint=
 package `className^;

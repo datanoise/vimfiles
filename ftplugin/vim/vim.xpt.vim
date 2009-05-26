@@ -86,7 +86,7 @@ endtry
 XPT if hint=if\ ..\ else\ ..
 XSET else...|post=\nelse\n  `cursor^
 if `cond^
-  `_^`
+  `_^^
 `else...^
 endif
 

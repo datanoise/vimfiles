@@ -152,7 +152,7 @@ if executable('ack')
   " always use ack for faster searching
   set grepprg=ack\ -a\ --ignore-dir=log\ --ignore-dir=tmp\ $*\\\|grep\ -v\ '^tags'
 endif
-set completeopt=longest,menu,preview " don't hide completion menu when typing
+set completeopt=longest,menu " don't hide completion menu when typing
 set clipboard+=unnamed
 au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs
 au FileType ruby setlocal completefunc=syntaxcomplete#Complete

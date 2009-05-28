@@ -2636,6 +2636,7 @@ fun! s:ApplyMap() " {{{
     call g:MapPush("<Del>", "i", 1)
 
     call g:MapPush(g:xptemplate_nav_next  , "i", 1)
+    call g:MapPush(g:xptemplate_nav_next  , "n", 1)
     call g:MapPush(g:xptemplate_nav_next  , "s", 1)
     call g:MapPush(g:xptemplate_nav_cancel, "s", 1)
 
@@ -2649,6 +2650,7 @@ fun! s:ApplyMap() " {{{
     inoremap <buffer> <Del> <C-r>=<SID>CheckAndDel("Del")<cr>
 
     exe 'inoremap <buffer> '.g:xptemplate_nav_next  .' <C-r>=<SID>NextItem("")<cr>'
+    exe 'nnoremap <buffer> '.g:xptemplate_nav_next  .' i<C-r>=<SID>NextItem("")<cr>'
     exe 'snoremap <buffer> '.g:xptemplate_nav_next  .' <Esc>`>a<C-r>=<SID>NextItem("")<cr>'
     exe 'smap     <buffer> '.g:xptemplate_nav_cancel.' <Del><C-r>=<SID>NextItem("clear")<cr>'
 
@@ -2665,6 +2667,7 @@ fun! s:ClearMap() " {{{
     iunmap <buffer> <C-w>
     iunmap <buffer> <Del>
     exe 'iunmap <buffer> '.g:xptemplate_nav_next
+    exe 'nunmap <buffer> '.g:xptemplate_nav_next
     exe 'sunmap <buffer> '.g:xptemplate_nav_next
     exe 'sunmap <buffer> '.g:xptemplate_nav_cancel
 
@@ -2678,6 +2681,7 @@ fun! s:ClearMap() " {{{
     call g:MapPop() " call MapPush("<Del>", "i", 1)                 
 
     call g:MapPop() " call MapPush(g:xptemplate_nav_next  , "i", 1) 
+    call g:MapPop() " call MapPush(g:xptemplate_nav_next  , "n", 1) 
     call g:MapPop() " call MapPush(g:xptemplate_nav_next  , "s", 1) 
     call g:MapPop() " call MapPush(g:xptemplate_nav_cancel, "s", 1) 
 

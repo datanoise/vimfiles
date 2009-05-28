@@ -120,6 +120,11 @@ if has('mac')
 endif
 " }}}
 
+" folding options {{{2
+set foldmethod=marker
+set foldlevel=99 " always expand folds
+" }}}
+
 " uncategorized options {{{2
 set bg=dark
 colo candycode_mod
@@ -134,7 +139,6 @@ set title
 if exists("&macmeta")
   set macmeta " on Mac use Option key as Meta
 endif
-set foldmethod=marker
 set vb t_vb= " no visual bell or beep, damn it
 " that makes it work on Windows too
 if has("win32")

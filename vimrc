@@ -245,9 +245,12 @@ inoremap <silent> <tab> <c-r>=MyTabOrCompletion()<cr>
 inoremap <c-_> <c-^>
 
 au FileType help nnoremap <buffer> q :bd<CR>
-au FileType html nmap <silent> <D-r> :sil !open %<cr>
+au FileType help nnoremap <buffer> K :h <c-r>=expand('<cword>')<cr><cr>
 au FileType ruby inoremap <buffer> <c-l> <c-r>= pumvisible() ? "\<lt>c-l>" : " => "<cr>
 au FileType ruby nnoremap <buffer> <F5> :!ruby %<cr>
+if has("mac")
+  au FileType html nnoremap <silent> <D-r> :sil !open %<cr>
+endif
 
 " Section: Commands && Abbrivations {{{1
 " --------------------------------------------------

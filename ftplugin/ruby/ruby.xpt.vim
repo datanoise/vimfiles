@@ -1,12 +1,7 @@
-if exists("b:__RUBY_XPT_VIM__")
-  finish
-endif
-let b:__RUBY_XPT_VIM__ = 1
-
 XPTemplate priority=lang keyword=:%#
 
 " containers
-let [s:f, s:v] = XPTcontainer()
+let s:f = XPTcontainer()[0]
 
 " inclusion
 XPTinclude
@@ -26,44 +21,47 @@ fun! s:f.RubySnakeCase(...) "{{{
 endfunction "}}}
 
 " Multiple each snippet {{{
-let s:each_list = [
-      \'each_byte',
-      \'each_char',
-      \'each_cons',
-      \'each_index',
-      \'each_key',
-      \'each_line',
-      \'each_pair',
-      \'each_slice',
-      \'each_value'
-      \]
+"{{{ s:each_list
+let s:each_list = [ 'byte', 'char', 'cons', 'index', 'key',
+      \'line', 'pair', 'slice', 'value' ]
+"}}}
 
 fun! s:f.RubyEachPopup() "{{{
-  return s:each_list
+  let l = []
+  for i in s:each_list
+    let l += [{'word': i, 'menu': 'each_' . i . '{ |..| ... }'}]
+  endfor
+  return l
 endfunction "}}}
 
 fun! s:f.RubyEachBrace() "{{{
-  let v = self.V()
-
-  if v =~# 'each_slice\|each_cons'
-    return v.'(`val^3^)'
+  let v = self.SV('^_','','')
+  if v == ''
+    return ''
+  elseif v =~# 'slice\|cons'
+    return '_' . v.'(`val^3^)'
   else
-    return v
+    return '_' . v
   endif
 endfunction "}}}
 
 fun! s:f.RubyEachPair() "{{{
-  let v = self.R('each_what')
-  if v =~# 'each_pair'
+  let v = self.R('what')
+  if v =~# 'pair'
     return '`el1^, `el2^'
+  elseif v == ''
+    return '`el^'
   else
-    let r = substitute(v[5:-1], "(.\\{-})", '', '')
-    return '`' . r . '^'
+    if v =~ 'slice\|cons'
+      let v = substitute(v,'val','','')
+    endif
+    return '`' . substitute(v,'[^a-z]','','g') . '^'
   endif
 endfunction "}}}
 " End multiple each snippet }}}
 
 " Multiple assert snippet {{{
+"{{{ s:assert_map
 let s:assert_map = {
       \'block'          : ''                                                        . ' { `cursor^ }',
       \'equals'         : '(`expected^, `actual^`, `message^)'                      . '',
@@ -75,21 +73,21 @@ let s:assert_map = {
       \'nil'            : '(`object^`, `message^)'                                  . '',
       \'no_match'       : '(/`regexp^/`^, `string^`, `message^)'                    . '',
       \'not_nil'        : '(`object^`, `message^)'                                  . '',
-      \'nothing_raised' : '(`exception^)'                                           . '',
+      \'nothing_raised' : '(`exception^)'                                           . ' { `cursor^ }',
       \'not_same'       : '(`expected^, `actual^`, `message^)'                      . '',
-      \'nothing_thrown' : '`(`_`)^'                                                 . ' { `cursor^ }',
+      \'nothing_thrown' : '`(`message`)^'                                           . ' { `cursor^ }',
       \'operator'       : '(`obj1^, `operator^, `obj2^`, `message^)'                . '',
-      \'raise'          : '(`exception^)'                                           . ' { `cursor^ } ',
+      \'raise'          : '(`exception^)'                                           . ' { `cursor^ }',
       \'respond_to'     : '(`object^, `respond to this message^`, `message^)'       . '',
       \'same'           : '(`expected^, `actual^`, `message^)'                      . '',
       \'send'           : '([`receiver^, `method^, `args^]`, `message^)'            . '',
-      \'throws'         : '(`expected symbol^`, `message^)'                         . ' { `cursor^ } ',
+      \'throws'         : '(`expected symbol^`, `message^)'                         . ' { `cursor^ }',
       \}
+"}}}
 
-
-fun! s:RubyAssertPopupSort(a, b)
+fun! s:RubyAssertPopupSort(a, b) "{{{
   return a:a.word == a:b.word ? 0 : a:a.word < a:b.word ? -1 : 1
-endfunction
+endfunction "}}}
 
 fun! s:f.RubyAssertPopup() "{{{
   let list = []
@@ -100,9 +98,12 @@ fun! s:f.RubyAssertPopup() "{{{
 endfunction "}}}
 
 fun! s:f.RubyAssertMethod() "{{{
-  let v = self.V()
+  let v = self.SV('^_', '', '')
+  if v == ''
+    return v . '(`^`, `message^)'
+  endif
   if has_key(s:assert_map, v)
-    return v . s:assert_map[v]
+    return '_' . v . s:assert_map[v]
   else
     return ''
   endif
@@ -126,11 +127,37 @@ fun! s:f.RepeatInsideEdges(sep) "{{{
         \. marks[1] . marks[1] . rt
 endfunction "}}}
 
+" Remove an item if its value hasn't change
+fun! s:f.RemoveIfUnchanged() "{{{
+  let v = self.V()
+  let [lft, rt] = self.ItemEdges()
+  if v == lft . self.N() . rt
+    return ''
+  else
+    return v
+  end
+endfunction "}}}
+
 " ================================= Snippets ===================================
 XPTemplateDef
+XPT # hint=#{..} syn=string
+XSET _=
+#{`_^}
+
+
+XPT : hint=:...\ =>\ ...
+:`key^ => `value^
+
+
+XPT % hint=%**[..]
+XSET _=Q
+XSET content=
+%`_^[`content^]
+
+
 XPT BEG hint=BEGIN\ {\ ..\ }
 BEGIN {
-  `cursor^
+`cursor^
 }
 
 
@@ -138,13 +165,13 @@ XPT Comp hint=include\ Comparable\ def\ <=>\ ...
 include Comparable
 
 def <=>(other)
-  `cursor^
+`cursor^
 end
 
 
 XPT END hint=END\ {\ ..\ }
 END {
-  `cursor^
+`cursor^
 }
 
 
@@ -152,7 +179,7 @@ XPT Enum hint=include\ Enumerable\ def\ each\ ...
 include Enumerable
 
 def each(&block)
-  `cursor^
+`cursor^
 end
 
 
@@ -220,7 +247,7 @@ any? { |`element^| `cursor^ }
 
 XPT app hint=if\ __FILE__\ ==\ $PROGRAM_NAME\ ...
 if __FILE__ == $PROGRAM_NAME
-  `cursor^
+`cursor^
 end
 
 
@@ -229,28 +256,23 @@ XSET arg=i
 XSET size=5
 Array.new(`size^) { |`arg^| `cursor^ }
 
-XPT ass hint=assert\\(..)
-XSET message...|post=, `_^
-assert(`boolean condition^`, `message...^)
-
-
-XPT ass_ hint=assert_**\\(..)\ ...
+XPT ass hint=assert**\\(..)\ ...
 XSET what=RubyAssertPopup()
 XSET what|post=RubyAssertMethod()
-XSET message|post=SV('^\(,\s*\)\=message$','','')
-XSET _|post=SV('^(_)$','','')
-assert_`what^
+XSET message|post=RemoveIfUnchanged()
+assert`_`what^
 
 
 XPT attr hint=attr_**\ :...
-XSET what=Choose(["_accessor", "_reader", "_writer"])
+XSET what=Choose(["accessor", "reader", "writer"])
+XSET what|post=SV("^_$",'','')
 XSET attr..|post=ExpandIfNotEmpty(', :', 'attr..')
-attr`what^ :`attr..^
+attr`_`what^ :`attr..^
 
 XPT begin hint=begin\ ..\ rescue\ ..\ else\ ..\ end
 XSETm rescue...|post=
 rescue `exception^` => `e^
-  `block^`
+`block^`
 `rescue...^XSETm END
 XSETm else...|post=
 else
@@ -272,7 +294,7 @@ XSET times=10_000
 TESTS = `times^
 
 Benchmark.bmbm do |result|
-  `cursor^
+`cursor^
 end
 
 
@@ -299,15 +321,7 @@ classify { |`element^| `cursor^ }
 XPT cl hint=class\ ..\ end
 XSET ClassName.post=RubyCamelCase()
 class `ClassName^
-  `cursor^
-end
-
-
-XPT clp hint=class\ ..\ <\ ..\ end
-XSET ClassName.post=RubyCamelCase()
-XSET Parent.post=RubyCamelCase()
-class `ClassName^ < `Parent^
-  `cursor^
+`cursor^
 end
 
 
@@ -339,13 +353,13 @@ end
 XPT cls hint=class\ <<\ ..\ end
 XSET self=self
 class << `self^
-  `cursor^
+`cursor^
 end
 
 
 XPT clstr hint=..\ =\ Struct.new\ ...
 XSETm do...|post= do
-  `cursor^
+`cursor^
 end
 XSETm END
 XSET ClassName|post=RubyCamelCase()
@@ -356,6 +370,7 @@ XSET attr..|post=RepeatInsideEdges(', :')
 XPT col hint=collect\ {\ ..\ }
 collect { |`obj^| `cursor^ }
 
+
 XPT deec hint=Deep\ copy
 Marshal.load(Marshal.dump(`obj^))
 
@@ -364,7 +379,7 @@ XPT def hint=def\ ..\ end
 XSET method|post=RubySnakeCase()
 XSET arg..|post=RepeatInsideEdges(', ')
 def `method^`(`arg..`)^
-  `cursor^
+`cursor^
 end
 
 
@@ -379,13 +394,13 @@ def_delegators :`del obj^, :`del methods^
 XPT defi hint=def\ initialize\ ..\ end
 XSET arg..|post=RepeatInsideEdges(', ')
 def initialize`(`arg..`)^
-  `cursor^
+`cursor^
 end
 
 
 XPT defmm hint=def\ method_missing\\(..)\ ..\ end
 def method_missing(meth, *args, &block)
-  `cursor^
+`cursor^
 end
 
 
@@ -393,14 +408,14 @@ XPT defs hint=def\ self...\ end
 XSET method.post=RubySnakeCase()
 XSET arg..|post=RepeatInsideEdges(', ')
 def self.`method^`(`arg..`)^
-  `cursor^
+`cursor^
 end
 
 
 XPT deft hint=def\ test_..\ ..\ end
 XSET name|post=RubySnakeCase()
 def test_`name^
-  `cursor^
+`cursor^
 end
 
 
@@ -425,7 +440,7 @@ Dir.glob('`dir^') { |`f^| `cursor^ }
 XPT do hint=do\ |..|\ ..\ end
 XSET arg..|post=RepeatInsideEdges(', ')
 do` |`arg..`|^
-  `^
+`cursor^
 end
 
 
@@ -435,15 +450,11 @@ XSET lbound=0
 downto(`lbound^) { |`arg^| `cursor^ }
 
 
-XPT ea hint=each\ {\ ..\ }
-each { |`e^| `cursor^ }
-
-
 XPT each hint=each_**\ {\ ..\ }
-XSET each_what=RubyEachPopup()
-XSET each_what|post=RubyEachBrace()
+XSET what=RubyEachPopup()
+XSET what|post=RubyEachBrace()
 XSET vars=RubyEachPair()
-`each_what^ { |`vars^| `cursor^ }
+each`_`what^ { |`vars^| `cursor^ }
 
 
 XPT fdir hint=File.dirname\\(..)
@@ -494,7 +505,7 @@ Hash.new { |`hash^,`key^| `hash^[`key^] = `cursor^ }
 XPT if hint=if\ ..\ elsif\ ..\ else\ ..\ end
 XSETm else...|post=
 else
-  `cursor^XSETm END
+`cursor^XSETm END
 XSETm elsif...|post=
 elsif `boolean exp^
   `block^`
@@ -513,29 +524,14 @@ XSET element=el
 inject`(`arg`)^ { |`accumulator^, `element^| `cursor^ }
 
 
-XPT int hint=#{..}
-XSET _=
-#{`_^}
-
-
-XPT kv hint=:...\ =>\ ...
-XSET _=\ 
-:`key^ => `value^`...^,`_^:`keyn^ => `valuen^`...^
-
-
 XPT lam hint=lambda\ {\ ..\ }
 XSET args|post=RepeatInsideEdges(', ')
 lambda {` |`args`|^ `cursor^ }
 
 
-XPT lit hint=%**[..]
-XSET _=Q
-XSET content=
-%`_^[`content^]
-
 XPT loop hint=loop\ do\ ...\ end
 loop do
-  `cursor^
+`cursor^
 end
 
 XPT map hint=map\ {\ |..|\ ..\ }
@@ -553,7 +549,7 @@ min { |`element1^, `element2^| `cursor^ }
 XPT mod hint=module\ ..\ ..\ end
 XSET module name|post=RubyCamelCase()
 module `module name^
-  `cursor^
+`cursor^
 end
 
 
@@ -569,7 +565,7 @@ end
 XPT nam hint=Rake\ Namespace
 XSET ns=fileRoot()
 namespace :`ns^ do
-  `cursor^
+`cursor^
 end
 
 
@@ -593,10 +589,6 @@ partition { |`element^| `cursor^ }
 XPT pathf hint=Path\ from\ here
 XSET path=../lib
 File.join(File.dirname(__FILE__), "`path^")
-
-
-XPT rb hint=#!/usr/bin/env\ ruby\ -w
-#!/usr/bin/env ruby -w
 
 
 XPT rdoc syn=comment hint=RDoc\ description
@@ -635,8 +627,12 @@ XPT sel hint=select\ {\ |..|\ ..\ }
 select { |`element^| `cursor^ }
 
 
+XPT shebang hint=#!/usr/bin/env\ ruby\ -w
+#!/usr/bin/env ruby -w
+
+
 XPT sinc hint=class\ <<\ self;\ self;\ end
-class << self; self end
+class << self; self; end
 
 
 XPT sor hint=sort\ {\ |..|\ ..\ }
@@ -659,16 +655,24 @@ XSET match=m
 sub(/`pattern^/) { |`match^| `cursor^ }
 
 
+XPT clp hint=class\ ..\ <\ ..\ end
+XSET ClassName.post=RubyCamelCase()
+XSET Parent.post=RubyCamelCase()
+class `ClassName^ < `Parent^
+`cursor^
+end
+
+
 XPT tas hint=Rake\ Task
 XSET task name|post=RubySnakeCase()
 XSET dep..|post=RepeatInsideEdges(', :')
 desc "`task description^"
 task :`task name^` => [:`dep..`]^ do
-  `cursor^
+`cursor^
 end
 
 
-XPT tc hint=require\ 'test/unit'\ ...\ class\ Test..\ <\ Test::Unit::TestCase\ ...
+XPT tc hint=require\ 'test/unit'\ ...\ class\ Test..\ <\ Test::Unit:TestCase\ ...
 XSET ClassName=RubyCamelCase(R("module"))
 XSET ClassName.post=RubyCamelCase()
 XSET deft=Trigger('deft')
@@ -698,19 +702,19 @@ transaction(`_^) { `cursor^ }
 XPT unif hint=Unix\ Filter
 XSET line=line
 ARGF.each_line do |`line^|
-  `cursor^
+`cursor^
 end
 
 
 XPT unless hint=unless\ ..\ end
 unless `boolean cond^
-  `cursor^
+`cursor^
 end
 
 
 XPT until hint=until\ ..\ end
 until `boolean cond^
-  `cursor^
+`cursor^
 end
 
 
@@ -738,7 +742,7 @@ end
 
 XPT while hint=while\ ..\ end
 while `boolean cond^
-  `cursor^
+`cursor^
 end
 
 
@@ -758,8 +762,3 @@ XPT y syn=comment hint=:yields:
 XPT zip hint=zip\\(..)\ {\ |..|\ ..\ }
 XSET row=row
 zip(`enum^) { |`row^| `cursor^ }
-
-
-XPT : hint=hash :key => :value
-:`key^ => `cursor^
-

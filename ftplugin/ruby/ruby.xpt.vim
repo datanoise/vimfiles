@@ -3,7 +3,7 @@ if exists("b:__RUBY_XPT_VIM__")
 endif
 let b:__RUBY_XPT_VIM__ = 1
 
-
+XPTemplate priority=lang keyword=:%#
 
 " containers
 let [s:f, s:v] = XPTcontainer()
@@ -760,6 +760,6 @@ XSET row=row
 zip(`enum^) { |`row^| `cursor^ }
 
 
-XPT h hint=hash :key => :value
+XPT : hint=hash :key => :value
 :`key^ => `cursor^
 

@@ -1,4 +1,4 @@
-XPTemplate priority=lang keyword=:%#
+XPTemplate priority=lang keyword=:%#{
 
 " containers
 let s:f = XPTcontainer()[0]
@@ -146,13 +146,16 @@ XSET _=
 
 
 XPT : hint=:...\ =>\ ...
-:`key^ => `value^
+:`key^ => `cursor^
 
 
 XPT % hint=%**[..]
 XSET _=Q
 XSET content=
 %`_^[`content^]
+
+XPT { hint=Block\ {|..|}
+{ |`_^| `cursor^ 
 
 
 XPT BEG hint=BEGIN\ {\ ..\ }
@@ -606,7 +609,7 @@ result.report("`name^: ") { TESTS.times { `cursor^ } }
 
 
 XPT req hint=require\ ..
-require '`lib^'
+require '`cursor^'
 
 
 XPT reqs hint=%w[..].map\ {\ |lib|\ require\ lib\ }
@@ -631,7 +634,7 @@ XPT shebang hint=#!/usr/bin/env\ ruby\ -w
 #!/usr/bin/env ruby -w
 
 
-XPT sinc hint=class\ <<\ self;\ self;\ end
+XPT sinc hint=class\ <<\ self;\ self\ end
 class << self; self; end
 
 

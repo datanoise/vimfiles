@@ -25,6 +25,11 @@ XPT exp hint=-export\ ..
 -export( [`func^/`arity^] ).
 
 
+XPT imp hint=-import\ ..^
+XSET arity=1
+-import( `module^, [`func^/`arity^`...^, `func^/`arity^`...^] ).
+
+
 XPT inc hint=-include\ ..
 -include( \"`cursor^^.hrl\").
 
@@ -97,9 +102,13 @@ end
 
 
 XPT fun hint=fun\ ..\ ->\ ..\ end
-fun (`params^) `_^^ -> `body^ `...^;
-    (`paramsn^) `_^^ -> `bodyn^`...^
-end `cursor^
+fun (`params^)` when `guard`^ -> `body^ `...^;
+    (`paramsn^)` when `guard`^ -> `bodyn^`...^
+end
+
+
+XPT fu hint=fun\ ..\ ->\ ..\ end
+fun (`params^)` `_`^ -> `body^ end
 
 
 XPT try hint=try\ ..\ catch\ ..\ end
@@ -126,11 +135,16 @@ catch
 end `cursor^
 
 
-XPT fn hint=f\ \(\ ..\ \)\ ->\ ..
-`funName^ ( `args0^ ) `_^^ ->
-  `body0^ `...^;
-`name^R('funName')^ ( `argsn^ ) `_^^ ->
+XPT ffn hint=f\ \(\ ..\ \)\ ->\ ..
+`funName^(`args0^)` when `guard`^ ->
+  `body0^`...^;
+`name^R('funName')^(`argsn^)` when `guard`^ ->
   `bodyn^`...^
 .
 
+
+XPT fn hint=f\ \(\ ..\ \)\ ->\ ..
+`funName^(`args0^)` when `guard`^ -> `body0^`...^;
+`name^R('funName')^(`argsn^)` when `guard`^ -> `bodyn^`...^
+.
 

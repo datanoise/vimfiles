@@ -3,6 +3,8 @@ if exists("b:__PHP_XPT_VIM__")
 endif
 let b:__PHP_XPT_VIM__ = 1
 
+XPTemplate priority=lang keyword=:
+
 " containers
 let [s:f, s:v] = XPTcontainer()
 
@@ -47,12 +49,12 @@ for ($`var^i^ = `init^; $`var^ >= `val^0^; $`var^--)
 XPT foreach hint=foreach\ (..\ as\ ..)\ {..}
 foreach ($`var^ as `container^)
 {
-    `body^
+    `cursor^
 }
 
 
 XPT fun hint=function\ ..(\ ..\ )\ {..}
-function `funName^( `params^ )
+function `funName^(` `params` ^)
 {
    `cursor^
 }
@@ -75,7 +77,13 @@ interface `interfaceName^
     `cursor^
 }
 
-XPT php hint=php block
+
+XPT php hint=php\ block
 <?php
   `cursor^
 ?>
+
+
+XPT : hint=hash\ assoc
+'`key^' => `cursor^
+

@@ -248,6 +248,7 @@ au FileType help nnoremap <buffer> q :bd<CR>
 au FileType vim  nnoremap <buffer> K :h <c-r>=expand('<cword>')<cr><cr>
 au FileType ruby inoremap <buffer> <c-l> <c-r>= pumvisible() ? "\<lt>c-l>" : " => "<cr>
 au FileType ruby nnoremap <buffer> <F5> :!ruby %<cr>
+au FileType php nnoremap <buffer> <F5> :!php %<cr>
 if has("mac")
   au FileType html nnoremap <silent> <D-r> :sil !open %<cr>
 endif

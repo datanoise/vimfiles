@@ -17,51 +17,51 @@ XPTemplateDef
 
 XPT if		hint=if\ (..)\ {..}\ else...
 XSET job=$INDENT_HELPER
-if (`condi^) `$BRACKETSTYLE^{ 
+if (`condi^) `$BRACKETSTYLE^{
   `job^
-}` 
-`else...`^\`$BRACKETSTYLE\^ else \`$BRACKETSTYLE\^{ 
-  \`cursor\^ 
+}`
+`else...`^\`$BRACKETSTYLE\^ else \`$BRACKETSTYLE\^{
+  \`cursor\^
 }^^
 
 
 XPT ifn		hint=if\ ($NULL\ ==\ ..)\ {..}\ else...
 XSET job=$INDENT_HELPER
-if (`$NULL^ == `var^) `$BRACKETSTYLE^{ 
+if (`$NULL^ == `var^) `$BRACKETSTYLE^{
   `job^
-}` 
-`else...`^\`$BRACKETSTYLE\^ else \`$BRACKETSTYLE\^{ 
-  \`cursor\^ 
+}`
+`else...`^\`$BRACKETSTYLE\^ else \`$BRACKETSTYLE\^{
+  \`cursor\^
 }^^
 
 
 XPT ifnn	hint=if\ ($NULL\ !=\ ..)\ {..}\ else...
 XSET job=$INDENT_HELPER
-if (`$NULL^ != `var^) `$BRACKETSTYLE^{ 
+if (`$NULL^ != `var^) `$BRACKETSTYLE^{
   `job^
-}` 
-`else...`^\`$BRACKETSTYLE\^ else \`$BRACKETSTYLE\^{ 
-  \`cursor\^ 
+}`
+`else...`^\`$BRACKETSTYLE\^ else \`$BRACKETSTYLE\^{
+  \`cursor\^
 }^^
 
 
 XPT if0		hint=if\ (0\ ==\ ..)\ {..}\ else...
 XSET job=$INDENT_HELPER
-if (0 == `var^) `$BRACKETSTYLE^{ 
+if (0 == `var^) `$BRACKETSTYLE^{
   `job^
-}` 
-`else...`^\`$BRACKETSTYLE\^ else \`$BRACKETSTYLE\^{ 
-  \`cursor\^ 
+}`
+`else...`^\`$BRACKETSTYLE\^ else \`$BRACKETSTYLE\^{
+  \`cursor\^
 }^^
 
 
 XPT ifn0	hint=if\ (0\ !=\ ..)\ {..}\ else...
 XSET job=$INDENT_HELPER
-if (0 != `var^) `$BRACKETSTYLE^{ 
+if (0 != `var^) `$BRACKETSTYLE^{
   `job^
-}` 
-`else...`^\`$BRACKETSTYLE\^ else \`$BRACKETSTYLE\^{ 
-  \`cursor\^ 
+}`
+`else...`^\`$BRACKETSTYLE\^ else \`$BRACKETSTYLE\^{
+  \`cursor\^
 }^^
 
 
@@ -70,7 +70,7 @@ XSET job=$INDENT_HELPER
 if (`condition^) `$BRACKETSTYLE^{
   `job^
 }`
-`...^ `$BRACKETSTYLE^else if (`cond^R("condition")^) `$BRACKETSTYLE^{ 
+`...^ `$BRACKETSTYLE^else if (`cond^R("condition")^) `$BRACKETSTYLE^{
   `job^
 }`
 `...^
@@ -86,7 +86,7 @@ switch (`var^) `$BRACKETSTYLE^{
   case `_^ :
     `job^
     break;
-  `...^ 
+  `...^
 
   `default...^default:
     \`cursor\^^^

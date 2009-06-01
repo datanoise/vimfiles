@@ -129,7 +129,7 @@ set foldlevel=99 " always expand folds
 set bg=dark
 colo candycode_mod
 if exists('&mc')
-  au BufNewFile,BufRead * set mc=81
+  au BufNew,BufRead * set mc=81
 endif
 set scrolloff=5      " keep at least 5 lines above/below
 set sidescrolloff=5  " keep at least 5 lines left/right
@@ -249,6 +249,7 @@ au FileType vim  nnoremap <buffer> K :h <c-r>=expand('<cword>')<cr><cr>
 au FileType ruby inoremap <buffer> <c-l> <c-r>= pumvisible() ? "\<lt>c-l>" : " => "<cr>
 au FileType ruby nnoremap <buffer> <F5> :!ruby %<cr>
 au FileType php nnoremap <buffer> <F5> :!php %<cr>
+au FileType php,c,cpp,java inoremap <buffer> {<cr> {<cr>}<esc>O
 if has("mac")
   au FileType html nnoremap <silent> <D-r> :sil !open %<cr>
 endif

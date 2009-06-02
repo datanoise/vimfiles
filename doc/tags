@@ -188,6 +188,8 @@ NERDTree-!	NERD_tree.txt	/*NERDTree-!*
 NERDTree-?	NERD_tree.txt	/*NERDTree-?*
 NERDTree-B	NERD_tree.txt	/*NERDTree-B*
 NERDTree-C	NERD_tree.txt	/*NERDTree-C*
+NERDTree-C-J	NERD_tree.txt	/*NERDTree-C-J*
+NERDTree-C-K	NERD_tree.txt	/*NERDTree-C-K*
 NERDTree-D	NERD_tree.txt	/*NERDTree-D*
 NERDTree-F	NERD_tree.txt	/*NERDTree-F*
 NERDTree-I	NERD_tree.txt	/*NERDTree-I*
@@ -199,8 +201,7 @@ NERDTree-R	NERD_tree.txt	/*NERDTree-R*
 NERDTree-T	NERD_tree.txt	/*NERDTree-T*
 NERDTree-U	NERD_tree.txt	/*NERDTree-U*
 NERDTree-X	NERD_tree.txt	/*NERDTree-X*
-NERDTree-c-j	NERD_tree.txt	/*NERDTree-c-j*
-NERDTree-c-k	NERD_tree.txt	/*NERDTree-c-k*
+NERDTree-cd	NERD_tree.txt	/*NERDTree-cd*
 NERDTree-contents	NERD_tree.txt	/*NERDTree-contents*
 NERDTree-e	NERD_tree.txt	/*NERDTree-e*
 NERDTree-f	NERD_tree.txt	/*NERDTree-f*

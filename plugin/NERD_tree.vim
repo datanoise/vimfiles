@@ -796,12 +796,12 @@ function! s:TreeFileNode.open()
         call s:exec(winnr . "wincmd w")
 
     else
-        if !s:isWindowUsable(winnr("#")) && s:firstNormalWindow() ==# -1
+        if !s:isWindowUsable(winnr("#")) && s:firstUsableWindow() ==# -1
             call self.openSplit()
         else
             try
                 if !s:isWindowUsable(winnr("#"))
-                    call s:exec(s:firstNormalWindow() . "wincmd w")
+                    call s:exec(s:firstUsableWindow() . "wincmd w")
                 else
                     call s:exec('wincmd p')
                 endif
@@ -2517,14 +2517,15 @@ function! s:echoError(msg)
     call s:echo(a:msg)
     echohl normal
 endfunction
-"FUNCTION: s:firstNormalWindow(){{{2
+"FUNCTION: s:firstUsableWindow(){{{2
 "find the window number of the first normal window
-function! s:firstNormalWindow()
+function! s:firstUsableWindow()
     let i = 1
     while i <= winnr("$")
         let bnum = winbufnr(i)
         if bnum != -1 && getbufvar(bnum, '&buftype') ==# ''
                     \ && !getwinvar(i, '&previewwindow')
+                    \ && (!getbufvar(bnum, '&modified') || &hidden)
             return i
         endif
 
@@ -2631,8 +2632,8 @@ function! s:isTreeOpen()
     return s:getTreeWinNum() != -1
 endfunction
 "FUNCTION: s:isWindowUsable(winnumber) {{{2
-"Returns 1 if opening a file from the tree in the given window requires it to
-"be split
+"Returns 0 if opening a file from the tree in the given window requires it to
+"be split, 1 otherwise
 "
 "Args:
 "winnumber: the number of the window in question
@@ -3061,7 +3062,6 @@ function! s:bindMappings()
     exec "nnoremap <silent> <buffer> ". g:NERDTreeMapActivateNode . " :call <SID>activateNode(0)<cr>"
     exec "nnoremap <silent> <buffer> ". g:NERDTreeMapOpenSplit ." :call <SID>openEntrySplit(0,0)<cr>"
     exec "nnoremap <silent> <buffer> <cr> :call <SID>activateNode(0)<cr>"
-    exec "nnoremap <silent> <buffer> o :call <SID>activateNode(0)<cr>"
 
     exec "nnoremap <silent> <buffer> ". g:NERDTreeMapPreview ." :call <SID>previewNode(0)<cr>"
     exec "nnoremap <silent> <buffer> ". g:NERDTreeMapPreviewSplit ." :call <SID>previewNode(1)<cr>"

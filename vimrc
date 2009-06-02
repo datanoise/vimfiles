@@ -282,7 +282,6 @@ let TList_Auto_Update = 0 " Don't autoupdate tags, I use 'u' command for that
 " NERD_tree settings
 let NERDTreeQuitOnOpen = 1 " Close NERDTree when a file is opened
 let g:NERDTreeHijackNetrw = 0
-let g:NERDTreeMapActivateNode = '<Enter>'
 let NERDTreeIgnore=['\.o$', '\~$', '\.class$']
 
 " NERD_commenter settings

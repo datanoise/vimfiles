@@ -105,7 +105,7 @@ call s:initVariable("g:NERDTreeMapCloseDir", "x")
 call s:initVariable("g:NERDTreeMapDeleteBookmark", "D")
 call s:initVariable("g:NERDTreeMapExecute", "!")
 call s:initVariable("g:NERDTreeMapFilesystemMenu", "m")
-call s:initVariable("g:NERDTreeMapHelp", "<F1>")
+call s:initVariable("g:NERDTreeMapHelp", "?")
 call s:initVariable("g:NERDTreeMapJumpFirstChild", "K")
 call s:initVariable("g:NERDTreeMapJumpLastChild", "J")
 call s:initVariable("g:NERDTreeMapJumpNextSibling", "<C-j>")
@@ -2355,12 +2355,13 @@ function! s:createTreeWin()
     "create the nerd tree window
     let splitLocation = g:NERDTreeWinPos ==# "left" ? "topleft " : "botright "
     let splitSize = g:NERDTreeWinSize
-    silent! exec splitLocation . 'vertical ' . splitSize . ' split'
 
     if !exists('t:NERDTreeBufName')
         let t:NERDTreeBufName = s:nextBufferName()
+        silent! exec splitLocation . 'vertical ' . splitSize . ' new'
         silent! exec "edit " . t:NERDTreeBufName
     else
+        silent! exec splitLocation . 'vertical ' . splitSize . ' split'
         silent! exec "buffer " . t:NERDTreeBufName
     endif
 

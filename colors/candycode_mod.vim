@@ -68,12 +68,11 @@ hi StatusLine   guifg=#CCCCCC       guibg=#202020       gui=none
             \   ctermfg=white       ctermbg=darkgray    cterm=NONE
 hi StatusLineNC guifg=black         guibg=#202020       gui=NONE
             \   ctermfg=blue        ctermbg=darkgray    cterm=NONE
-hi MarginColumn guifg=#CCCCCC       guibg=#202020       gui=none
-            \   ctermfg=white       ctermbg=darkgray    cterm=NONE
 hi WildMenu     guifg=#ffffff       guibg=#133293       gui=bold
             \   ctermfg=white       ctermbg=darkblue    cterm=bold
 hi VertSplit    guifg=#c2bfa5       guibg=#c2bfa5       gui=NONE
             \   ctermfg=white       ctermbg=white       cterm=NONE
+hi! link MarginColumn StatusLineNC
 
 hi TabLine      guifg=#000000       guibg=#c2bfa5       gui=NONE
             \   ctermfg=black       ctermbg=white       cterm=NONE

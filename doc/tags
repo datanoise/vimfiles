@@ -434,6 +434,7 @@ dbext-integration	dbext.txt	/*dbext-integration*
 dbext-intellisense	dbext.txt	/*dbext-intellisense*
 dbext-list-objects	dbext.txt	/*dbext-list-objects*
 dbext-mappings	dbext.txt	/*dbext-mappings*
+dbext-modelines	dbext.txt	/*dbext-modelines*
 dbext-new	dbext.txt	/*dbext-new*
 dbext-newdb	dbext.txt	/*dbext-newdb*
 dbext-omni-completion	dbext.txt	/*dbext-omni-completion*
@@ -441,7 +442,19 @@ dbext-overview	dbext.txt	/*dbext-overview*
 dbext-prompting	dbext.txt	/*dbext-prompting*
 dbext-sourceforge	dbext.txt	/*dbext-sourceforge*
 dbext-tutorial	dbext.txt	/*dbext-tutorial*
+dbext-tutorial-completion	dbext.txt	/*dbext-tutorial-completion*
+dbext-tutorial-connection	dbext.txt	/*dbext-tutorial-connection*
 dbext-tutorial-dbi	dbext.txt	/*dbext-tutorial-dbi*
+dbext-tutorial-describe	dbext.txt	/*dbext-tutorial-describe*
+dbext-tutorial-execute	dbext.txt	/*dbext-tutorial-execute*
+dbext-tutorial-filetype	dbext.txt	/*dbext-tutorial-filetype*
+dbext-tutorial-history	dbext.txt	/*dbext-tutorial-history*
+dbext-tutorial-login	dbext.txt	/*dbext-tutorial-login*
+dbext-tutorial-objects	dbext.txt	/*dbext-tutorial-objects*
+dbext-tutorial-profile	dbext.txt	/*dbext-tutorial-profile*
+dbext-tutorial-results	dbext.txt	/*dbext-tutorial-results*
+dbext-tutorial-select	dbext.txt	/*dbext-tutorial-select*
+dbext-tutorial-variables	dbext.txt	/*dbext-tutorial-variables*
 dbext.txt	dbext.txt	/*dbext.txt*
 dbext.vim	dbext.txt	/*dbext.vim*
 ds	surround.txt	/*ds*

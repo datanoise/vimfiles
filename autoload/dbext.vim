@@ -1,11 +1,11 @@
 " dbext.vim - Commn Database Utility
 " Copyright (C) 2002-7, Peter Bagyinszki, David Fishburn
 " ---------------------------------------------------------------
-" Version:       8.00
+" Version:       10.00
 " Maintainer:    David Fishburn <dfishburn dot vim at gmail dot com>
 " Authors:       Peter Bagyinszki <petike1 at dpg dot hu>
 "                David Fishburn <dfishburn dot vim at gmail dot com>
-" Last Modified: 2008 Oct 29
+" Last Modified: 2009 Jan 30
 " Based On:      sqlplus.vim (author: Jamis Buck)
 " Created:       2002-05-24
 " Homepage:      http://vim.sourceforge.net/script.php?script_id=356
@@ -37,7 +37,7 @@ if v:version < 700
     echomsg "dbext: Version 4.00 or higher requires Vim7.  Version 3.50 can stil be used with Vim6."
     finish
 endif
-let g:loaded_dbext_auto = 800
+let g:loaded_dbext_auto = 1000
 
 " call confirm("Loaded dbext autoload", "&Ok")
 " Script variable defaults, these are used internal and are never displayed
@@ -51,6 +51,12 @@ let s:dbext_tempfile = fnamemodify(tempname(), ":h").
             \ 'dbext.sql'
 let s:dbext_prev_sql     = ''
 let s:dbext_result_count = 0
+" Store previous buffer information so we can return to it when we 
+" " Store previous buffer information so we can return to it when we 
+" close the Result window
+" close the Result window
+let s:dbext_buffer_last_winnr = -1
+let s:dbext_buffer_last       = -1
 " }}}
 
 " Build internal lists {{{
@@ -79,6 +85,10 @@ function! s:DB_buildLists()
     call add(s:db_types_mv, 'SQLITE')
     " Oracle Rdb (stern)
     call add(s:db_types_mv, 'RDB')
+    " Sybase SQL Anywhere UltraLite (fishburn)
+    call add(s:db_types_mv, 'ULTRALITE')
+    " Firebird (fishburn)
+    call add(s:db_types_mv, 'FIREBIRD')
 
     " The following are only available with the
     " Perl DBI extension plug.
@@ -155,6 +165,7 @@ function! s:DB_buildLists()
     call add(s:config_params_mv, 'delete_temp_file')
     call add(s:config_params_mv, 'autoclose')
     call add(s:config_params_mv, 'autoclose_min_lines')
+    call add(s:config_params_mv, 'variable_remember')
 
     " Script parameters
     let s:script_params_mv = []
@@ -312,14 +323,15 @@ function! dbext#DB_execFuncWCheck(name,...)
  
     let use_defaults = 1
     if s:DB_get("buffer_defaulted") != 1
-        call s:DB_resetBufferParameters(use_defaults)
+        let rc = s:DB_resetBufferParameters(use_defaults)
+        if rc == -1
+            call s:DB_warningMsg( "dbext:A valid database type must be chosen" )
+            return -1
+        endif
         if a:name == 'promptForParameters'
             " Handle the special case where no parameters were defaulted
             " but the process of resettting them has defaulted them.
             call s:DB_warningMsg( "dbext:Connection parameters have been defaulted" )
-        elseif s:DB_get("buffer_defaulted") != 1
-            call s:DB_warningMsg( "dbext:A valid database type must be chosen" )
-            return -1
         endif
     endif
 
@@ -355,10 +367,10 @@ function! dbext#DB_execFuncTypeWCheck(name,...)
  
     let use_defaults = 1
     if s:DB_get("buffer_defaulted") != 1
-        call s:DB_resetBufferParameters(use_defaults)
-        if s:DB_get("buffer_defaulted") != 1
-            call s:DB_warningMsg( "dbext:A valid database type must be chosen - b" )
-            return -1
+        let rc = s:DB_resetBufferParameters(use_defaults)
+        if rc == -1
+            call s:DB_warningMsg( "dbext:A valid database type must be chosen" )
+            return rc
         endif
     endif
 
@@ -493,6 +505,12 @@ function! s:DB_set(name, value)
     if index(s:all_params_mv, a:name) > -1
         let value = a:value
 
+        " If a value of -1 is provided assume an error
+        " somewhere an abort
+        if value == -1 
+            return -1
+        endif
+
         " Handle some special cases
         if (a:name ==# "type")
             " Do not check if the type already exists since
@@ -544,6 +562,7 @@ function! s:DB_set(name, value)
         endif
 
         call s:DB_warningMsg("dbext:Unknown parameter: " . a:name)
+        return -1
     endif
 
     return 0
@@ -800,12 +819,19 @@ function! s:DB_getDefault(name)
     elseif a:name ==# "history_max_entry"       |return (exists("g:dbext_default_history_max_entry")?g:dbext_default_history_max_entry.'':'4096')
     elseif a:name ==# "autoclose"               |return (exists("g:dbext_default_autoclose")?g:dbext_default_autoclose.'':'0')
     elseif a:name ==# "autoclose_min_lines"     |return (exists("g:dbext_default_autoclose_min_lines")?g:dbext_default_autoclose_min_lines.'':'2')
+    elseif a:name ==# "variable_remember"       |return (exists("g:dbext_default_variable_remember")?g:dbext_default_variable_remember.'':'1')
     elseif a:name ==# "ASA_bin"                 |return (exists("g:dbext_default_ASA_bin")?g:dbext_default_ASA_bin.'':'dbisql')
     elseif a:name ==# "ASA_cmd_terminator"      |return (exists("g:dbext_default_ASA_cmd_terminator")?g:dbext_default_ASA_cmd_terminator.'':';')
     elseif a:name ==# "ASA_cmd_options"         |return (exists("g:dbext_default_ASA_cmd_options")?g:dbext_default_ASA_cmd_options.'':'-nogui')
     elseif a:name ==# "ASA_on_error"            |return (exists("g:dbext_default_ASA_on_error")?g:dbext_default_ASA_on_error.'':'exit')
     elseif a:name ==# "ASA_SQL_Top_pat"         |return (exists("g:dbext_default_ASA_SQL_Top_pat")?g:dbext_default_ASA_SQL_Top_pat.'':'\(\cselect\)')
     elseif a:name ==# "ASA_SQL_Top_sub"         |return (exists("g:dbext_default_ASA_SQL_Top_sub")?g:dbext_default_ASA_SQL_Top_sub.'':'\1 TOP @dbext_topX ')
+    elseif a:name ==# "ULTRALITE_bin"            |return (exists("g:dbext_default_ULTRALITE_bin")?g:dbext_default_ULTRALITE_bin.'':'dbisql')
+    elseif a:name ==# "ULTRALITE_cmd_terminator" |return (exists("g:dbext_default_ULTRALITE_cmd_terminator")?g:dbext_default_ULTRALITE_cmd_terminator.'':';')
+    elseif a:name ==# "ULTRALITE_cmd_options"    |return (exists("g:dbext_default_ULTRALITE_cmd_options")?g:dbext_default_ULTRALITE_cmd_options.'':'-nogui -ul')
+    elseif a:name ==# "ULTRALITE_on_error"       |return (exists("g:dbext_default_ULTRALITE_on_error")?g:dbext_default_ULTRALITE_on_error.'':'exit')
+    elseif a:name ==# "ULTRALITE_SQL_Top_pat"    |return (exists("g:dbext_default_ULTRALITE_SQL_Top_pat")?g:dbext_default_ULTRALITE_SQL_Top_pat.'':'\(\cselect\)')
+    elseif a:name ==# "ULTRALITE_SQL_Top_sub"    |return (exists("g:dbext_default_ULTRALITE_SQL_Top_sub")?g:dbext_default_ULTRALITE_SQL_Top_sub.'':'\1 TOP @dbext_topX ')
     elseif a:name ==# "ASE_bin"                 |return (exists("g:dbext_default_ASE_bin")?g:dbext_default_ASE_bin.'':'isql')
     elseif a:name ==# "ASE_cmd_terminator"      |return (exists("g:dbext_default_ASE_cmd_terminator")?g:dbext_default_ASE_cmd_terminator.'':"\ngo\n")
     elseif a:name ==# "ASE_cmd_options"         |return (exists("g:dbext_default_ASE_cmd_options")?g:dbext_default_ASE_cmd_options.'':'-w 10000')
@@ -831,6 +857,12 @@ function! s:DB_getDefault(name)
     elseif a:name ==# "MYSQL_version"           |return (exists("g:dbext_default_MYSQL_version")?g:dbext_default_MYSQL_version.'':'5')
     elseif a:name ==# "MYSQL_SQL_Top_pat"       |return (exists("g:dbext_default_MYSQL_SQL_Top_pat")?g:dbext_default_MYSQL_SQL_Top_pat.'':'\(.*\)')
     elseif a:name ==# "MYSQL_SQL_Top_sub"       |return (exists("g:dbext_default_MYSQL_SQL_Top_sub")?g:dbext_default_MYSQL_SQL_Top_sub.'':'\1 LIMIT @dbext_topX ')
+    elseif a:name ==# "FIREBIRD_bin"            |return (exists("g:dbext_default_FIREBIRD_bin")?g:dbext_default_FIREBIRD_bin.'':'isql')
+    elseif a:name ==# "FIREBIRD_cmd_options"    |return (exists("g:dbext_default_FIREBIRD_cmd_options")?g:dbext_default_FIREBIRD_cmd_options.'':'')
+    elseif a:name ==# "FIREBIRD_cmd_terminator" |return (exists("g:dbext_default_FIREBIRD_cmd_terminator")?g:dbext_default_FIREBIRD_cmd_terminator.'':';')
+    elseif a:name ==# "FIREBIRD_version"        |return (exists("g:dbext_default_FIREBIRD_version")?g:dbext_default_FIREBIRD_version.'':'5')
+    elseif a:name ==# "FIREBIRD_SQL_Top_pat"    |return (exists("g:dbext_default_FIREBIRD_SQL_Top_pat")?g:dbext_default_FIREBIRD_SQL_Top_pat.'':'\(.*\)')
+    elseif a:name ==# "FIREBIRD_SQL_Top_sub"    |return (exists("g:dbext_default_FIREBIRD_SQL_Top_sub")?g:dbext_default_FIREBIRD_SQL_Top_sub.'':'\1 FIRST @dbext_topX ')
     elseif a:name ==# "ORA_bin"                 |return (exists("g:dbext_default_ORA_bin")?g:dbext_default_ORA_bin.'':'sqlplus')
     elseif a:name ==# "ORA_cmd_header"          |return (exists("g:dbext_default_ORA_cmd_header")?g:dbext_default_ORA_cmd_header.'':"" .
                         \ "set pagesize 10000\n" .
@@ -942,6 +974,30 @@ function! s:DB_getDefault(name)
     endif
 endfunction
 
+function! dbext#DB_completeSettings(ArgLead, CmdLine, CursorPos)
+    let items = copy(s:all_params_mv)
+    call extend(items, s:config_dbi_mv)
+    if a:ArgLead != ''
+        let items = filter(items, "v:val =~ '^".a:ArgLead."'")
+    endif
+    return items
+endfunction
+
+function! dbext#DB_completeVariable(ArgLead, CmdLine, CursorPos)
+    if exists('b:dbext_sqlvar_mv')
+        let items = []
+        for [k,v] in items(b:dbext_sqlvar_mv)
+            call add(items, k.'='.v)
+        endfor
+        if a:ArgLead != ''
+            let items = filter(items, "v:val =~ '^".substitute(a:ArgLead,"'","''",'g')."'")
+        endif
+        return items
+    else
+        return []
+    endif
+endfunction
+
 "" Sets global parameters to default values.
 function! s:DB_resetGlobalParameters()
 
@@ -999,6 +1055,7 @@ endfunction
 " new buffer to set up the buffer defaults
 function! s:DB_resetBufferParameters(use_defaults)
     let no_defaults  = 0
+    let retval       = -2
 
     " Reset configuration parameters to defaults
     for param in s:config_params_mv
@@ -1022,19 +1079,33 @@ function! s:DB_resetBufferParameters(use_defaults)
             " Only set the buffer variable if the default value
             " is not '@ask'
             if s:DB_getDefault(param) !=? '@ask'
-                call s:DB_set(param, s:DB_get(param))
+                let value = s:DB_get(param)
+                if value == -1 
+                    let retval = value
+                    break
+                else
+                    let retval = s:DB_set(param, value)
+                endif
             endif
         endif
     endfor
 
-    " If a database type has been chosen, do not prompt
+    " if retval == -1 
+    "     return retval
+    " endif
+
+    " If a database type has not been chosen, do prompt
     " for connection information
-    if s:DB_get("type", no_defaults) == "" && a:use_defaults == 1
+    if s:DB_get("type", no_defaults) == "" 
+                \ && a:use_defaults == 1
+                \ && retval == -2
         call s:DB_promptForParameters()
     endif
 
-    call s:DB_validateBufferParameters()
+    " call s:DB_validateBufferParameters()
+    let retval = s:DB_validateBufferParameters()
 
+    return retval
 endfunction
 
 "" Returns a string containing a vim command where the named variable gets the
@@ -1082,7 +1153,8 @@ endfunction
 
 function! s:DB_promptForParameters(...)
 
-    call s:DB_set('prompting_user', 1)
+    " call s:DB_set('prompting_user', 1)
+    let b:dbext_prompting_user = 1
     let no_default = 1
     let param_prompted = 0
     let param_value = ''
@@ -1174,6 +1246,7 @@ function! s:DB_promptForParameters(...)
         " If the user cancelled the input, break from the loop
         " this is a new 602 feature
         if l:new_value == "-1"
+            let retval = l:new_value
             break
         elseif l:new_value !=# l:old_value
             " Make the comparison between the new_value and old_value
@@ -1244,7 +1317,6 @@ function! s:DB_promptForParameters(...)
         " are leaving this code as is
         echo "\n" 
     endif
-    call s:DB_set('prompting_user', 0)
 
     if (s:DB_get('type') =~ '\<DBI\>\|\<ODBC\>') 
         " If we have changed any of our connection parameters
@@ -1252,6 +1324,9 @@ function! s:DB_promptForParameters(...)
         " use the existing connection for this buffer.
         call dbext#DB_disconnect()
     endif
+
+    " call s:DB_set('prompting_user', 0)
+    let b:dbext_prompting_user = 0
 
     return retval
 endfunction
@@ -1285,7 +1360,10 @@ function! dbext#DB_checkModeline()
             " Since a modeline exists, clear any existing defaults
             " connection parameters
             let no_defaults = 0
-            call s:DB_resetBufferParameters(no_defaults)
+            let rc = s:DB_resetBufferParameters(no_defaults)
+            " if rc == -1
+            "     break
+            " endif
 
             let rc = dbext#DB_setMultipleOptions(mdl_options)
             if rc > -1
@@ -1347,9 +1425,13 @@ function! s:DB_stripLeadFollowSpaceLines(str)
     let stripped = substitute(a:str, '^[\r\n]\+', '', '')
     " Now take care of the other end of the string
     let stripped = substitute(stripped, '\([ \t]\+\)\([\r\n]\+\)', '\2', 'g')
-    " 
-    let stripped = substitute( stripped, '^\s*\(.\{-}\)[ \t\r\n]*$', '\1\n', '' )
-
+    
+    " Albie patch
+    " Unfortunately, the following substitute concats the first 2 lines, to 
+    " create a space on the first line
+    " let stripped = substitute( stripped, '^\s*\(.\{-}\)[ \t\r\n]*$', '\1\n', '' )
+    let stripped = substitute(stripped, '^\|[\n]\zs\s*\(.\{-}\)[ \t]*\ze[\r\n$]', '\1', 'g' )
+    let stripped = substitute(stripped, '^\s\+', '', '')
     return stripped
 endfunction
 
@@ -1384,7 +1466,10 @@ function! dbext#DB_setMultipleOptions(multi_options)
     " Strip leading or following quotes, single or double
     let options_cs = s:DB_stripLeadFollowQuotesSpace(a:multi_options)
 
-    " Choose a bad separator (:), and it is too late to choose another one
+    " replace all "\:" sequences with \!
+    let options_cs = substitute(options_cs, '\\:', '\\!', '' )
+
+    " Chose a bad separator (:), and it is too late to choose another one
     " with the plugin available.
     " On win32 platforms, must do something special for the bin_path
     " parameter, since it can have C:\
@@ -1407,6 +1492,9 @@ function! dbext#DB_setMultipleOptions(multi_options)
             let opt_name  = matchstr(option, '.\{-}\ze=')
             let opt_value = matchstr(option, '=\zs.*')
             let opt_value = s:DB_stripLeadFollowQuotesSpace(opt_value)
+ 
+            " replace all "\!" sequences with :
+            let opt_value = substitute(opt_value, '\\!', ':', '' )
 
             if has("win32") && (
                         \ opt_name ==? 'bin_path'
@@ -1694,6 +1782,129 @@ function! s:DB_ASA_getDictionaryView()
                 \ " ORDER BY ".(s:DB_get('dict_show_owner')==1?"vcreator||'.'||":'')."viewname; "
                 \ )
     return s:DB_ASA_stripHeaderFooter(result)
+endfunction 
+"}}}
+" UltraLite exec {{{
+function! s:DB_ULTRALITE_execSql(str)
+    " All defaults are specified in the DB_getDefault function.
+    " This contains the defaults settings for all database types
+    let terminator = dbext#DB_getWType("cmd_terminator")
+
+    let output = dbext#DB_getWType("cmd_header") 
+    " Check if a login_script has been specified
+    let output = output.s:DB_getLoginScript(s:DB_get("login_script"))
+    let output = output.a:str
+    " Only include a command terminator if one has not already
+    " been added
+    if output !~ s:DB_escapeStr(terminator) . 
+                \ '['."\n".' \t]*$'
+        let output = output . terminator
+    endif
+
+    exe 'redir! > ' . s:dbext_tempfile
+    silent echo output
+    redir END
+
+    let dbext_bin = s:DB_fullPath2Bin(dbext#DB_getWType("bin"))
+
+    let cmd = dbext_bin .  ' ' . dbext#DB_getWType("cmd_options") . ' ' .
+                \ s:DB_option('-onerror ', dbext#DB_getWType("on_error"), ' ') .
+                \ ' -c "' .
+                \ s:DB_option('uid=', s:DB_get("user"), ';') .
+                \ s:DB_option('pwd=', s:DB_get("passwd"), ';') .
+                \ s:DB_option('dsn=', s:DB_get("dsnname"), ';') .
+                \ s:DB_option('dbf=', s:DB_get("dbname"), ';') .
+                \ s:DB_option('', s:DB_get("extra"), '') 
+    let cmd = cmd .  '" ' . 
+                \ ' read ' . s:dbext_tempfile
+    let result = s:DB_runCmd(cmd, output, "")
+
+    return result
+endfunction
+
+function! s:DB_ULTRALITE_describeTable(table_name)
+    let owner  = s:DB_getObjectOwner(a:table_name)
+    let object = s:DB_getObjectName(a:table_name)
+    let owner  = ( strlen(owner) > 0 ? owner : '' ) 
+    " return s:DB_ULTRALITE_execSql("call sp_jdbc_columns('".object."', '".owner."');")
+    let sql =  ''.
+                \ 'select CAST("column_name" as VARCHAR(40)) column_name, "domain", "nulls", CAST("default" as VARCHAR(40)) "default", "domain_info", sc."object_id", CAST(st."table_name" as VARCHAR(40)) table_name '.
+                \ "  from SYSTABLE st ".
+                \ "  join SYSCOLUMN sc ".
+                \ "    on st.object_id = sc.table_id ".
+                \ " where st.table_name = '".object."' "
+                \ " order by sc.table_id, sc.object_id asc "
+    return s:DB_ULTRALITE_execSql(sql)
+endfunction
+
+function! s:DB_ULTRALITE_describeProcedure(proc_name)
+    echo 'UltraLite does not support stored procedures'
+    return -1
+endfunction
+
+function! s:DB_ULTRALITE_getListTable(table_prefix)
+    let owner      = s:DB_getObjectOwner(a:table_prefix)
+    let table_name = s:DB_getObjectName(a:table_prefix)
+    let sql = ''.
+                \ "select CAST(table_name as VARCHAR(70)) table_name, table_type " .
+                \ "  from SYSTABLE " .
+                \ " where table_name   like '" . table_name . "%' ".
+                \ " order by table_name"
+    return s:DB_ULTRALITE_execSql(sql)
+endfunction
+
+function! s:DB_ULTRALITE_getListProcedure(proc_prefix)
+    echo 'UltraLite does not support stored procedures'
+    return -1
+endfunction
+
+function! s:DB_ULTRALITE_getListView(view_prefix)
+    echo 'UltraLite does not support views'
+    return -1
+endfunction 
+
+function! s:DB_ULTRALITE_getListColumn(table_name) 
+    let owner      = s:DB_getObjectOwner(a:table_name)
+    let table_name = s:DB_getObjectName(a:table_name)
+    let query = ''.
+                \ "select column_name ".
+                \ "  from SYSTABLE st ".
+                \ "  join SYSCOLUMN sc ".
+                \ "    on st.object_id = sc.table_id ".
+                \ " where st.table_name = '".table_name."' "
+                \ " order by sc.object_id asc "
+    let result = s:DB_ULTRALITE_execSql( query )
+    return s:DB_ULTRALITE_stripHeaderFooter(result)
+endfunction 
+
+function! s:DB_ULTRALITE_stripHeaderFooter(result)
+    " Strip off column headers ending with a newline
+    let stripped = substitute( a:result, '\_.*-\s*'."[\<C-J>]", '', '' )
+    " Strip off query statistics
+    let stripped = substitute( stripped, '(\(First\s\+\)\?\d\+ rows\_.*', '', '' )
+    " Strip off trailing spaces
+    " let stripped = substitute( stripped, '\(\<\w\+\>\)\s*', '\1', 'g' )
+    let stripped = substitute( stripped, '\(\<\w\+\>\)\s*\(\n\)', '\1\2', '' )
+    return stripped
+endfunction 
+
+function! s:DB_ULTRALITE_getDictionaryTable() 
+    let result = s:DB_ULTRALITE_execSql(
+                \ "select table_name " .
+                \ "  from SYSTABLE " .
+                \ " order by table_name"
+                \ )
+    return s:DB_ULTRALITE_stripHeaderFooter(result)
+endfunction 
+
+function! s:DB_ULTRALITE_getDictionaryProcedure() 
+    echo 'UltraLite does not support stored procedures'
+    return -1
+endfunction 
+
+function! s:DB_ULTRALITE_getDictionaryView() 
+    echo 'UltraLite does not support views'
+    return -1
 endfunction 
 "}}}
 " ASE exec {{{
@@ -2595,8 +2806,11 @@ function! s:DB_ORA_execSql(str)
     " Added quit to the end of the command to exit SQLPLUS
     if output !~ s:DB_escapeStr(terminator) . 
                 \ '['."\n".' \t]*$'
-        let output = output . "\nquit".terminator
-    endif
+        let output = output . terminator
+     endif
+ 
+    " Added quit to the end of the command to exit SQLPLUS
+    let output = output . "\nquit".terminator
 
     exe 'redir! > ' . s:dbext_tempfile
     silent echo output
@@ -2935,8 +3149,11 @@ function! s:DB_RDB_execSql(str) "{{{
     " Added quit to the end of the command to exit SQLPLUS
     if output !~ s:DB_escapeStr(terminator) . 
                 \ '['."\n".' \t]*$'
-        let output = output . "\nquit".terminator
-    endif
+        let output = output . terminator
+     endif
+ 
+    " Added quit to the end of the command to exit SQLPLUS
+    let output = output . "\nquit".terminator
 
     exe 'redir! > ' . s:dbext_tempfile
     silent echo output
@@ -3231,6 +3448,132 @@ function! s:DB_SQLSRV_getDictionaryView() "{{{
                 \ " order by ".(s:DB_get('dict_show_owner')==1?"convert(varchar,u.name), ":'')."o.name"
                 \ )
     return s:DB_SQLSRV_stripHeaderFooter(result)
+endfunction "}}}
+"}}}
+" FIREBIRD exec {{{
+function! s:DB_FIREBIRD_execSql(str)
+    " All defaults are specified in the DB_getDefault function.
+    " This contains the defaults settings for all database types
+    let terminator = dbext#DB_getWType("cmd_terminator")
+
+    let output = dbext#DB_getWType("cmd_header") 
+    " Check if a login_script has been specified
+    let output = output.s:DB_getLoginScript(s:DB_get("login_script"))
+    let output = output.a:str
+    " Only include a command terminator if one has not already
+    " been added
+    if output !~ s:DB_escapeStr(terminator) . 
+                \ '['."\n".' \t]*$'
+        let output = output . terminator
+    endif
+
+    exe 'redir! > ' . s:dbext_tempfile
+    silent echo output
+    redir END
+
+    let dbext_bin = s:DB_fullPath2Bin(dbext#DB_getWType("bin"))
+
+    let cmd = dbext_bin .  ' ' . dbext#DB_getWType("cmd_options")
+    let cmd = cmd .
+                \ s:DB_option(' -u ', s:DB_get("user"), '') .
+                \ s:DB_option(' -p ',  s:DB_get("passwd"), '') .
+                \ s:DB_option(' ', s:DB_get("dbname"), '') .
+                \ s:DB_option(' ', s:DB_get("extra"), '') .
+                \ ' < ' . s:dbext_tempfile
+    let result = s:DB_runCmd(cmd, output, "")
+
+    return result
+endfunction
+
+function! s:DB_FIREBIRD_describeTable(table_name)
+    return s:DB_FIREBIRD_execSql("show tables ".a:table_name)
+endfunction
+
+function! s:DB_FIREBIRD_describeProcedure(procedure_name)
+    return s:DB_FIREBIRD_execSql("show procedure ".a:procedure_name)
+    return result
+endfunction
+
+function! s:DB_FIREBIRD_getListTable(table_prefix)
+    let query = "SELECT RDB$RELATION_NAME ".
+                \" FROM RDB$RELATIONS ".
+                \"WHERE RDB$SYSTEM_FLAG=0 ".
+                \"  AND RDB$RELATION_NAME LIKE '".a:table_prefix."%'".
+                \"ORDER BY RDB$RELATION_NAME "
+    return s:DB_FIREBIRD_execSql(query)
+endfunction
+
+function! s:DB_FIREBIRD_getListProcedure(proc_prefix)
+    let owner   = s:DB_getObjectOwner(a:proc_prefix)
+    let object  = s:DB_getObjectName(a:proc_prefix)
+    let query = "SELECT DISTINCT RDB$PROCEDURE_NAME ".
+                \" FROM RDB$PROCEDURES ".
+                \"WHERE RDB$PROCEDURE_NAME LIKE '".object."%'".
+                \"ORDER BY RDB$PROCEDURE_NAME "
+    return s:DB_FIREBIRD_execSql(query)
+endfunction
+
+function! s:DB_FIREBIRD_getListView(view_prefix)
+    let owner   = s:DB_getObjectOwner(a:view_prefix)
+    let object  = s:DB_getObjectName(a:view_prefix)
+    let query = "SELECT DISTINCT RDB$VIEW_NAME ".
+                \" FROM RDB$VIEW_RELATIONS ".
+                \"WHERE RDB$VIEW_NAME LIKE '".object."%'".
+                \"ORDER BY RDB$VIEW_NAME "
+    return s:DB_FIREBIRD_execSql(query)
+endfunction 
+
+function! s:DB_FIREBIRD_getListColumn(table_name) "{{{
+    let owner      = s:DB_getObjectOwner(a:table_name)
+    let table_name = s:DB_getObjectName(a:table_name)
+    let query = ''.
+                \ "SELECT f.rdb$field_name ".
+                \ "  FROM rdb$relation_fields f ".
+                \ "  JOIN rdb$relations r ".
+                \ "    ON f.rdb$relation_name = r.rdb$relation_name ".
+                \ "   AND r.rdb$view_blr IS NULL ".
+                \ "   AND ( ".
+                \ "           r.rdb$system_flag IS NULL ".
+                \ "        OR r.rdb$system_flag   = 0 ".
+                \ "       ) ".
+                \ " WHERE f.rdb$relation_name = '".table_name."' ".
+                \ " ORDER BY f.rdb$field_position "
+    let result = s:DB_FIREBIRD_execSql( query )
+    return s:DB_FIREBIRD_stripHeaderFooter(result)
+endfunction "}}}
+
+function! s:DB_FIREBIRD_stripHeaderFooter(result) "{{{
+    " RDB$RELATION_NAME
+    " RDB$FIELD_NAME
+    " ===============================================================================
+    " ==============================
+    " =================================================
+    " COUNTRY
+    " COUNTRY
+    "
+    " COUNTRY
+    " CURRENCY
+    "
+    " Strip off column headers ending with a newline
+    let stripped = substitute( a:result, '\_.*=\s*'."[\<C-J>]", '', '' )
+    " Strip off trailing spaces
+    let stripped = substitute( stripped, '\(\<\w\+\>\)\s*\(\n\)', '\1\2', '' )
+    return stripped
+endfunction "}}}
+
+function! s:DB_FIREBIRD_getDictionaryTable() "{{{
+    let result = s:DB_FIREBIRD_getListTable('')
+    return s:DB_FIREBIRD_stripHeaderFooter(result)
+endfunction "}}}
+
+function! s:DB_FIREBIRD_getDictionaryProcedure() "{{{
+    let result = s:DB_FIREBIRD_getListProcedure('')
+    return s:DB_FIREBIRD_stripHeaderFooter(result)
+endfunction "}}}
+
+function! s:DB_FIREBIRD_getDictionaryView() "{{{
+    let result = s:DB_FIREBIRD_getListView('')
+    return s:DB_FIREBIRD_stripHeaderFooter(result)
 endfunction "}}}
 "}}}
 " DBI (Perl) exec {{{
@@ -4543,6 +4886,19 @@ function! dbext#DB_execSql(query)
    " Add query to internal history
     call s:DB_historyAdd(query)
     
+    " We need some additional database type information to continue
+    if s:DB_get("buffer_defaulted") != 1
+        let use_defaults = 1
+        let rc = s:DB_resetBufferParameters(use_defaults)
+        if rc == -1
+            call s:DB_warningMsg( 
+                        \ "dbext:A valid database type must ".
+                        \ "be chosen" 
+                        \ )
+            return rc
+        endif
+    endif
+
     if s:DB_get("prompt_for_parameters") == "1"
         let query = dbext#DB_parseQuery(query)
     endif
@@ -4584,14 +4940,15 @@ function! dbext#DB_execSqlTopX(...)
         let sql = a:1
     else
         call s:DB_warningMsg("dbext:No statement to execute!")
-        return
+        return ""
     endif
     
     " We need some additional database type information to continue
     if s:DB_get("buffer_defaulted") != 1
         let use_defaults = 1
-        call s:DB_resetBufferParameters(use_defaults)
-        if s:DB_get("buffer_defaulted") != 1
+        let rc = s:DB_resetBufferParameters(use_defaults)
+        if rc == -1
+            call s:DB_warningMsg( "dbext:A valid database type must be chosen" )
             return ""
         endif
     endif
@@ -4599,7 +4956,7 @@ function! dbext#DB_execSqlTopX(...)
     let max_rows = input("How many rows to return? ")
     if max_rows !~ '\d\+'
         call s:DB_warningMsg("dbext:You must provide a numeric value")
-        return
+        return ""
     endif
 
     let cur_rows = 0
@@ -4878,9 +5235,10 @@ function! dbext#DB_getListConnections()
     " we are dealing with to choose the correct cmd_terminator
     if s:DB_get("buffer_defaulted") != 1
         let use_defaults = 1
-        call s:DB_resetBufferParameters(use_defaults)
-        if s:DB_get("buffer_defaulted") != 1
-            return ""
+        let rc = s:DB_resetBufferParameters(use_defaults)
+        if rc == -1
+            call s:DB_warningMsg( "dbext:A valid database type must be chosen" )
+            return -1
         endif
     endif
 
@@ -4913,8 +5271,9 @@ function! dbext#DB_getQueryUnderCursor()
     " In order to parse a statement, we must know what database type
     " we are dealing with to choose the correct cmd_terminator
     if s:DB_get("buffer_defaulted") != 1
-        call s:DB_resetBufferParameters(use_defaults)
-        if s:DB_get("buffer_defaulted") != 1
+        let rc = s:DB_resetBufferParameters(use_defaults)
+        if rc == -1
+            call s:DB_warningMsg( "dbext:A valid database type must be chosen" )
             return ""
         endif
     endif
@@ -5066,15 +5425,6 @@ function! s:DB_getInput(prompt, default_value, cancel_value)
 
     return val
 endfunction
-
-function! dbext#DB_settingsComplete(ArgLead, CmdLine, CursorPos)
-    let items = copy(s:all_params_mv)
-    call extend(items, s:config_dbi_mv)
-    if a:ArgLead != ''
-        let items = filter(items, "v:val =~ '^".a:ArgLead."'")
-    endif
-    return items
-endfunction
 function! s:DB_getObjectOwner(object) "{{{
     " The owner regex matches a word at the start of the string which is
     " followed by a dot, but doesn't include the dot in the result.
@@ -5182,8 +5532,8 @@ function! dbext#DB_DictionaryCreate( drop_dict, which ) "{{{
     " we are dealing with to choose the correct cmd_terminator
     if s:DB_get("buffer_defaulted") != 1
         let use_defaults = 1
-        call s:DB_resetBufferParameters(use_defaults)
-        if s:DB_get("buffer_defaulted") != 1
+        let rc = s:DB_resetBufferParameters(use_defaults)
+        if rc == -1
             return temp_file
         endif
     endif
@@ -5512,6 +5862,48 @@ function! dbext#DB_orientationToggle(...)
         exec switched_bufnr."buffer"
     endif
 endfunction "}}}
+" switchPrevBuf {{{
+function! dbext#DB_switchPrevBuf()
+    let curr_bufnr     = s:dbext_prev_bufnr
+    let switched_bufnr = s:dbext_prev_bufnr
+
+    " Check to ensure the buffer still exists
+    if bufnr(s:dbext_prev_bufnr) > 0
+        " If the buffer in that window is still the same buffer
+        if winbufnr(s:dbext_prev_winnr) == s:dbext_prev_bufnr
+            " Return to original window
+            exec s:dbext_prev_winnr."wincmd w"
+            return s:dbext_prev_bufnr
+        else
+            " Find another split window which contains this buffer
+            if bufwinnr(s:dbext_prev_bufnr) > -1
+                let s:dbext_prev_winnr = bufwinnr(s:dbext_prev_bufnr)
+                " Return to original window
+                exec s:dbext_prev_winnr."wincmd w"
+                return s:dbext_prev_bufnr
+            else
+                if &hidden == 1
+                    " Return to the original window
+                    exec s:dbext_prev_winnr."wincmd w"
+                    " Record which buffer we are current editing
+                    let switched_bufnr = bufnr('%')
+                    " Change the buffer (assuming hidden is set) to the previous
+                    " buffer.
+                    exec s:dbext_prev_bufnr."buffer"
+                    return s:dbext_prev_bufnr
+                else
+                    " Buffer exists, but hidden is set.
+                    " Could not switch to previous buffer.
+                    return -2
+                endif
+            endif
+        endif
+    else
+        " Buffer does not exist.
+        " Could not switch to previous buffer.
+        return -1
+    endif
+endfunction "}}}
 " runPrevCmd {{{
 function! dbext#DB_runPrevCmd(...)
     " If no SQL specified use the current script variable
@@ -5525,52 +5917,27 @@ function! dbext#DB_runPrevCmd(...)
     let curr_bufnr     = s:dbext_prev_bufnr
     let switched_bufnr = s:dbext_prev_bufnr
 
+    let rc = dbext#DB_switchPrevBuf()
+
     " Check to ensure the buffer still exists
-    if bufnr(s:dbext_prev_bufnr) > 0
-        " If the buffer in that window is still the same buffer
-        if winbufnr(s:dbext_prev_winnr) == s:dbext_prev_bufnr
+    if rc == -2
+        " If empty, check if they want to leave it empty
+        " of skip this variable
+        let response = confirm("Buffer #:".s:dbext_prev_bufnr.
+                    \ " is no longer visible and hidden is not set.".
+                    \ " Do you want to execute".
+                    \ " this statement using the buffer's".
+                    \ " connection parameters from the same window".
+                    \ " (buffer #:".bufnr('%').")",
+                    \ "&Yes" .
+                    \ "\n&No"
+                    \ )
+        if response == 1
             let refresh = 1
             " Return to original window
             exec s:dbext_prev_winnr."wincmd w"
-        else
-            " Find another split window which contains this buffer
-            if bufwinnr(s:dbext_prev_bufnr) > -1
-                let s:dbext_prev_winnr = bufwinnr(s:dbext_prev_bufnr)
-                let refresh = 1
-                " Return to original window
-                exec s:dbext_prev_winnr."wincmd w"
-            else
-                if &hidden == 1
-                    " Return to the original window
-                    exec s:dbext_prev_winnr."wincmd w"
-                    " Record which buffer we are current editing
-                    let switched_bufnr = bufnr('%')
-                    " Change the buffer (assuming hidden is set) to the previous
-                    " buffer.
-                    exec s:dbext_prev_bufnr."buffer"
-                    " Refresh the SQL
-                    let refresh = 1
-                else
-                    " If empty, check if they want to leave it empty
-                    " of skip this variable
-                    let response = confirm("Buffer #:".s:dbext_prev_bufnr.
-                                \ " is no longer visible and hidden is not set.".
-                                \ " Do you want to execute".
-                                \ " this statement using the buffer's".
-                                \ " connection parameters from the same window".
-                                \ " (buffer #:".bufnr('%').")",
-                                \ "&Yes" .
-                                \ "\n&No"
-                                \ )
-                    if response == 1
-                        let refresh = 1
-                        " Return to original window
-                        exec s:dbext_prev_winnr."wincmd w"
-                    endif
-                endif
-            endif
         endif
-    else
+    elseif rc == -1
         call s:DB_warningMsg('dbext:Buffer:'.s:dbext_prev_bufnr.' no longer exists')
         " If empty, check if they want to leave it empty
         " of skip this variable
@@ -5587,6 +5954,9 @@ function! dbext#DB_runPrevCmd(...)
             " Return to original window
             exec s:dbext_prev_winnr."wincmd w"
         endif
+    else
+        " Switch was successful
+        let refresh = 1
     endif
 
     if refresh == 1
@@ -5601,7 +5971,8 @@ function! dbext#DB_runPrevCmd(...)
         " buffer.
         exec switched_bufnr."buffer"
     endif
-endfunction "}}}
+endfunction 
+"}}}
 " runCmd {{{
 function! s:DB_runCmd(cmd, sql, result)
     let s:dbext_prev_sql   = a:sql
@@ -5664,7 +6035,7 @@ function! s:DB_runCmd(cmd, sql, result)
                 if s:DB_switchToBuffer(res_buf_name, res_buf_name, 'result_bufnr') == 1
                     " Switch back to the result buffer and execute
                     " the user defined function
-                    call DBextPostResult(s:DB_get('type'), s:DB_get('result_bufnr'))
+                    call DBextPostResult(s:DB_get('type'), (s:DB_get('result_bufnr')+0))
                 endif
             endif
             if s:DB_get('autoclose') == '1' && s:dbext_result_count <= s:DB_get('autoclose_min_lines')
@@ -5723,6 +6094,11 @@ endfunction "}}}
 function! s:DB_switchToBuffer(buf_name, buf_file, get_buf_nr_name)
     " Retieve this value before we switch buffers
     let l:buffer_lines = s:DB_get('buffer_lines')
+
+    " Save the current buffer number. The yankring will switch back to
+    " this buffer when an action is taken.
+    let s:dbext_buffer_last       = bufnr('%')
+    let s:dbext_buffer_last_winnr = winnr()
 
     " Do not use bufexists(res_buf_name), since it uses a fully qualified
     " path name to search for the buffer, which in effect opens multiple
@@ -5833,7 +6209,7 @@ endfunction "}}}
 function! dbext#DB_windowClose(buf_name)
     if a:buf_name == '%'
         " The user hit 'q', which is a buffer specific mapping to close
-        " the result or history window.  Save the size of the buffer
+        " the result/history/variable window.  Save the size of the buffer
         " for future use.
         
         " Update the local buffer variables with the current size
@@ -5844,10 +6220,15 @@ function! dbext#DB_windowClose(buf_name)
         " Hide it 
         hide
 
+        if bufwinnr(s:dbext_buffer_last) != -1
+            " If the buffer is visible, switch to it
+            exec s:dbext_buffer_last_winnr . "wincmd w"
+        endif
+
         return
     endif
 
-    " If the command executed was DBCloseResults this must handle both 
+    " If the command executed was DBResultsClose this must handle both 
     " cases, Results window and the History window
     
     " Results Window
@@ -5876,6 +6257,12 @@ function! dbext#DB_windowClose(buf_name)
 
         " Hide it 
         hide
+
+        if bufwinnr(s:dbext_buffer_last) != -1
+            " If the buffer is visible, switch to it
+            exec s:dbext_buffer_last_winnr . "wincmd w"
+        endif
+
         return
     endif
 
@@ -5900,6 +6287,12 @@ function! dbext#DB_windowClose(buf_name)
 
         " Hide it 
         hide
+
+        if bufwinnr(s:dbext_buffer_last) != -1
+            " If the buffer is visible, switch to it
+            exec s:dbext_buffer_last_winnr . "wincmd w"
+        endif
+
     endif
 endfunction "}}}
 " DB_windowOpen {{{
@@ -5914,14 +6307,20 @@ function! dbext#DB_windowOpen()
 
     " Open buffer in required location
     if s:DB_switchToBuffer(res_buf_name, res_buf_name, 'result_bufnr') == 1
-        nnoremap <buffer> <silent> R :DBRefreshResult<cr>
-        nnoremap <buffer> <silent> O :DBOrientationToggle<cr>
+        nnoremap <buffer> <silent> R   :DBResultsRefresh<cr>
+        nnoremap <buffer> <silent> O   :DBOrientationToggle<cr>
+        nnoremap <buffer> <silent> dd  :call dbext#DB_removeVariable()<CR>
+        xnoremap <buffer> <silent> d   :call dbext#DB_removeVariable()<CR>
+        " nnoremap <buffer> <silent> dd  :call s:DB_removeVariable()<CR>
+        " xnoremap <buffer> <silent> d   :call s:DB_removeVariable()<CR>
+        " nnoremap <buffer> <silent> dd  :DBVarRangeAssign!<CR>
+        " xnoremap <buffer> <silent> d   :DBVarRangeAssign!<CR>
     endif
 
     setlocal modified
-    " Create a buffer mapping to clo this window
-    nnoremap <buffer> q :DBCloseResults<cr>
-    nnoremap <buffer> <silent> a             :call <SID>DB_set('autoclose', (s:DB_get('autoclose')==1?0:1))<CR>
+    " Create a buffer mapping to close this window
+    nnoremap <buffer> q                :DBResultsClose<cr>
+    nnoremap <buffer> <silent> a       :call <SID>DB_set('autoclose', (s:DB_get('autoclose')==1?0:1))<CR>
     if hasmapto('DB_historyDel')
         try
             silent! unmap <buffer> dd
@@ -5932,6 +6331,13 @@ function! dbext#DB_windowOpen()
         try
             silent! unmap <buffer> <2-LeftMouse>
             silent! unmap <buffer> <CR>
+        catch
+        endtry
+    endif
+    if hasmapto('DB_removeVariable')
+        try
+            silent! unmap  <buffer> dd
+            silent! xunmap <buffer> d
         catch
         endtry
     endif
@@ -5995,15 +6401,21 @@ function! s:DB_addToResultBuffer(output, do_clear)
 
     " Open buffer in required location
     if s:DB_switchToBuffer(res_buf_name, res_buf_name, 'result_bufnr') == 1
-        nnoremap <buffer> <silent> R :DBRefreshResult<cr>
-        nnoremap <buffer> <silent> O :DBOrientationToggle<cr>
+        nnoremap <buffer> <silent> R   :DBResultsRefresh<cr>
+        nnoremap <buffer> <silent> O   :DBOrientationToggle<cr>
+        nnoremap <buffer> <silent> dd  :call dbext#DB_removeVariable()<CR>
+        xnoremap <buffer> <silent> d   :call dbext#DB_removeVariable()<CR>
+        " nnoremap <buffer> <silent> dd  :call s:DB_removeVariable()<CR>
+        " xnoremap <buffer> <silent> d   :call s:DB_removeVariable()<CR>
+        " nnoremap <buffer> <silent> dd  :DBVarRangeAssign!<CR>
+        " xnoremap <buffer> <silent> d   :DBVarRangeAssign!<CR>
     endif
 
     setlocal modified
-    " Create a buffer mapping to clo this window
-    nnoremap <buffer> q :DBCloseResults<cr>
+    " Create a buffer mapping to close this window
+    nnoremap <buffer> q                :DBResultsClose<cr>
     nnoremap <buffer> <silent> a       :call <SID>DB_set('autoclose', (s:DB_get('autoclose')==1?0:1))<CR>
-    nnoremap <buffer> <silent> <space> :DBToggleResultsResize<cr>
+    nnoremap <buffer> <silent> <space> :DBResultsToggleResize<cr>
     if hasmapto('DB_historyDel')
         try
             silent! unmap <buffer> dd
@@ -6097,6 +6509,10 @@ function! dbext#DB_parseQuery(query)
     elseif &filetype == "vim"
         let query = s:DB_parseVim(a:query)
         return s:DB_parseHostVariables(query)
+    elseif &filetype == "vb"    ||
+           \ &filetype == "basic"
+        let query = s:DB_parseVB(a:query)
+        return s:DB_parseHostVariables(query)
     else
         return s:DB_parseHostVariables(a:query)
     endif
@@ -6119,59 +6535,107 @@ function! s:DB_searchReplace(str, exp_find_str, exp_get_value, count_matches)
         let count_nbr = count_nbr + 1
         " Retrieve the name of what we found
         let var = matchstr(str, a:exp_get_value, index)
-        let index = index + 1
-        " Prompt the user using the name of the variable
-        let dialog_msg = "Enter value for " . var
-        if a:count_matches == 1
-            " If there is no name (ie ?), then include the
-            " count of what was found so the user can
-            " distinguish between different ?s
-            let dialog_msg = dialog_msg . " number " . count_nbr
-        endif
-        let dialog_msg = dialog_msg . ": "
-        let var_val = s:DB_getInput( 
-                    \ dialog_msg,
-                    \ '',
-                    \ "dbext_cancel"
-                    \ )
-        let response = 2
-        " Ok or Cancel result in an empty string
-        if var_val == "dbext_cancel" 
-            let response = 5
-        elseif var_val == "" 
-            " If empty, check if they want to leave it empty
-            " of skip this variable
-            let response = confirm("Your value is empty!",
-                                    \ "&Skip" .
-                                    \ "\n&Use blank" .
-                                    \ "\nS&top Prompting" .
-                                    \ "\n&Never Prompt" .
-                                    \ "\n&Abort"
-                                    \ )
-        endif
-        if response == 1
+
+        " Check if this is part of a parameter definition
+        "   IN       @variable CHAR(1)
+        "   OUT      @variable CHAR(1)
+        "   INOUT    @variable CHAR(1)
+        "   DECLARE  @variable CHAR(1)
+        " Or part of a string
+        "   '@variable'
+        " Or part of path
+        "   /@variable'
+        " Or part of path
+        "   /@variable'
+        " Or a global variable
+        "   SET @@variable = ...
+        " If so, ignore the match
+        let inout = matchstr(strpart(str, 1, (index-1)), '\(\<\w\+\ze\s*$\|''\ze$\|/\ze$\|@\ze$\)')
+
+        if inout !~? '\(in\|out\|inout\|declare\|set\|''\|/\|@\)'
+            " Check to see if the variable is part of the temporarily
+            " stored list of variables to ignore
+            if has_key(b:dbext_sqlvar_temp_mv, var)
+                " Ingore match and move on
+                let index = match(str, a:exp_find_str, index+strlen(var))
+            else
+                " Prompt for value and continue
+                let index = index + 1
+
+                let response = 2
+                if has_key(b:dbext_sqlvar_mv, var)
+                    let var_val = b:dbext_sqlvar_mv[var]
+                else
+                    " Prompt the user using the name of the variable
+                    let dialog_msg = "Enter value for " . var
+                    if a:count_matches == 1
+                        " If there is no name (ie ?), then include the
+                        " count of what was found so the user can
+                        " distinguish between different ?s
+                        let dialog_msg = dialog_msg . " number " . count_nbr
+                    endif
+                    let dialog_msg = dialog_msg . ": "
+                    let var_val = s:DB_getInput( 
+                                \ dialog_msg,
+                                \ '',
+                                \ "dbext_cancel"
+                                \ )
+                    let response = 2
+                    " Ok or Cancel result in an empty string
+                    if var_val == "dbext_cancel" 
+                        let response = 5
+                    elseif var_val == "" 
+                        " If empty, check if they want to leave it empty
+                        " of skip this variable
+                        let response = confirm("Your value is empty!",
+                                                \ "&Skip" .
+                                                \ "\n&Use blank" .
+                                                \ "\nS&top Prompting" .
+                                                \ "\n&Never Prompt" .
+                                                \ "\n&Abort"
+                                                \ )
+                    endif
+                endif
+                if response == 1
+                    " Skip this match and move on to the next
+                    let index = match(str, a:exp_find_str, index+strlen(var))
+                elseif response == 2
+                    " Use blank
+                    " Replace the variable with what was entered
+                    let replace_sub = '\%'.index.'c'.'.\{'.strlen(var).'}'
+                    let str = substitute(str, replace_sub, var_val, '')
+                    let index = match(str, a:exp_find_str, index+strlen(var_val))
+                    if a:count_matches != 1 && s:DB_get('variable_remember') == '1'
+                        " Add this assignment to the list of remembered 
+                        " assignments unless it is question marks as host
+                        " variables.
+                        call dbext#DB_sqlVarAssignment(0, 'set '.var.' = '.var_val)
+                    endif
+                elseif response == 4
+                    " Never Prompt
+                    call s:DB_set("always_prompt_for_variables", '-1')
+                    break
+                elseif response == 5
+                    " Abort
+                    " If we are aborting, do not execute the SQL statement
+                    let str = ""
+                    break
+                else
+                    " Stop Prompting
+                    " Skip all remaining matches
+                    call s:DB_set("stop_prompt_for_variables",1)
+                    break
+                endif
+            endif
+        else
+            " if inout !~? "'" && s:DB_get('variable_remember') == '1'
+            if s:DB_get('variable_remember') == '1'
+                " Remember this as only a temporary variable and remove
+                " these when a new query begins
+                call dbext#DB_sqlVarAssignment(2, 'set '.var.' = '.var)
+            endif
             " Skip this match and move on to the next
             let index = match(str, a:exp_find_str, index+strlen(var))
-        elseif response == 2
-            " Use blank
-            " Replace the variable with what was entered
-            let replace_sub = '\%'.index.'c'.'.\{'.strlen(var).'}'
-            let str = substitute(str, replace_sub, var_val, '')
-            let index = match(str, a:exp_find_str, index+strlen(var_val))
-        elseif response == 4
-            " Never Prompt
-            call s:DB_set("always_prompt_for_variables", "-1")
-            break
-        elseif response == 5
-            " Abort
-            " If we are aborting, do not execute the SQL statement
-            let str = ""
-            break
-        else
-            " Stop Prompting
-            " Skip all remaining matches
-            call s:DB_set("stop_prompt_for_variables",1)
-            break
         endif
     endwhile
     return str
@@ -6181,6 +6645,13 @@ endfunction
 " Host Variable Parser {{{
 function! s:DB_parseHostVariables(query)
     let query = a:query
+
+    call s:DB_sqlVarRemoveTemp()
+    if s:DB_sqlVarInit() != 0
+        return -1
+    endif
+    let query = s:DB_removeEmptyLines(query)
+    " let query = s:DB_sqlVarSubstitute(query)
 
     if s:DB_get("always_prompt_for_variables") == -1
         " Never try to parse the query
@@ -6690,6 +7161,81 @@ function! s:DB_parsePerl(query)
 endfunction
 "}}}
 
+" VB Parser, Garrison Yu {{{
+function! s:DB_parseVB(query)
+
+    " Join all line continuations by removing the ending "_"
+    let a_query = substitute(a:query, " _[\r\n]\\+\\s*", "","")
+
+    " Get the string part of the vb query and remove the beginning
+    " and closing quotes
+    let query = ""
+    let isPureSql = 1
+    for line in split(a_query, "[\r\n]\\+")
+
+        let t = matchstr(line, '\(\("\([^"\\]\|\\.\)*"[^"'']*\)\+\)')
+        let t = substitute(t, '^\s*"', '\1',"")
+        let t = substitute(t, '"\s*$', "","")
+        if t != ""
+            let query = query . "\n" . t
+            let isPureSql = 0
+        endif
+    endfor
+
+    " Is not executing in vb environment
+    if isPureSql == 1
+        return a:query
+    endif
+    
+    " Since strings are enclosed in double quotes ("), they can be escaped
+    " with a backslash, we must replace these as well.
+    "     "select \"name\", col2  "
+    let query = substitute(query, '\\"', '"', 'g')
+
+    " If strings are concatenated over multiple lines, since they are
+    " joined now, remove the concatenation
+    "    "select " + " * from " + " some_table ";
+    "    "select " & " * from " & " some_table ";
+    let query = substitute(query, '"\s*[+&]\s*"', ' ', 'g')
+    let query = substitute(query, '\s*\([+&]\)\s*', '\1', 'g')
+
+    " remove \n
+    let query = substitute(query, "[\r\n]\\+", ' ', 'g')
+
+    " Prompt for the variables which are part of
+    " string concentations like this:
+    "   "SELECT * FROM " + prefix+"product"
+    "   "SELECT * FROM " + obj.method() +"product"
+    "call inputdialog(query)
+    let var_expr = '\s*[+&]\s*\(.\{-}\)\s*[+&]\s*'
+    let var_expr_q = '"' . var_expr . '"'
+    "  "\s*       - Double quote followed any space 
+    "  [+&]\s*    - A plus sign and any space
+    "  \(.\{-}\)  - The variable / obj / method
+    "  \s*[+&]    - Any space and a plus sign
+    "  \s*"       - Any space followed by a double quote
+
+    " Replace all sql vars using existing buffer variables
+    let index = match(query, var_expr_q)
+    while index > -1
+        let var = matchstr(query, var_expr, index)
+        let val = s:DB_sqlvar_get(var)
+        echo b:dbext_sqlvar_mv
+        if index == 0
+            let query = val.query[index+strlen(var)+2:]
+        else
+            let query = query[0:index-1].val.query[index+strlen(var)+2:]
+        endif
+        let index = match(query, var_expr, index+strlen(var))
+    endwhile
+    " let query = s:DB_searchReplace(query, var_expr, var_expr, 0)
+
+    "call inputdialog(query)
+    return query
+endfunction
+"}}}
+
+
 " Profile Parser {{{
 function! s:DB_parseProfile(value)
 
@@ -6720,7 +7266,7 @@ function! s:DB_parseProfile(value)
     " Reset all connection parameters to blanks since a 
     " profile should set everything required
     let no_defaults = 0
-    call s:DB_resetBufferParameters(no_defaults)
+    let rc = s:DB_resetBufferParameters(no_defaults)
 
     if profile_value =~? 'profile'
         let rc = -1
@@ -6731,6 +7277,205 @@ function! s:DB_parseProfile(value)
     let rc = dbext#DB_setMultipleOptions(profile_value)
 
     return rc
+endfunction
+
+" SQL Variables Management {{{
+"
+" The purpose of this sub-code is to add buffer variables specially 
+" for SQL variables.  Features:
+"   1. Use the following command to add/remove variables
+"      # set xxx = 'yyy'
+"      # unset xxx = 'yyy'
+"   2. Once the variables are set, the variables will be used before 
+"      further processing the sql queries.
+"
+function! s:DB_sqlVarInit()
+    " If the buffer connection parameters are not initialized
+    " the wrong values may be pulled for the value of the variable 
+    " specifically, the statement terminator may be included in the 
+    " value.
+    let use_defaults = 1
+    if s:DB_get("buffer_defaulted") != 1
+        let rc = s:DB_resetBufferParameters(use_defaults)
+        if rc == -1
+            call s:DB_warningMsg( 
+                        \ "dbext:A valid database type must ".
+                        \ "be chosen first" 
+                        \ )
+            return rc
+        endif
+    endif
+
+    " Init the sql var dictionary
+    if !exists("b:dbext_sqlvar_mv")
+        let b:dbext_sqlvar_mv = {}
+    endif
+    if !exists("b:dbext_sqlvar_temp_mv")
+        let b:dbext_sqlvar_temp_mv = {}
+    endif
+
+    return 0
+endfunction
+
+function! s:DB_sqlVarRemoveTemp()
+    " Temporary variables must be cleaned up for each new
+    " statement executing.
+    if exists("b:dbext_sqlvar_temp_mv")
+        unlet b:dbext_sqlvar_temp_mv
+    endif
+
+    return 0
+endfunction
+
+function! s:DB_sqlVarSet(name, value, temporary)
+    " Store a var in buffer variable for any following sql queries
+    if s:DB_sqlVarInit() != 0
+        return -1
+    endif
+
+    try
+        if a:temporary == 0
+            let b:dbext_sqlvar_mv[a:name] = a:value
+        else
+            let b:dbext_sqlvar_temp_mv[a:name] = a:value
+        endif
+    catch
+        call s:DB_warningMsg('Failed to set:'.a:name.' ==> |'.a:value.'|')
+    endtry
+
+endfunction
+
+function! dbext#DB_sqlVarAssignment(drop_var, stmt)
+    " Execute the user provided assignment statement
+    "
+    " drop_var can 3 values
+    "     0 - standard variable
+    "     1 - drop the variable
+    "     2 - store a temporary variable (only for the query)
+    "
+    " A drop_var = 2 can only happen while parsing a query for
+    " host variables from DB_searchReplace()
+    if s:DB_sqlVarInit() != 0
+        return -1
+    endif
+
+    let stmt = a:stmt
+    let matches = matchlist(stmt,'\s*set\s\+\(.\{-}\)\s*=\s*\(.\{-\}\)'.
+                \ '\%('.dbext#DB_getWType("cmd_terminator").'\)\?\s*$'
+                \ )
+    if ! empty(matches)
+        let name = matches[1]
+        let value = matches[2]
+
+        if name != '' 
+            if value != '' && a:drop_var != 1
+                " Set the variable
+                call s:DB_sqlVarSet(name, value, a:drop_var)
+            else
+                " Remove the variable
+                if has_key(b:dbext_sqlvar_mv, name)
+                    call remove(b:dbext_sqlvar_mv, name)
+                endif
+            endif
+        else
+            call s:DB_warningMsg('Failed to execute:|'.stmt.'|'.name.'|'.value.'|')
+        endif
+    else
+        let matches = matchlist(stmt,'\s*unset\s\+\(.\{-}\).*')
+        if empty(matches)
+            call s:DB_warningMsg('dbext: Unknown statement:|'.stmt.'|')
+            return
+        endif
+        if matches[1] != "" && exists("b:dbext_sqlvar_mv") && has_key(b:dbext_sqlvar_mv, matches[1])
+            unlet b:dbext_sqlvar_mv[matches[1]]
+        else
+            call s:DB_warningMsg('Failed to find var:|'.matches[1].'|')
+        endif
+
+    endif
+endfunction
+
+function! dbext#DB_sqlVarRangeAssignment(remove_var) range
+    for lineNum in range(a:firstline, a:lastline)
+        let line = getline(lineNum)
+        if line !~ "^\s*$"
+            call dbext#DB_sqlVarAssignment(a:remove_var, line)
+        endif
+    endfor
+endfunction
+
+function! dbext#DB_removeVariable() range
+    let curr_bufnr     = s:dbext_prev_bufnr
+    let switched_bufnr = s:dbext_prev_bufnr
+
+    let lines          = []
+    for lineNum in range(a:firstline, a:lastline)
+        let line = getline(lineNum)
+        if line !~ "^\s*$"
+            call add(lines, line)
+        endif
+    endfor
+
+    let rc = dbext#DB_switchPrevBuf()
+
+    " Check to ensure the buffer still exists
+    if rc > 0
+        for line in lines
+            call dbext#DB_sqlVarAssignment(1, line)
+        endfor
+    endif
+
+    DBResultsClose
+endfunction 
+
+function! s:DB_removeEmptyLines(sql)
+    " let sql = s:DB_stripLeadFollowSpaceLines(a:sql)
+    let sql = substitute(a:sql, '[\n\r]\+\(\s*[\n\r]\*\)*\s*[\n\r]\+', '\n', 'g')
+
+    return sql
+endfunction
+
+function! s:DB_sqlVarSubstitute(sql)
+    " Substitute sql vars in the given stmt
+    if s:DB_sqlVarInit() != 0
+        return -1
+    endif
+    let sql = a:sql
+
+    for [k,v] in items(b:dbext_sqlvar_mv)
+        " let sql = substitute(sql, '[:@]'.k, v, 'g')
+        let sql = substitute(sql, k, v, 'g')
+    endfor
+
+    for [k,v] in items(b:dbext_sqlvar_temp_mv)
+        " let sql = substitute(sql, '[:@]'.k, v, 'g')
+        let sql = substitute(sql, k, v, 'g')
+    endfor
+
+    return sql
+endfunction
+
+function! dbext#DB_sqlVarList(...)
+    " Record current buffer to return to the correct one
+    let s:dbext_prev_winnr = winnr()
+    let s:dbext_prev_bufnr = bufnr('%')
+
+    if s:DB_sqlVarInit() != 0
+        return -1
+    endif
+
+    let var_list = 
+                \ "------------------------\n" .
+                \ "** Variable List **\n" .
+                \ "------------------------"
+    for [k,v] in items(b:dbext_sqlvar_mv)
+        let var_list = var_list . 
+                    \ "\nset ".k." = ".v
+    endfor
+
+    call s:DB_addToResultBuffer(var_list, "clear")
+
+    return ""
 endfunction
 "}}}
 " History {{{
@@ -6762,6 +7507,9 @@ function! s:DB_historyAdd(sql)
     exec "normal! 2gg"
     " Save the history file
     call s:DB_historySave(1)
+
+    let res_buf_name   = s:DB_resBufName()
+    call dbext#DB_windowClose(s:DB_resBufName())
 
     " Return to original window
     " exec cur_winnr."wincmd w"
@@ -6810,11 +7558,18 @@ function! dbext#DB_historyList()
     nnoremap <buffer> <silent> <CR>          :call <SID>DB_historyUse(line("."))<CR>
     nnoremap <buffer> <silent> dd            :call <SID>DB_historyDel(line("."))<CR>
     nnoremap <buffer> <silent> a             :call <SID>DB_set('autoclose', (s:DB_get('autoclose')==1?0:1))<CR>
-    " Create a buffer mapping to clo this window
-    nnoremap <buffer> q :DBCloseResults<cr>
-    nnoremap <buffer> <silent> <space> :DBToggleResultsResize<cr>
+    " Create a buffer mapping to close this window
+    nnoremap <buffer> q                      :DBResultsClose<cr>
+    nnoremap <buffer> <silent> <space>       :DBResultsToggleResize<cr>
     
-    if hasmapto('DBRefreshResult')
+    if hasmapto('DB_removeVariable')
+        try
+            silent! unmap  <buffer> dd
+            silent! xunmap <buffer> d
+        catch
+        endtry
+    endif
+    if hasmapto('DBResultsRefresh')
         try
             silent! unmap <buffer> R
         catch
@@ -7110,9 +7865,6 @@ endfunction
 
 "}}}
 call s:DB_buildLists()
-" function! dbext#DB_buildLists()
-"     call s:DB_buildLists()
-" endfunction 
 
 call s:DB_resetGlobalParameters()
 " vim:fdm=marker:nowrap:ts=4:expandtab:ff=unix:

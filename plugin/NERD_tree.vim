@@ -2,7 +2,7 @@
 " File:        NERD_tree.vim
 " Description: vim global plugin that provides a nice tree explorer
 " Maintainer:  Martin Grenfell <martin_grenfell at msn dot com>
-" Last Change: 27 Jan, 2009
+" Last Change: 7 Jun, 2009
 " License:     This program is free software. It comes without any warranty,
 "              to the extent permitted by applicable law. You can redistribute
 "              it and/or modify it under the terms of the Do What The Fuck You
@@ -10,7 +10,7 @@
 "              See http://sam.zoy.org/wtfpl/COPYING for more details.
 "
 " ============================================================================
-let s:NERD_tree_version = '3.1.0'
+let s:NERD_tree_version = '3.1.1'
 
 " SECTION: Script init stuff {{{1
 "============================================================
@@ -154,7 +154,7 @@ command! -n=? -complete=dir -bar NERDTree :call s:initNerdTree('<args>')
 command! -n=? -complete=dir -bar NERDTreeToggle :call s:toggle('<args>')
 command! -n=0 -bar NERDTreeClose :call s:closeTreeIfOpen()
 command! -n=1 -complete=customlist,s:completeBookmarks -bar NERDTreeFromBookmark call s:initNerdTree('<args>')
-command! -n=0 -complete=customlist,s:completeNERDTreeMirrors -bar NERDTreeMirror call s:initNerdTreeMirror()
+command! -n=0 -bar NERDTreeMirror call s:initNerdTreeMirror()
 " SECTION: Auto commands {{{1
 "============================================================
 augroup NERDTree

@@ -72,7 +72,7 @@ hi WildMenu     guifg=#ffffff       guibg=#133293       gui=bold
             \   ctermfg=white       ctermbg=darkblue    cterm=bold
 hi VertSplit    guifg=#c2bfa5       guibg=#c2bfa5       gui=NONE
             \   ctermfg=white       ctermbg=white       cterm=NONE
-hi! link MarginColumn StatusLineNC
+hi! link MarginColumn StatusLine
 
 hi TabLine      guifg=#000000       guibg=#c2bfa5       gui=NONE
             \   ctermfg=black       ctermbg=white       cterm=NONE

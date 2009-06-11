@@ -1,7 +1,7 @@
-if exists("b:__LEX_XPT_VIM__") 
-    finish 
+if exists("b:__LEX_XPT_VIM__")
+    finish
 endif
-let b:__LEX_XPT_VIM__ = 1 
+let b:__LEX_XPT_VIM__ = 1
 
 " inclusion
 XPTinclude

@@ -1,33 +1,44 @@
-if exists("b:__CPP_CPP_XPT_VIM__")
-  finish
-endif
-" To avoid loading the C version...
-let b:__C_C_XPT_VIM__ = 1
-let b:__CPP_CPP_XPT_VIM__ = 1
+XPTemplate priority=sub
 
-" containers
-let [s:f, s:v] = XPTcontainer()
+" Setting priority of cpp to "sub" or "subset of language", makes it override
+" all c snippet if conflict
 
 
-call extend(s:v, { '$TRUE': 'true'
-                \, '$FALSE' : 'false'
-                \, '$NULL' : 'NULL'
-                \, '$UNDEFINED' : ''
-                \, '$BRACKETSTYLE' : "\n"
-                \, '$INDENT_HELPER' : ';' }, 'force')
 
-" inclusion
+XPTvar $TRUE          true
+XPTvar $FALSE         false
+XPTvar $NULL          NULL
+
+XPTvar $IF_BRACKET_STL     \n
+XPTvar $FOR_BRACKET_STL    \n
+XPTvar $WHILE_BRACKET_STL  \n
+XPTvar $STRUCT_BRACKET_STL \n
+XPTvar $FUNC_BRACKET_STL   \n
+
+XPTvar $VOID_LINE  /* void */;
+XPTvar $CURSOR_PH      /* cursor */
+
+XPTvar $CL  /*
+XPTvar $CM   *
+XPTvar $CR   */
+
+XPTvar $CS   //
+
+
+
 XPTinclude
       \ _common/common
-      \ _comment/c.like
+      \ _comment/singleDouble
       \ _condition/c.like
-      \ _loops/c.like
-      \ _loops/java.like
-      \ _structures/c.like
+      \ _func/c.like
+      \ _loops/c.while.like
+      \ _loops/java.for.like
       \ _preprocessor/c.like
-      \ c/wrap
+      \ _structures/c.like
 
 " ========================= Function and Varaibles =============================
+let [s:f, s:v] = XPTcontainer()
+
 function! s:f.cleanTempl( ctx, ... )
   let notypename = substitute( a:ctx,"\\s*typename\\s*","","g" )
   let cleaned = substitute( notypename, "\\s*class\\s*", "", "g" )
@@ -52,7 +63,7 @@ std::map<`typeKey^,`val^>   `name^;
 `cursor^
 
 
-XPT class   hint=class+ctor
+XPT class   hint=class+ctor indent=keep
 class `className^
 {
 public:
@@ -63,8 +74,6 @@ public:
 private:
 };
  
-// Scratch implementation
-// feel free to copy/paste or destroy
 `className^::`className^( `ctorParam^ )
 {
 }
@@ -78,12 +87,6 @@ private:
 }
 ..XPT
 
-XPT fun=..\ ..\ (..)
-`int^ `name^(`_^^)
-{
-    `cursor^
-}
-
 
 XPT namespace hint=namespace\ {}
 namespace `name^
@@ -92,12 +95,6 @@ namespace `name^
 }
 ..XPT
 
-XPT main hint=main\ (argc,\ argv)
-int main(int argc, char *argv[])
-{
-    `cursor^
-    return 0;
-}
 
 XPT templateclass   hint=template\ <>\ class
 template
@@ -112,8 +109,6 @@ public:
 private:
 };
  
-// Scratch implementation
-// feel free to copy/paste or destroy
 template <`templateParam^>
 `className^<`_^cleanTempl(R('templateParam'))^^>::`className^( `ctorParam^ )
 {
@@ -131,6 +126,7 @@ template <`templateParam^>
 ..XPT
 
 XPT try hint=try\ ...\ catch...
+XSET handler=$CL void $CR
 try
 {
     `what^
@@ -139,9 +135,18 @@ catch ( `except^ )
 {
     `handler^
 }`...^
-`catch...^catch ( ... )
+
+
+
+XPT try_ hint=try\ {\ SEL\ }\ catch...
+XSET handler=$CL void $CR
+try
 {
-    \`cursor\^
-}^^
+    `wrapped^
+}
+`...^catch ( `except^ )
+{
+    `handler^
+}`...^
 
-
+..XPT

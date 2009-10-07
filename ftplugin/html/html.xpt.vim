@@ -1,21 +1,28 @@
-if exists("b:__HTML_HTML_XPT_VIM__")
-  finish
-endif
-let b:__HTML_HTML_XPT_VIM__ = 1
+XPTemplate priority=lang keyword=<
 
-" containers
-let [s:f, s:v] = XPTcontainer()
+let [s:f, s:v] = XPTcontainer() 
+ 
+XPTvar $TRUE          1
+XPTvar $FALSE         0
+XPTvar $NULL          NULL
+XPTvar $UNDEFINED     NULL
+XPTvar $VOID_LINE /* void */;
+XPTvar $IF_BRACKET_STL \n
 
-" constant definition
-call extend(s:v, {'\$TRUE': '1', '\$FALSE' : '0', '\$NULL' : 'NULL', '\$UNDEFINED' : ''})
-
-" inclusion
 XPTinclude 
       \ _common/common
-      \ _comment/xml
       \ xml/xml
-      \ xml/wrap
-" ========================= Function and Varaibles =============================
+
+XPTvar $CL    <!--
+XPTvar $CM    
+XPTvar $CR    -->
+XPTinclude 
+      \ _comment/doubleSign
+
+" ========================= Function and Variables =============================
+
+
+
 fun! s:f.createTable(...) "{{{
   let nrow_str = inputdialog("num of row:")
   let nrow = nrow_str + 0
@@ -31,93 +38,122 @@ fun! s:f.createTable(...) "{{{
     endwhile
   endwhile
   return "<table id='`id^'>\n".l."</table>"
-
 endfunction "}}}
 
-fun! s:f.makeIdent(ctx, ...) "{{{
-  return substitute(substitute(a:ctx, "[A-Z]", "\\l\\0", "g"), "\\s\\+", "_", "g")
-endfun "}}}
 
-fun! s:f.makeLabel(ctx, ...) "{{{
-  if self.V() != "_"
-    return self.V()
+let s:doctypes = {
+      \ 'HTML 3.2 Final'         : '"-//W3C//DTD HTML 3.2 Final//EN"',
+      \ 'HTML 4.0 Frameset'      : '"-//W3C//DTD HTML 4.0 Frameset//EN" "http://www.w3.org/TR/REC-html40/frameset.dtd"',
+      \ 'HTML 4.0 Transitional'  : '"-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"',
+      \ 'HTML 4.0'               : '"-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"',
+      \ 'HTML 4.01 Frameset'     : '"-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd"',
+      \ 'HTML 4.01 Transitional' : '"-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"',
+      \ 'HTML 4.01'              : '"-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"',
+      \ 'XHTML 1.0 Frameset'     : '"-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd"',
+      \ 'XHTML 1.0 Strict'       : '"-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"',
+      \ 'XHTML 1.0 Transitional' : '"-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"',
+      \ 'XHTML 1.1'              : '"-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"',
+      \ 'XHTML Basic 1.0'        : '"-//W3C//DTD XHTML Basic 1.0//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd"',
+      \ 'XHTML Basic 1.1'        : '"-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd"',
+      \ 'XHTML Mobile 1.0'       : '"-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd"',
+      \ 'XHTML Mobile 1.1'       : '"-//WAPFORUM//DTD XHTML Mobile 1.1//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile11.dtd"',
+      \ 'XHTML Mobile 1.2'       : '"-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd"',
+      \}
+
+
+fun! s:f.doctypeList()
+  return keys( s:doctypes )
+endfunction
+
+fun! s:f.doctypePost(v)
+  if has_key( s:doctypes, a:v )
+    return s:doctypes[ a:v ]
+  else
+    return ''
   endif
-  return substitute(substitute(a:ctx, "_\\(.\\)", " \\U\\1", "g"), "^\\(.\\)", "\\U\\1", "g")
-endfun "}}}
+endfunction
 
+" TODO do not apply to following place holder 
+fun! s:f.html_tagAttr()
+  let tagName = self.V()
+  if tagName ==? 'a'
+    return tagName . ' href="' . self.ItemCreate( '#', {}, {} ) . '"'
+  " elseif tagName ==? 'div'
+  " elseif tagName ==? 'table'
+  else
+
+    return tagName
+  endif
+
+endfunction
 " ================================= Snippets ===================================
-call XPTemplatePriority('lang')
-call XPTemplate('doctype_html3', [
-      \'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">'])
-call XPTemplate('doctype_html4_frameset', [ 
-      \'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN" "http://www.w3.org/TR/REC-html40/frameset.dtd">'])
-call XPTemplate('doctype_html4_loose', [ 
-      \'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">'])
-call XPTemplate('doctype_html4_strict', [ 
-      \'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">'])
-call XPTemplate('doctype_html41_frameset', [ 
-      \'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">'])
-call XPTemplate('doctype_html41_loose', [ 
-      \'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">'])
-call XPTemplate('doctype_html41_strict', [ 
-      \'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">'])
-call XPTemplate('doctype_xthml1_frameset', [ 
-      \'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">'])
-call XPTemplate('doctype_xhtml1_strict', [ 
-      \'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'])
-call XPTemplate('doctype_xhtml1_transitional', [ 
-      \'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'])
-call XPTemplate('doctype_xhtml11', [ 
-      \'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/1999/xhtml">'])
+
 
 call XPTemplate("id", {'syn' : 'tag'}, 'id="`^"')
 call XPTemplate("class", {'syn' : 'tag'}, 'class="`^"')
-call XPTemplate('a', '<a href="`href^">`cursor^</a>')
-call XPTemplate("script", [ '<script language="javascript" type="text/javascript">', '`cursor^', '</script>'])
-call XPTemplate("scrlink", [ '<script language="javascript" type="text/javascript" src="`cursor^"></script>'])
 
 
-call XPTemplate('table', [ '`createTable()^' ])
-call XPTemplate('table2', [
-      \ '<table>',
-      \ '  <tr>',
-      \ '    <td>`text^^</td>`...2^', 
-      \ '    <td>`text^^</td>`...2^', 
-      \ '  </tr>`...0^', 
-      \ '  <tr>',
-      \ '    <td>`text^^</td>`...1^', 
-      \ '    <td>`text^^</td>`...1^', 
-      \ '  </tr>`...0^', 
-      \ '</table>'
-      \])
-
-call XPTemplate('table3', [
-      \ '<table id="`id^">`CntStart("i", "0")^',
-      \ '  <tr>`CntStart("j", "0")^',
-      \ '    <td id="`^R("id")_{Cnt("i")}_{CntIncr("j")}^">`text^^</td>`...2^', 
-      \ '    <td id="`^R("id")_{Cnt("i")}_{CntIncr("j")}^">`text^^</td>`...2^', 
-      \ '  </tr>`tr...^', 
-      \ '  <tr>',
-      \ '    <td id="\`\^CntStart("j","0")R("id")_{CntIncr("i")}_{CntIncr("j")}\^">\`text\^\^</td>\`td...\^', 
-      \ '    <td id="\\\`\\\^R("id")_{Cnt("i")}_{CntIncr("j")}\\\^">\\\`text\\\^\\\^</td>\\\`td...\\\^\^\^', 
-      \ '  </tr>\`tr...\^^^', 
-      \ '</table>'
-      \])
 
 XPTemplateDef
+
+
+
+XPT table
+<table>
+  <tr>
+    <td>`text^^</td>`...2^
+    <td>`text^^</td>`...2^
+  </tr>`...0^
+  <tr>
+    <td>`text^^</td>`...1^
+    <td>`text^^</td>`...1^
+  </tr>`...0^
+</table>
+..XPT
+
+XPT tablecounter hidden=1
+<table id="`id^">`CntStart("i", "0")^
+  <tr>`CntStart("j", "0")^
+    <td id="`^R("id")_{Cnt("i")}_{CntIncr("j")}^">`text^^</td>`...2^
+    <td id="`^R("id")_{Cnt("i")}_{CntIncr("j")}^">`text^^</td>`...2^
+  </tr>`tr...^
+  <tr>
+    <td id="\`\^CntStart("j","0")R("id")_{CntIncr("i")}_{CntIncr("j")}\^">\`text\^\^</td>\`td...\^
+    <td id="\\\`\\\^R("id")_{Cnt("i")}_{CntIncr("j")}\\\^">\\\`text\\\^\\\^</td>\\\`td...\\\^\^\^
+  </tr>\`tr...\^^^
+</table>
+..XPT
+
+XPT table0 hidden=1
+`createTable()^
+
 
 XPT html hint=<html><head>..<head><body>...
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=`encoding^utf-8^"/>
-    <link rel="stylesheet" type="text/css" href="`^" />
+    <link rel="stylesheet" type="text/css" href="" />
+    <style></style>
     <title>`title^E('%:r')^</title>
+    <script language="javascript" type="text/javascript">
+      <!-- -->
+    </script>
   </head>
   <body>
     `cursor^
   </body>
 </html>
+
+XPT doctype hint=<!DOCTYPE\ ***
+XSET doctype=doctypeList()
+XSET doctype|post=doctypePost( V() )
+<!DOCTYPE html PUBLIC `doctype^>
+
+
+XPT a hint=<a\ href...
+<a href="`href^">`cursor^</a>
+..XPT
 
 
 XPT div hint=<div>\ ..\ </div>
@@ -125,11 +161,26 @@ XPT div hint=<div>\ ..\ </div>
 
 
 XPT p hint=<p>\ ..\ </p>
-<p`^>`cursor^</p>
+XSET attr?|post=EchoIfNoChange('')
+<p` `attr?^>`cursor^</p>
+
+
+XPT ul hint=<ul>\ <li>...
+<ul>
+    <li>`val^</li>`...^
+    <li>`val^</li>`...^
+</ul>
+
+
+XPT ol hint=<ol>\ <li>...
+<ol>
+    <li>`val^</li>`...^
+    <li>`val^</li>`...^
+</ol>
 
 
 XPT br hint=<br\ />
-<br/>
+<br />
 
 
 " <h1>`cr^^`cursor^`cr^^</h1>
@@ -138,7 +189,19 @@ XSET n=1
 <h`n^>`cursor^</h`n^>
 
 
+XPT script hint=<script\ language="javascript"...
+<script language="javascript" type="text/javascript">
+`cursor^
+</script>
+..XPT
 
+XPT scrlink hint=<script\ ..\ src=...
+<script language="javascript" type="text/javascript" src="`cursor^"></script>
+
+
+XPT <_ hint=
+XSET span_disable|post=html_tagAttr()
+<`span^>`wrapped^</`span^>
 
 XPT p_ hint=
 <p>`wrapped^</p>
@@ -153,29 +216,6 @@ XSET n=1
 
 
 XPT a_ hint=<a\ href="">\ SEL\ </a>
-<a href="">`wrapped^</a>
+<a href="`^">`wrapped^</a>
 
 
-XPT input hint=<input\ type="">\ VAL\ </input>
-XSET type=Choose(["text", "submit", "hidden", "button", "file"])
-XSET id...|post= id="`^"
-<input type="`type^" name="`name^" value="`value^"`id...^>
-
-
-XPT style hint=<style>...</style>
-XSET media=Choose(["screen", "print", "all", "handheld"])
-<style type="text/css" media="`media^">
-  `cursor^
-</style>
-
-
-XPT fieldset hint=<fieldset>...</fieldset>
-XSET class...|post= class="`^R("id")^"
-<fieldset id="`id^"`class...^>
-  <legend>`_^makeLabel(R("id"))^^</legend>
-
-  `cursor^
-</fieldset>
-
-XPT link
-<link rel="`stylesheet^" href="`path^/stylesheets/master.css^" type="text/css" media="`media^screen^" title="`title^no title^" charset="`charset^utf-8^" />

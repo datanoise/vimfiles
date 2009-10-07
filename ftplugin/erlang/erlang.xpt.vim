@@ -15,23 +15,8 @@ XPTinclude
 " ================================= Snippets ===================================
 XPTemplateDef
 
-
-XPT mod hint=-module\ ..
-XSET name=fileRoot()
--module( `name^ ).
-
-
-XPT exp hint=-export\ ..
--export( [`func^/`arity^] ).
-
-
-XPT imp hint=-import\ ..^
-XSET arity=1
--import( `module^, [`func^/`arity^`...^, `func^/`arity^`...^] ).
-
-
 XPT inc hint=-include\ ..
--include( \"`cursor^^.hrl\").
+-include( "`cursor^.hrl").
 
 
 XPT def hint=-define\ ..
@@ -41,110 +26,102 @@ XPT def hint=-define\ ..
 XPT ifdef hint=-ifdef\ ..\-endif..
 -ifdef( `what^ ).
   `thenmacro^
-`else...^-else.
-  \`cursor\^^^
--endif().
+``else...`
+{{^-else.
+  `cursor^
+`}}^-endif().
 
 
 XPT ifndef hint=-ifndef\ ..\-endif
 -ifndef( `what^ ).
   `thenmacro^
-`else...^-else.
-  \`cursor\^^^
--endif().
+``else...`
+{{^-else.
+  `cursor^
+`}}^-endif().
 
 
 XPT record hint=-record\ ..,{..}
 -record( `recordName^
        ,{ `field1^`...^
-        , `fieldn^`...^
+       ,  `fieldn^`...^
         }).
 
 
 XPT if hint=if\ ..\ ->\ ..\ end
 if
- `cond^ ->
-   `body^`...^;
- `cond2^ ->
-   `bodyn^`...^
+   `cond^ ->
+       `body^` `...^;
+   `cond2^ ->
+       `bodyn^` `...^
 end `cursor^
 
 
 XPT case hint=case\ ..\ of\ ..\ ->\ ..\ end
 case `matched^ of
- `pattern^ ->
-   `body^`...^;
- `patternn^ ->
-   `bodyn^`...^
+   `pattern^ ->
+       `body^`...^;
+   `patternn^ ->
+       `bodyn^`...^
 end `cursor^
-
-
-XPT rcv hint=receive\ ..\ ->\ ..\ end
-receive
- `pattern^ ->
-   `body^ `...^;
- `patternn^ ->
-   `bodyn^`...^`after...^
-after
-  \`afterBody\^^^
-end
 
 
 XPT receive hint=receive\ ..\ ->\ ..\ end
 receive
-  `pattern^ ->
-    `body^ `...^;
-  `patternn^ ->
-    `bodyn^`...^`after...^
-after
-  \`afterBody\^^^
+   `pattern^ ->
+       `body^` `...^;
+   `patternn^ ->
+       `body^` `...^`
+   `after...{{^
+   after
+    `afterBody^`}}^
 end
+
 
 
 XPT fun hint=fun\ ..\ ->\ ..\ end
-fun (`params^)` when `guard`^ -> `body^ `...^;
-    (`paramsn^)` when `guard`^ -> `bodyn^`...^
-end
-
-
-XPT fu hint=fun\ ..\ ->\ ..\ end
-fun (`params^)` `_`^ -> `body^ end
+fun (`params^) `_^ -> `body^`
+    `more...{{^;
+    (`params^) `_^ -> `body^`
+    `...{{^;
+    (`params^) `_^ -> `body^`
+    `...^`}}^`}}^
+end `cursor^
 
 
 XPT try hint=try\ ..\ catch\ ..\ end
 try `what^
 catch
-  `excep^ -> `toRet^ `...^;
-  `except^ -> `toRet^`...^
-`after...^after
-  \`afterBody\^^^
+    `except^ -> `toRet^`
+    `...^;
+    `except^ -> `toRet^`
+    `...^`
+`after...{{^
+after
+    `afterBody^`}}^
 end `cursor^
 
 
 XPT tryof hint=try\ ..\ of\ ..
 try `what^ of
-  `pattern^ ->
-    `body^ `...0^;
-  `patternn^ ->
-    `bodyn^`...0^
+   `pattern^ ->
+       `body^` `more...^;
+   `patternn^ ->
+       `body^` `more...^
 catch
-   `excep^ -> `toRet^ `...1^;
-   `except^ -> `toRet^`...1^
-`after...^after
-   \`afterBody\^^^
+    `excep^ -> `toRet^` `...^;
+    `except^ -> `toRet^` `...^`
+`after...{{^
+after
+    `afterBody^`}}^
 end `cursor^
 
 
-XPT ffn hint=f\ \(\ ..\ \)\ ->\ ..
-`funName^(`args0^)` when `guard`^ ->
-  `body0^`...^;
-`name^R('funName')^(`argsn^)` when `guard`^ ->
-  `bodyn^`...^
+XPT function hint=f\ \(\ ..\ \)\ ->\ ..
+`funName^ ( `args0^ ) `_^ ->
+    `body0^ `...^;
+`name^R('funName')^ ( `argsn^ ) `_^ ->
+    `bodyn^`...^
 .
 
-
-XPT fn hint=f\ \(\ ..\ \)\ ->\ ..
-`funName^(`args0^)` when `guard`^ -> `body0^`...^;
-`name^R('funName')^(`argsn^)` when `guard`^ -> `bodyn^`...^
-.
 

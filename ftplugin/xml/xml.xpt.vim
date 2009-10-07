@@ -1,22 +1,30 @@
-if exists("b:__XML_XPT_VIM__")
-    finish
-endif
-let b:__XML_XPT_VIM__ = 1
+XPTemplate priority=spec keyword=<
 
-" containers
-let [s:f, s:v] = XPTcontainer()
+let [s:f, s:v] = XPTcontainer() 
+ 
+XPTvar $TRUE          1
+XPTvar $FALSE         0
+XPTvar $VOID_LINE     <!-- void -->;
 
-" inclusion
-XPTinclude
+XPTinclude 
       \ _common/common
 
-" ========================= Function and Varaibles =============================
+XPTvar $CL    <!--
+XPTvar $CM    
+XPTvar $CR    -->
+XPTinclude 
+      \ _comment/doubleSign
+
+
+" ========================= Function and Variables =============================
+
 
 " ================================= Snippets ===================================
-call XPTemplatePriority('spec')
 XPTemplateDef
-XPT t hint=<Tag>..</Tag>
-<`tag^`...^ `name^="`val^"`...^>
+
+
+XPT < hint=<Tag>..</Tag>
+<`tag^` `...{{^ `name^="`val^"` `...^`}}^>
     `cursor^
 </`tag^>
 
@@ -32,6 +40,19 @@ XPT style hint=<?xml-stylesheet...
 XPT CDATA_ hint=<![CDATA[...
 <![CDATA[
 `cursor^
+]]>
+
+
+
+" ================================= Wrapper ===================================
+
+XPT <_ hint=<Tag>\ SEL\ </Tag>
+<`tag^` `...{{^ `name^="`val^"` `...^`}}^>`wrapped^</`tag^>
+
+
+XPT CDATA_ hint=<![CDATA[\ SEL\ ]]>
+<![CDATA[
+`wrapped^
 ]]>
 
 

@@ -1,24 +1,13 @@
-if exists("b:___COMMENT_C_LIKE_XPT_VIM__")
-  finish
-endif
-let b:___COMMENT_C_LIKE_XPT_VIM__ = 1
+XPTemplate priority=like
 
-" containers
-let [s:f, s:v] = XPTcontainer()
+XPTvar $CL  /*
+XPTvar $CM  *
+XPTvar $CR  */
 
-" constant definition
-call extend(s:v, {'$CL': '/*', '$CM' : '*' , '$CR' : '*/', '$CS' : '//'})
+" commonly c language does not support '//'
+" XPTvar $CS  //
 
-" inclusion
+echom "_comment/c.like is deprecated"
+
 XPTinclude 
       \ _comment/pattern
-
-" ========================= Function and Varaibles =============================
-
-
-" ================================= Snippets ===================================
-" call XPTemplatePriority('like')
-
-
-
-

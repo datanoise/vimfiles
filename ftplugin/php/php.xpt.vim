@@ -37,12 +37,16 @@ XPTinclude
 XPTinclude 
       \ _loops/c.while.like
 
+XPTembed 
+            \ html/html
 
 " ========================= Function and Variables =============================
 
 " ================================= Snippets ===================================
 XPTemplateDef
 
+XPT php hint=<?php\ ...\ ?>
+<?php `cursor^?>
 
 XPT foreach hint=foreach\ (..\ as\ ..)\ {..}
 foreach ($`var^ as `container^)`$FOR_BRACKET_STL^{

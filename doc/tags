@@ -252,14 +252,15 @@ Tlist_Get_Tagname_By_Line()	taglist.txt	/*Tlist_Get_Tagname_By_Line()*
 Tlist_Set_App()	taglist.txt	/*Tlist_Set_App()*
 Tlist_Update_File_Tags()	taglist.txt	/*Tlist_Update_File_Tags()*
 V()	xpt-function.txt	/*V()*
-XPTcontainer()	xpt.api.txt	/*XPTcontainer()*
 XPTembed	xpt.snippet.syn.txt	/*XPTembed*
 XPTemplate	xptemplate.txt	/*XPTemplate*
 XPTemplate()	xpt.api.txt	/*XPTemplate()*
 XPTemplateDef	xpt.snippet.syn.txt	/*XPTemplateDef*
 XPTemplateMark()	xpt.api.txt	/*XPTemplateMark()*
 XPTemplatePriority()	xpt.api.txt	/*XPTemplatePriority()*
+XPTfuncs()	xpt.api.txt	/*XPTfuncs()*
 XPTinclude	xpt.snippet.syn.txt	/*XPTinclude*
+XPTvar	xpt.snippet.syn.txt	/*XPTvar*
 ^	xpt.snippet.syn.txt	/*^*
 `	xpt.snippet.syn.txt	/*`*
 `...^	xptemplate.txt	/*`...^*
@@ -931,6 +932,7 @@ xpt-snippet-priority	xpt.snippet.syn.txt	/*xpt-snippet-priority*
 xpt-snippet-repetition	xpt.snippet.syn.txt	/*xpt-snippet-repetition*
 xpt-snippet-sample	xpt.snippet.syn.txt	/*xpt-snippet-sample*
 xpt-snippet-setting	xpt.snippet.syn.txt	/*xpt-snippet-setting*
+xpt-snippet-synonym	xpt.snippet.syn.txt	/*xpt-snippet-synonym*
 xpt-snippet-syntax	xpt.snippet.syn.txt	/*xpt-snippet-syntax*
 xpt-snippet-variable	xpt.snippet.syn.txt	/*xpt-snippet-variable*
 xpt-substitute	xpt-function.txt	/*xpt-substitute*

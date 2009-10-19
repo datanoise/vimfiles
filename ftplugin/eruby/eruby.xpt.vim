@@ -1,11 +1,22 @@
 XPTemplate priority=lang-
 
-let [s:f, s:v] = XPTcontainer()
-
 XPTinclude 
-      \ _common/common
-      \ html/html
-      \ ruby/ruby
+    \ _common/common
+    \ html/html
+    \ html/eruby
 
+XPTembed
+    \ ruby/ruby
+    \ javascript/javascript
+    \ css/css
+
+" ========================= Function and Variables =============================
+
+" ================================= Snippets ===================================
 XPTemplateDef
+
+
+
+
+" ================================= Wrapper ===================================
 

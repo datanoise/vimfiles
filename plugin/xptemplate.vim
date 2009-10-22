@@ -2052,7 +2052,11 @@ fun! s:GetContextFT()
 endfunction 
 fun! s:GetContextFTObj() 
     let x = XPTbufData()
-    return x.filetypes[ s:GetContextFT() ]
+    if has_key(x.filetypes, s:GetContextFT())
+      return x.filetypes[ s:GetContextFT() ]
+    else
+      return x.filetypes[ &filetype ]
+    endif
 endfunction 
 augroup XPT 
     au!

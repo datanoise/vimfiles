@@ -413,7 +413,8 @@ end
 
 XPT deft hint=def\ test_..\ ..\ end
 XSET name|post=RubySnakeCase()
-def test_`name^
+XSET arg*|post=RepeatInsideEdges(', ')
+def test_`name^`(`arg*`)^
     `cursor^
 end
 

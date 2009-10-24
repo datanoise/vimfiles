@@ -577,11 +577,13 @@ g:xptemplate_goback	xptemplate.txt	/*g:xptemplate_goback*
 g:xptemplate_key	xptemplate.txt	/*g:xptemplate_key*
 g:xptemplate_nav_cancel	xptemplate.txt	/*g:xptemplate_nav_cancel*
 g:xptemplate_nav_next	xptemplate.txt	/*g:xptemplate_nav_next*
+g:xptemplate_nav_prev	xptemplate.txt	/*g:xptemplate_nav_prev*
 g:xptemplate_ph_pum_accept_empty	xptemplate.txt	/*g:xptemplate_ph_pum_accept_empty*
 g:xptemplate_strip_left	xptemplate.txt	/*g:xptemplate_strip_left*
 g:xptemplate_to_right	xptemplate.txt	/*g:xptemplate_to_right*
 g:xptemplate_vars	xptemplate.txt	/*g:xptemplate_vars*
 greplace.txt	greplace.txt	/*greplace.txt*
+i_<S-tab>	xptemplate.txt	/*i_<S-tab>*
 i_<tab>	xptemplate.txt	/*i_<tab>*
 i_CTRL-G_S	surround.txt	/*i_CTRL-G_S*
 i_CTRL-G_s	surround.txt	/*i_CTRL-G_s*
@@ -741,6 +743,7 @@ rails-vim-integration	rails.txt	/*rails-vim-integration*
 rails.txt	rails.txt	/*rails.txt*
 ruby.vim	ft-ruby-syntax.txt	/*ruby.vim*
 s_<CR>	xptemplate.txt	/*s_<CR>*
+s_<S-tab>	xptemplate.txt	/*s_<S-tab>*
 s_<tab>	xptemplate.txt	/*s_<tab>*
 s_CTRL-l	xptemplate.txt	/*s_CTRL-l*
 self._ctx	xpt.api.txt	/*self._ctx*

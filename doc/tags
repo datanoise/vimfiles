@@ -573,6 +573,7 @@ g:textobj_fold_no_default_key_mappings	textobj-fold.txt	/*g:textobj_fold_no_defa
 g:textobj_function_no_default_key_mappings	textobj-function.txt	/*g:textobj_function_no_default_key_mappings*
 g:textobj_indent_no_default_key_mappings	textobj-indent.txt	/*g:textobj_indent_no_default_key_mappings*
 g:textobj_lastpat_no_default_key_mappings	textobj-lastpat.txt	/*g:textobj_lastpat_no_default_key_mappings*
+g:xptemplate_brace_complete	xptemplate.txt	/*g:xptemplate_brace_complete*
 g:xptemplate_goback	xptemplate.txt	/*g:xptemplate_goback*
 g:xptemplate_key	xptemplate.txt	/*g:xptemplate_key*
 g:xptemplate_nav_cancel	xptemplate.txt	/*g:xptemplate_nav_cancel*

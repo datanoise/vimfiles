@@ -1,1 +1,0 @@
-../html/eruby.xpt.vim

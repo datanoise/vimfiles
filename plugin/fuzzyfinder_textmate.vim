@@ -99,6 +99,10 @@ RUBY
     let self.tag_files = s:GetCurrentTagFiles()
   endfunction
 
+  function! g:FuzzyFinderMode.TextMate.on_open(expr, mode)
+    call g:FuzzyFinderMode.File.on_open(a:expr, a:mode)
+  endfunction
+
   " ================================================================================
   " This function is copied almost whole-sale from fuzzyfinder.vim. Ideally, I could
   " used the on_complete callback to more cleanly add the new behavior, but the

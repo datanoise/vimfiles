@@ -187,14 +187,13 @@ nmap ,sg :source ~/.gvimrc
 nmap ,vv :e ~/.vimrc
 nmap ,vg :e ~/.gvimrc
 
-nnoremap <silent> <leader>br :FuzzyFinderTextMate<CR>
-nnoremap <silent> <leader>bR :FuzzyFinderTextMateClear<CR>
-nnoremap <silent> <leader>bb :FuzzyFinderBuffer<CR>
-nnoremap <silent> <leader>bf :FuzzyFinderFile<CR>
-nnoremap <silent> <leader>bd :FuzzyFinderDir<CR>
-nnoremap <silent> <leader>bt :FuzzyFinderTag<CR>
-nnoremap <silent> <leader>bl :FuzzyFinderMruFile<CR>
-nnoremap <silent> <leader>bc :FuzzyFinderMruCmd<CR>
+nnoremap <silent> <leader>bb :FufBuffer<CR>
+nnoremap <silent> <leader>bf :FufFile<CR>
+nnoremap <silent> <leader>bd :FufDir<CR>
+nnoremap <silent> <leader>bt :FufTag<CR>
+nnoremap <silent> <leader>bc :FufChangeList<CR>
+nnoremap <silent> <leader>bj :FufJumpList<CR>
+nnoremap <silent> <leader>bq :FufQuickfix<CR>
 nnoremap <silent> <leader>[  :TlistOpen<CR>
 nnoremap <silent> <leader>o  :exec 'NERDTree' . expand('%:p:h')<CR>
 " visual select of the last pasted text

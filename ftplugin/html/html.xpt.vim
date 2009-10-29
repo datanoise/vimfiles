@@ -150,7 +150,9 @@ XPT a hint=<a\ href...
 
 
 XPT div hint=<div>\ ..\ </div>
-<div`^>`cursor^</div>
+<div`^>
+    `cursor^
+</div>
 
 
 XPT p hint=<p>\ ..\ </p>

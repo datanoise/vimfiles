@@ -37,7 +37,7 @@ if !hlID('XPTIgnoredMark') && g:xptemplate_hl
 endif
 let g:XPTmappings = {
       \ 'popup'         : "<C-r>=XPTemplateStart(0,{'popupOnly':1})<cr>", 
-      \ 'trigger'       : "<C-g>u<C-r>=XPTemplateStart(0)<cr>", 
+      \ 'trigger'       : "<C-r>=XPTemplateStart(0)<cr>", 
       \ 'wrapTrigger_old'   : "\"0di<C-r>=XPTemplatePreWrap(@0)<cr>", 
       \ 'wrapTrigger'   : "\"0s<C-r>=XPTemplatePreWrap(@0)<cr>", 
       \ 'incSelTrigger' : "<C-c>`>a<C-r>=XPTemplateStart(0)<cr>", 
@@ -86,7 +86,7 @@ fun! g:XPTloadBundle(ft, bundle)
     endif
 endfunction 
 fun! s:FiletypeInit() 
-    let x = XPTbufData()
+    let x = g:XPTobject()
     let fts = x.filetypes
     for [ ft, ftScope ] in items( fts )
         let f = ftScope.funcs

@@ -219,6 +219,21 @@ fun! s:f.BuildIfNoChange( ... )
   endif
 endfunction
 
+fun! s:f.BuildIfNoChangePre( ... )
+  let v = substitute( self.V(), "\\V\n\\|\\s", '', 'g')
+  let pre = get(self._ctx.tmpl.setting.preValues, self.N(), '')
+  if empty(pre)
+    let pre = self.ItemFullname()
+  endif
+  let fn = substitute( pre, "\\V\n\\|\\s", '', 'g')
+
+  if v ==# fn
+      return { 'action' : 'build', 'text' : join( a:000, '' ) }
+  else
+      return { 'action' : 'keepIndent', 'text' : self.V() }
+  endif
+endfunction
+
 " trigger nested template
 fun! s:f.Trigger(name) "{{{
   return {'action' : 'expandTmpl', 'tmplName' : a:name}

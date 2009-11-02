@@ -126,9 +126,12 @@ render :update do |`page^|
 end
 
 XPT rest hint=respond_to
-XSET format=Choose(['js', 'xml', 'html'])
+XSET wants|def=Trigger('wants')
 respond_to do |wants|
-    wants.`format^` { `val` }^`cursor^
+    `wants^`
+    `wants...^
+    `wants^`
+    `wants...^
 end
 
 XPT wants hint=wants.format

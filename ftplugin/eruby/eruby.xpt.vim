@@ -156,5 +156,13 @@ XPT conf hint=content_for
 XPT end hint=end\ \(ERB)
 <% end -%>
 
+XPT jit hint=javascript_include_tag
+XSET cache...|post=, :cache => `true^
+<%= javascript_include_tag `:all^`, :`cache...`^ %>
+
+XPT slt hint=stylesheet_link_tag
+XSET cache...|post=, :cache => `true^
+<%= stylesheet_link_tag `:all^`, :`cache...`^ %>
+
 " ================================= Wrapper ===================================
 

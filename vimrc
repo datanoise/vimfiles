@@ -8,8 +8,6 @@ syntax on             " Enable syntax highlighting
 filetype on           " Enable filetype detection
 filetype indent on    " Enable filetype-specific indenting
 filetype plugin on    " Enable filetype-specific plugins
-set runtimepath+=~/.vim/xptemplate
-
 
 " Section: Options {{{1
 " --------------------------------------------------
@@ -296,6 +294,10 @@ let g:rubycomplete_buffer_loading = 1
 let g:rubycomplete_rails = 1
 let g:rubycomplete_classes_in_global = 1
 
+" xptemplate settings
+set runtimepath+=~/.vim/xptemplate
+let g:xptemplate_bundle = 'javascript_jquery,ruby_rails'
+
 " Misc settings
 let g:proj_flags = "imstc"
 let g:dbext_default_history_file = $HOME."/.dbext_history"
@@ -304,4 +306,4 @@ let g:CSApprox_verbose_level = 0 " to shut it up
 let c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:obviousModeInsertHi = 'term=reverse ctermbg=52 guibg=#660000'
 let g:obviousModeCmdwinHi = 'term=reverse ctermbg=22 guibg=#660000'
-let g:xptemplate_bundle = 'javascript_jquery,ruby_rails'
+

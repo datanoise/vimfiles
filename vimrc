@@ -47,7 +47,11 @@ function! GetCurDir()
   let result = substitute(result, '^.\+\ze.\{30,}', '<', '')
   return '('.result.')'
 endfunction
-set statusline=[%n]%m\ %<%.99f\ %{GetCurDir()}\ %h%w%r%y%=%-16(\ %l,%c-%v\ %)%P
+set statusline=[%n]%m\ %<%.99f\ %{GetCurDir()}\ %h%w%r%y%=
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+set statusline+=\ %-16(\ %l,%c-%v\ %)%P
 " }}}
 
 " cscope settings {{{2
@@ -276,6 +280,7 @@ let Tlist_Close_On_Select = 1
 let Tlist_Enable_Fold_Column = 0
 let Tlist_Show_One_File = 1
 let TList_Auto_Update = 0 " Don't autoupdate tags, I use 'u' command for that
+let Tlist_Inc_Winwidth = 0 " Don't resize my window!
 
 " NERD_tree settings
 let NERDTreeQuitOnOpen = 1 " Close NERDTree when a file is opened
@@ -299,11 +304,11 @@ set runtimepath+=~/.vim/xptemplate
 let g:xptemplate_bundle = 'javascript_jquery,ruby_rails'
 
 " Misc settings
-let g:proj_flags = "imstc"
 let g:dbext_default_history_file = $HOME."/.dbext_history"
 let g:DrChipTopLvlMenu = "Plugin."
 let g:CSApprox_verbose_level = 0 " to shut it up
 let c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:obviousModeInsertHi = 'term=reverse ctermbg=52 guibg=#660000'
 let g:obviousModeCmdwinHi = 'term=reverse ctermbg=22 guibg=#660000'
+let g:syntastic_enable_signs=1
 

@@ -149,7 +149,7 @@ if has("win32")
 endif
 set tags+=../tags,../../tags,../../../tags,../../../../tags,./tmp/tags
 set cpoptions+=d
-set timeoutlen=2000 " A little bit more time for macros
+set timeoutlen=1000 " A little bit more time for macros
 set ttimeoutlen=100  " Make Esc work faster
 " do not search included files, it's a way too slow
 set complete-=i

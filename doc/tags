@@ -60,6 +60,9 @@
 'syntastic_auto_loc_list'	syntastic.txt	/*'syntastic_auto_loc_list'*
 'syntastic_enable_signs'	syntastic.txt	/*'syntastic_enable_signs'*
 'syntastic_quiet_warnings'	syntastic.txt	/*'syntastic_quiet_warnings'*
+,b	camelcasemotion.txt	/*,b*
+,e	camelcasemotion.txt	/*,e*
+,w	camelcasemotion.txt	/*,w*
 :CSApproxSnapshot	CSApprox.txt	/*:CSApproxSnapshot*
 :Errors	syntastic.txt	/*:Errors*
 :FufAddBookmark	fuf.txt	/*:FufAddBookmark*
@@ -345,6 +348,16 @@ bufexplorer-todo	bufexplorer.txt	/*bufexplorer-todo*
 bufexplorer-usage	bufexplorer.txt	/*bufexplorer-usage*
 bufexplorer.txt	bufexplorer.txt	/*bufexplorer.txt*
 buffer-explorer	bufexplorer.txt	/*buffer-explorer*
+camelcasemotion-configuration	camelcasemotion.txt	/*camelcasemotion-configuration*
+camelcasemotion-dependencies	camelcasemotion.txt	/*camelcasemotion-dependencies*
+camelcasemotion-description	camelcasemotion.txt	/*camelcasemotion-description*
+camelcasemotion-history	camelcasemotion.txt	/*camelcasemotion-history*
+camelcasemotion-installation	camelcasemotion.txt	/*camelcasemotion-installation*
+camelcasemotion-known-problems	camelcasemotion.txt	/*camelcasemotion-known-problems*
+camelcasemotion-todo	camelcasemotion.txt	/*camelcasemotion-todo*
+camelcasemotion-usage	camelcasemotion.txt	/*camelcasemotion-usage*
+camelcasemotion.txt	camelcasemotion.txt	/*camelcasemotion.txt*
+camelcasemotion.vim	camelcasemotion.txt	/*camelcasemotion.vim*
 config/rails.vim	rails.txt	/*config\/rails.vim*
 cs	surround.txt	/*cs*
 csapprox	CSApprox.txt	/*csapprox*

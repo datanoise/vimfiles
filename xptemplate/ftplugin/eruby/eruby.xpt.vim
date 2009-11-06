@@ -122,19 +122,29 @@ XSET text|post=BuildIfNoChangePre('`"`link text`"^')
 <%= link_to `text^, `parent^_`child^_path(`pobj^`, `cobj`^) %>
 
 XPT lia hint=link_to\ \(action)
-<%= link_to "`link text...^", :action => "`index^" %>
+XSET text|pre="link text..."
+XSET text|post=BuildIfNoChangePre('`"`link text`"^')
+<%= link_to `text^, :action => "`index^" %>
 
 XPT liai hint=link_to\ \(action,\ id)
-<%= link_to "`link text...^", :action => "`index^", :id => `@item^ %>
+XSET text|pre="link text..."
+XSET text|post=BuildIfNoChangePre('`"`link text`"^')
+<%= link_to `text^, :action => "`index^", :id => `@item^ %>
 
 XPT lic hint=link_to\ \(controller)
-<%= link_to "`link text...^, :controller => "`items^" %>
+XSET text|pre="link text..."
+XSET text|post=BuildIfNoChangePre('`"`link text`"^')
+<%= link_to `text^, :controller => "`items^" %>
 
 XPT lica hint=link_to\ \(controller,\ action)
-<%= link_to "`link text...^", :controller => "`index^", :action => "`index^" %>
+XSET text|pre="link text..."
+XSET text|post=BuildIfNoChangePre('`"`link text`"^')
+<%= link_to `text^, :controller => "`index^", :action => "`index^" %>
 
 XPT licai hint=link_to\ \(controller,\ action,\ id)
-<%= link_to "`link text...^", :controller => "`index^", :action => "`index^", :id => "`edit^" %>
+XSET text|pre="link text..."
+XSET text|post=BuildIfNoChangePre('`"`link text`"^')
+<%= link_to `text^, :controller => "`index^", :action => "`index^", :id => "`edit^" %>
 
 XPT lim hint=link_to\ \(model)
 <%= link_to `model^.`name^, `model^_path(`model^) %>

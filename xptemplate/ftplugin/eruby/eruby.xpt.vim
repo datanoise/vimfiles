@@ -21,6 +21,10 @@ fun! s:f.BaseFname(fn)
   return substitute(a:fn, '^\(\w\+\)\(\.\w*\)', '\1', 'g')
 endfunction
 
+fun! s:f.BuildOptionalString( str )
+  return self.Build( self.V() == '"'.a:str.'..."' ? '`"`'.a:str.'`"^' : self.V() )
+endfunction
+
 " ================================= Snippets ===================================
 XPTemplateDef
 
@@ -102,14 +106,14 @@ XSET disabled...|post=, :disabled => `_^false^
 
 XPT lip hint=link_to\ \(path)
 XSET text|pre="link text..."
-XSET text|post=BuildIfNoChangePre('`"`link text`"^')
+XSET text|post=BuildOptionalString('link text')
 XSET variable|pre=@model
 XSET variable|def=@R('model')
 <%= link_to `text^, `model^_path(`variable^) %>
 
 XPT lipp hint=link_to\ \(path\ plural)
 XSET text|pre="link text..."
-XSET text|post=BuildIfNoChangePre('`"`link text`"^')
+XSET text|post=BuildOptionalString('link text')
 <%= link_to `text^, `model^s_path %>
 
 XPT linp hint=link_to\ \(nested\ path\)
@@ -118,32 +122,32 @@ XSET pobj|def=@R('parent')
 XSET cobj|pre=@child
 XSET cobj|def=@R('child')
 XSET text|pre="link text..."
-XSET text|post=BuildIfNoChangePre('`"`link text`"^')
+XSET text|post=BuildOptionalString('link text')
 <%= link_to `text^, `parent^_`child^_path(`pobj^`, `cobj`^) %>
 
 XPT lia hint=link_to\ \(action)
 XSET text|pre="link text..."
-XSET text|post=BuildIfNoChangePre('`"`link text`"^')
+XSET text|post=BuildOptionalString('link text')
 <%= link_to `text^, :action => "`index^" %>
 
 XPT liai hint=link_to\ \(action,\ id)
 XSET text|pre="link text..."
-XSET text|post=BuildIfNoChangePre('`"`link text`"^')
+XSET text|post=BuildOptionalString('link text')
 <%= link_to `text^, :action => "`index^", :id => `@item^ %>
 
 XPT lic hint=link_to\ \(controller)
 XSET text|pre="link text..."
-XSET text|post=BuildIfNoChangePre('`"`link text`"^')
+XSET text|post=BuildOptionalString('link text')
 <%= link_to `text^, :controller => "`items^" %>
 
 XPT lica hint=link_to\ \(controller,\ action)
 XSET text|pre="link text..."
-XSET text|post=BuildIfNoChangePre('`"`link text`"^')
+XSET text|post=BuildOptionalString('link text')
 <%= link_to `text^, :controller => "`index^", :action => "`index^" %>
 
 XPT licai hint=link_to\ \(controller,\ action,\ id)
 XSET text|pre="link text..."
-XSET text|post=BuildIfNoChangePre('`"`link text`"^')
+XSET text|post=BuildOptionalString('link text')
 <%= link_to `text^, :controller => "`index^", :action => "`index^", :id => "`edit^" %>
 
 XPT lim hint=link_to\ \(model)

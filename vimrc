@@ -251,7 +251,7 @@ au FileType vim  nnoremap <buffer> K :h <c-r>=expand('<cword>')<cr><cr>
 au FileType ruby inoremap <buffer> <c-l> <c-r>= pumvisible() ? "\<lt>c-l>" : " => "<cr>
 au FileType ruby nnoremap <buffer> <F5> :!ruby %<cr>
 au FileType php nnoremap <buffer> <F5> :!php %<cr>
-au FileType php,c,cpp,java,javascript,html inoremap <buffer> {<cr> {<cr>}<esc>O
+au FileType php,c,cpp,java,javascript,html,eruby inoremap <buffer> {<cr> {<cr>}<esc>O
 if has("mac")
   au FileType html nnoremap <silent> <D-r> :sil !open %<cr>
 endif

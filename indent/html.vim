@@ -216,7 +216,7 @@ fun! HtmlIndentGet(lnum)
 	      setlocal noic
 	    endif
 
-	    return GetJsIndent()
+	    return GetJavascriptIndent()
 	endif
     endif
 

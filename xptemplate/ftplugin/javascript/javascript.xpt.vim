@@ -103,7 +103,7 @@ XPT fcmt hint=full\ doxygen\ comment
 
 XPT fun hint=function\ ..(\ ..\ )\ {..}
 XSET arg*|post=ExpandIfNotEmpty(', ', 'arg*')
-function` `name^ (`arg*^) {
+function` `name` ^(`arg*^) {
     `cursor^
 }
 

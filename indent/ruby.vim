@@ -219,7 +219,7 @@ function GetRubyIndent()
       if line[col-1]==')' && col('.') != col('$') - 1
 	let ind = virtcol('.')-1
       else
-	let ind = indent(s:GetMSL(line('.')))
+	let ind = indent(line('.'))
       endif
     endif
     return ind
@@ -274,7 +274,7 @@ function GetRubyIndent()
 
   " If the previous line ended with a block opening, add a level of indent.
   if s:Match(lnum, s:block_regex)
-    return indent(s:GetMSL(lnum)) + &sw
+    return indent(lnum) + &sw
   endif
 
   " If the previous line contained an opening bracket, and we are still in it,

@@ -153,7 +153,7 @@ XPT # hint=#{..} syn=string
 
 
 XPT : hint=:...\ =>\ ...
-:`key^ => `value^
+:`key^ => `cursor^
 
 
 XPT % hint=%**[..]

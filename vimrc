@@ -301,8 +301,10 @@ let g:rubycomplete_classes_in_global = 1
 
 " xptemplate settings
 set runtimepath+=~/.vim/xptemplate
-let g:xptemplate_bundle = 'javascript_jquery,javascript_extjs,ruby_rails'
-let g:xptemplate_highlight = ''
+au User BufEnterRails call g:XPTaddBundle('ruby', 'rails')
+au User BufEnterRails call g:XPTaddBundle('eruby', 'rails')
+let g:xptemplate_highlight = 'following,next'
+hi link XPTnextItem CursorLine
 
 " Misc settings
 let g:dbext_default_history_file = $HOME."/.dbext_history"

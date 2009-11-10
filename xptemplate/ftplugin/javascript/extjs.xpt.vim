@@ -24,4 +24,9 @@ XPT ecls hint=Define\ Class
 });
 Ext.reg("`class^SV('\<.','\l&', '' )^", `namespace^.`class^);
 
+XPT prop hint=property
+`property^: `value^,`
+`property...^
+`property^: `value^`,
+`property...^
 

@@ -1,9 +1,5 @@
 XPTemplate priority=lang-
 
-" containers
-let s:f = g:XPTfuncs() 
-
-
 XPTinclude 
     \ _common/common
     \ html/html
@@ -11,7 +7,6 @@ XPTinclude
 
 XPTembed
     \ ruby/ruby
-    \ ruby/rails
     \ javascript/javascript
     \ css/css
 
@@ -19,6 +14,9 @@ XPTembed
 
 " ================================= Snippets ===================================
 XPTemplateDef
+
+
+
 
 " ================================= Wrapper ===================================
 

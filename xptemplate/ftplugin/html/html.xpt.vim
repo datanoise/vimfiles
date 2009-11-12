@@ -88,8 +88,8 @@ endfunction
 " ================================= Snippets ===================================
 
 
-call XPTemplate("id", {'syn' : 'tag'}, 'id="`^"')
-call XPTemplate("class", {'syn' : 'tag'}, 'class="`^"')
+call XPTdefineSnippet("id", {'syn' : 'tag'}, 'id="`^"')
+call XPTdefineSnippet("class", {'syn' : 'tag'}, 'class="`^"')
 
 
 
@@ -128,9 +128,6 @@ XPT html hint=<html><head>..<head><body>...
         <meta http-equiv="Content-Type" content="text/html; charset=`encoding^Echo(&fenc == '' ? 'utf-8' : &fenc)^"/>
         <link rel="stylesheet" type="text/css" href="`link^" />
         <title>`title^E('%:r')^</title>
-        <script language="javascript" type="text/javascript">
-            <!-- -->
-        </script>
     </head>
     <body>
         `cursor^
@@ -152,6 +149,9 @@ XPT div hint=<div>\ ..\ </div>
 <div`^>
     `cursor^
 </div>
+
+XPT divv hint=<div>\ ..\ </div>
+<div`^>`cursor^</div>
 
 
 XPT p hint=<p>\ ..\ </p>
@@ -207,9 +207,9 @@ XPT h_ hint=<h?>\ ..\ </h?>
 XSET n=1
 <h`n^>`wrapped^</h`n^>
 
+
+
 XPT a_ hint=<a\ href="">\ SEL\ </a>
 <a href="`^">`wrapped^</a>
 
-XPT link hint=<link\ .../>
-<link rel="`stylesheet^" href="`/css/master.css^" type="text/css" media="`screen^" title="`no title^" charset="`utf-8^" />
 

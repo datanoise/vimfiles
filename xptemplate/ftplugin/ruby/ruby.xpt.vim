@@ -86,7 +86,7 @@ let s:assert_map = {
 "}}}
 
 fun! s:RubyAssertPopupSort(a, b) "{{{
-  return a:a.word == a:b.word ? 0 : a:a.word < a:b.word ? -1 : 1
+  return a:a.word > a:b.word
 endfunction "}}}
 
 fun! s:f.RubyAssertPopup() "{{{
@@ -153,7 +153,7 @@ XPT # hint=#{..} syn=string
 
 
 XPT : hint=:...\ =>\ ...
-:`key^ => `cursor^
+:`key^ => `value^
 
 
 XPT % hint=%**[..]
@@ -767,8 +767,7 @@ XPT y syn=comment hint=:yields:
 XPT zip hint=zip\(..)\ {\ |..|\ ..\ }
 zip(`enum^) { |`row^| `cursor^ }
 
-XPT mp hint=map\(&:sym_proc)
-map(&:`sym^)
+
 
 
 " ================================= Wrapper ===================================
@@ -818,3 +817,4 @@ begin
 {{^ensure
     `cursor^
 `}}^end
+

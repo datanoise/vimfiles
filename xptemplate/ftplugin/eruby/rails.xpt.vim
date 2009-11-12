@@ -9,6 +9,9 @@ let s:f = g:XPTfuncs()
 XPTinclude
   \ _common/common
 
+XPTembed
+  \ ruby/rails
+
 " ========================= Function and Variables =============================
 
 fun! s:f.BaseFname(fn)

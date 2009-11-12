@@ -199,6 +199,7 @@ nnoremap <silent> <leader>bj :FufJumpList<CR>
 nnoremap <silent> <leader>bq :FufQuickfix<CR>
 nnoremap <silent> <leader>[  :TlistOpen<CR>
 nnoremap <silent> <leader>o  :exec 'NERDTree' . expand('%:p:h')<CR>
+nnoremap <silent> <leader>f  :exec 'NERDTree' . expand('%:p:h')<CR>
 " visual select of the last pasted text
 nnoremap <silent> <leader>v `[v`]
 nnoremap <silent> <leader>h :set hlsearch!<CR>

@@ -298,4 +298,23 @@ XPT dc hint=default_scope
 XSET joins...|post=, :joins => :`table^
 default_scope :`order^ => `'created_at DESC'^`, :`joins...`^
 
+XPT plugin hint=Plugin\ template
+XSET def=Trigger('def')
+module `plugin^
+    def self.included(base)
+        base.send :extend, ClassMethods
+    end
 
+    module ClassMethods
+        def acts_as_`plugin^S(SV('[A-Z]','_\l&','g'),'\<_','','')^
+            send :include, InstanceMethods
+        end
+    end
+
+    module InstanceMethods
+        `
+        `def...^
+        `def^`
+        `def...^
+    end
+end

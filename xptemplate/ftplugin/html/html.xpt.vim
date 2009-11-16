@@ -213,3 +213,6 @@ XPT a_ hint=<a\ href="">\ SEL\ </a>
 <a href="`^">`wrapped^</a>
 
 
+XPT link hint=<link\ .../>
+<link rel="`stylesheet^" href="`/css/master.css^" type="text/css" media="`screen^" title="`no title^" charset="`utf-8^" />
+

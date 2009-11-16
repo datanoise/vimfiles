@@ -204,11 +204,14 @@
 	|g:xptemplate_vars|. Variables defined with |g:xptemplate_vars|
 	override variables defined in any snippet files.
 
-	NOTE Conventionally the name of |xpt-snippet-variable| must be upper
-	case.
+	NOTE	Conventionally the name of |xpt-snippet-variable| supplied by
+		XPTemplate is upper-case letter started.
+		User defined variable name should starts with lower-case
+		letter.
+	
 
-	NOTE Override control of |xpt-snippet-variable| is affected by
-	|xpt-snippet-priority|.
+	NOTE	Override control of |xpt-snippet-variable| is affected by
+		|xpt-snippet-priority|.
 
 							*xpt-snippet-function*
 	|xpt-snippet-function| can be used in :
@@ -228,6 +231,10 @@
 		XSET elts=c_printfElts( R( 'pattern' ) )
 		printf( "`pattern^"`elts^ )
 <
+	NOTE	Conventionally the name of |xpt-snippet-function| supplied by
+		XPTemplate is upper-case letter started.
+		User defined function name should starts with lower-case
+		letter.
 
 								  *XPTinclude*
 						      *xpt-snippet-XPTinclude*
@@ -236,8 +243,8 @@
 <	The <filename> is only the file root, without ".xpt.vim". 
 	XPTinclude can include several snippets at one time.
 
-	NOTE do NOT use |runtime| to include other snippet files. XPTinclude
-	handles snippet priority, but |runtime| does NOT.
+	NOTE do NOT use |:runtime| to include other snippet files. XPTinclude
+	handles snippet priority, but |:runtime| does NOT.
 
 								    *XPTembed*
 							   *xpt-snippet-embed*
@@ -264,7 +271,7 @@
 
 							    *xpt-snippet-name*
 	<snippetName> is the name the user has to type to trigger this
-	snippet. It can only contain characters defined in |iskeyword| and
+	snippet. It can only contain characters defined in 'iskeyword' and
 	|xpt-snippet-keyword|.
 
 							 *xpt-snippet-setting*
@@ -292,12 +299,17 @@
 	"$" needs to be escaped if you do NOT want it to be evaluated as
 	variable.
 
+
 							  *xpt-snippet-hidden*
 	Set to 1 to prevent the snippet from being triggered by the user, but
-	it CAN be triggered from internal API. Syntax : >
-		XPT for hidden=1
+	it CAN be triggered from internal API, or included by other snippet.
+	Syntax: >
+		XPT for hidden=1 hint=...
+<	Or: >
+		XPT for hidden hint=...
 <
-	See |xpt-api|.
+	See |xpt-snippet-include| and |xpt-api|.
+
 
 							   *xpt-snippet-alias*
 	Make the snippet an alias to another snippet. Syntax : >
@@ -477,7 +489,7 @@
 <	The second "i", with double |`| before "<", is the leading one.
 
 						     *xpt-placeholder-special*
-	Special place holders include : |xpt-placeholder-cursur| and
+	Special place holders include : |xpt-placeholder-cursor| and
 	|xpt-placeholder-wrapped|.
 
 					 *`cursor^*   *xpt-placeholder-cursor*

@@ -4,10 +4,29 @@ XPTvar $TRUE          1
 XPTvar $FALSE         0
 XPTvar $NULL          NULL
 
-XPTvar $BRif  \ 
-XPTvar $BRel   \n
 
-XPTvar $VOID_LINE  /* void */;
+" if () ** {
+XPTvar $BRif     ' '
+
+" } ** else {
+XPTvar $BRel     \n
+
+
+
+" int fun( ** arg ** )
+XPTvar $SParg      ' '
+
+" if ** (
+XPTvar $SPif       ' '
+
+" if ( ** condition ** )
+XPTvar $SPcnd      ' '
+
+" a = a ** + ** 1
+XPTvar $SPop       ' '
+
+
+XPTvar $VOID_LINE      /* void */;
 XPTvar $CURSOR_PH      /* cursor */
 
 
@@ -17,18 +36,20 @@ XPTvar $CURSOR_PH      /* cursor */
 " ================================= Snippets ===================================
 XPTemplateDef
 
-XPT if		hint=if\ (..)\ {..}\ else...
-XSET job=$VOID_LINE
-if (`condition^)`$BRif^{ 
+XPT _if hidden=1
+if`$SPif^(`$SPcnd^`condition^`$SPcnd^)`$BRif^{
     `job^
-}` `else...{{^`$BRel^`Include:else^`}}^
+}
+
+
+XPT if hint=if\ (..)\ {..}\ else...
+XSET job=$VOID_LINE
+`Include:_if^` `else...{{^`$BRel^`Include:else^`}}^
 
 
 XPT elif hint=else\ if\ \(\ ...\ )\ {\ ...\ }
 XSET job=$VOID_LINE
-else if (`condition^)`$BRif^{
-    `job^
-}
+else `Include:_if^
 
 
 XPT else hint=else\ {\ ...\ }
@@ -38,61 +59,56 @@ else`$BRif^{
 
 
 XPT ifn  alias=if	hint=if\ ($NULL\ ==\ ..)\ {..}\ else...
-XSET condition=Embed('`$NULL^ == `var^')
+XSET condition=Embed('`$NULL^`$SPop^==`$SPop^`var^')
 
 
 XPT ifnn alias=if	hint=if\ ($NULL\ !=\ ..)\ {..}\ else...
-XSET condition=Embed('`$NULL^ != `var^')
+XSET condition=Embed('`$NULL^`$SPop^!=`$SPop^`var^')
 
 
 XPT if0  alias=if	hint=if\ (0\ ==\ ..)\ {..}\ else...
-XSET condition=Embed('0 == `var^')
+XSET condition=Embed('0`$SPop^==`$SPop^`var^')
 
 
 XPT ifn0 alias=if	hint=if\ (0\ !=\ ..)\ {..}\ else...
-XSET condition=Embed('0 != `var^')
+XSET condition=Embed('0`$SPop^!=`$SPop^`var^')
 
 
-XPT ifee	hint=if\ (..)\ {..}\ elseif...
+XPT ifee	hint=if\ (..)\ {..}\ else\ if...
 XSET job=$VOID_LINE
 XSET another_cond=R('condition')
-if (`condition^)`$BRif^{
-    `job^
-}` `else_if...^
+`Include:_if^` `else_if...^
 XSETm else_if...|post
-`$BRif^else if (`another_cond^)`$BRif^{
+`$BRel^else if`$SPif^(`$SPcnd^`another_cond^`$SPcnd^)`$BRif^{
     `job^
 }` `else_if...^
 XSETm END
 
 
 XPT switch	hint=switch\ (..)\ {case..}
-XSET job=$VOID_LINE
-switch (`var^)`$BRif^{
-    case `constant^ :
-        `job^
-        break;
+switch (`$SParg^`var^`$SParg^)`$BRif^{
+    `:case:^
 `
     `case...`
-^`
-    `default...^
+    {{^
+    `:case:^
+`
+    `case...`
+^`}}^`
+    `default...`{{^
+    `:default:^`}}^
 }
-XSETm case...|post
-
-    case `constant^ :
-        `job^
-        break;
-`
-    `case...`
-^
-XSETm END
-XSETm default...|post
-
-    default:
-        `cursor^
-XSETm END
 ..XPT
 
+XPT case " case ..:
+XSET job=$VOID_LINE
+case `constant^`$SPif^:
+    `job^
+    break;
+
+XPT default " default ..:
+default:
+    `cursor^
 
 
 
@@ -100,7 +116,7 @@ XSETm END
 
 
 XPT if_ hint=if\ (..)\ {\ SEL\ }
-if (`condition^)`$BRif^{
+if`$SPif^(`$SPcnd^`condition^`$SPcnd^)`$BRif^{
     `wrapped^
 }
 

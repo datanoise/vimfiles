@@ -15,22 +15,32 @@ endfunction
 
 XPTemplateDef
 
-XPT ecls hint=Define\ Class
+XPT p hint=property
+`property^: `value^`
+`property...^,
+`property^: `value^`,
+`property...^
+
+XPT conf hint=Apply\ config
+XSET property=Trigger('p')
+var config = {
+    `property^
+};
+Ext.apply(this, config);
+
+XPT class hint=Define\ Class
+XSET config...|post=`config^
+XSET config=Trigger('conf')
 `namespace^.`class^ = Ext.extend(`base^, {
     `
     `property...^`
     `property^: `value^,`
     `property...^
     initComponent: function() {
-        `cursor^
+        `config...^
         `namespace^.`class^.superclass.initComponent.apply(this, arguments);
+        `cursor^
     }
 });
 Ext.reg("`class^JSToSnakeCase()^", `namespace^.`class^);
-
-XPT p hint=property
-`property^: `value^`
-`property...^,
-`property^: `value^`,
-`property...^
 

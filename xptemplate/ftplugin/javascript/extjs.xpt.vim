@@ -9,6 +9,10 @@ let s:f = g:XPTfuncs()
 XPTinclude
       \ _common/common
 
+fun! s:f.JSToSnakeCase()
+  return self.S(self.SV('[A-Z]', '_\l&', 'g'), '\<_', '', '')
+endfunction
+
 XPTemplateDef
 
 XPT ecls hint=Define\ Class
@@ -22,7 +26,7 @@ XPT ecls hint=Define\ Class
         `namespace^.`class^.superclass.initComponent.apply(this, arguments);
     }
 });
-Ext.reg("`class^SV('\<.','\l&', '' )^", `namespace^.`class^);
+Ext.reg("`class^JSToSnakeCase()^", `namespace^.`class^);
 
 XPT p hint=property
 `property^: `value^`

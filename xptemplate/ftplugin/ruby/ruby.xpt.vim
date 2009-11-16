@@ -11,8 +11,7 @@ XPTinclude
 
 fun! s:f.RubyCamelCase(...) "{{{
   let str = a:0 == 0 ? self.V() : a:1
-  let r = substitute(substitute(str, "[\/ _]", ' ', 'g'), '\<.', '\u&', 'g')
-  return substitute(r, " ", '', 'g')
+  return substitute(substitute(str, "[\/ _]", ' ', 'g'), '\<.', '\u&', 'g')
 endfunction "}}}
 
 fun! s:f.RubySnakeCase(...) "{{{
@@ -315,8 +314,9 @@ classify { |`element^| `cursor^ }
 
 
 XPT cl hint=class\ ..\ end
-XSET ClassName.post=RubyCamelCase()
-class `ClassName^
+XSET ClassName|post=RubyCamelCase()
+XSET Parent|post=RubyCamelCase()
+class `ClassName^` < `Parent^
     `cursor^
 end
 

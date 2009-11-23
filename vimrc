@@ -221,6 +221,7 @@ nnoremap <C-y> 4<C-y>
 nmap <silent> ,o A<CR>
 nnoremap Y y$
 nnoremap z- 1z=
+nnoremap L :
 nnoremap [l [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
 nnoremap <F2> <C-w><C-w>
 nnoremap <F4> :sil make %<cr><c-l>:cc<cr>

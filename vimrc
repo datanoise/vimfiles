@@ -254,6 +254,7 @@ au FileType ruby inoremap <buffer> <c-l> <c-r>= pumvisible() ? "\<lt>c-l>" : " =
 au FileType ruby nnoremap <buffer> <F5> :!ruby %<cr>
 au FileType php nnoremap <buffer> <F5> :!php %<cr>
 au FileType php,c,cpp,java,javascript,html,eruby,css inoremap <buffer> {<cr> {<cr>}<esc>O
+au FileType xml setlocal foldmethod=syntax
 if has("mac")
   au FileType html nnoremap <silent> <D-r> :sil !open %<cr>
 endif
@@ -317,4 +318,4 @@ let c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:obviousModeInsertHi = 'term=reverse ctermbg=52 guibg=#660000'
 let g:obviousModeCmdwinHi = 'term=reverse ctermbg=22 guibg=#660000'
 let g:syntastic_enable_signs=1
-
+let g:xml_syntax_folding=1

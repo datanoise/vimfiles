@@ -10,7 +10,7 @@ XPTinclude
       \ _common/common
 
 fun! s:f.JSToSnakeCase()
-  return self.S(self.SV('[A-Z]', '_\l&', 'g'), '\<_', '', '')
+  return self.S(self.SV('[A-Z]\+', '_\l&', 'g'), '\<_', '', '')
 endfunction
 
 XPTemplateDef

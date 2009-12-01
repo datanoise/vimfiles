@@ -51,7 +51,7 @@ XPT nff hint=fields_for
 XPT ffl hint=form_for\ label
 XSET name|pre=Attribute
 XSET name|def=S(S(R('attribute'),'[[:alpha:]]\+','\u\0','g'),'_',' ','g')
-<%= f.label :`attribute^`, "`name^" %>
+<%= f.label :`attribute^`, "`name`"^ %>
 
 XPT fftf hint=form_for\ text_field
 <%= f.text_field :`attribute^ %>

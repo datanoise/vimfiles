@@ -151,7 +151,7 @@ XSET text|post=BuildOptionalString('link text')
 XPT lim hint=link_to\ \(model)
 <%= link_to `model^.`name^, `model^_path(`model^) %>
 
-XPT for hint=for\ loop\ in\ eruby
+XPT fore hint=for\ loop\ with\ empty\ check
 <% if !`list^.blank? -%>
     <% for `item^ in `list^ -%>
         `code^R('item')^
@@ -159,6 +159,13 @@ XPT for hint=for\ loop\ in\ eruby
 <% else -%>
     `cursor^
 <% end -%>
+
+XPT for hint=for\ loop
+XSET list|pre=@items
+XSET code|pre=item
+<% for `item^ in `list^@R('item')s^ -%>
+    <%= `code^R('item')^.name %>
+<% end %>
 
 XPT conf hint=content_for
 <% content_for :`yield_label_in_layout^ do -%>

@@ -314,6 +314,10 @@ fun! XPPcorrectPos()
 endfunction 
 fun! s:ApplyMapAndSetting() 
     call s:_InitBuffer()
+    if exists( 'b:__xpp_pushed' )
+        return
+    endif
+    let b:__xpp_pushed = 1
     call b:_xpp_map_saver.Save()
     exe 'inoremap <silent> <buffer> <UP>'   '<C-r>=XPPup()<CR>'
     exe 'inoremap <silent> <buffer> <DOWN>' '<C-r>=XPPdown()<CR>'
@@ -338,11 +342,17 @@ fun! s:CheckAndRepop()
 endfunction 
 fun! s:ClearMapAndSetting() 
     call s:_InitBuffer()
+    if !exists( 'b:__xpp_pushed' )
+        return
+    endif
+    unlet b:__xpp_pushed
     call b:_xpp_map_saver.Restore()
     call b:_xpp_setting_switch.Restore()
     if exists( ':AcpUnlock' )
-        AcpLock
-        AcpUnlock
+        try
+            AcpUnlock
+        catch /.*/
+        endtry
     endif
 endfunction 
 fun! XPPend() 

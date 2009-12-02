@@ -253,6 +253,7 @@ au FileType vim  nnoremap <buffer> K :h <c-r>=expand('<cword>')<cr><cr>
 au FileType ruby inoremap <buffer> <c-l> <c-r>= pumvisible() ? "\<lt>c-l>" : " => "<cr>
 au FileType ruby nnoremap <buffer> <F5> :!ruby %<cr>
 au FileType php nnoremap <buffer> <F5> :!php %<cr>
+au FileType cucumber nnoremap <buffer> <F5> :!cucumber % -q<cr>
 au FileType php,c,cpp,java,javascript,html,eruby,css inoremap <buffer> {<cr> {<cr>}<esc>O
 au FileType xml setlocal foldmethod=syntax
 if has("mac")

@@ -19,6 +19,9 @@ XPTvar $BRfun         ' '
 XPTinclude
       \ _common/common
 
+XPTvar $CL    /*
+XPTvar $CM    *
+XPTvar $CR    */
 XPTinclude
       \ _comment/doubleSign
 

@@ -320,3 +320,4 @@ let g:obviousModeInsertHi = 'term=reverse ctermbg=52 guibg=#660000'
 let g:obviousModeCmdwinHi = 'term=reverse ctermbg=22 guibg=#660000'
 let g:syntastic_enable_signs=1
 let g:xml_syntax_folding=1
+let g:fuf_abbrevMap = {"^ " : [ "**/", ]}

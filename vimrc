@@ -297,6 +297,7 @@ let NERDSpaceDelims=1 " Add an extra space to comment delimiters
 
 " Ignore binary, temprary and log files
 let g:fuzzy_ignore = "*.png;*.jpg;*.gif;*.o;*.class;tmp/**;log/**"
+let g:fuf_previewHeight=0
 
 " Rubycomplete plugin settings
 let g:rubycomplete_buffer_loading = 1

@@ -316,7 +316,7 @@ classify { |`element^| `cursor^ }
 XPT cl hint=class\ ..\ end
 XSET ClassName|post=RubyCamelCase()
 XSET Parent|post=RubyCamelCase()
-class `ClassName^` < `Parent^
+class `ClassName^` < `Parent?^
     `cursor^
 end
 

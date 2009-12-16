@@ -58,6 +58,7 @@
 'loaded_nerd_comments'	NERD_commenter.txt	/*'loaded_nerd_comments'*
 'loaded_nerd_tree'	NERD_tree.txt	/*'loaded_nerd_tree'*
 'syntastic_auto_loc_list'	syntastic.txt	/*'syntastic_auto_loc_list'*
+'syntastic_disabled_filetypes'	syntastic.txt	/*'syntastic_disabled_filetypes'*
 'syntastic_enable_signs'	syntastic.txt	/*'syntastic_enable_signs'*
 'syntastic_quiet_warnings'	syntastic.txt	/*'syntastic_quiet_warnings'*
 ,b	camelcasemotion.txt	/*,b*
@@ -93,6 +94,8 @@
 :NERDTreeFromBookmark	NERD_tree.txt	/*:NERDTreeFromBookmark*
 :NERDTreeMirror	NERD_tree.txt	/*:NERDTreeMirror*
 :NERDTreeToggle	NERD_tree.txt	/*:NERDTreeToggle*
+:SyntasticDisable	syntastic.txt	/*:SyntasticDisable*
+:SyntasticEnable	syntastic.txt	/*:SyntasticEnable*
 :TextobjDatetimeDefaultKeyMappings	textobj-datetime.txt	/*:TextobjDatetimeDefaultKeyMappings*
 :TextobjDiffDefaultKeyMappings	textobj-diff.txt	/*:TextobjDiffDefaultKeyMappings*
 :TextobjEntireDefaultKeyMappings	textobj-entire.txt	/*:TextobjEntireDefaultKeyMappings*
@@ -349,6 +352,7 @@ bufexplorer-customization	bufexplorer.txt	/*bufexplorer-customization*
 bufexplorer-installation	bufexplorer.txt	/*bufexplorer-installation*
 bufexplorer-todo	bufexplorer.txt	/*bufexplorer-todo*
 bufexplorer-usage	bufexplorer.txt	/*bufexplorer-usage*
+bufexplorer-windowlayout	bufexplorer.txt	/*bufexplorer-windowlayout*
 bufexplorer.txt	bufexplorer.txt	/*bufexplorer.txt*
 buffer-explorer	bufexplorer.txt	/*buffer-explorer*
 camelcasemotion-configuration	camelcasemotion.txt	/*camelcasemotion-configuration*
@@ -480,9 +484,12 @@ g:bufExplorerFindActive	bufexplorer.txt	/*g:bufExplorerFindActive*
 g:bufExplorerReverseSort	bufexplorer.txt	/*g:bufExplorerReverseSort*
 g:bufExplorerShowDirectories	bufexplorer.txt	/*g:bufExplorerShowDirectories*
 g:bufExplorerShowRelativePath	bufexplorer.txt	/*g:bufExplorerShowRelativePath*
+g:bufExplorerShowTabBuffer	bufexplorer.txt	/*g:bufExplorerShowTabBuffer*
 g:bufExplorerShowUnlisted	bufexplorer.txt	/*g:bufExplorerShowUnlisted*
 g:bufExplorerSortBy	bufexplorer.txt	/*g:bufExplorerSortBy*
+g:bufExplorerSplitBelow	bufexplorer.txt	/*g:bufExplorerSplitBelow*
 g:bufExplorerSplitOutPathName	bufexplorer.txt	/*g:bufExplorerSplitOutPathName*
+g:bufExplorerSplitRight	bufexplorer.txt	/*g:bufExplorerSplitRight*
 g:fuf_abbrevMap	fuf.txt	/*g:fuf_abbrevMap*
 g:fuf_bookmark_keyDelete	fuf.txt	/*g:fuf_bookmark_keyDelete*
 g:fuf_bookmark_prompt	fuf.txt	/*g:fuf_bookmark_prompt*
@@ -729,7 +736,10 @@ surround-targets	surround.txt	/*surround-targets*
 surround.txt	surround.txt	/*surround.txt*
 syntastic	syntastic.txt	/*syntastic*
 syntastic-about	syntastic.txt	/*syntastic-about*
+syntastic-changelog	syntastic.txt	/*syntastic-changelog*
+syntastic-commands	syntastic.txt	/*syntastic-commands*
 syntastic-contents	syntastic.txt	/*syntastic-contents*
+syntastic-credits	syntastic.txt	/*syntastic-credits*
 syntastic-error-signs	syntastic.txt	/*syntastic-error-signs*
 syntastic-error-window	syntastic.txt	/*syntastic-error-window*
 syntastic-functionality	syntastic.txt	/*syntastic-functionality*

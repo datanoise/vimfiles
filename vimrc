@@ -110,17 +110,17 @@ set mouse=a
 " }}}
 
 " encoding & keymap options {{{2
-set encoding=utf-8
-set keymap=russian-jcuken
-set iminsert=0
-set imsearch=-1
-if has('mac')
-  set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ
-  set langmap+=фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
-  set langmap+=Ж:
-  set langmap+=Б<
-  set langmap+=Ю>
-endif
+"set encoding=utf-8
+"set keymap=russian-jcuken
+"set iminsert=0
+"set imsearch=-1
+"if has('mac')
+"  set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ
+"  set langmap+=фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
+"  set langmap+=Ж:
+"  set langmap+=Б<
+"  set langmap+=Ю>
+"endif
 " }}}
 
 " folding options {{{2
@@ -285,6 +285,7 @@ let Tlist_Enable_Fold_Column = 0
 let Tlist_Show_One_File = 1
 let TList_Auto_Update = 0 " Don't autoupdate tags, I use 'u' command for that
 let Tlist_Inc_Winwidth = 0 " Don't resize my window!
+let Tlist_Ctags_Cmd = '/usr/local/bin/ctags'
 
 " NERD_tree settings
 let NERDTreeQuitOnOpen = 1 " Close NERDTree when a file is opened

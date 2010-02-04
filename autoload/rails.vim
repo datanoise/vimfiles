@@ -1,11 +1,9 @@
 " autoload/rails.vim
-" Author:       Tim Pope <vimNOSPAM@tpope.info>
+" Author:       Tim Pope <vimNOSPAM@tpope.org>
 
 " Install this file as autoload/rails.vim.  This file is sourced manually by
 " plugin/rails.vim.  It is in autoload directory to allow for future usage of
 " Vim 7's autoload feature.
-
-" ============================================================================
 
 " Exit quickly when:
 " - this plugin was already loaded (or disabled)
@@ -1210,11 +1208,11 @@ function! s:readable_default_rake_task(lnum) dict abort
     endif
   elseif t =~ '^spec\>'
     if self.name() =~# '\<spec/spec_helper\.rb$'
-      return 'spec SPEC_OPTS='
+      return 'spec'
     elseif lnum > 0
-      return 'spec SPEC="%:p" SPEC_OPTS=--line='.lnum
+      return 'spec SPEC="%:p":'.lnum
     else
-      return 'spec SPEC="%:p" SPEC_OPTS='
+      return 'spec SPEC="%:p"'
     endif
   elseif t =~ '^test\>'
     let meth = self.last_method(lnum)
@@ -1734,7 +1732,7 @@ function! s:Edit(count,cmd,...)
 endfunction
 
 function! s:fuzzyglob(arg)
-  return '*'.s:gsub(s:gsub(a:arg,'[^/]','[&]*'),'/','/*')
+  return s:gsub(s:gsub(a:arg,'[^/.]','[&]*'),'%(/|^)\.@!|\.','&*')
 endfunction
 
 function! s:Complete_find(ArgLead, CmdLine, CursorPos)
@@ -2756,7 +2754,11 @@ function! s:libEdit(cmd,...)
 endfunction
 
 function! s:environmentEdit(cmd,...)
-  return s:EditSimpleRb(a:cmd,"environment",a:0? a:1 : "../environment","config/environments/",".rb")
+  if a:0 || rails#app().has_file('config/application.rb')
+    return s:EditSimpleRb(a:cmd,"environment",a:0? a:1 : "../application","config/environments/",".rb")
+  else
+    return s:EditSimpleRb(a:cmd,"environment","environment","config/",".rb")
+  endif
 endfunction
 
 function! s:initializerEdit(cmd,...)
@@ -4573,10 +4575,25 @@ function! s:BufSettings()
   elseif ft == 'eruby'
     call self.setvar('&suffixesadd',".".s:gsub(s:view_types,',',',.').",.rb,.css,.js,.html,.yml,.csv")
     if exists("g:loaded_allml")
-      " allml is available on vim.org.
       call self.setvar('allml_stylesheet_link_tag', "<%= stylesheet_link_tag '\r' %>")
       call self.setvar('allml_javascript_include_tag', "<%= javascript_include_tag '\r' %>")
       call self.setvar('allml_doctype_index', 10)
+    endif
+    if exists("g:loaded_ragtag")
+      call self.setvar('ragtag_stylesheet_link_tag', "<%= stylesheet_link_tag '\r' %>")
+      call self.setvar('ragtag_javascript_include_tag', "<%= javascript_include_tag '\r' %>")
+      call self.setvar('ragtag_doctype_index', 10)
+    endif
+  elseif ft == 'haml'
+    if exists("g:loaded_allml")
+      call self.setvar('allml_stylesheet_link_tag', "= stylesheet_link_tag '\r'")
+      call self.setvar('allml_javascript_include_tag', "= javascript_include_tag '\r'")
+      call self.setvar('allml_doctype_index', 10)
+    endif
+    if exists("g:loaded_ragtag")
+      call self.setvar('ragtag_stylesheet_link_tag', "= stylesheet_link_tag '\r'")
+      call self.setvar('ragtag_javascript_include_tag', "= javascript_include_tag '\r'")
+      call self.setvar('ragtag_doctype_index', 10)
     endif
   endif
   if ft == 'eruby' || ft == 'yaml'

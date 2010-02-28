@@ -183,3 +183,7 @@ catch (`err^)`$BRif^{
 finally`$BRif^{
     `cursor^
 }`}}^
+
+XPT con hint=console.log\(\ ...\ )
+console.log(`cursor^)
+

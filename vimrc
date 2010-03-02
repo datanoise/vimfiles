@@ -256,7 +256,7 @@ au FileType php nnoremap <buffer> <F5> :!php %<cr>
 au FileType cucumber nnoremap <buffer> <F5> :!cucumber % -q<cr>
 au FileType php,c,cpp,java,javascript,html,eruby,css inoremap <buffer> {<cr> {<cr>}<esc>O
 au FileType xml setlocal foldmethod=syntax
-au BufRead,BufNewFile *.iphone.erb let b:eruby_subtype = 'html'
+au BufReadPre,BufNewFile *.iphone.erb let b:eruby_subtype = 'html'
 if has("mac")
   au FileType html nnoremap <silent> <D-r> :sil !open %<cr>
 endif

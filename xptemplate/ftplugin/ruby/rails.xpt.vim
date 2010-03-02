@@ -136,7 +136,7 @@ end
 
 XPT wants hint=wants.format
 XSET format=Choose(['js', 'xml', 'html'])
-wants.`format^` { `val` }^
+wants.`format^` { `value?` }^
 
 XPT maprs hint=map.resources
 XSETm do...|post

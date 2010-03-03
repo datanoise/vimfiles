@@ -204,7 +204,9 @@ XPT a hint=<a\ href...
 " TODO auto cr complete
 XPT div hint=<div>\ ..\ </div>
 XSET what=Echo('')
-<div` `attr?^>`what^</div>
+<div` `attr?^>
+    `what^
+</div>
 
 
 XPT p hint=<p>\ ..\ </p>

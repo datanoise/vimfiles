@@ -298,7 +298,7 @@ let g:NERDShutUp = 1
 let NERDSpaceDelims=1 " Add an extra space to comment delimiters
 
 " FuzzyFinder settings
-let g:fuzzy_ignore = "*.png;*.jpg;*.gif;*.o;*.class;tmp/**;log/**"
+let g:fuf_file_exclude = '\v\~$|\.(o|exe|dll|bak|sw[po])$|(^|[/\\])\.(hg|git|bzr|svn|)($|[/\\])'
 let g:fuf_previewHeight=0
 let g:fuf_abbrevMap = {"^ " : [ "**/", ]}
 

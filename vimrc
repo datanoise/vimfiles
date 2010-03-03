@@ -297,9 +297,10 @@ let NERDTreeIgnore=['\.o$', '\~$', '\.class$']
 let g:NERDShutUp = 1
 let NERDSpaceDelims=1 " Add an extra space to comment delimiters
 
-" Ignore binary, temprary and log files
+" FuzzyFinder settings
 let g:fuzzy_ignore = "*.png;*.jpg;*.gif;*.o;*.class;tmp/**;log/**"
 let g:fuf_previewHeight=0
+let g:fuf_abbrevMap = {"^ " : [ "**/", ]}
 
 " Rubycomplete plugin settings
 let g:rubycomplete_buffer_loading = 1
@@ -323,4 +324,3 @@ let g:obviousModeInsertHi = 'term=reverse ctermbg=52 guibg=#660000'
 let g:obviousModeCmdwinHi = 'term=reverse ctermbg=22 guibg=#660000'
 " let g:syntastic_enable_signs=1
 let g:xml_syntax_folding=1
-let g:fuf_abbrevMap = {"^ " : [ "**/", ]}

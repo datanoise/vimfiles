@@ -109,20 +109,6 @@ set mousehide
 set mouse=a
 " }}}
 
-" encoding & keymap options {{{2
-"set encoding=utf-8
-"set keymap=russian-jcuken
-"set iminsert=0
-"set imsearch=-1
-"if has('mac')
-"  set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ
-"  set langmap+=фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
-"  set langmap+=Ж:
-"  set langmap+=Б<
-"  set langmap+=Ю>
-"endif
-" }}}
-
 " folding options {{{2
 set foldmethod=marker
 set foldlevel=99 " always expand folds
@@ -130,7 +116,7 @@ set foldlevel=99 " always expand folds
 
 " uncategorized options {{{2
 set bg=dark
-colo candycode_mod
+colo ir_black_mod
 if exists('&mc')
   au BufNew,BufRead * set mc=81
 endif
@@ -322,5 +308,4 @@ let g:CSApprox_verbose_level = 0 " to shut it up
 let c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:obviousModeInsertHi = 'term=reverse ctermbg=52 guibg=#660000'
 let g:obviousModeCmdwinHi = 'term=reverse ctermbg=22 guibg=#660000'
-" let g:syntastic_enable_signs=1
 let g:xml_syntax_folding=1

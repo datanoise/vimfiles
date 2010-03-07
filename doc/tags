@@ -904,8 +904,10 @@ textobj-user-function	textobj-user.txt	/*textobj-user-function*
 textobj-user-interface	textobj-user.txt	/*textobj-user-interface*
 textobj-user-introduction	textobj-user.txt	/*textobj-user-introduction*
 textobj-user.txt	textobj-user.txt	/*textobj-user.txt*
+vS	surround.txt	/*vS*
 v_ay	textobj-syntax.txt	/*v_ay*
 v_iy	textobj-syntax.txt	/*v_iy*
+vgS	surround.txt	/*vgS*
 vs	surround.txt	/*vs*
 yS	surround.txt	/*yS*
 ySS	surround.txt	/*ySS*

@@ -197,7 +197,7 @@ XSET doctype|post=html_doctype_post( V() )
 
 
 XPT a hint=<a\ href...
-<a href="`href^">`cursor^</a>
+<a href="`href^"` `attributes?`^>`cursor^</a>
 ..XPT
 
 

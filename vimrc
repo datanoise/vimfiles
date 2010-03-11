@@ -188,6 +188,8 @@ nnoremap <silent> <leader>o  :exec 'NERDTree' . expand('%:p:h')<CR>
 nnoremap <silent> <leader>f  :exec 'NERDTree' . expand('%:p:h')<CR>
 " visual select of the last pasted text
 nnoremap <silent> <leader>v `[v`]
+" visual select of the line's content
+nnoremap <silent> <leader>V ^v$h
 nnoremap <silent> <leader>h :set hlsearch!<CR>
 nnoremap <silent> <leader>l :setlocal list!<CR>
 nnoremap <silent> <leader>n :set nu!<CR>
@@ -295,6 +297,7 @@ let g:rubycomplete_classes_in_global = 1
 
 " xptemplate settings
 set runtimepath+=~/.vim/xptemplate
+" set runtimepath+=~/tmp/xpt-src/dist
 let g:xptemplate_bundle = 'javascript_extjs'
 au User BufEnterRails call g:XPTaddBundle('ruby', 'rails')
 au User BufEnterRails call g:XPTaddBundle('eruby', 'rails')

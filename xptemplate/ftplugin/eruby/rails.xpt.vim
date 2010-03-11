@@ -183,4 +183,8 @@ XPT slt hint=stylesheet_link_tag
 XSET cache...|post=, :cache => `true^
 <%= stylesheet_link_tag `:all^`, :`cache...`^ %>
 
-
+XPT each hint=each\ loop
+XSET param=S(S(R('model'), '^@\?\(\w\+\).*', '\1', ''), 's$', '', '')
+<% `model^.each do |`param^| %>
+    `cursor^
+<% end %>

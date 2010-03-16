@@ -125,7 +125,7 @@ hi MoreMsg      guifg=#39d049       guibg=NONE          gui=NONE
 hi ErrorMsg     guifg=#ffffff       guibg=#ff0000       gui=bold
             \   ctermfg=white       ctermbg=red         cterm=bold
 hi WarningMsg   guifg=white         guibg=#FF6C60       gui=BOLD
-                ctermfg=white       ctermbg=red         cterm=NONE
+            \   ctermfg=white       ctermbg=red         cterm=NONE
 
 " }}}
 

@@ -34,9 +34,9 @@ hi SpellBad     guifg=NONE          guibg=NONE          gui=undercurl
 hi SpellCap     guifg=NONE          guibg=NONE          gui=undercurl
             \   ctermfg=white       ctermbg=darkblue    guisp=#0044ff
 hi SpellLocal   guifg=NONE          guibg=NONE          gui=undercurl
-            \   ctermfg=black       ctermbg=cyan        guisp=#00dd99   
+            \   ctermfg=black       ctermbg=cyan        guisp=#00dd99
 hi SpellRare    guifg=NONE          guibg=NONE          gui=undercurl
-            \   ctermfg=white       ctermbg=darkmagenta guisp=#ff22ee   
+            \   ctermfg=white       ctermbg=darkmagenta guisp=#ff22ee
 
 hi DiffAdd      guifg=#ffffff       guibg=#126493       gui=NONE
             \   ctermfg=white       ctermbg=darkblue    cterm=NONE
@@ -50,19 +50,19 @@ hi DiffText     guifg=#ffffff       guibg=#976398       gui=bold
 " }}}
 " borders / separators / menus {{{
 
-hi FoldColumn   guifg=#c8bcb9       guibg=#786d65       gui=bold            
+hi FoldColumn   guifg=#c8bcb9       guibg=#786d65       gui=bold
             \   ctermfg=lightgray   ctermbg=darkgray    cterm=NONE
 hi SignColumn   guifg=#c8bcb9       guibg=#786d65       gui=bold
             \   ctermfg=lightgray   ctermbg=darkgray    cterm=NONE
 
-hi Pmenu        guifg=#000000       guibg=#a6a190       gui=NONE
-            \   ctermfg=white       ctermbg=darkgray    cterm=NONE
-hi PmenuSel     guifg=#ffffff       guibg=#133293       gui=NONE
-            \   ctermfg=white       ctermbg=lightblue   cterm=NONE
 hi PmenuSbar    guifg=NONE          guibg=#555555       gui=NONE
             \   ctermfg=black       ctermbg=black       cterm=NONE
 hi PmenuThumb   guifg=NONE          guibg=#cccccc       gui=NONE
             \   ctermfg=gray        ctermbg=gray        cterm=NONE
+hi Pmenu        guifg=#f6f3e8       guibg=#444444       gui=NONE
+            \   ctermfg=NONE        ctermbg=NONE        cterm=NONE
+hi PmenuSel     guifg=#000000       guibg=#cae682       gui=NONE
+            \   ctermfg=NONE        ctermbg=NONE        cterm=NONE
 
 hi StatusLine   guifg=#CCCCCC       guibg=#202020       gui=none
             \   ctermfg=white       ctermbg=darkgray    cterm=NONE
@@ -100,7 +100,7 @@ hi CursorColumn guifg=NONE          guibg=#1b1b1b       gui=NONE
 hi Visual       guifg=#ffffff       guibg=#606070       gui=NONE
             \   ctermfg=white       ctermbg=lightblue   cterm=NONE
 
-hi IncSearch    guifg=#000000       guibg=#eedd33       gui=bold 
+hi IncSearch    guifg=#000000       guibg=#eedd33       gui=bold
             \   ctermfg=white       ctermbg=yellow      cterm=NONE
 hi Search       guifg=#efefd0       guibg=#937340       gui=NONE
             \   ctermfg=white       ctermbg=darkgreen   cterm=NONE
@@ -124,8 +124,8 @@ hi MoreMsg      guifg=#39d049       guibg=NONE          gui=NONE
 
 hi ErrorMsg     guifg=#ffffff       guibg=#ff0000       gui=bold
             \   ctermfg=white       ctermbg=red         cterm=bold
-hi WarningMsg   guifg=#ccae22       guibg=NONE          gui=bold    
-            \   ctermfg=yellow      ctermbg=NONE        cterm=bold
+hi WarningMsg   guifg=white         guibg=#FF6C60       gui=BOLD
+                ctermfg=white       ctermbg=red         cterm=NONE
 
 " }}}
 

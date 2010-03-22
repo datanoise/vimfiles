@@ -115,7 +115,7 @@ set foldlevel=99 " always expand folds
 " }}}
 
 " uncategorized options {{{2
-set bg=dark
+" set bg=dark
 colo candycode_mod
 " colo ir_black_mod
 if exists('&mc')
@@ -276,7 +276,6 @@ let Tlist_Enable_Fold_Column = 0
 let Tlist_Show_One_File = 1
 let TList_Auto_Update = 0 " Don't autoupdate tags, I use 'u' command for that
 let Tlist_Inc_Winwidth = 0 " Don't resize my window!
-let Tlist_Ctags_Cmd = '/usr/local/bin/ctags'
 
 " NERD_tree settings
 let NERDTreeQuitOnOpen = 1 " Close NERDTree when a file is opened

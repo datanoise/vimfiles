@@ -180,6 +180,7 @@ nmap ,vg :e ~/.gvimrc
 
 nnoremap <silent> <leader>bb :FufBuffer<CR>
 nnoremap <silent> <leader>bf :FufFile<CR>
+nnoremap <silent> <leader>t :FufFile !<CR>
 nnoremap <silent> <leader>bd :FufDir<CR>
 nnoremap <silent> <leader>bt :FufTag<CR>
 nnoremap <silent> <leader>bc :FufChangeList<CR>
@@ -289,7 +290,7 @@ let NERDSpaceDelims=1 " Add an extra space to comment delimiters
 " FuzzyFinder settings
 let g:fuf_file_exclude = '\v\~$|\.(o|exe|dll|bak|sw[po])$|(^|[/\\])\.(hg|git|bzr|svn|)($|[/\\])'
 let g:fuf_previewHeight=0
-let g:fuf_abbrevMap = {"^ " : [ "**/", ]}
+let g:fuf_abbrevMap = {"^!" : [ "**/", ]}
 
 " Rubycomplete plugin settings
 let g:rubycomplete_buffer_loading = 1
@@ -298,7 +299,6 @@ let g:rubycomplete_classes_in_global = 1
 
 " xptemplate settings
 set runtimepath+=~/.vim/xptemplate
-" set runtimepath+=~/tmp/xpt-src/dist
 let g:xptemplate_bundle = 'javascript_extjs'
 au User BufEnterRails call g:XPTaddBundle('ruby', 'rails')
 au User BufEnterRails call g:XPTaddBundle('eruby', 'rails')

@@ -115,7 +115,7 @@ set foldlevel=99 " always expand folds
 " }}}
 
 " uncategorized options {{{2
-" set bg=dark
+set bg=dark
 colo candycode_mod
 " colo ir_black_mod
 if exists('&mc')

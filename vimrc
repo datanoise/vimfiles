@@ -224,6 +224,7 @@ function! SwitchPrevBuf()
   endif
 endfunction
 nnoremap <silent> <C-tab> :call SwitchPrevBuf()<cr>
+nnoremap <silent> <C-^> :call SwitchPrevBuf()<cr>
 
 " insert modeline
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>

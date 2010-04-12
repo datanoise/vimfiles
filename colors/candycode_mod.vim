@@ -169,6 +169,9 @@ hi Error        guifg=#ffffff       guibg=#ff0000       gui=NONE
 hi Todo         guifg=#ffffff       guibg=#ee7700       gui=bold
             \   ctermfg=black       ctermbg=yellow      cterm=bold
 
+hi rubySymbol     guifg=#FFA16E  guibg=NONE          gui=NONE
+            \   ctermfg=red         ctermbg=NONE        cterm=NONE
+
 hi XPTIgnoredMark
             \   guifg=#CCCCCC       guibg=#202020       gui=NONE
             \   ctermfg=white       ctermbg=yellow      cterm=NONE

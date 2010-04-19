@@ -30,7 +30,6 @@ XPTvar	xpt.snippet.syn.txt	/*XPTvar*
 `cursor^	xpt.snippet.syn.txt	/*`cursor^*
 g:XPTaddBundle()	xpt.api.txt	/*g:XPTaddBundle()*
 g:xptemplate_brace_complete	xptemplate.txt	/*g:xptemplate_brace_complete*
-g:xptemplate_brace_complete_i	xptemplate.txt	/*g:xptemplate_brace_complete_i*
 g:xptemplate_bundle	xptemplate.txt	/*g:xptemplate_bundle*
 g:xptemplate_fallback	xptemplate.txt	/*g:xptemplate_fallback*
 g:xptemplate_goback	xptemplate.txt	/*g:xptemplate_goback*
@@ -103,7 +102,7 @@ xpt-priority-format	xpt.snippet.syn.txt	/*xpt-priority-format*
 xpt-priority-value	xpt.snippet.syn.txt	/*xpt-priority-value*
 xpt-repetition	xptemplate.txt	/*xpt-repetition*
 xpt-snippet	xpt.snippet.syn.txt	/*xpt-snippet*
-xpt-snippet-ComeFist	xpt.snippet.syn.txt	/*xpt-snippet-ComeFist*
+xpt-snippet-ComeFirst	xpt.snippet.syn.txt	/*xpt-snippet-ComeFirst*
 xpt-snippet-ComeLast	xpt.snippet.syn.txt	/*xpt-snippet-ComeLast*
 xpt-snippet-XPTinclude	xpt.snippet.syn.txt	/*xpt-snippet-XPTinclude*
 xpt-snippet-XSET	xpt.snippet.syn.txt	/*xpt-snippet-XSET*

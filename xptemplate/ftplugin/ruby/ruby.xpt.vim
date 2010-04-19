@@ -8,7 +8,6 @@ XPTinclude
       \ _common/common
 
 " ========================= Function and Variables =============================
-XPTvar $SPop       ''
 
 fun! s:f.RubyCamelCase(...) "{{{
   let str = a:0 == 0 ? self.V() : a:1

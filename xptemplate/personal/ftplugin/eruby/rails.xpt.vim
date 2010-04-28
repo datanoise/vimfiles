@@ -24,7 +24,6 @@ endfunction
 
 
 " ================================= Snippets ===================================
-XPTemplateDef
 
 XPT df hint=div_for
 <% div_for `obj^ do -%>

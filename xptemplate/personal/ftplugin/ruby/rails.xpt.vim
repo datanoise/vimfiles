@@ -14,7 +14,6 @@ XPTinclude
 
 
 " ================================= Snippets ===================================
-XPTemplateDef
 
 XPT p hint=params[:id]
 params[:`id^]

@@ -304,6 +304,8 @@ let g:xptemplate_bundle = 'javascript_extjs'
 au User BufEnterRails call g:XPTaddBundle('ruby', 'rails')
 au User BufEnterRails call g:XPTaddBundle('eruby', 'rails')
 let g:xptemplate_highlight = 'following,next'
+let g:xptemplate_pum_tab_nav = 1
+let g:xptemplate_nav_next = '<C-j>'
 hi link XPTnextItem CursorLine
 
 " Misc settings

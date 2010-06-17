@@ -1,6 +1,7 @@
 " Vim indent file
 " Language:		Ruby
 " Maintainer:		Nikolai Weibull <now at bitwi.se>
+" Last Change:		2009 Dec 17
 " URL:			http://vim-ruby.rubyforge.org
 " Anon CVS:		See above site
 " Release Coordinator:	Doug Kearns <dougkearns@gmail.com>
@@ -177,7 +178,7 @@ function s:LineHasOpeningBrackets(lnum)
 endfunction
 
 function s:Match(lnum, regex)
-  let col = match(getline(a:lnum), a:regex) + 1
+  let col = match(getline(a:lnum), '\C'.a:regex) + 1
   return col > 0 && !s:IsInStringOrComment(a:lnum, col) ? col : 0
 endfunction
 
@@ -219,7 +220,7 @@ function GetRubyIndent()
       if line[col-1]==')' && col('.') != col('$') - 1
 	let ind = virtcol('.')-1
       else
-	let ind = indent(line('.'))
+	let ind = indent(s:GetMSL(line('.')))
       endif
     endif
     return ind
@@ -274,7 +275,7 @@ function GetRubyIndent()
 
   " If the previous line ended with a block opening, add a level of indent.
   if s:Match(lnum, s:block_regex)
-    return indent(lnum) + &sw
+    return indent(s:GetMSL(lnum)) + &sw
   endif
 
   " If the previous line contained an opening bracket, and we are still in it,

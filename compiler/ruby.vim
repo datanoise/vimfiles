@@ -2,7 +2,7 @@
 " Language:		Ruby
 " Function:		Syntax check and/or error reporting
 " Maintainer:		Tim Hammerquist <timh at rubyforge.org>
-" Info:			$Id: ruby.vim,v 1.12 2006/04/15 12:01:18 dkearns Exp $
+" Last Change:		2008 Aug 1
 " URL:			http://vim-ruby.rubyforge.org
 " Anon CVS:		See above site
 " Release Coordinator:	Doug Kearns <dougkearns@gmail.com>
@@ -50,7 +50,7 @@ set cpo-=C
 "
 "   :make -c %<CR>
 "
-CompilerSet makeprg=ruby\ -wc\ $*
+CompilerSet makeprg=ruby\ -w\ $*
 
 CompilerSet errorformat=
     \%+E%f:%l:\ parse\ error,
@@ -65,4 +65,4 @@ CompilerSet errorformat=
 let &cpo = s:cpo_save
 unlet s:cpo_save
 
-" vim: nowrap sw=2 sts=2 ts=8 ff=unix:
+" vim: nowrap sw=2 sts=2 ts=8:

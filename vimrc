@@ -149,7 +149,7 @@ if executable('ack')
   set grepprg=ack\ -a\ --ignore-dir=log\ --ignore-dir=tmp\ $*\\\|grep\ -v\ '^tags'
 endif
 set completeopt=longest,menu " don't hide completion menu when typing
-set clipboard+=unnamed
+" set clipboard+=unnamed
 au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs
 au FileType ruby setlocal completefunc=syntaxcomplete#Complete
 au FileType scala,ruby exe 'compiler '. expand('<amatch>')

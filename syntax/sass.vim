@@ -14,13 +14,17 @@ syn case ignore
 syn cluster sassCssProperties contains=cssFontProp,cssFontDescriptorProp,cssColorProp,cssTextProp,cssBoxProp,cssGeneratedContentProp,cssPagingProp,cssUIProp,cssRenderProp,cssAuralProp,cssTableProp
 syn cluster sassCssAttributes contains=css.*Attr,cssComment,cssValue.*,cssColor,cssURL,sassDefault,cssImportant,cssError,cssStringQ,cssStringQQ,cssFunction,cssUnicodeEscape,cssRenderProp
 
+syn region sassDefinition matchgroup=cssBraces start="{" end="}" contains=TOP
+
+syn match sassProperty "\%([{;]\s*\|^\)\@<=[[:alnum:]-]\+:" contains=css.*Prop skipwhite nextgroup=sassCssAttribute contained containedin=sassDefinition
 syn match sassProperty "^\s*\zs\s\%([[:alnum:]-]\+:\|:[[:alnum:]-]\+\)"hs=s+1 contains=css.*Prop skipwhite nextgroup=sassCssAttribute
 syn match sassProperty "^\s*\zs\s\%(:\=[[:alnum:]-]\+\s*=\)"hs=s+1 contains=css.*Prop skipwhite nextgroup=sassCssAttribute
-syn match sassCssAttribute ".*$" contained contains=@sassCssAttributes,sassConstant,sassFunction
+syn match sassCssAttribute +\%("\%([^"]\|\\"\)*"\|'\%([^']\|\\'\)*'\|[^;]\)*+ contained contains=@sassCssAttributes,sassVariable,sassFunction
 syn match sassDefault "!default\>" contained
-syn match sassConstant "!\%(important\>\|default\>\)\@![[:alnum:]_-]\+"
-syn match sassConstant "$[[:alnum:]_-]\+"
-syn match sassConstantAssignment "\%([!$][[:alnum:]_]\+\s*\)\@<=\%(||\)\==" nextgroup=sassCssAttribute skipwhite
+syn match sassVariable "!\%(important\>\|default\>\)\@![[:alnum:]_-]\+"
+syn match sassVariable "$[[:alnum:]_-]\+"
+syn match sassVariableAssignment "\%([!$][[:alnum:]_-]\+\s*\)\@<=\%(||\)\==" nextgroup=sassCssAttribute skipwhite
+syn match sassVariableAssignment "\%([!$][[:alnum:]_-]\+\s*\)\@<=:" nextgroup=sassCssAttribute skipwhite
 
 syn match sassFunction "\<\%(rgb\|rgba\|red\|green\|blue\|mix\)\>(\@=" contained
 syn match sassFunction "\<\%(hsl\|hsla\|hue\|saturation\|lightness\|adjust-hue\|lighten\|darken\|saturate\|desaturate\|grayscale\|complement\)\>(\@=" contained
@@ -28,6 +32,8 @@ syn match sassFunction "\<\%(alpha\|opacity\|rgba\|opacify\|fade-in\|transparent
 syn match sassFunction "\<\%(unquote\|quote\)\>(\@=" contained
 syn match sassFunction "\<\%(percentage\|round\|ceil\|floor\|abs\)\>(\@=" contained
 syn match sassFunction "\<\%(type-of\|unit\|unitless\|comparable\)\>(\@=" contained
+
+syn region sassInterpolation matchgroup=sassInterpolationDelimiter start="#{" end="}" contains=@sassCssAttributes,sassVariable,sassFunction
 
 syn match sassMixinName "[[:alnum:]_-]\+" contained nextgroup=sassCssAttribute
 syn match sassMixin  "^="               nextgroup=sassMixinName
@@ -47,8 +53,8 @@ syn match sassAmpersand  "&"
 " TODO: Arithmetic (including strings and concatenation)
 
 syn region sassInclude start="@import" end=";\|$" contains=cssComment,cssURL,cssUnicodeEscape,cssMediaType
-syn region sassDebugLine matchgroup=sassDebug start="@debug\>" end="$" contains=@sassCssAttributes,sassConstant,sassFunction
-syn region sassControlLine matchgroup=sassControl start="@\%(if\|else\%(\s\+if\)\=\|while\|for\)\>" end="$" contains=sassFor,@sassCssAttributes,sassConstant,sassFunction
+syn region sassDebugLine matchgroup=sassDebug start="@debug\>" end="$" contains=@sassCssAttributes,sassVariable,sassFunction
+syn region sassControlLine matchgroup=sassControl start="@\%(if\|else\%(\s\+if\)\=\|while\|for\)\>" end="$" contains=sassFor,@sassCssAttributes,sassVariable,sassFunction
 syn keyword sassFor from to through contained
 
 syn keyword sassTodo        FIXME NOTE TODO OPTIMIZE XXX contained
@@ -58,7 +64,7 @@ syn region  sassCssComment  start="^\z(\s*\)/\*" end="^\%(\z1 \)\@!" contains=sa
 hi def link sassCssComment              sassComment
 hi def link sassComment                 Comment
 hi def link sassDefault                 cssImportant
-hi def link sassConstant                Identifier
+hi def link sassVariable                Identifier
 hi def link sassFunction                Function
 hi def link sassMixing                  PreProc
 hi def link sassMixin                   PreProc
@@ -71,6 +77,7 @@ hi def link sassFor                     PreProc
 hi def link sassEscape                  Special
 hi def link sassIdChar                  Special
 hi def link sassClassChar               Special
+hi def link sassInterpolationDelimiter  Delimiter
 hi def link sassAmpersand               Character
 hi def link sassId                      Identifier
 hi def link sassClass                   Type

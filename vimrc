@@ -126,6 +126,7 @@ set sidescrolloff=5  " keep at least 5 lines left/right
 set autoread         " disable annoying confirmations
 set hidden
 set title
+set colorcolumn=80
 " set number
 if exists("&macmeta")
   set macmeta " on Mac use Option key as Meta
@@ -180,7 +181,7 @@ nmap ,vg :e ~/.gvimrc
 
 nnoremap <silent> <leader>bb :FufBuffer<CR>
 nnoremap <silent> <leader>bf :FufFile<CR>
-nnoremap <silent> <leader>t :FufFile !<CR>
+" nnoremap <silent> <leader>t :FufFile !<CR>
 nnoremap <silent> <leader>bd :FufDir<CR>
 nnoremap <silent> <leader>bt :FufTag<CR>
 nnoremap <silent> <leader>bc :FufChangeList<CR>

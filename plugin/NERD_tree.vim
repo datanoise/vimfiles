@@ -2640,6 +2640,7 @@ function! s:initNerdTreeInPlace(dir)
     setlocal foldcolumn=0
     setlocal nobuflisted
     setlocal nospell
+    setlocal norelativenumber
     if g:NERDTreeShowLineNumbers
         setlocal nu
     else
@@ -2868,6 +2869,7 @@ function! s:createTreeWin()
     setlocal foldcolumn=0
     setlocal nobuflisted
     setlocal nospell
+    setlocal norelativenumber
     if g:NERDTreeShowLineNumbers
         setlocal nu
     else

@@ -181,7 +181,7 @@ nmap ,vg :e ~/.gvimrc
 
 nnoremap <silent> <leader>bb :FufBuffer<CR>
 nnoremap <silent> <leader>bf :FufFile<CR>
-" nnoremap <silent> <leader>t :FufFile !<CR>
+nnoremap <silent> <leader>t :FufFile !<CR>
 nnoremap <silent> <leader>bd :FufDir<CR>
 nnoremap <silent> <leader>bt :FufTag<CR>
 nnoremap <silent> <leader>bc :FufChangeList<CR>

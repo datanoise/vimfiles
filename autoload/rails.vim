@@ -3100,7 +3100,7 @@ function! s:readable_related(...) dict abort
     elseif file =~ '\<vendor/.*/test/'
       return s:sub(file,'<vendor/.{-}/\zstest/','lib/')
     else
-      return fnamemodify(file,":t")
+      return fnamemodify(file,':t')."\n".s:sub(s:sub(f,'\.rb$','_spec.rb'),'^app/','spec/')
     endif
   else
     return ""
@@ -3771,7 +3771,7 @@ function! s:BufInitStatusline()
     if &l:statusline == ''
       let &l:statusline='%<%f %h%m%r%='
       if &ruler
-        let &l:statusline .= '%-16( %l,%c-%v %)%P'
+        let &l:statusline .= '%-14.(%l,%c%V%) %P'
       endif
     endif
     let &l:statusline = s:InjectIntoStatusline(&l:statusline)

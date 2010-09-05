@@ -59,22 +59,45 @@ fun! XPreplaceInternal(start, end, replacement, ...)
         call extend( option, a:1, 'force' )
     endif
     let replacement = s:ConvertSpaceToTab( a:replacement )
+    let repLines = XPT#SpaceToTab( split( a:replacement, '\n', 1 ) )
     if option.doJobs
         call s:doPreJob(a:start, a:end, replacement)
     endif
-    call cursor( a:start )
-    silent! normal! zO
-    call cursor( a:start )
-    if a:start != a:end
-        silent! normal! v
-        call cursor( a:end )
-        silent! normal! dzO
-        call cursor( a:start )
-    endif
-    if replacement != ''
-        let positionAfterReplacement = s:Replace_standard( a:start, a:end, replacement )
+    if 0
+        let [ curNrLines, finalNrLines ] = [ a:end[ 0 ] - a:start[ 0 ] + 1, len( repLines ) ]
+        let [ s, e ] = [ 1, col( [ a:end[ 0 ], '$' ] ) ]
+        let repLines[ 0 ] = XPT#TextInLine( a:start[ 0 ], s, a:start[ 1 ] ) . repLines[ 0 ]
+        let repLines[ -1 ] .= XPT#TextInLine( a:end[ 0 ], a:end[ 1 ], e )
+        let positionAfterReplacement = [ a:end[ 0 ] + ( finalNrLines - curNrLines ), a:end[1] - len(getline(a:end[0])) ]
+        if curNrLines > finalNrLines
+            call cursor( a:start )
+            if curNrLines > finalNrLines + 1
+                exe 'silent!' 'normal!' 'zOd' ( finalNrLines - curNrLines - 1 ) 'j'
+            else
+                silent! normal! zOdd
+            endif
+        elseif curNrLines < finalNrLines
+            call append( a:start[ 0 ], repeat( [ '' ], finalNrLines - curNrLines ) )
+        endif
+        call setline( a:start[ 0 ], repLines )
+        let positionAfterReplacement[1] += len(getline(positionAfterReplacement[0]))
+        call cursor( positionAfterReplacement )
+        silent! normal! zO
     else
-        let positionAfterReplacement = [ line("."), col(".") ]
+        call cursor( a:start )
+        silent! normal! zO
+        call cursor( a:start )
+        if a:start != a:end
+            silent! normal! v
+            call cursor( a:end )
+            silent! normal! dzO
+            call cursor( a:start )
+        endif
+        if replacement != ''
+            let positionAfterReplacement = s:Replace_standard( a:start, a:end, replacement )
+        else
+            let positionAfterReplacement = [ line("."), col(".") ]
+        endif
     endif
     if option.doJobs
         call s:doPostJob( a:start, positionAfterReplacement, replacement )
@@ -89,7 +112,7 @@ fun! s:Replace_standard( start, end, replacement )
     let @" = replacement . ';'
     if ifPasteAtEnd
         call cursor( a:start[0], a:start[1] - 1 )
-        let char = getline( "." )[ -1:-1 ]
+        let char = matchstr( getline( '.' ), '\v.$' )
         let @" = char . replacement . ';'
         silent! normal! ""P
     else
@@ -106,7 +129,7 @@ fun! s:Replace_standard( start, end, replacement )
     call cursor(positionAfterReplacement)
     silent! '',.foldopen!
     if ifPasteAtEnd
-        call cursor( positionAfterReplacement[0], positionAfterReplacement[1] - 1 - 1 )
+        call cursor( positionAfterReplacement[0], positionAfterReplacement[1] - 1 - len( char ) )
         silent! normal! DzO
     else
         call cursor( positionAfterReplacement )
@@ -143,7 +166,8 @@ fun! XPreplace(start, end, replacement, ...)
     try
         let positionAfterReplacement = XPreplaceInternal( a:start, a:end, a:replacement, option )
     catch /.*/
-        call XPT#war( v:exception )
+        call XPT#warn( v:exception )
+        call XPT#warn( v:throwpoint )
     finally
         call XPRendSession()
     endtry

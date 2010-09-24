@@ -1,7 +1,6 @@
 " Vim filetype plugin
 " Language:		Ruby
 " Maintainer:		Gavin Sinclair <gsinclair at gmail.com>
-" Last Change:		2010 Mar 15
 " URL:			http://vim-ruby.rubyforge.org
 " Anon CVS:		See above site
 " Release Coordinator:  Doug Kearns <dougkearns@gmail.com>
@@ -191,7 +190,7 @@ function! RubyBalloonexpr()
     if str !~ '^\w'
       return ''
     endif
-    silent! let res = substitute(system("ri --system -f simple -T \"".str.'"'),'\n$','','')
+    silent! let res = substitute(system("ri -f simple -T \"".str.'"'),'\n$','','')
     if res =~ '^Nothing known about' || res =~ '^Bad argument:' || res =~ '^More than one method'
       return ''
     endif

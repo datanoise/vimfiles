@@ -293,7 +293,6 @@ let NERDSpaceDelims=1 " Add an extra space to comment delimiters
 " FuzzyFinder settings
 let g:fuf_file_exclude = '\v\~$|\.(o|exe|dll|bak|sw[po])$|(^|[/\\])\.(hg|git|bzr|svn|)($|[/\\])'
 let g:fuf_previewHeight=0
-let g:fuf_abbrevMap = {"^!" : [ "**/", ]}
 
 " Rubycomplete plugin settings
 let g:rubycomplete_buffer_loading = 1

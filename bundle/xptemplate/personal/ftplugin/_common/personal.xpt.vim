@@ -9,6 +9,7 @@ XPTemplate priority=personal
 
 XPTvar $author 'Kent'
 XPTvar $email  'ksibilev@gmail.com'
+XPTvar $SParg  ''
 
 XPTemplateDef
 

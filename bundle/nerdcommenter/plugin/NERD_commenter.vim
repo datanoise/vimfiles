@@ -21,6 +21,7 @@ if v:version < 700
     finish
 endif
 let loaded_nerd_comments = 1
+let mapleader = ','
 
 " Function: s:InitVariable() function {{{2
 " This function is used to initialise a given variable to a given value. The

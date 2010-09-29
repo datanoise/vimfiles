@@ -21,7 +21,6 @@ if v:version < 700
     finish
 endif
 let loaded_nerd_comments = 1
-let mapleader = ','
 
 " Function: s:InitVariable() function {{{2
 " This function is used to initialise a given variable to a given value. The
@@ -2727,6 +2726,7 @@ function! s:CreateMaps(target, combo)
 endfunction
 
 if g:NERDCreateDefaultMappings
+    let mapleader = ','
     call s:CreateMaps('<plug>NERDCommenterComment',    '<leader>cc')
     call s:CreateMaps('<plug>NERDCommenterToggle',     '<leader>c<space>')
     call s:CreateMaps('<plug>NERDCommenterMinimal',    '<leader>cm')
@@ -2739,6 +2739,7 @@ if g:NERDCreateDefaultMappings
     call s:CreateMaps('<plug>NERDCommenterUncomment',  '<leader>cu')
     call s:CreateMaps('<plug>NERDCommenterToEOL',      '<leader>c$')
     call s:CreateMaps('<plug>NERDCommenterAppend',     '<leader>cA')
+    unlet mapleader
 
     if !hasmapto('<plug>NERDCommenterAltDelims', 'n')
         nmap <leader>ca <plug>NERDCommenterAltDelims

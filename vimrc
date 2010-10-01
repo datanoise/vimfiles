@@ -30,6 +30,8 @@ else
   set backupdir=/tmp
   set directory=/tmp
 endif
+set undodir=~/tmp/undofile
+set undofile
 " }}}
 
 " search options {{{2

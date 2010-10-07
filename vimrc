@@ -233,15 +233,15 @@ nnoremap <silent> <C-^> :call SwitchPrevBuf()<cr>
 " insert modeline
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
 " keyword completion on <TAB>
-function MyTabOrCompletion()
-  let col = col('.')-1
-  if pumvisible() || col && getline('.')[col-1] =~ '\k'
-    return "\<C-N>"
-  else
-    return "\<tab>"
-  endif
-endfunction
-inoremap <silent> <tab> <c-r>=MyTabOrCompletion()<cr>
+" function MyTabOrCompletion()
+"   let col = col('.')-1
+"   if pumvisible() || col && getline('.')[col-1] =~ '\k'
+"     return "\<C-N>"
+"   else
+"     return "\<tab>"
+"   endif
+" endfunction
+" inoremap <silent> <tab> <c-r>=MyTabOrCompletion()<cr>
 inoremap <c-_> <c-^>
 
 au FileType help nnoremap <buffer> q :bd<CR>

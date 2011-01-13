@@ -45,8 +45,12 @@ Syntastic comes in two parts: the syntax checker plugins, and the core script
 (i.e. syntastic.vim). The syntax checker plugins are defined on a per-filetype
 basis where each one wraps up an external syntax checking program. The core
 script delegates off to these plugins and uses their output to provide the
-syntastic functionality. Currently, syntax checking plugins exist for eruby,
-haml, html, javascript, php, python, ruby and sass.
+syntastic functionality. Currently, syntax checking plugins exist for c,
+coffee, cpp, cucumber, eruby, haml, haskell, html, javascript, lua, perl, php,
+python, ruby, sass, sh, tex and xhtml.
+
+NOTE: This list is subject to change without notice.  Please check the
+syntax_checkers directory for a reliable list of syntax checkers.
 
 If your language is not supported then see |syntastic-syntax-checkers| for
 details on how to implement a syntax checking plugin, and be sure to send me a
@@ -223,6 +227,20 @@ The latest dev versions are on github
 
 ==============================================================================
 7. Changelog                                             *syntastic-changelog*
+
+1.2.0
+    - New syntax checkers from github:kongo2002
+      - c (thanks also to github:jperras)
+      - cpp
+      - lua
+      - sh (thanks also to github:jmcantrell)
+    - add coffee syntax checked by github:lstoll
+    - add tex syntax checker
+    - make html checker play nicer with html5, thanks to github:enaeseth
+    - escape filenames properly when invoking syntax checkers, thanks to
+      github:jmcantrell
+    - adjust the ruby syntax checker to avoid some common annoying warnings,
+      thanks to github:robertwahler
 
 1.1.0 [codenamed: tpimp]
     - Dont load rubygems for ruby/eruby syntax checkers. Thanks tpope.

@@ -58,7 +58,7 @@ call s:InitVariable("g:NERDMenuMode", 3)
 call s:InitVariable("g:NERDLPlace", "[>")
 call s:InitVariable("g:NERDUsePlaceHolders", 1)
 call s:InitVariable("g:NERDRemoveAltComs", 1)
-call s:InitVariable("g:NERDRemoveExtraSpaces", 1)
+call s:InitVariable("g:NERDRemoveExtraSpaces", 0)
 call s:InitVariable("g:NERDRPlace", "<]")
 call s:InitVariable("g:NERDSpaceDelims", 0)
 
@@ -146,7 +146,7 @@ let s:delimiterMap = {
     \ 'eiffel': { 'left': '--' },
     \ 'elf': { 'left': "'" },
     \ 'elmfilt': { 'left': '#' },
-    \ 'erlang': { 'left': '%' },
+    \ 'erlang': { 'left': '%', 'leftAlt': '%%' },
     \ 'eruby': { 'left': '<%#', 'right': '%>', 'leftAlt': '<!--', 'rightAlt': '-->' },
     \ 'expect': { 'left': '#' },
     \ 'exports': { 'left': '#' },
@@ -175,7 +175,7 @@ let s:delimiterMap = {
     \ 'gitrebase': { 'left': '#' },
     \ 'gnuplot': { 'left': '#' },
     \ 'groovy': { 'left': '//', 'leftAlt': '/*', 'rightAlt': '*/' },
-    \ 'gsp': { 'left': '<%--', 'right': '--%>' },
+    \ 'gsp': { 'left': '<%--', 'right': '--%>', 'leftAlt': '<!--','rightAlt': '-->'},
     \ 'gtkrc': { 'left': '#' },
     \ 'haskell': { 'left': '{-','right': '-}', 'leftAlt': '--' },
     \ 'hb': { 'left': '#' },
@@ -208,6 +208,7 @@ let s:delimiterMap = {
     \ 'kscript': { 'left': '//', 'leftAlt': '/*', 'rightAlt': '*/' },
     \ 'lace': { 'left': '--' },
     \ 'ldif': { 'left': '#' },
+    \ 'less': { 'left': '/*','right': '*/' },
     \ 'lilo': { 'left': '#' },
     \ 'lilypond': { 'left': '%' },
     \ 'liquid': { 'left': '{% comment %}', 'right': '{% endcomment %}' },
@@ -257,6 +258,7 @@ let s:delimiterMap = {
     \ 'occam': { 'left': '--' },
     \ 'omlet': { 'left': '(*', 'right': '*)' },
     \ 'omnimark': { 'left': ';' },
+    \ 'ooc': { 'left': '//', 'leftAlt': '/*', 'rightAlt': '*/' },
     \ 'openroad': { 'left': '//' },
     \ 'opl': { 'left': "REM" },
     \ 'ora': { 'left': '#' },
@@ -302,8 +304,10 @@ let s:delimiterMap = {
     \ 'sass': { 'left': '//', 'leftAlt': '/*' },
     \ 'sather': { 'left': '--' },
     \ 'scala': { 'left': '//', 'leftAlt': '/*', 'rightAlt': '*/' },
+    \ 'scheme': { 'left': ';', 'leftAlt': '#|', 'rightAlt': '|#' },
     \ 'scilab': { 'left': '//' },
     \ 'scsh': { 'left': ';' },
+    \ 'scss': { 'left': '/*','right': '*/' },
     \ 'sed': { 'left': '#' },
     \ 'sgmldecl': { 'left': '--', 'right': '--' },
     \ 'sgmllnx': { 'left': '<!--', 'right': '-->' },

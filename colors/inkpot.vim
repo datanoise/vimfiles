@@ -45,7 +45,7 @@ if ! exists("g:inkpot_black_background")
 endif
 
 if has("gui_running")
-    if ! g:inkpot_black_background
+    if ! g:inkpot_black_background"{{{
         hi Normal         gui=NONE   guifg=#cfbfad   guibg=#1e1e27
     else
         hi Normal         gui=NONE   guifg=#cfbfad   guibg=#000000
@@ -135,9 +135,9 @@ if has("gui_running")
         hi SpellCap     gui=undercurl guisp=#66cccc
 
         hi MatchParen   gui=NONE      guifg=#404040   guibg=#8fff8b
-    endif
+    endif"}}}
 else
-    if ! g:inkpot_black_background
+    if ! g:inkpot_black_background"{{{
         exec "hi Normal         cterm=NONE   ctermfg=" . <SID>X(79) . " ctermbg=" . <SID>X(80)
     else
         exec "hi Normal         cterm=NONE   ctermfg=" . <SID>X(79) . " ctermbg=" . <SID>X(16)
@@ -206,7 +206,8 @@ else
         exec "hi SpellLocal     cterm=NONE ctermbg=" . <SID>X(36)
         exec "hi SpellCap       cterm=NONE ctermbg=" . <SID>X(21)
         exec "hi MatchParen     cterm=NONE ctermbg=" . <SID>X(14) . "ctermfg=" . <SID>X(25)
-    endif
+    endif"}}}
 endif
+hi! link ColorColumn StatusLine
 
 " vim: set et :

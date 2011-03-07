@@ -190,7 +190,7 @@ function! RubyBalloonexpr()
     if str !~ '^\w'
       return ''
     endif
-    silent! let res = substitute(system("ri -f simple -T \"".str.'"'),'\n$','','')
+    silent! let res = substitute(substitute(system("ri -f ansi --no-gems -T \"".str.'"'),'\n$','',''), '\e[^m]\+m', '', 'g')
     if res =~ '^Nothing known about' || res =~ '^Bad argument:' || res =~ '^More than one method'
       return ''
     endif

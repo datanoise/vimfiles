@@ -1,3 +1,4 @@
+'syntastic_auto_jump'	syntastic.txt	/*'syntastic_auto_jump'*
 'syntastic_auto_loc_list'	syntastic.txt	/*'syntastic_auto_loc_list'*
 'syntastic_disabled_filetypes'	syntastic.txt	/*'syntastic_disabled_filetypes'*
 'syntastic_enable_signs'	syntastic.txt	/*'syntastic_enable_signs'*

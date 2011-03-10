@@ -2,8 +2,6 @@
 " Language   : Scala (http://scala-lang.org/)
 " Maintainers: Stefan Matthias Aust, Julien Wetterwald
 " Last Change: 2007 June 13
-" Revision   : $Id: scala.vim 15234 2008-05-29 21:54:59Z stepancheg $
-"        $URL: https://lampsvn.epfl.ch/svn-repos/scala/scala-tool-support/trunk/src/vim/syntax/scala.vim $
 
 if version < 600
   syntax clear
@@ -18,7 +16,10 @@ syn sync minlines=50
 syn keyword scalaKeyword abstract case catch do else extends final finally for forSome if implicit lazy match new null override private protected requires return sealed super this throw try type while with yield
 syn match scalaKeyword "=>"
 syn match scalaKeyword "<-"
-syn match scalaKeyword "_"
+syn match scalaKeyword "\<_\>"
+
+" well known 'names'
+syn keyword scalaWellKnowns Actor ActorRef
 
 syn match scalaOperator ":\{2,\}" "this is not a type
 
@@ -54,8 +55,7 @@ syn match scalaRoot "\<[a-zA-Z][_$a-zA-Z0-9]*\."me=e-1
 syn match scalaMethodCall "\.[a-z][_$a-zA-Z0-9]*"ms=s+1
 
 " type declarations in val/var/def
-" syn match scalaType ":\s*\(=>\s*\)\?[._$a-zA-Z0-9]\+\(\[[^]]*\]\+\)\?\(\s*\(<:\|>:\|#\|=>\)\s*[._$a-zA-Z0-9]\+\(\[[^]]*\]\+\)*\)*"ms=s+1
-syn match scalaType "\<[A-Z]\w*\>"
+syn match scalaType ":\s*\(=>\s*\)\?[._$a-zA-Z0-9]\+\(\[[^]]*\]\+\)\?\(\s*\(<:\|>:\|#\|=>\)\s*[._$a-zA-Z0-9]\+\(\[[^]]*\]\+\)*\)*"ms=s+1
 
 " comments
 syn match scalaTodo "[tT][oO][dD][oO]" contained
@@ -68,6 +68,9 @@ syn case match
 syn region scalaDocComment start="/\*\*" end="\*/" contains=scalaDocTags,scalaTodo,@scalaHtml keepend
 syn region scalaDocTags start="{@\(link\|linkplain\|inherit[Dd]oc\|doc[rR]oot\|value\)" end="}" contained
 syn match scalaDocTags "@[a-z]\+" contained
+
+" annotations
+syn match scalaAnnotation "@[a-zA-Z]\+"
 
 syn match scalaEmptyString "\"\""
 
@@ -103,8 +106,10 @@ syn sync fromstart
 
 " map Scala groups to standard groups
 hi link scalaKeyword Keyword
+hi link scalaAnnotation Include
 hi link scalaPackage Include
 hi link scalaImport Include
+hi link scalaDocTags Include
 hi link scalaBoolean Boolean
 hi link scalaOperator Normal
 hi link scalaNumber Number
@@ -118,7 +123,6 @@ hi link scalaUnicode Special
 hi link scalaComment Comment
 hi link scalaLineComment Comment
 hi link scalaDocComment Comment
-hi link scalaDocTags Special
 hi link scalaTodo Todo
 hi link scalaType Type
 hi link scalaTypeSpecializer scalaType
@@ -142,6 +146,7 @@ hi link scalaClassName Special
 hi link scalaClassSpecializer Special
 hi link scalaConstructor Special
 hi link scalaConstructorSpecializer scalaConstructor
+hi link scalaWellKnowns Function
 
 let b:current_syntax = "scala"
 

@@ -309,3 +309,4 @@ let c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:obviousModeInsertHi = 'term=reverse ctermbg=52 guibg=#660000'
 let g:obviousModeCmdwinHi = 'term=reverse ctermbg=22 guibg=#660000'
 let g:xml_syntax_folding=1
+let g:syntastic_disabled_filetypes = ['coffee', 'cpp', 'c']

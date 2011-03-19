@@ -75,7 +75,8 @@ if !exists("s:ruby_path")
     ruby VIM::command( 'let s:ruby_path = "%s"' % ($: + begin; require %q{rubygems}; Gem.all_load_paths.sort.uniq; rescue LoadError; []; end).join(%q{,}) )
     let s:ruby_path = '.,' . substitute(s:ruby_path, '\%(^\|,\)\.\%(,\|$\)', ',,', '')
   elseif executable("ruby")
-    let s:code = "print ($: + begin; require %q{rubygems}; Gem.all_load_paths.sort.uniq; rescue LoadError; []; end).join(%q{,})"
+    " let s:code = "print ($: + begin; require %q{rubygems}; Gem.all_load_paths.sort.uniq; rescue LoadError; []; end).join(%q{,})"
+    let s:code = "print $:.join(%q{,})"
     if &shellxquote == "'"
       let s:ruby_path = system('ruby -e "' . s:code . '"')
     else
@@ -89,7 +90,7 @@ if !exists("s:ruby_path")
   endif
 endif
 
-let &l:path = s:ruby_path
+let &l:path = &path . ',' . s:ruby_path
 
 if has("gui_win32") && !exists("b:browsefilter")
   let b:browsefilter = "Ruby Source Files (*.rb)\t*.rb\n" .

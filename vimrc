@@ -182,15 +182,9 @@ nmap ,sg :source ~/.gvimrc
 nmap ,vv :e ~/.vimrc
 nmap ,vg :e ~/.gvimrc
 
-nnoremap <silent> <leader>bb :FufBuffer<CR>
-nnoremap <silent> <leader>bf :FufFileWithCurrentBufferDir<CR>
-" nnoremap <silent> <leader>t :FufCoverageFile<CR>
-nnoremap <silent> <leader>bd :FufDir<CR>
-nnoremap <silent> <leader>bt :FufTag<CR>
-nnoremap <silent> <leader>bc :FufChangeList<CR>
-nnoremap <silent> <leader>bj :FufJumpList<CR>
-nnoremap <silent> <leader>bq :FufQuickfix<CR>
 nnoremap <silent> <leader>[  :TlistOpen<CR>
+nnoremap <silent> ,t         :CommandT<CR>
+nnoremap <silent> ,l         :CommandTBuffer<CR>
 nnoremap <silent> <leader>o  :exec 'NERDTree' . expand('%:p:h')<CR>
 nnoremap <silent> <leader>f  :exec 'NERDTree' . expand('%:p:h')<CR>
 " visual select of the last pasted text
@@ -292,10 +286,6 @@ let NERDTreeIgnore=['\.o$', '\~$', '\.class$']
 let g:NERDShutUp = 1
 let NERDSpaceDelims=1 " Add an extra space to comment delimiters
 
-" FuzzyFinder settings
-let g:fuf_file_exclude = '\v\~$|\.(o|exe|dll|bak|sw[po])$|(^|[/\\])\.(hg|git|bzr|svn|)($|[/\\])'
-let g:fuf_previewHeight=0
-
 " Rubycomplete plugin settings
 let g:rubycomplete_buffer_loading = 1
 let g:rubycomplete_rails = 1
@@ -316,5 +306,6 @@ let g:CSApprox_verbose_level = 0 " to shut it up
 let c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:obviousModeInsertHi = 'term=reverse ctermbg=52 guibg=#660000'
 let g:obviousModeCmdwinHi = 'term=reverse ctermbg=22 guibg=#660000'
-let g:xml_syntax_folding=1
+let g:xml_syntax_folding = 1
 let g:syntastic_disabled_filetypes = ['coffee', 'cpp', 'c']
+let g:CommandTMatchWindowAtTop = 1

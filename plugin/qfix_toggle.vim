@@ -16,4 +16,4 @@ augroup QFixToggle
 augroup END
 
 let g:jah_Quickfix_Win_Height = 10
-nnoremap <silent> <leader>] :QFix<CR>
+nnoremap <silent> \] :QFix<CR>

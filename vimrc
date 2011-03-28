@@ -164,6 +164,7 @@ au CursorHoldI * call feedkeys("\<C-G>u", "nt")
 
 " Section: Keybindings {{{1
 "--------------------------------------------------
+let mapleader = ','
 " mappings for cscope
 if has("cscope")
   nmap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
@@ -176,24 +177,24 @@ if has("cscope")
   nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
 endif
 
-nmap ,ss :w<CR>
-nmap ,sv :source ~/.vimrc
-nmap ,sg :source ~/.gvimrc
-nmap ,vv :e ~/.vimrc
-nmap ,vg :e ~/.gvimrc
+nnoremap <leader>ss :w<CR>
+nnoremap <leader>sv :source ~/.vimrc
+nnoremap <leader>sg :source ~/.gvimrc
+nnoremap <leader>vv :e ~/.vimrc
+nnoremap <leader>vg :e ~/.gvimrc
 
-nnoremap <silent> <leader>[  :TlistOpen<CR>
-nnoremap <silent> ,t         :CommandT<CR>
-nnoremap <silent> ,l         :CommandTBuffer<CR>
+nnoremap <silent> \[  :TlistOpen<CR>
+nnoremap <silent> <leader>t  :CommandT<CR>
+nnoremap <silent> <leader>l  :CommandTBuffer<CR>
 nnoremap <silent> <leader>o  :exec 'NERDTree' . expand('%:p:h')<CR>
 nnoremap <silent> <leader>f  :exec 'NERDTree' . expand('%:p:h')<CR>
 " visual select of the last pasted text
-nnoremap <silent> <leader>v `[v`]
+nnoremap <silent> \v `[v`]
 " visual select of the line's content
-nnoremap <silent> <leader>V ^v$h
-nnoremap <silent> <leader>h :set hlsearch!<CR>
-nnoremap <silent> <leader>l :setlocal list!<CR>
-nnoremap <silent> <leader>n :set nu!<CR>
+nnoremap <silent> \V ^v$h
+nnoremap <silent> \h :set hlsearch!<CR>
+nnoremap <silent> \l :setlocal list!<CR>
+nnoremap <silent> \n :set nu!<CR>
 " indented paste
 nnoremap <silent> <leader>p p:'[,']normal ==<CR>
 nnoremap <silent> <leader>P P:'[,']normal ==<CR>
@@ -201,13 +202,13 @@ nnoremap <silent> <leader>ss :%s/\s\+$//<CR>
 
 nnoremap <silent> <F3> :cn<CR>
 nnoremap <silent> <S-F3> :cp<CR>
-nnoremap <silent> ,] :cn<CR>
-nnoremap <silent> ,[ :cp<CR>
+nnoremap <silent> <leader>] :cn<CR>
+nnoremap <silent> <leader>[ :cp<CR>
 nnoremap <C-J> <C-D>
 nnoremap <C-K> <C-U>
 nnoremap <C-e> 4<C-e>
 nnoremap <C-y> 4<C-y>
-nmap <silent> ,o A<CR>
+nnoremap <silent> <leader>o A<CR>
 nnoremap Y y$
 nnoremap z- 1z=
 nnoremap L :

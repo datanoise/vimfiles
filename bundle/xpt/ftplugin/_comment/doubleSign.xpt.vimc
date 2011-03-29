@@ -1,0 +1,35 @@
+XPTemplate priority=all-
+let s:f = g:XPTfuncs()
+" snippets for language whose comment sign is 2 signs, like c:"/* */"
+XPTinclude
+      \ _common/common
+fun! s:f._xCommentMidIndent()
+    let l = self.GetVar( '$CL' )
+    let m = self.GetVar( '$CM' )
+    
+    if len( l ) <= len( m )
+        return ''
+    else
+        return '      '[ : len( l ) - len( m ) - 1 ]
+    endif
+endfunction
+fun! s:f._xCommentLeftWithoutMid()
+    let l = self.GetVar( '$CL' )
+    let m = self.GetVar( '$CM' )
+    if l == '' || m == ''
+        return l
+    endif
+    if l[ -len( m ) : ] == m
+        return l[ : -len( m ) -1 ]
+    else
+        return l
+    endif
+endfunction
+call XPTdefineSnippet('_d_comment',{'hidden': 1, 'rawHint': '$CL .. $CR', 'wrap': 'what'},['`$CL^ `what^^ `$CR^`^'])
+call XPTdefineSnippet('_d_commentBlock',{'hidden': 1, 'rawHint': '$CL ..', 'wrap': 1},['`$_xCommentLeftWithoutMid^`$CM `cursor^', '`$_xCommentMidIndent$CR^'])
+call XPTdefineSnippet('_d_commentDoc',{'hidden': 1, 'rawHint': '$CL$CM ..', 'wrap': 1},['`$CL^`$CM^', '`$_xCommentMidIndent$CM `cursor^', '`$_xCommentMidIndent$CR^'])
+call XPTdefineSnippet('_d_commentLine',{'hidden': 1, 'rawHint': '$CL .. $CR', 'wrap': 'what', 'onfocusFilters': {'what': {'nIndent': 0, 'text': ''}}},['`$CL `what` $CR^`^'])
+call XPTemplateAlias('comment','_d_comment',{'alias': '_d_comment'})
+call XPTemplateAlias('commentBlock','_d_commentBlock',{'alias': '_d_commentBlock'})
+call XPTemplateAlias('commentDoc','_d_commentDoc',{'alias': '_d_commentDoc'})
+call XPTemplateAlias('commentLine','_d_commentLine',{'alias': '_d_commentLine'})

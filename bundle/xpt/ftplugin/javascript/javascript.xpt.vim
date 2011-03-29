@@ -48,11 +48,11 @@ XSET log=console.log
 XSET job=$VOID_LINE
 XSET jobn=$VOID_LINE
 var t0 = new Date().getTime();
-for(var i = 0; i < `times^; ++i){
+for (var i = 0; i < `times^; ++i){
     `job^
 }
 var t1 = new Date().getTime();
-for(var i = 0; i < `times^; ++i){
+for (var i = 0; i < `times^; ++i){
     `jobn^
 }
 var t2 = new Date().getTime();
@@ -109,7 +109,7 @@ function` `name^ (`arg*^) {
 
 
 XPT forin " for (var .. in ..) {..}
-for( var `i^ in `array^ )`$BRloop^{
+for ( var `i^ in `array^ )`$BRloop^{
     var `e^ = `array^[`i^];
     `cursor^
 }
@@ -153,7 +153,7 @@ finally`$BRif^{
 XPT bench_ wraponly=wrapped " Benchmark
 XSET log=console.log
 var t0 = new Date().getTime();
-for(var i = 0; i < `times^; ++i){
+for (var i = 0; i < `times^; ++i){
     `wrapped^
 }
 var t1 = new Date().getTime();

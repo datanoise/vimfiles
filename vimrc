@@ -298,7 +298,12 @@ au User BufEnterRails call g:XPTaddBundle('ruby', 'rails')
 au User BufEnterRails call g:XPTaddBundle('eruby', 'rails')
 let g:xptemplate_highlight = 'following,next'
 let g:xptemplate_pum_tab_nav = 1
+let g:xptemplate_brace_complete = 1
 hi link XPTnextItem CursorLine
+
+" command-t settings
+" let g:CommandTMatchWindowAtTop = 1
+let g:CommandTMaxHeight=10
 
 " Misc settings
 let g:dbext_default_history_file = $HOME."/.dbext_history"
@@ -309,4 +314,3 @@ let g:obviousModeInsertHi = 'term=reverse ctermbg=52 guibg=#660000'
 let g:obviousModeCmdwinHi = 'term=reverse ctermbg=22 guibg=#660000'
 let g:xml_syntax_folding = 1
 let g:syntastic_disabled_filetypes = ['coffee', 'cpp', 'c']
-let g:CommandTMatchWindowAtTop = 1

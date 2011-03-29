@@ -1,3 +1,5 @@
+" GetLatestVimScripts: 2611 1 :AutoInstall: xpt.tgz
+" VERSION: 0.4.8.110216
 if exists( "g:__XPTEMPLATE_VIM__" ) && g:__XPTEMPLATE_VIM__ >= XPT#ver
     finish
 endif
@@ -36,6 +38,7 @@ fun! XPTmarkCompare( o, markToAdd, existedMark )
     return 1
 endfunction 
 let s:repetitionPattern     = '\w\*...\w\*'
+let s:expandablePattern     = '\V\S\+...\$'
 let s:nullDict = {}
 let s:nullList = []
 let s:nonEscaped =
@@ -421,6 +424,10 @@ fun! s:InitItemOrderList( setting )
     let a:setting.comeLast  = g:xptutil.RemoveDuplicate( a:setting.comeLast )
 endfunction 
 fun! XPTreload() 
+    try
+        call s:Crash()
+    catch /.*/
+    endtry
   try
     unlet b:xptemplateData
   catch /.*/
@@ -1104,6 +1111,10 @@ fun! s:CreatePlaceHolder( ctx, nameInfo, valueInfo )
         let val = g:xptutil.UnescapeChar( val, xp.l . xp.r )
         let nIndent = indent( a:valueInfo[0][0] )
         if isPostFilter
+            if name =~ s:expandablePattern
+                let val = g:xptutil.UnescapeChar( val, '{$( ' )
+                let val = 'BuildIfNoChange(' . string( val ) . ')'
+            endif
             let placeHolder.postFilter = g:FilterValue.New( -nIndent, val )
         else
             let placeHolder.ontimeFilter = g:FilterValue.New( -nIndent, val )
@@ -1165,11 +1176,16 @@ fun! s:BuildMarksOfPlaceHolder( item, placeHolder, nameInfo, valueInfo )
 endfunction 
 fun! s:AddItemToRenderContext( ctx, item ) 
     let [ctx, item] = [ a:ctx, a:item ]
+    let exist = has_key( ctx.itemDict, item.name )
     if item.name != ''
         let ctx.itemDict[ item.name ] = item
     endif
     if ctx.phase != 'rendering'
         call add( ctx.firstList, item )
+        call filter( ctx.itemList, 'v:val isnot item' )
+        return
+    endif
+    if exist
         return
     endif
     if item.name == ''
@@ -1198,6 +1214,7 @@ fun! s:BuildPlaceHolders( markRange )
     let snipObj = renderContext.snipObject
     let setting = snipObj.setting
     let xp = renderContext.snipObject.ptn
+    let renderContext.itemDict = {}
     let current = [ renderContext.item, renderContext.leadingPlaceHolder ]
     let renderContext.action = 'build'
     if renderContext.firstList == []
@@ -1336,6 +1353,13 @@ fun! s:ApplyBuildTimeInclusion( placeHolder, nameInfo, valueInfo )
         return
     endif
     let incTmplObject = tmplDict[ incName ]
+    if !incTmplObject.parsed
+        call s:ParseInclusion( renderContext.ftScope.allTemplates, incTmplObject )
+        let incTmplObject.snipText = s:ParseSpaces( incTmplObject )
+        let incTmplObject.snipText = s:ParseQuotedPostFilter( incTmplObject )
+        let incTmplObject.snipText = s:ParseRepetition( incTmplObject )
+        let incTmplObject.parsed = 1
+    endif
     call s:MergeSetting( renderContext.snipSetting, incTmplObject.setting )
     let incSnip = s:ReplacePHInSubSnip( renderContext.snipObject, incTmplObject, params )
     let incSnip = s:AddIndent( incSnip, nameInfo[0] )
@@ -1407,13 +1431,18 @@ fun! s:BuildItemForPlaceHolder( placeHolder )
                     \'keyPH'        : s:nullDict,
                     \'behavior'     : {},
                     \}
-        call s:AddItemToRenderContext( renderContext, item )
     endif
+    let inPrevBuild = ( index( renderContext.itemList, item ) >= 0 )
+    call s:AddItemToRenderContext( renderContext, item )
     if a:placeHolder.isKey
         let item.keyPH = a:placeHolder
         let item.fullname = a:placeHolder.fullname
     else
-        call add( item.placeHolders, a:placeHolder )
+        if renderContext.phase != 'rendering' && inPrevBuild
+            call insert( item.placeHolders, a:placeHolder )
+        else
+            call add( item.placeHolders, a:placeHolder )
+        endif
     endif
     return item
 endfunction 
@@ -1451,9 +1480,6 @@ fun! s:PushBackItem()
         call insert( item.placeHolders, renderContext.leadingPlaceHolder, 0 )
     endif
     call insert( renderContext.itemList, item, 0 )
-    if item.name != ''
-        let renderContext.itemDict[ item.name ] = item
-    endif
     let item.processed = 1
 endfunction 
 fun! s:ShiftForward( action ) 
@@ -1550,7 +1576,7 @@ fun! s:ApplyPostFilter()
         let oriFilter = copy( filter )
         let [ start, end ] = XPMposStartEnd( marks )
         call XPMsetLikelyBetween( marks.start, marks.end )
-        if filter.text !=# typed
+        if filter.rc != 0 && filter.text !=# typed
             call s:RemoveEditMark( leader )
             call b:xptemplateData.settingWrap.Switch()
             call XPreplace( start, end, filter.text )
@@ -1594,6 +1620,9 @@ fun! s:EvalPostFilter( filter, typed, leader )
     call s:EvalFilter( a:filter, renderContext.ftScope.funcs, {
           \ 'typed' : a:typed, 'startPos' : startMark.pos } )
     let a:filter.toBuild = 0
+    if a:filter.rc == 0
+        return
+    endif
     if has_key( a:filter, 'action' )
         let act = a:filter.action
         if act.name == 'build'
@@ -1601,7 +1630,6 @@ fun! s:EvalPostFilter( filter, typed, leader )
         elseif act.name == 'keepIndent'
             let a:filter.nIndent = 0
         else
-            let a:filter.text = get( post, 'text', '' )
         endif
     elseif has_key( a:filter, 'text' )
         let a:filter.toBuild = 1
@@ -1673,9 +1701,6 @@ fun! s:ExtractOneItem()
     endif
     let item = itemList[ 0 ]
     let renderContext.itemList = renderContext.itemList[ 1 : ]
-    if item.name != '' && has_key( renderContext.itemDict, item.name )
-        unlet renderContext.itemDict[ item.name ]
-    endif
     let renderContext.item = item
     if empty( item.placeHolders ) && item.keyPH == s:nullDict
         call XPT#warn( "item without placeholders!" )
@@ -1973,7 +1998,12 @@ fun! s:SelectCurrent()
             endif
         endif
         normal! v
-        return "\<esc>gv\<C-g>"
+        if &selectmode =~ 'cmd'
+            call feedkeys( "\<esc>gv", 'nt' )
+        else
+            call feedkeys( "\<esc>gv\<C-g>", 'nt' )
+        endif
+        return ''
     endif
 endfunction 
 fun! s:CreateStringMask( str ) 
@@ -2207,6 +2237,7 @@ fun! s:XPTinitMapping()
     let b:xptemplateData.settingSwitch = g:SettingSwitch.New()
     call b:xptemplateData.settingSwitch.AddList(
           \[ '&l:textwidth', '0' ],
+          \[ '&l:lazyredraw', '1' ],
           \[ '&l:indentkeys', { 'exe' : 'setl indentkeys-=*<Return>' } ],
           \[ '&l:cinkeys', { 'exe' : 'setl cinkeys-=*<Return>' } ],
           \)
@@ -2697,4 +2728,3 @@ endfunction
 com! XPTreload call XPTreload()
 com! XPTcrash call <SID>Crash()
 let &cpo = s:oldcpo
-" GetLatestVimScripts: 2611 1 :AutoInstall: xpt.tgz

@@ -213,7 +213,7 @@ nnoremap z- 1z=
 nnoremap L :
 nnoremap [l [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
 nnoremap <F2> <C-w><C-w>
-nnoremap <F4> :sil make %<cr><c-l>:cc<cr>
+nnoremap <F4> :sil make %<CR><c-l>:cc<CR>
 function! SwitchPrevBuf()
   if bufloaded(bufname("#")) != 0
     exec "b#"
@@ -221,9 +221,10 @@ function! SwitchPrevBuf()
     echo "No buffer to switch to"
   endif
 endfunction
-nnoremap <silent> <C-tab> :call SwitchPrevBuf()<cr>
-nnoremap <silent> <C-^> :call SwitchPrevBuf()<cr>
-cnoremap qq qa!
+nnoremap <silent> <C-tab> :call SwitchPrevBuf()<CR>
+nnoremap <silent> <C-^> :call SwitchPrevBuf()<CR>
+nnoremap <silent> <leader>rt :!ctags --extra=+f -R *<CR><CR>
+cnoremap Q qa!
 
 " insert modeline
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
@@ -236,20 +237,20 @@ inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:
 "     return "\<tab>"
 "   endif
 " endfunction
-" inoremap <silent> <tab> <c-r>=MyTabOrCompletion()<cr>
+" inoremap <silent> <tab> <c-r>=MyTabOrCompletion()<CR>
 inoremap <c-_> <c-^>
 
 au FileType help nnoremap <buffer> q :bd<CR>
-au FileType vim  nnoremap <buffer> K :h <c-r>=expand('<cword>')<cr><cr>
-au FileType ruby inoremap <buffer> <c-l> <c-r>= pumvisible() ? "\<lt>c-l>" : " => "<cr>
-au FileType ruby nnoremap <buffer> <F5> :!ruby %<cr>
-au FileType php nnoremap <buffer> <F5> :!php %<cr>
-au FileType cucumber nnoremap <buffer> <F5> :!cucumber % -q<cr>
-au FileType php,c,cpp,java,javascript,html,eruby,css inoremap <buffer> {<cr> {<cr>}<esc>O
+au FileType vim  nnoremap <buffer> K :h <c-r>=expand('<cword>')<CR><CR>
+au FileType ruby inoremap <buffer> <c-l> <c-r>= pumvisible() ? "\<lt>c-l>" : " => "<CR>
+au FileType ruby nnoremap <buffer> <F5> :!ruby %<CR>
+au FileType php nnoremap <buffer> <F5> :!php %<CR>
+au FileType cucumber nnoremap <buffer> <F5> :!cucumber % -q<CR>
+au FileType php,c,cpp,java,javascript,html,eruby,css inoremap <buffer> {<CR> {<CR>}<Esc>O
 au FileType xml setlocal foldmethod=syntax
 au BufReadPre,BufNewFile *.iphone.erb let b:eruby_subtype = 'html'
 if has("mac")
-  au FileType html nnoremap <silent> <D-r> :sil !open %<cr>
+  au FileType html nnoremap <silent> <D-r> :sil !open %<CR>
 endif
 
 " Section: Commands && Abbrivations {{{1
@@ -261,7 +262,7 @@ endfunc
 cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
 " NOTE: that doesn't work in MacVim gui mode if sudo requests a password!!!
 command! -bar -nargs=0 SudoW   :exe "write !sudo tee % >/dev/null"|silent edit!
-au FileType ruby iabbrev rb! #!<esc>:r !which ruby<cr>kgJo<C-W><C-R>=Eatchar('\s')<cr>
+au FileType ruby iabbrev rb! #!<Esc>:r !which ruby<CR>kgJo<C-W><C-R>=Eatchar('\s')<CR>
 " display name of the syntax ID at the cursor
 func! SynName()
   echo synIDattr(synID(line('.'), col('.'), 0), 'name')

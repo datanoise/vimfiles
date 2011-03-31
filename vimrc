@@ -304,6 +304,7 @@ hi link XPTnextItem CursorLine
 " command-t settings
 let g:CommandTCancelMap=['<C-c>', '<Esc>']
 let g:CommandTMaxHeight=10
+let g:CommandTSelectNextMap=['<Esc>OB', '<C-n>'] " fix for arrow keys
 
 " Misc settings
 let g:dbext_default_history_file = $HOME."/.dbext_history"

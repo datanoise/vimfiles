@@ -184,10 +184,9 @@ nnoremap <leader>vv :e ~/.vimrc
 nnoremap <leader>vg :e ~/.gvimrc
 
 nnoremap <silent> \[  :TlistOpen<CR>
-nnoremap <silent> <leader>t  :CommandT<CR>
+nnoremap <silent> <leader>n  :CommandT<CR>
 nnoremap <silent> <leader>l  :CommandTBuffer<CR>
-nnoremap <silent> <leader>o  :exec 'NERDTree' . expand('%:p:h')<CR>
-nnoremap <silent> <leader>f  :exec 'NERDTree' . expand('%:p:h')<CR>
+nnoremap <silent> \f  :exec 'NERDTree' . expand('%:p:h')<CR>
 " visual select of the last pasted text
 nnoremap <silent> \v `[v`]
 " visual select of the line's content
@@ -224,6 +223,7 @@ function! SwitchPrevBuf()
 endfunction
 nnoremap <silent> <C-tab> :call SwitchPrevBuf()<cr>
 nnoremap <silent> <C-^> :call SwitchPrevBuf()<cr>
+cnoremap qq qa!
 
 " insert modeline
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
@@ -302,7 +302,7 @@ let g:xptemplate_brace_complete = 1
 hi link XPTnextItem CursorLine
 
 " command-t settings
-" let g:CommandTMatchWindowAtTop = 1
+let g:CommandTCancelMap=['<C-c>', '<Esc>']
 let g:CommandTMaxHeight=10
 
 " Misc settings

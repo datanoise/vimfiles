@@ -300,7 +300,6 @@ au User BufEnterRails call g:XPTaddBundle('eruby', 'rails')
 let g:xptemplate_highlight = 'following,next'
 let g:xptemplate_pum_tab_nav = 1
 " let g:xptemplate_brace_complete = 1
-let g:xptemplate_key = '<Tab>'
 hi link XPTnextItem CursorLine
 
 " command-t settings

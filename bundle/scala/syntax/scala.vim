@@ -136,7 +136,7 @@ syn sync fromstart
 
 " map Scala groups to standard groups
 hi link scalaKeyword Keyword
-hi link scalaKeywordModifier Function
+hi link scalaKeywordModifier Define
 hi link scalaAnnotation Include
 hi link scalaPackage Include
 hi link scalaImport Include

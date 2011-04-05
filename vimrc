@@ -100,7 +100,7 @@ au FileType otl   setlocal nolist
 " wild options {{{2
 set wildmenu
 set wildmode=full
-set wildignore=*.o,*.bundle,*.png,*.jpg,*.gif
+set wildignore=*.o,*.bundle,*.png,*.jpg,*.gif,*.class
 set showcmd
 " the above doesn't always work. the following enforces it
 au VimEnter * set showcmd
@@ -197,7 +197,7 @@ nnoremap <silent> \n :set nu!<CR>
 " indented paste
 nnoremap <silent> <leader>p p:'[,']normal ==<CR>
 nnoremap <silent> <leader>P P:'[,']normal ==<CR>
-nnoremap <silent> <leader>ss :%s/\s\+$//<CR>
+nnoremap <silent> <leader>sd mx:%s/\s\+$//<CR>`x
 
 nnoremap <silent> <F3> :cn<CR>
 nnoremap <silent> <S-F3> :cp<CR>
@@ -246,7 +246,7 @@ au FileType ruby inoremap <buffer> <c-l> <c-r>= pumvisible() ? "\<lt>c-l>" : " =
 au FileType ruby nnoremap <buffer> <F5> :!ruby %<CR>
 au FileType php nnoremap <buffer> <F5> :!php %<CR>
 au FileType cucumber nnoremap <buffer> <F5> :!cucumber % -q<CR>
-au FileType php,c,cpp,java,javascript,html,eruby,css inoremap <buffer> {<CR> {<CR>}<Esc>O
+au FileType php,c,cpp,java,javascript,html,eruby,css,scala inoremap <buffer> {<CR> {<CR>}<Esc>O
 au FileType xml setlocal foldmethod=syntax
 au BufReadPre,BufNewFile *.iphone.erb let b:eruby_subtype = 'html'
 if has("mac")
@@ -299,7 +299,8 @@ au User BufEnterRails call g:XPTaddBundle('ruby', 'rails')
 au User BufEnterRails call g:XPTaddBundle('eruby', 'rails')
 let g:xptemplate_highlight = 'following,next'
 let g:xptemplate_pum_tab_nav = 1
-let g:xptemplate_brace_complete = 1
+" let g:xptemplate_brace_complete = 1
+let g:xptemplate_key = '<Tab>'
 hi link XPTnextItem CursorLine
 
 " command-t settings

@@ -10,7 +10,7 @@ XPTinclude
 
 
 
-XPTvar $CURSOR_PH 
+XPTvar $CURSOR_PH
 
 XPTvar $CL    <!--
 XPTvar $CM
@@ -84,15 +84,15 @@ let s:nIndent = 0
 fun! s:f.html_cont_ontype()
     let v = self.V()
     if v =~ '\V\n'
-        let v = matchstr( v, '\V\.\*\ze\n' )
+        let v = matchstr( v, '\V\.\*\S\ze\s\*\n' )
         let s:nIndent = &indentexpr != ''
               \ ? eval( substitute( &indentexpr, '\Vv:lnum', 'line(".")', '' ) ) - indent( line( "." ) - 1 )
               \ : self.NIndent()
 
-        return self.Finish( v . "\n" . repeat( ' ', s:nIndent ) )
+        return self.FinishOuter( v . "\n" . repeat( ' ', s:nIndent ) )
     else
         return v
-    endif
+      endif
 endfunction
 
 fun! s:f.html_cont_helper()
@@ -405,7 +405,7 @@ XPT fieldset " <fieldset ..
 " datetime-local
 " number
 " range
-" color 
+" color
 
 
 

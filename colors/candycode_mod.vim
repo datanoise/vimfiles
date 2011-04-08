@@ -141,7 +141,10 @@ hi Constant     guifg=#ff6050       guibg=NONE          gui=NONE
 hi Boolean      guifg=#ff6050       guibg=NONE          gui=bold
             \   ctermfg=red         ctermbg=NONE        cterm=bold
 
-hi Identifier   guifg=#eecc44       guibg=NONE          gui=NONE
+hi Identifier   guifg=#f7e396       guibg=NONE          gui=NONE
+            \   ctermfg=yellow      ctermbg=NONE        cterm=NONE
+
+hi Function     guifg=#eecc44       guibg=NONE          gui=NONE
             \   ctermfg=yellow      ctermbg=NONE        cterm=NONE
 
 hi Statement    guifg=#66d077       guibg=NONE          gui=bold

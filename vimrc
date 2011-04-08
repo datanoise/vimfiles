@@ -120,7 +120,6 @@ set foldlevel=99 " always expand folds
 " uncategorized options {{{2
 set bg=dark
 colo candycode_mod
-" colo ir_black_mod
 if exists('&mc')
   au BufNew,BufRead * set mc=81
 endif
@@ -294,7 +293,6 @@ let g:rubycomplete_rails = 1
 let g:rubycomplete_classes_in_global = 1
 
 " xptemplate settings
-let g:xptemplate_bundle = 'javascript_extjs'
 au User BufEnterRails call g:XPTaddBundle('ruby', 'rails')
 au User BufEnterRails call g:XPTaddBundle('eruby', 'rails')
 let g:xptemplate_highlight = 'following,next'

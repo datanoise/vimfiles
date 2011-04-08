@@ -212,5 +212,6 @@ hi link javaScriptNumber      Number
 " Special for CSharp
 hi  link csXmlTag             Keyword
 
+hi! link ColorColumn StatusLine
 
 " Special for PHP

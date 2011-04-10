@@ -119,7 +119,8 @@ set foldlevel=99 " always expand folds
 
 " uncategorized options {{{2
 set bg=dark
-colo candycode_mod
+" colo candycode_mod
+colo ir_black_mod
 if exists('&mc')
   au BufNew,BufRead * set mc=81
 endif
@@ -129,7 +130,7 @@ set autoread         " disable annoying confirmations
 set hidden
 set title
 set colorcolumn=80
-" set number
+set number
 if exists("&macmeta")
   set macmeta " on Mac use Option key as Meta
 endif
@@ -152,7 +153,7 @@ if executable('ack')
   set grepprg=ack\ -a\ --ignore-dir=log\ --ignore-dir=tmp\ $*\\\|grep\ -v\ '^tags'
 endif
 set completeopt=longest,menu " don't hide completion menu when typing
-set clipboard+=unnamed
+" set clipboard+=unnamed
 au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs
 au FileType ruby setlocal completefunc=syntaxcomplete#Complete
 au FileType scala,ruby exe 'compiler '. expand('<amatch>')

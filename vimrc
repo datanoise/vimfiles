@@ -130,6 +130,7 @@ set autoread         " disable annoying confirmations
 set hidden
 set title
 set colorcolumn=80
+au FileType help setlocal cc=0
 set number
 if exists("&macmeta")
   set macmeta " on Mac use Option key as Meta
@@ -224,6 +225,7 @@ endfunction
 nnoremap <silent> <C-tab> :call SwitchPrevBuf()<CR>
 nnoremap <silent> <C-^> :call SwitchPrevBuf()<CR>
 nnoremap <silent> <leader>rt :!ctags --extra=+f -R *<CR><CR>
+nnoremap <silent> <leader>rh :call pathogen#helptags()<CR>:echo 'Generated help tags'<CR>
 cnoremap Q qa!
 
 " insert modeline
@@ -245,7 +247,6 @@ au FileType vim  nnoremap <buffer> K :h <c-r>=expand('<cword>')<CR><CR>
 au FileType ruby inoremap <buffer> <c-l> <c-r>= pumvisible() ? "\<lt>c-l>" : " => "<CR>
 au FileType ruby nnoremap <buffer> <F5> :!ruby %<CR>
 au FileType php nnoremap <buffer> <F5> :!php %<CR>
-au FileType cucumber nnoremap <buffer> <F5> :!cucumber % -q<CR>
 au FileType php,c,cpp,java,javascript,html,eruby,css,scala inoremap <buffer> {<CR> {<CR>}<Esc>O
 au FileType xml setlocal foldmethod=syntax
 au BufReadPre,BufNewFile *.iphone.erb let b:eruby_subtype = 'html'
@@ -283,10 +284,6 @@ let Tlist_Inc_Winwidth = 0 " Don't resize my window!
 let NERDTreeQuitOnOpen = 1 " Close NERDTree when a file is opened
 let g:NERDTreeHijackNetrw = 0
 let NERDTreeIgnore=['\.o$', '\~$', '\.class$']
-
-" NERD_commenter settings
-let g:NERDShutUp = 1
-let NERDSpaceDelims=1 " Add an extra space to comment delimiters
 
 " Rubycomplete plugin settings
 let g:rubycomplete_buffer_loading = 1

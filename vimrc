@@ -131,7 +131,7 @@ set hidden
 set title
 set colorcolumn=80
 au FileType help setlocal cc=0
-set number
+" set number
 if exists("&macmeta")
   set macmeta " on Mac use Option key as Meta
 endif
@@ -198,7 +198,13 @@ nnoremap <silent> \n :set nu!<CR>
 " indented paste
 nnoremap <silent> <leader>p p:'[,']normal ==<CR>
 nnoremap <silent> <leader>P P:'[,']normal ==<CR>
+nnoremap <silent> gp "*p:'[,']normal ==<CR>
+nnoremap <silent> gP "*P:'[,']normal ==<CR>
+nnoremap <silent> gy "*y
+nnoremap <silent> gY "*Y
+nnoremap <silent> gYY "*YY
 nnoremap <silent> <leader>sd mx:%s/\s\+$//<CR>`x
+nnoremap <silent> g= :Tabularize assignment<CR>
 
 nnoremap <silent> <F3> :cn<CR>
 nnoremap <silent> <S-F3> :cp<CR>
@@ -231,15 +237,15 @@ cnoremap Q qa!
 " insert modeline
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
 " keyword completion on <TAB>
-" function MyTabOrCompletion()
-"   let col = col('.')-1
-"   if pumvisible() || col && getline('.')[col-1] =~ '\k'
-"     return "\<C-N>"
-"   else
-"     return "\<tab>"
-"   endif
-" endfunction
-" inoremap <silent> <tab> <c-r>=MyTabOrCompletion()<CR>
+function MyTabOrCompletion()
+  let col = col('.')-1
+  if pumvisible() || col && getline('.')[col-1] =~ '\k'
+    return "\<C-N>"
+  else
+    return "\<tab>"
+  endif
+endfunction
+inoremap <silent> <tab> <c-r>=MyTabOrCompletion()<CR>
 inoremap <c-_> <c-^>
 
 au FileType help nnoremap <buffer> q :bd<CR>

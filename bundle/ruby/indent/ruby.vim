@@ -231,7 +231,8 @@ function GetRubyIndent()
       if line[col-1]==')' && col('.') != col('$') - 1
 	let ind = virtcol('.') - 1
       else
-	let ind = indent(s:GetMSL(line('.')))
+	" let ind = indent(s:GetMSL(line('.')))
+	let ind = indent(line('.'))
       endif
     endif
     return ind

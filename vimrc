@@ -200,8 +200,8 @@ nnoremap <silent> <leader>p p:'[,']normal ==<CR>
 nnoremap <silent> <leader>P P:'[,']normal ==<CR>
 nnoremap <silent> gp "*p:'[,']normal ==<CR>
 nnoremap <silent> gP "*P:'[,']normal ==<CR>
-nnoremap <silent> gy "*y
-nnoremap <silent> gY "*Y
+vnoremap <silent> gy "*y
+vnoremap <silent> gY "*Y
 nnoremap <silent> gYY "*YY
 nnoremap <silent> <leader>sd mx:%s/\s\+$//<CR>`x
 nnoremap <silent> g= :Tabularize assignment<CR>
@@ -247,6 +247,7 @@ function MyTabOrCompletion()
 endfunction
 inoremap <silent> <tab> <c-r>=MyTabOrCompletion()<CR>
 inoremap <c-_> <c-^>
+
 
 au FileType help nnoremap <buffer> q :bd<CR>
 au FileType vim  nnoremap <buffer> K :h <c-r>=expand('<cword>')<CR><CR>
@@ -322,3 +323,4 @@ let g:obviousModeInsertHi = 'term=reverse ctermbg=52 guibg=#660000'
 let g:obviousModeCmdwinHi = 'term=reverse ctermbg=22 guibg=#660000'
 let g:xml_syntax_folding = 1
 let g:syntastic_disabled_filetypes = ['coffee', 'cpp', 'c']
+

@@ -118,12 +118,12 @@ function s:GetMSL(lnum, in_one_line_scope)
       " Don't use lines that are part of a one line scope as msl unless the
       " flag in_one_line_scope is set to 1
       "
-      if a:in_one_line_scope 
-	break
+      if a:in_one_line_scope
+        break
       end
       let msl_one_line = s:Match(lnum, s:one_line_scope_regex)
       if msl_one_line == 0
-	break
+        break
       endif
     endif
     let lnum = s:PrevNonBlankNonString(lnum - 1)
@@ -204,7 +204,7 @@ function s:ExitingOneLineScope(lnum)
     else
       let prev_msl = s:GetMSL(msl - 1, 1)
       if s:Match(prev_msl, s:one_line_scope_regex)
-	return prev_msl
+        return prev_msl
       endif
     endif
   endif
@@ -240,7 +240,8 @@ function GetJavascriptIndent()
       if line[col-1]==')' && col('.') != col('$') - 1
         let ind = virtcol('.')-1
       else
-        let ind = indent(s:GetMSL(line('.'), 0))
+        " let ind = indent(s:GetMSL(line('.'), 0))
+        let ind = indent(line('.'))
       endif
     endif
     return ind
@@ -278,7 +279,8 @@ function GetJavascriptIndent()
 
   " If the previous line ended with a block opening, add a level of indent.
   if s:Match(lnum, s:block_regex)
-    return indent(s:GetMSL(lnum, 0)) + &sw
+    " return indent(s:GetMSL(lnum, 0)) + &sw
+    return indent(lnum) + &sw
   endif
 
   " If the previous line contained an opening bracket, and we are still in it,
@@ -326,5 +328,4 @@ endfunction
 let &cpo = s:cpo_save
 unlet s:cpo_save
 
-" vim:set sw=2 sts=2 ts=8 noet:
-
+" -*- vim -*- vim:set ft=vim et sw=2 sts=2:

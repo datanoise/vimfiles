@@ -191,7 +191,7 @@ nnoremap <silent> \f  :exec 'NERDTree' . expand('%:p:h')<CR>
 " visual select of the last pasted text
 nnoremap <silent> \v `[v`]
 " visual select of the line's content
-nnoremap <silent> \V ^v$h
+nnoremap <silent> <leader>V ^v$h
 nnoremap <silent> \h :set hlsearch!<CR>
 nnoremap <silent> \l :setlocal list!<CR>
 nnoremap <silent> \n :set nu!<CR>
@@ -314,13 +314,12 @@ if !has('gui_running')
   let g:CommandTSelectPrevMap=['<Esc>OA', '<C-p>']
 end
 
+" syntastic settings
+let g:syntastic_disabled_filetypes = ['coffee', 'cpp', 'c']
+let g:syntastic_auto_loc_list=2
+
 " Misc settings
 let g:dbext_default_history_file = $HOME."/.dbext_history"
-let g:DrChipTopLvlMenu = "Plugin."
 let g:CSApprox_verbose_level = 0 " to shut it up
 let c_comment_strings = 1 " I like highlighting strings inside C comments
-let g:obviousModeInsertHi = 'term=reverse ctermbg=52 guibg=#660000'
-let g:obviousModeCmdwinHi = 'term=reverse ctermbg=22 guibg=#660000'
 let g:xml_syntax_folding = 1
-let g:syntastic_disabled_filetypes = ['coffee', 'cpp', 'c']
-

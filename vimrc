@@ -119,8 +119,8 @@ set foldlevel=99 " always expand folds
 
 " uncategorized options {{{2
 set bg=dark
-" colo candycode_mod
-colo ir_black_mod
+colo candycode_mod
+" colo ir_black_mod
 if exists('&mc')
   au BufNew,BufRead * set mc=81
 endif
@@ -232,7 +232,9 @@ nnoremap <silent> <C-tab> :call SwitchPrevBuf()<CR>
 nnoremap <silent> <C-^> :call SwitchPrevBuf()<CR>
 nnoremap <silent> <leader>rt :!ctags --extra=+f -R *<CR><CR>
 nnoremap <silent> <leader>rh :call pathogen#helptags()<CR>:echo 'Generated help tags'<CR>
-cnoremap Q qa!
+cnoremap <M-q> qa!
+" this one for xterm
+cnoremap q  qa!
 
 " insert modeline
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>

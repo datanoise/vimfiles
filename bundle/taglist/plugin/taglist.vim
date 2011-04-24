@@ -417,7 +417,8 @@ let s:tlist_def_java_settings = 'java;p:package;c:class;i:interface;' .
                               \ 'f:field;m:method'
 
 " javascript language
-let s:tlist_def_javascript_settings = 'javascript;f:function'
+" let s:tlist_def_javascript_settings = 'javascript;f:function'
+let s:tlist_def_javascript_settings = 'js;c:class;f:function'
 
 " lisp language
 let s:tlist_def_lisp_settings = 'lisp;f:function'
@@ -444,8 +445,8 @@ let s:tlist_def_python_settings = 'python;c:class;m:member;f:function'
 let s:tlist_def_rexx_settings = 'rexx;s:subroutine'
 
 " ruby language
-let s:tlist_def_ruby_settings = 'ruby;c:class;f:method;F:function;' .
-                              \ 'm:singleton method'
+let s:tlist_def_ruby_settings = 'ruby;c:class;f:method;F:singleton method;' .
+                              \ 'm:module'
 
 " scheme language
 let s:tlist_def_scheme_settings = 'scheme;s:set;f:function'

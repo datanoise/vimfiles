@@ -119,8 +119,8 @@ set foldlevel=99 " always expand folds
 
 " uncategorized options {{{2
 set bg=dark
-colo candycode_mod
-" colo ir_black_mod
+" colo candycode_mod
+colo ir_black_mod
 if exists('&mc')
   au BufNew,BufRead * set mc=81
 endif
@@ -198,8 +198,8 @@ nnoremap <silent> \n :set nu!<CR>
 " indented paste
 nnoremap <silent> <leader>p p:'[,']normal ==<CR>
 nnoremap <silent> <leader>P P:'[,']normal ==<CR>
-nnoremap <silent> gp "*p:'[,']normal ==<CR>
-nnoremap <silent> gP "*P:'[,']normal ==<CR>
+nnoremap <silent> gp "*p
+nnoremap <silent> gP "*P
 vnoremap <silent> gy "*y
 vnoremap <silent> gY "*Y
 nnoremap <silent> gYY "*YY
@@ -300,6 +300,7 @@ let g:rubycomplete_rails = 1
 let g:rubycomplete_classes_in_global = 1
 
 " xptemplate settings
+let g:xptemplate_key = '<Tab>'
 au User BufEnterRails call g:XPTaddBundle('ruby', 'rails')
 au User BufEnterRails call g:XPTaddBundle('eruby', 'rails')
 let g:xptemplate_highlight = 'following,next'
@@ -325,3 +326,4 @@ let g:dbext_default_history_file = $HOME."/.dbext_history"
 let g:CSApprox_verbose_level = 0 " to shut it up
 let c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:xml_syntax_folding = 1
+let g:syntastic_jsl_conf='~/.jsl.conf'

@@ -328,4 +328,3 @@ let g:CSApprox_verbose_level = 0 " to shut it up
 let c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:xml_syntax_folding = 1
 let g:syntastic_jsl_conf='~/.jsl.conf'
-let g:solorized_visibility='low'

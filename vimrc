@@ -154,7 +154,7 @@ if executable('ack')
   set grepprg=ack\ -a\ --ignore-dir=log\ --ignore-dir=tmp\ $*\\\|grep\ -v\ '^tags'
 endif
 set completeopt=longest,menu " don't hide completion menu when typing
-" set clipboard+=unnamed
+set clipboard+=unnamed
 au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs
 au FileType ruby setlocal completefunc=syntaxcomplete#Complete
 au FileType scala,ruby exe 'compiler '. expand('<amatch>')
@@ -198,11 +198,6 @@ nnoremap <silent> \n :set nu!<CR>
 " indented paste
 nnoremap <silent> <leader>p p:'[,']normal ==<CR>
 nnoremap <silent> <leader>P P:'[,']normal ==<CR>
-nnoremap <silent> gp "*p
-nnoremap <silent> gP "*P
-vnoremap <silent> gy "*y
-vnoremap <silent> gY "*Y
-nnoremap <silent> gYY "*YY
 nnoremap <silent> <leader>sd mx:%s/\s\+$//<CR>`x
 nnoremap <silent> g= :Tabularize assignment<CR>
 
@@ -214,7 +209,7 @@ nnoremap <C-J> <C-D>
 nnoremap <C-K> <C-U>
 nnoremap <C-e> 4<C-e>
 nnoremap <C-y> 4<C-y>
-nnoremap <silent> <leader>o A<CR>
+nmap     <silent> <leader>o A<CR>
 nnoremap Y y$
 nnoremap z- 1z=
 nnoremap L :
@@ -296,7 +291,7 @@ let NERDTreeIgnore=['\.o$', '\~$', '\.class$']
 
 " Rubycomplete plugin settings
 let g:rubycomplete_buffer_loading = 1
-let g:rubycomplete_rails = 1
+let g:rubycomplete_rails = 0
 let g:rubycomplete_classes_in_global = 1
 
 " xptemplate settings

@@ -254,6 +254,7 @@ au FileType php nnoremap <buffer> <F5> :!php %<CR>
 au FileType php,c,cpp,java,javascript,html,eruby,css,scala inoremap <buffer> {<CR> {<CR>}<Esc>O
 au FileType xml setlocal foldmethod=syntax
 au BufReadPre,BufNewFile *.iphone.erb let b:eruby_subtype = 'html'
+au BufReadPre,BufNewFile *.ipad.erb let b:eruby_subtype = 'html'
 if has("mac")
   au FileType html nnoremap <silent> <D-r> :sil !open %<CR>
 endif
@@ -267,7 +268,7 @@ endfunc
 cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
 " NOTE: that doesn't work in MacVim gui mode if sudo requests a password!!!
 command! -bar -nargs=0 SudoW   :exe "write !sudo tee % >/dev/null"|silent edit!
-au FileType ruby iabbrev rb! #!<Esc>:r !which ruby<CR>kgJo<C-W><C-R>=Eatchar('\s')<CR>
+au FileType ruby iabbrev <buffer> rb! #!<C-R>=substitute(system('which ruby'),'\n$','','')<CR><C-R>=Eatchar('\s')<CR>
 " display name of the syntax ID at the cursor
 func! SynName()
   echo synIDattr(synID(line('.'), col('.'), 0), 'name')
@@ -304,7 +305,7 @@ let g:xptemplate_pum_tab_nav = 1
 hi link XPTnextItem CursorLine
 
 " command-t settings
-let g:CommandTMatchWindowReverse=1
+" let g:CommandTMatchWindowReverse=1
 let g:CommandTCancelMap=['<C-c>', '<Esc>']
 let g:CommandTMaxHeight=10
 if !has('gui_running')
@@ -314,7 +315,7 @@ if !has('gui_running')
 end
 
 " syntastic settings
-let g:syntastic_disabled_filetypes = ['coffee', 'cpp', 'c']
+let g:syntastic_disabled_filetypes = ['coffee', 'cpp', 'c', 'scss']
 let g:syntastic_auto_loc_list=2
 
 " Misc settings

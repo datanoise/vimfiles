@@ -187,7 +187,7 @@ nnoremap <leader>vg :e ~/.gvimrc
 nnoremap <silent> \[  :TlistOpen<CR>
 nnoremap <silent> <leader>n  :CommandT<CR>
 nnoremap <silent> <leader>l  :CommandTBuffer<CR>
-nnoremap <silent> \f  :exec 'NERDTree' . expand('%:p:h')<CR>
+nnoremap <silent> <leader>m  :exec 'NERDTree' . expand('%:p:h')<CR>
 " visual select of the last pasted text
 nnoremap <silent> \v `[v`]
 " visual select of the line's content
@@ -289,6 +289,8 @@ let Tlist_Inc_Winwidth = 0 " Don't resize my window!
 let NERDTreeQuitOnOpen = 1 " Close NERDTree when a file is opened
 let g:NERDTreeHijackNetrw = 0
 let NERDTreeIgnore=['\.o$', '\~$', '\.class$']
+let NERDTreeMinimalUI=0
+let NERDTreeDirArrows=1
 
 " Rubycomplete plugin settings
 let g:rubycomplete_buffer_loading = 1
@@ -324,3 +326,4 @@ let g:CSApprox_verbose_level = 0 " to shut it up
 let c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:xml_syntax_folding = 1
 let g:syntastic_jsl_conf='~/.jsl.conf'
+let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')

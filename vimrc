@@ -153,7 +153,7 @@ if executable('ack')
   " always use ack for faster searching
   set grepprg=ack\ -a\ --ignore-dir=log\ --ignore-dir=tmp\ $*\\\|grep\ -v\ '^tags'
 endif
-set completeopt=longest,menu " don't hide completion menu when typing
+set completeopt=menu " don't hide completion menu when typing
 set clipboard+=unnamed
 au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs
 au FileType ruby setlocal completefunc=syntaxcomplete#Complete
@@ -251,7 +251,7 @@ au FileType vim  nnoremap <buffer> K :h <c-r>=expand('<cword>')<CR><CR>
 au FileType ruby inoremap <buffer> <c-l> <c-r>= pumvisible() ? "\<lt>c-l>" : " => "<CR>
 au FileType ruby nnoremap <buffer> <F5> :!ruby %<CR>
 au FileType php nnoremap <buffer> <F5> :!php %<CR>
-au FileType php,c,cpp,java,javascript,html,eruby,css,scala inoremap <buffer> {<CR> {<CR>}<Esc>O
+au FileType php,c,cpp,java,javascript,html,eruby,css,scala,scss inoremap <buffer> {<CR> {<CR>}<Esc>O
 au FileType xml setlocal foldmethod=syntax
 au BufReadPre,BufNewFile *.iphone.erb let b:eruby_subtype = 'html'
 au BufReadPre,BufNewFile *.ipad.erb let b:eruby_subtype = 'html'

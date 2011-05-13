@@ -434,8 +434,8 @@ function! s:BEMapKeys()
   nnoremap <buffer> <silent> t             :call <SID>BESelectBuffer("tab")<cr>
   nnoremap <buffer> <silent> <s-cr>        :call <SID>BESelectBuffer("tab")<cr>
 
-  nnoremap <buffer> <silent> d             :call <SID>BERemoveBuffer("delete", "n")<cr>
-  xnoremap <buffer> <silent> d             :call <SID>BERemoveBuffer("delete", "v")<cr>
+  nnoremap <buffer> <silent> dd            :call <SID>BERemoveBuffer("delete", "n")<cr>
+  xnoremap <buffer> <silent> dd            :call <SID>BERemoveBuffer("delete", "v")<cr>
   nnoremap <buffer> <silent> D             :call <SID>BERemoveBuffer("wipe", "n")<cr>
   xnoremap <buffer> <silent> D             :call <SID>BERemoveBuffer("wipe", "v")<cr>
 
@@ -552,17 +552,17 @@ function! s:BECreateHelp()
     call add(header, '" <F1> : toggle this help')
     call add(header, '" <enter> or o or Mouse-Double-Click : open buffer under cursor')
     call add(header, '" <shift-enter> or t : open buffer in another tab')
-    call add(header, '" d : delete buffer')
-    call add(header, '" D : wipe buffer')
-    call add(header, '" f : toggle find active buffer')
-    call add(header, '" p : toggle spliting of file and path name')
-    call add(header, '" q : quit')
-    call add(header, '" r : reverse sort')
-    call add(header, '" R : toggle showing relative or full paths')
-    call add(header, '" s : cycle thru "sort by" fields '.string(s:sort_by).'')
-    call add(header, '" S : reverse cycle thru "sort by" fields')
-    call add(header, '" T : toggle if to show only buffers for this tab or not')
-    call add(header, '" u : toggle showing unlisted buffers')
+    call add(header, '" dd : delete buffer')
+    call add(header, '" D  : wipe buffer')
+    call add(header, '" f  : toggle find active buffer')
+    call add(header, '" p  : toggle spliting of file and path name')
+    call add(header, '" q  : quit')
+    call add(header, '" r  : reverse sort')
+    call add(header, '" R  : toggle showing relative or full paths')
+    call add(header, '" s  : cycle thru "sort by" fields '.string(s:sort_by).'')
+    call add(header, '" S  : reverse cycle thru "sort by" fields')
+    call add(header, '" T  : toggle if to show only buffers for this tab or not')
+    call add(header, '" u  : toggle showing unlisted buffers')
   else
     call add(header, '" Press <F1> for Help')
   endif

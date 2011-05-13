@@ -5,7 +5,7 @@ let g:loaded_url = 1
 
 function! Browser ()
   let line = getline (".")
-  let basic_pattern = ":[^[:space:]()<>\"']*"
+  let basic_pattern = ":[^[:space:]()<>\"'\\]]*"
   let protocols = ["http", "https", "ftp", "file"]
   for protocol in protocols
     let pattern = protocol . basic_pattern

@@ -58,7 +58,7 @@ Commands to use once exploring:
  <leftmouse>   Opens the buffer that is under the cursor into the current
                window.
  <shift-enter> Opens the buffer that is under the cursor in another tab.
- d            |:delete|the buffer under the cursor from the list.  The
+ dd           |:delete|the buffer under the cursor from the list.  The
                buffer's 'buflisted' is cleared. This allows for the buffer to
                be displayed again using the 'show unlisted' command.
  R             Toggles relative path/absolute path.

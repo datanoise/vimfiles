@@ -114,7 +114,7 @@ set cpo&vim
 "store the generated menu under the same path this file is found:
 let s:MaxEntriesPerSubmenu = 45
 let s:menuFile = expand('<sfile>:p:h') . '/ColorSchemes.vim'
-let s:menuName = '&ColorSchemes'
+let s:menuName = '&Themes'
 let s:xdigit = '[0123456789ABCDEFabcdef]'
 let s:hexvals = { 0:0, 1:1, 2:2, 3:3,
             \4:4, 5:5, 6:6, 7:7,

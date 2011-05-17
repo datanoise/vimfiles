@@ -417,8 +417,7 @@ let s:tlist_def_java_settings = 'java;p:package;c:class;i:interface;' .
                               \ 'f:field;m:method'
 
 " javascript language
-" let s:tlist_def_javascript_settings = 'javascript;f:function'
-let s:tlist_def_javascript_settings = 'js;c:class;f:function'
+let s:tlist_def_javascript_settings = 'javascript;f:function'
 
 " lisp language
 let s:tlist_def_lisp_settings = 'lisp;f:function'

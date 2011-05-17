@@ -251,10 +251,11 @@ au FileType vim  nnoremap <buffer> K :h <c-r>=expand('<cword>')<CR><CR>
 au FileType ruby inoremap <buffer> <c-l> <c-r>= pumvisible() ? "\<lt>c-l>" : " => "<CR>
 au FileType ruby nnoremap <buffer> <F5> :!ruby %<CR>
 au FileType php nnoremap <buffer> <F5> :!php %<CR>
-au FileType php,c,cpp,java,javascript,html,eruby,css,scala,scss inoremap <buffer> {<CR> {<CR>}<Esc>O
+au FileType php,c,cpp,java,javascript,html,eruby,css,scala,scss,objc inoremap <buffer> {<CR> {<CR>}<Esc>O
 au FileType xml setlocal foldmethod=syntax
 au BufReadPre,BufNewFile *.iphone.erb let b:eruby_subtype = 'html'
 au BufReadPre,BufNewFile *.ipad.erb let b:eruby_subtype = 'html'
+autocmd BufReadPost fugitive://* set bufhidden=delete
 if has("mac")
   au FileType html nnoremap <silent> <D-r> :sil !open %<CR>
 endif
@@ -284,6 +285,8 @@ let Tlist_Enable_Fold_Column = 0
 let Tlist_Show_One_File = 1
 let TList_Auto_Update = 0 " Don't autoupdate tags, I use 'u' command for that
 let Tlist_Inc_Winwidth = 0 " Don't resize my window!
+let tlist_objc_settings    = 'objc;i:interface;c:class;m:method;p:property'
+let tlist_javascript_settings = 'js;c:class;f:function'
 
 " NERD_tree settings
 let NERDTreeQuitOnOpen = 1 " Close NERDTree when a file is opened

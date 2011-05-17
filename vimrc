@@ -50,10 +50,10 @@ function! GetCurDir()
   let result = substitute(result, '^.\+\ze.\{30,}', '<', '')
   return '('.result.')'
 endfunction
-set statusline=[%n]%m\ %<%.99f\ %{GetCurDir()}\ %h%w%r%y%=
-set statusline+=%#warningmsg#
+set statusline=[%n]%m\ %<%.99f\ %{GetCurDir()}\ %h%w%r%y
+set statusline+=\ %#errormsg#
 set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+set statusline+=%*%=
 set statusline+=\ %-16(\ %l,%c-%v\ %)%P
 " }}}
 
@@ -322,6 +322,7 @@ end
 " syntastic settings
 let g:syntastic_disabled_filetypes = ['coffee', 'cpp', 'c', 'scss']
 let g:syntastic_auto_loc_list=2
+let g:syntastic_stl_format = '[ERR:%F(%t)]'
 
 " Misc settings
 let g:dbext_default_history_file = $HOME."/.dbext_history"

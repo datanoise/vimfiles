@@ -301,7 +301,7 @@ XSET att?=Embed( 'name="`name^"' )
 
 " TODO enctype list : application/x-www-form-urlencoded
 XPT form wrap " <form ..>..</form>
-XSET method=ChooseStr( 'GET', 'POST' )
+XSET method=ChooseStr( 'get', 'post' )
 <form action="`action^" method="`method^" accept-charset="`html_enc()^" enctype="multipart/form-data">
     `cursor^
 </form>

@@ -157,6 +157,7 @@ set completeopt=menu " don't hide completion menu when typing
 set clipboard+=unnamed
 au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs
 au FileType ruby setlocal completefunc=syntaxcomplete#Complete
+au FileType ruby setlocal balloonexpr&
 au FileType scala,ruby exe 'compiler '. expand('<amatch>')
 " save undo point when leaving vim window
 au CursorHoldI * call feedkeys("\<C-G>u", "nt")

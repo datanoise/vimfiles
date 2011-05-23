@@ -32,7 +32,7 @@ syntax sync fromstart
 "" JavaScript comments
 syntax keyword javaScriptCommentTodo    TODO FIXME XXX TBD contained
 syntax region  javaScriptLineComment    start=+\/\/+ end=+$+ keepend contains=javaScriptCommentTodo,@Spell
-syntax region  javaScriptEnvComment     start=+^#!+ end=+$+ keepend contains=javaScriptCommentTodo,@Spell
+syntax region  javaScriptEnvComment     start="\%^#!" end="$" display
 syntax region  javaScriptLineComment    start=+^\s*\/\/+ skip=+\n\s*\/\/+ end=+$+ keepend contains=javaScriptCommentTodo,@Spell fold
 syntax region  javaScriptCvsTag         start="\$\cid:" end="\$" oneline contained
 syntax region  javaScriptComment        start="/\*"  end="\*/" contains=javaScriptCommentTodo,javaScriptCvsTag,@Spell fold
@@ -72,7 +72,8 @@ syntax case match
 syntax match   javaScriptSpecial        "\\\d\d\d\|\\x\x\{2\}\|\\u\x\{4\}\|\\."
 syntax region  javaScriptStringD        start=+"+  skip=+\\\\\|\\$"+  end=+"+  contains=javaScriptSpecial,@htmlPreproc
 syntax region  javaScriptStringS        start=+'+  skip=+\\\\\|\\$'+  end=+'+  contains=javaScriptSpecial,@htmlPreproc
-syntax region  javaScriptRegexpString   start=+\(\([)\]"']\|\d\|\w\)\s*\)\@<!/\(\*\|/\)\@!+ skip=+\\\\\|\\/+ end=+/[gim]\{,3}+ contains=javaScriptSpecial,@htmlPreproc oneline
+syntax region  javaScriptRegexpCharClass start=+\[\]\|\[^\]\|\[+ end=+\]+ contained
+syntax region  javaScriptRegexpString   start=+\(\(\(return\|case\)\s\+\)\@<=\|\(\([)\]"']\|\d\|\w\)\s*\)\@<!\)/\(\*\|/\)\@!+ skip=+\\\\\|\\/+ end=+/[gim]\{,3}+ contains=javaScriptSpecial,javaScriptRegexpCharClass,@htmlPreproc oneline
 syntax match   javaScriptNumber         /\<-\=\d\+L\=\>\|\<0[xX]\x\+\>/
 syntax match   javaScriptFloat          /\<-\=\%(\d\+\.\d\+\|\d\+\.\|\.\d\+\)\%([eE][+-]\=\d\+\)\=\>/
 syntax match   javaScriptLabel          /\(?\s*\)\@<!\<\w\+\(\s*:\)\@=/
@@ -200,7 +201,7 @@ if version >= 508 || !exists("did_javascript_syn_inits")
   endif
   HiLink javaScriptComment              Comment
   HiLink javaScriptLineComment          Comment
-  HiLink javaScriptEnvComment           Comment
+  HiLink javaScriptEnvComment           PreProc
   HiLink javaScriptDocComment           Comment
   HiLink javaScriptCommentTodo          Todo
   HiLink javaScriptCvsTag               Function
@@ -212,6 +213,7 @@ if version >= 508 || !exists("did_javascript_syn_inits")
   HiLink javaScriptStringS              String
   HiLink javaScriptStringD              String
   HiLink javaScriptRegexpString         String
+  HiLink javaScriptRegexpCharClass      Character
   HiLink javaScriptCharacter            Character
   HiLink javaScriptPrototype            Type
   HiLink javaScriptConditional          Conditional

@@ -33,15 +33,13 @@ set cpo&vim
 " ============
 
 " Regex of syntax group names that are or delimit string or are comments.
-let s:syng_strcom = '\<javaScript\%(RegexpString\|CommentTodo\|LineComment\|Comment\|DocComment\)\>'
+let s:syng_strcom = 'javaScript\%(String\|RegexpString\|CommentTodo\|LineComment\|Comment\|DocComment\)'
 
 " Regex of syntax group names that are strings.
-let s:syng_string =
-      \ '\<javaScript\%(RegexpString\)\>'
+let s:syng_string = 'javaScript\%(RegexpString\)'
 
 " Regex of syntax group names that are strings or documentation.
-let s:syng_stringdoc =
-  \'\<javaScriptDocComment\>'
+let s:syng_stringdoc = 'javaScriptDocComment'
 
 " Expression used to check whether we should skip a match with searchpair().
 let s:skip_expr = "synIDattr(synID(line('.'),col('.'),1),'name') =~ '".s:syng_strcom."'"
@@ -118,12 +116,12 @@ function s:GetMSL(lnum, in_one_line_scope)
       " Don't use lines that are part of a one line scope as msl unless the
       " flag in_one_line_scope is set to 1
       "
-      if a:in_one_line_scope
-        break
+      if a:in_one_line_scope 
+	break
       end
       let msl_one_line = s:Match(lnum, s:one_line_scope_regex)
       if msl_one_line == 0
-        break
+	break
       endif
     endif
     let lnum = s:PrevNonBlankNonString(lnum - 1)
@@ -167,7 +165,7 @@ function s:IndentWithContinuation(lnum, ind, width)
   " TODO: the || s:IsInString() thing worries me a bit.
   if p_lnum != lnum
     if s:Match(p_lnum,s:continuation_regex)||s:IsInString(p_lnum,strlen(line))
-      return a:ind + a:width
+      return a:ind
     endif
   endif
 
@@ -204,7 +202,7 @@ function s:ExitingOneLineScope(lnum)
     else
       let prev_msl = s:GetMSL(msl - 1, 1)
       if s:Match(prev_msl, s:one_line_scope_regex)
-        return prev_msl
+	return prev_msl
       endif
     endif
   endif
@@ -240,7 +238,6 @@ function GetJavascriptIndent()
       if line[col-1]==')' && col('.') != col('$') - 1
         let ind = virtcol('.')-1
       else
-        " let ind = indent(s:GetMSL(line('.'), 0))
         let ind = indent(line('.'))
       endif
     endif
@@ -279,7 +276,6 @@ function GetJavascriptIndent()
 
   " If the previous line ended with a block opening, add a level of indent.
   if s:Match(lnum, s:block_regex)
-    " return indent(s:GetMSL(lnum, 0)) + &sw
     return indent(lnum) + &sw
   endif
 
@@ -328,4 +324,5 @@ endfunction
 let &cpo = s:cpo_save
 unlet s:cpo_save
 
-" -*- vim -*- vim:set ft=vim et sw=2 sts=2:
+" vim:set sw=2 sts=2 ts=8 noet:
+

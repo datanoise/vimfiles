@@ -325,6 +325,10 @@ let g:syntastic_disabled_filetypes = ['coffee', 'cpp', 'c', 'scss']
 let g:syntastic_auto_loc_list=2
 let g:syntastic_stl_format = '[ERR:%F(%t)]'
 
+" delimitMate settings
+let delimitMate_expand_space = 1
+let delimitMate_expand_cr = 1
+
 " Misc settings
 let g:dbext_default_history_file = $HOME."/.dbext_history"
 let g:CSApprox_verbose_level = 0 " to shut it up

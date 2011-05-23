@@ -57,12 +57,13 @@ if maparg('<CR>','i') =~# '<C-R>=.*crend(.)<CR>\|<\%(Plug\|SID\)>.*End'
 elseif maparg('<CR>','i') =~ '<CR>'
     exe "imap <script> <C-X><CR> ".maparg('<CR>','i')."<SID>AlwaysEnd"
     exe "imap <script> <CR>      ".maparg('<CR>','i')."<SID>DiscretionaryEnd"
+elseif maparg('<CR>','i') =~ '<Plug>delimitMateCR'
+    exe "imap <C-X><CR> ".maparg('<CR>', 'i')."<Plug>AlwaysEnd"
+    exe "imap <CR> ".maparg('<CR>', 'i')."<Plug>DiscretionaryEnd"
 else
     imap <C-X><CR> <CR><Plug>AlwaysEnd
-    " imap <CR>      <CR><Plug>DiscretionaryEnd
     imap <CR> <C-R>=pumvisible() ? "\<lt>c-y>" : "\<lt>CR>"<CR><Plug>DiscretionaryEnd
 endif
-
 if maparg('<M-o>','i') == ''
     inoremap <M-o> <C-O>o
 endif

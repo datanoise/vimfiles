@@ -202,10 +202,6 @@ nnoremap <silent> <leader>P P:'[,']normal ==<CR>
 nnoremap <silent> <leader>sd mx:%s/\s\+$//<CR>`x
 nnoremap <silent> g= :Tabularize assignment<CR>
 
-nnoremap <silent> <F3> :cn<CR>
-nnoremap <silent> <S-F3> :cp<CR>
-nnoremap <silent> <leader>] :cn<CR>
-nnoremap <silent> <leader>[ :cp<CR>
 nnoremap <C-J> <C-D>
 nnoremap <C-K> <C-U>
 nnoremap <C-e> 4<C-e>

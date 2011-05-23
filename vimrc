@@ -226,6 +226,10 @@ function! SwitchPrevBuf()
 endfunction
 nnoremap <silent> <C-tab> :call SwitchPrevBuf()<CR>
 nnoremap <silent> <C-^> :call SwitchPrevBuf()<CR>
+if has('mac')
+  nnoremap <silent> <D-[> :bprev<CR>
+  nnoremap <silent> <D-]> :bnext<CR>
+endif
 nnoremap <silent> <leader>rt :!ctags --extra=+f -R *<CR><CR>
 nnoremap <silent> <leader>rh :call pathogen#helptags()<CR>:echo 'Generated help tags'<CR>
 cnoremap <M-q> qa!

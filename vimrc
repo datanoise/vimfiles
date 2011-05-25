@@ -252,7 +252,8 @@ au FileType vim  nnoremap <buffer> K :h <c-r>=expand('<cword>')<CR><CR>
 au FileType ruby inoremap <buffer> <c-l> <c-r>= pumvisible() ? "\<lt>c-l>" : " => "<CR>
 au FileType ruby nnoremap <buffer> <F5> :!ruby %<CR>
 au FileType php nnoremap <buffer> <F5> :!php %<CR>
-au FileType php,c,cpp,java,javascript,html,eruby,css,scala,scss,objc inoremap <buffer> {<CR> {<CR>}<Esc>O
+" this is taken care of by delimitMate
+" au FileType php,c,cpp,java,javascript,html,eruby,css,scala,scss,objc inoremap <buffer> {<CR> {<CR>}<Esc>O
 au FileType xml setlocal foldmethod=syntax
 au BufReadPre,BufNewFile *.iphone.erb let b:eruby_subtype = 'html'
 au BufReadPre,BufNewFile *.ipad.erb let b:eruby_subtype = 'html'
@@ -336,3 +337,6 @@ let c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:xml_syntax_folding = 1
 let g:syntastic_jsl_conf='~/.jsl.conf'
 let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
+let g:alternateExtensions_h = "c,cpp,cxx,cc,CC,m,mm"
+let g:alternateExtensions_m = "h"
+let g:alternateExtensions_mm = "h"

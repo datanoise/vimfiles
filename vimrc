@@ -182,15 +182,15 @@ endif
 nnoremap <leader>ss :w<CR>
 nnoremap <leader>sv :source ~/.vimrc
 nnoremap <leader>sg :source ~/.gvimrc
-nnoremap <leader>vv :e ~/.vimrc
-nnoremap <leader>vg :e ~/.gvimrc
+nnoremap \vv :e ~/.vimrc
+nnoremap \vg :e ~/.gvimrc
 
 nnoremap <silent> \[  :TlistOpen<CR>
 nnoremap <silent> <leader>n  :CommandT<CR>
 nnoremap <silent> <leader>l  :CommandTBuffer<CR>
 nnoremap <silent> <leader>m  :exec 'NERDTree' . expand('%:p:h')<CR>
 " visual select of the last pasted text
-nnoremap <silent> \v `[v`]
+nnoremap <silent> <leader>v `[v`]
 " visual select of the line's content
 nnoremap <silent> <leader>V ^v$h
 nnoremap <silent> \h :set hlsearch!<CR>

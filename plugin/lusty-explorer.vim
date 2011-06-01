@@ -1876,6 +1876,8 @@ class Display
       VIM::command "#{map} <C-e>    :call <SID>#{prefix}KeyPressed(5)<CR>"
       VIM::command "#{map} <C-r>    :call <SID>#{prefix}KeyPressed(18)<CR>"
       VIM::command "#{map} <C-u>    :call <SID>#{prefix}KeyPressed(21)<CR>"
+      VIM::command "#{map} <Esc>OA  <Left>"
+      VIM::command "#{map} <Esc>OB  <Left>"
     end
 
     def print(strings)

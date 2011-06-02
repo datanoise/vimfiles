@@ -266,10 +266,10 @@ endfunction
 
 
 " Default mappings.
-nmap <silent> \lf :LustyFilesystemExplorer<CR>
-nmap <silent> \lr :LustyFilesystemExplorerFromHere<CR>
-nmap <silent> \lb :LustyBufferExplorer<CR>
-nmap <silent> \lg :LustyBufferGrep<CR>
+nmap <silent> \ef :LustyFilesystemExplorer<CR>
+nmap <silent> \er :LustyFilesystemExplorerFromHere<CR>
+nmap <silent> \eb :LustyBufferExplorer<CR>
+nmap <silent> \eg :LustyBufferGrep<CR>
 
 " Vim-to-ruby function calls.
 function! s:LustyFilesystemExplorerStart(path)

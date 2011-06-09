@@ -100,7 +100,7 @@ au FileType otl   setlocal nolist
 " wild options {{{2
 set wildmenu
 set wildmode=full
-set wildignore=*.o,*.bundle,*.png,*.jpg,*.gif,*.class
+set wildignore=*.o,*.bundle,*.png,*.jpg,*.gif,*.class,*.log
 set showcmd
 " the above doesn't always work. the following enforces it
 au VimEnter * set showcmd

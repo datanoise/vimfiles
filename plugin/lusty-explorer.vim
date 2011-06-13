@@ -22,11 +22,11 @@
 "      Version: 4.1
 "
 "        Usage:
-"                 <Leader>lf  - Opens the filesystem explorer.
-"                 <Leader>lr  - Opens the filesystem explorer from the
-"                               directory of the current file.
-"                 <Leader>lb  - Opens the buffer explorer.
-"                 <Leader>lg  - Opens the buffer grep, for searching through
+"                 \ef  - Opens the filesystem explorer.
+"                 \er  - Opens the filesystem explorer from the
+"                        directory of the current file.
+"                 \eb  - Opens the buffer explorer.
+"                 \eg  - Opens the buffer grep, for searching through
 "                               all loaded buffers
 "
 "               You can also use the commands:

@@ -277,6 +277,7 @@ func! SynName()
   echo synIDattr(synID(line('.'), col('.'), 0), 'name')
 endfunc
 command! SynName :call SynName()
+command! Rm if input('Are you sure (y or n)? ') == 'y'|:exe 'sil !rm %'|bw!|else|echo|endif
 
 
 " Section: Plugin settings {{{1

@@ -10,7 +10,7 @@ endif
 let b:did_ftplugin = 1
 
 setlocal formatoptions-=t formatoptions+=croql
-setlocal comments=f-1:###,:#
+setlocal comments=:#
 setlocal commentstring=#\ %s
 
 setlocal makeprg=coffee\ -c\ $*
@@ -38,6 +38,8 @@ endfunction
 command! -range=% CoffeeCompile <line1>,<line2>:w !coffee -scb
 " Compile the current file.
 command! -bang -bar -nargs=* CoffeeMake call s:CoffeeMake(<q-bang>, <q-args>)
+" Run the selected text or the entire file and show output on vim command line
+command! -range=% CoffeeRun <line1>,<line2>:w !coffee -s
 
 " Deprecated: Compile the current file on write.
 if exists("coffee_compile_on_save")

@@ -5,6 +5,7 @@
 runtime! macros/matchit.vim
 set nocompatible      " We're running Vim, not Vi!
 call pathogen#runtime_append_all_bundles()
+call pathogen#helptags()
 syntax on             " Enable syntax highlighting
 filetype on           " Enable filetype detection
 filetype indent on    " Enable filetype-specific indenting

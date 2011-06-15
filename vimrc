@@ -202,6 +202,7 @@ nnoremap <silent> <leader>p p:'[,']normal ==<CR>
 nnoremap <silent> <leader>P P:'[,']normal ==<CR>
 nnoremap <silent> <leader>sd mx:%s/\s\+$//<CR>`x
 nnoremap <silent> g= :Tabularize assignment<CR>
+vnoremap <silent> g= :Tabularize assignment<CR>
 
 nnoremap <C-J> <C-D>
 nnoremap <C-K> <C-U>
@@ -211,7 +212,7 @@ nmap     <silent> <leader>o A<CR>
 nnoremap Y y$
 nnoremap z- 1z=
 nnoremap L :
-nnoremap [l [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
+nnoremap [s [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
 nnoremap <F2> <C-w><C-w>
 nnoremap <F4> :sil make %<CR><c-l>:cc<CR>
 function! SwitchPrevBuf()
@@ -303,15 +304,6 @@ let NERDTreeDirArrows=1
 let g:rubycomplete_buffer_loading = 1
 let g:rubycomplete_rails = 0
 let g:rubycomplete_classes_in_global = 1
-
-" xptemplate settings
-let g:xptemplate_key = '<Tab>'
-au User BufEnterRails call g:XPTaddBundle('ruby', 'rails')
-au User BufEnterRails call g:XPTaddBundle('eruby', 'rails')
-let g:xptemplate_highlight = 'following,next'
-let g:xptemplate_pum_tab_nav = 1
-" let g:xptemplate_brace_complete = 1
-hi link XPTnextItem CursorLine
 
 " command-t settings
 " let g:CommandTMatchWindowReverse=1

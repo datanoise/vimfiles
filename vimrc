@@ -170,7 +170,6 @@ au CursorHoldI * call feedkeys("\<C-G>u", "nt")
 
 " Section: Keybindings {{{1
 "--------------------------------------------------
-inoremap jj <Esc>
 let mapleader = ','
 nnoremap <leader>ss :w<CR>
 nnoremap <leader>sv :source ~/.vimrc
@@ -348,3 +347,4 @@ let g:alternateExtensions_h = "c,cpp,cxx,cc,CC,m,mm"
 let g:alternateExtensions_m = "h"
 let g:alternateExtensions_mm = "h"
 let g:yankring_history_file = '.yring_hist'
+let g:user_zen_leader_key = '<c-e>'

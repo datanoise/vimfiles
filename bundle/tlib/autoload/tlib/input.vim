@@ -128,25 +128,25 @@ function! tlib#input#ListW(world, ...) "{{{3
     if stridx(world.type, 'm') != -1
         call extend(key_agents, g:tlib_keyagents_InputList_m, 'force')
     endif
-    if has('menu')
-        amenu ]TLibInputListPopupMenu.Pick\ selected\ item <cr>
-        amenu ]TLibInputListPopupMenu.Select #
-        amenu ]TLibInputListPopupMenu.Select\ all <c-a>
-        amenu ]TLibInputListPopupMenu.Reset\ list <c-r>
-        amenu ]TLibInputListPopupMenu.Cancel <esc>
-        amenu ]TLibInputListPopupMenu.-StandardEntries- :
-    endif
-    for handler in world.key_handlers
-        let k = get(handler, 'key', '')
-        if !empty(k)
-            let key_agents[k] = handler.agent
-            if has('menu') && has_key(handler, 'help') && !empty(handler.help)
-                exec 'amenu ]TLibInputListPopupMenu.'. escape(handler.help, ' .\')
-                            \ .' '. handler.key_name
-                let world.has_menu = 1
-            endif
-        endif
-    endfor
+    " if has('menu')
+    "     amenu ]TLibInputListPopupMenu.Pick\ selected\ item <cr>
+    "     amenu ]TLibInputListPopupMenu.Select #
+    "     amenu ]TLibInputListPopupMenu.Select\ all <c-a>
+    "     amenu ]TLibInputListPopupMenu.Reset\ list <c-r>
+    "     amenu ]TLibInputListPopupMenu.Cancel <esc>
+    "     amenu ]TLibInputListPopupMenu.-StandardEntries- :
+    " endif
+    " for handler in world.key_handlers
+    "     let k = get(handler, 'key', '')
+    "     if !empty(k)
+    "         let key_agents[k] = handler.agent
+    "         if has('menu') && has_key(handler, 'help') && !empty(handler.help)
+    "             exec 'amenu ]TLibInputListPopupMenu.'. escape(handler.help, ' .\')
+    "                         \ .' '. handler.key_name
+    "             let world.has_menu = 1
+    "         endif
+    "     endif
+    " endfor
     " let statusline  = &l:statusline
     " let laststatus  = &laststatus
     let lastsearch  = @/

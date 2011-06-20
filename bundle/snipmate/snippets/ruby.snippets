@@ -32,7 +32,7 @@ snippet when
 	when ${1:condition}
 		${2}
 snippet def
-	def ${1:method_name}
+	def ${1:name}
 		${2}
 	end
 snippet deft
@@ -424,21 +424,21 @@ snippet ts
 	require "tc_${1:test_case_file}"
 	require "tc_${2:test_case_file}"${3}
 snippet as
-	assert(${1:test}, "${2:Failure message.}")${3}
+	assert ${1:test}, "${2:Failure message.}"${3}
 snippet ase
-	assert_equal(${1:expected}, ${2:actual})${3}
+	assert_equal ${1:expected}, ${2:actual}${3}
 snippet asne
-	assert_not_equal(${1:unexpected}, ${2:actual})${3}
+	assert_not_equal ${1:unexpected}, ${2:actual}${3}
 snippet asid
-	assert_in_delta(${1:expected_float}, ${2:actual_float}, ${3:2 ** -20})${4}
+	assert_in_delta ${1:expected_float}, ${2:actual_float}, ${3:2 ** -20}${4}
 snippet asio
-	assert_instance_of(${1:ExpectedClass}, ${2:actual_instance})${3}
+	assert_instance_of ${1:ExpectedClass}, ${2:actual_instance}${3}
 snippet asko
-	assert_kind_of(${1:ExpectedKind}, ${2:actual_instance})${3}
+	assert_kind_of ${1:ExpectedKind}, ${2:actual_instance}${3}
 snippet asn
-	assert_nil(${1:instance})${2}
+	assert_nil ${1:instance}${2}
 snippet asnn
-	assert_not_nil(${1:instance})${2}
+	assert_not_nil ${1:instance}${2}
 snippet asm
 	assert_match(/${1:expected_pattern}/, ${2:actual_string})${3}
 snippet asnm
@@ -559,4 +559,3 @@ snippet cfor
 	<% content_for :${1:head} do %>
 		${2}
 	<% end %>
->>>>>>> d46588cad4f48f1fe6f0e80c06b87f9b78792422

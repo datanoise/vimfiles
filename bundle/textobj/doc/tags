@@ -1,3 +1,4 @@
+:TextobjBetweenDefaultKeyMappings	textobj-between.txt	/*:TextobjBetweenDefaultKeyMappings*
 :TextobjDatetimeDefaultKeyMappings	textobj-datetime.txt	/*:TextobjDatetimeDefaultKeyMappings*
 :TextobjDiffDefaultKeyMappings	textobj-diff.txt	/*:TextobjDiffDefaultKeyMappings*
 :TextobjEntireDefaultKeyMappings	textobj-entire.txt	/*:TextobjEntireDefaultKeyMappings*
@@ -7,6 +8,8 @@
 :TextobjLastpatDefaultKeyMappings	textobj-lastpat.txt	/*:TextobjLastpatDefaultKeyMappings*
 :TextobjRubyblockDefaultKeyMappings	textobj-rubyblock.txt	/*:TextobjRubyblockDefaultKeyMappings*
 :TextobjSyntaxDefaultKeyMappings	textobj-syntax.txt	/*:TextobjSyntaxDefaultKeyMappings*
+<Plug>(textobj-between-a)	textobj-between.txt	/*<Plug>(textobj-between-a)*
+<Plug>(textobj-between-i)	textobj-between.txt	/*<Plug>(textobj-between-i)*
 <Plug>(textobj-datetime-auto)	textobj-datetime.txt	/*<Plug>(textobj-datetime-auto)*
 <Plug>(textobj-datetime-date)	textobj-datetime.txt	/*<Plug>(textobj-datetime-date)*
 <Plug>(textobj-datetime-full)	textobj-datetime.txt	/*<Plug>(textobj-datetime-full)*
@@ -38,6 +41,7 @@
 <Plug>(textobj-syntax-i)	textobj-syntax.txt	/*<Plug>(textobj-syntax-i)*
 ay	textobj-syntax.txt	/*ay*
 b:textobj_function_select()	textobj-function.txt	/*b:textobj_function_select()*
+g:textobj_cobetweeno_default_key_mappings	textobj-between.txt	/*g:textobj_cobetweeno_default_key_mappings*
 g:textobj_datetime_no_default_key_mappings	textobj-datetime.txt	/*g:textobj_datetime_no_default_key_mappings*
 g:textobj_diff_no_default_key_mappings	textobj-diff.txt	/*g:textobj_diff_no_default_key_mappings*
 g:textobj_entire_no_default_key_mappings	textobj-entire.txt	/*g:textobj_entire_no_default_key_mappings*
@@ -53,6 +57,14 @@ textobj#user#move()	textobj-user.txt	/*textobj#user#move()*
 textobj#user#plugin()	textobj-user.txt	/*textobj#user#plugin()*
 textobj#user#select()	textobj-user.txt	/*textobj#user#select()*
 textobj#user#select_pair()	textobj-user.txt	/*textobj#user#select_pair()*
+textobj-between	textobj-between.txt	/*textobj-between*
+textobj-between-changelog	textobj-between.txt	/*textobj-between-changelog*
+textobj-between-contents	textobj-between.txt	/*textobj-between-contents*
+textobj-between-customizing	textobj-between.txt	/*textobj-between-customizing*
+textobj-between-interface	textobj-between.txt	/*textobj-between-interface*
+textobj-between-introduction	textobj-between.txt	/*textobj-between-introduction*
+textobj-between-key-mappings	textobj-between.txt	/*textobj-between-key-mappings*
+textobj-between.txt	textobj-between.txt	/*textobj-between.txt*
 textobj-datetime-bugs	textobj-datetime.txt	/*textobj-datetime-bugs*
 textobj-datetime-changelog	textobj-datetime.txt	/*textobj-datetime-changelog*
 textobj-datetime-contents	textobj-datetime.txt	/*textobj-datetime-contents*

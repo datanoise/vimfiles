@@ -22,11 +22,11 @@
 "      Version: 4.1
 "
 "        Usage:
-"                 \ef  - Opens the filesystem explorer.
-"                 \er  - Opens the filesystem explorer from the
-"                        directory of the current file.
-"                 \eb  - Opens the buffer explorer.
-"                 \eg  - Opens the buffer grep, for searching through
+"                 <leader>rf  - Opens the filesystem explorer.
+"                 <leader>rr  - Opens the filesystem explorer from the
+"                               directory of the current file.
+"                 <leader>rb  - Opens the buffer explorer.
+"                 <leader>rg  - Opens the buffer grep, for searching through
 "                               all loaded buffers
 "
 "               You can also use the commands:
@@ -266,10 +266,10 @@ endfunction
 
 
 " Default mappings.
-nmap <silent> \ef :LustyFilesystemExplorer<CR>
-nmap <silent> \er :LustyFilesystemExplorerFromHere<CR>
-nmap <silent> \eb :LustyBufferExplorer<CR>
-nmap <silent> \eg :LustyBufferGrep<CR>
+nmap <silent> <leader>rf :LustyFilesystemExplorer<CR>
+nmap <silent> <leader>rr :LustyFilesystemExplorerFromHere<CR>
+nmap <silent> <leader>rb :LustyBufferExplorer<CR>
+nmap <silent> <leader>rg :LustyBufferGrep<CR>
 
 " Vim-to-ruby function calls.
 function! s:LustyFilesystemExplorerStart(path)

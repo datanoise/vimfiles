@@ -150,12 +150,15 @@ set complete-=i
 " do not display :into screen at startup
 set shortmess+=I
 set nofsync " don't spin my disk
-if executable('ack')
+if executable('ack') && !exists('g:ackprg')
   " always use ack for faster searching
   set grepprg=ack\ -a\ --ignore-dir=log\ --ignore-dir=tmp\ $*\\\|grep\ -v\ '^tags'
 endif
 set completeopt=menu " don't hide completion menu when typing
-set clipboard+=unnamed
+if !has('gui_running')
+  " in gui YankRing takes care of it
+  set clipboard+=unnamed
+endif
 au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs
 au FileType ruby setlocal completefunc=syntaxcomplete#Complete
 au FileType ruby setlocal balloonexpr&
@@ -167,19 +170,8 @@ au CursorHoldI * call feedkeys("\<C-G>u", "nt")
 
 " Section: Keybindings {{{1
 "--------------------------------------------------
+inoremap jj <Esc>
 let mapleader = ','
-" mappings for cscope
-if has("cscope")
-  nmap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
-  nmap <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-  nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
-endif
-
 nnoremap <leader>ss :w<CR>
 nnoremap <leader>sv :source ~/.vimrc
 nnoremap <leader>sg :source ~/.gvimrc
@@ -190,10 +182,11 @@ nnoremap <silent> \[  :TlistOpen<CR>
 nnoremap <silent> <leader>n  :CommandT<CR>
 nnoremap <silent> <leader>l  :CommandTBuffer<CR>
 nnoremap <silent> <leader>m  :exec 'NERDTree' . expand('%:p:h')<CR>
-" visual select of the last pasted text
-nnoremap <silent> <leader>v `[v`]
+nnoremap <silent> <leader>y  :YRShow<CR>
 " visual select of the line's content
-nnoremap <silent> <leader>V ^v$h
+nnoremap <silent> <leader>v ^v$h
+" visual select of the last pasted text
+nnoremap <silent> <leader>V `[v`]
 nnoremap <silent> \h :set hlsearch!<CR>
 nnoremap <silent> \l :setlocal list!<CR>
 nnoremap <silent> \n :set nu!<CR>
@@ -229,10 +222,21 @@ if has('mac')
   nnoremap <silent> <D-]> :bnext<CR>
 endif
 nnoremap <silent> <leader>rt :!ctags --extra=+f -R *<CR><CR>
-nnoremap <silent> <leader>rh :call pathogen#helptags()<CR>:echo 'Generated help tags'<CR>
 cnoremap <M-q> qa!
 " this one for xterm
 cnoremap q  qa!
+
+" mappings for cscope
+if has("cscope")
+  nmap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+  nmap <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+  nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+endif
 
 " insert modeline
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
@@ -324,6 +328,15 @@ let g:syntastic_stl_format = '[ERR:%F(%t)]'
 let delimitMate_expand_space = 1
 let delimitMate_expand_cr = 1
 
+" snipmate settings
+function! MyGetSnips(scopes, word)
+  if index(a:scopes, 'eruby') >= 0
+    call add(a:scopes, b:eruby_subtype)
+  endif
+  return snipMate#GetSnippets(a:scopes, a:word)
+endfunction
+let g:snipMate = {'get_snippets': function('MyGetSnips')}
+
 " Misc settings
 let g:dbext_default_history_file = $HOME."/.dbext_history"
 let g:CSApprox_verbose_level = 0 " to shut it up
@@ -334,3 +347,4 @@ let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
 let g:alternateExtensions_h = "c,cpp,cxx,cc,CC,m,mm"
 let g:alternateExtensions_m = "h"
 let g:alternateExtensions_mm = "h"
+let g:yankring_history_file = '.yring_hist'

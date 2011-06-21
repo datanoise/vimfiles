@@ -45,12 +45,17 @@ call s:SetMakePrg()
 " Reset `makeprg` on rename.
 autocmd BufFilePost,BufWritePost,FileWritePost <buffer> call s:SetMakePrg()
 
-" Compile some CoffeeScript and show it in a scratch buffer.
-function! s:CoffeeCompile() range
+" Compile some CoffeeScript and show it in a scratch buffer. We handle ranges
+" like this to stop the cursor from being moved before the function is called.
+function! s:CoffeeCompile(startline, endline)
+  " Store the current buffer and cursor.
+  let s:coffee_compile_prev_buf = bufnr('%')
+  let s:coffee_compile_prev_pos = getpos('.')
+
   " Build stdin lines.
-  let lines = join(getline(a:firstline, a:lastline), "\n")
+  let lines = join(getline(a:startline, a:endline), "\n")
   " Get compiler output.
-  let output = system('coffee -scb', lines)
+  let output = system('coffee -scb 2>&1', lines)
 
   " Use at most half of the screen.
   let max_height = winheight('%') / 2
@@ -65,7 +70,7 @@ function! s:CoffeeCompile() range
     setlocal bufhidden=wipe buftype=nofile
     setlocal nobuflisted noswapfile nowrap
 
-    nnoremap <buffer> <silent> q :close<CR>
+    nnoremap <buffer> <silent> q :hide<CR>
   else
     " Move to the old window and clear the buffer.
     exec win 'wincmd w'
@@ -81,7 +86,7 @@ function! s:CoffeeCompile() range
   call cursor(1, 1)
 
   if v:shell_error
-    " A compile error occured.
+    " A compile error occurred.
     setlocal filetype=
   else
     " Coffee was compiled successfully.
@@ -92,7 +97,7 @@ function! s:CoffeeCompile() range
 endfunction
 
 " Peek at compiled CoffeeScript.
-command! -range=% -bar CoffeeCompile <line1>,<line2>:call s:CoffeeCompile()
+command! -range=% -bar CoffeeCompile call s:CoffeeCompile(<line1>, <line2>)
 " Compile the current file.
 command! -bang -bar -nargs=* CoffeeMake make<bang> <args>
 " Run some CoffeeScript.

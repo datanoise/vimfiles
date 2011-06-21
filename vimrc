@@ -186,7 +186,7 @@ nnoremap <silent> <leader>y  :YRShow<CR>
 nnoremap <silent> <leader>v ^v$h
 " visual select of the last pasted text
 nnoremap <silent> <leader>V `[v`]
-nnoremap <silent> \h :set hlsearch!<CR>
+nnoremap <silent> <leader>h :set hlsearch!<CR>
 nnoremap <silent> \l :setlocal list!<CR>
 nnoremap <silent> \n :set nu!<CR>
 " indented paste
@@ -239,18 +239,7 @@ endif
 
 " insert modeline
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
-" keyword completion on <TAB>
-function MyTabOrCompletion()
-  let col = col('.')-1
-  if pumvisible() || col && getline('.')[col-1] =~ '\k'
-    return "\<C-N>"
-  else
-    return "\<tab>"
-  endif
-endfunction
-inoremap <silent> <tab> <c-r>=MyTabOrCompletion()<CR>
 inoremap <c-_> <c-^>
-
 
 au FileType help nnoremap <buffer> q :bd<CR>
 au FileType vim  nnoremap <buffer> K :h <c-r>=expand('<cword>')<CR><CR>

@@ -20,7 +20,7 @@ if !executable("puppet")
 endif
 
 function! SyntaxCheckers_puppet_GetLocList()
-    let makeprg = 'puppet --color=false --parseonly '.shellescape(expand('%'))
+    let makeprg = 'puppet parser validate --color=false '.shellescape(expand('%'))
     let errorformat = 'err: Could not parse for environment %*[a-z]: %m at %f:%l'
 
     return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })

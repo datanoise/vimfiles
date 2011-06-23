@@ -233,9 +233,11 @@ fun! snipMate#jumpTabStop(backwards)
 	if s:curPos < 0 | let s:curPos = s:snipLen - 1 | endif
 
 	if s:curPos == s:snipLen
+		echomsg s:endCol
+		echomsg g:snipPos[s:curPos-1][1]+g:snipPos[s:curPos-1][2]
 		let sMode = s:endCol == g:snipPos[s:curPos-1][1]+g:snipPos[s:curPos-1][2]
 		call s:RemoveSnippet()
-		return sMode ? "\<tab>" : TriggerSnippet()
+		return sMode ? TriggerSnippet() : "\<tab>"
 	endif
 
 	call cursor(g:snipPos[s:curPos][0], g:snipPos[s:curPos][1])
@@ -244,7 +246,11 @@ fun! snipMate#jumpTabStop(backwards)
 	let s:endCol = g:snipPos[s:curPos][1]
 	let s:prevLen = [line('$'), col('$')]
 
-	return g:snipPos[s:curPos][2] == -1 ? '' : s:SelectWord()
+	let ret_val = g:snipPos[s:curPos][2] == -1 ? '' : s:SelectWord()
+	" if s:curPos == s:snipLen - 1
+	" 	call s:RemoveSnippet()
+	" endif
+	return ret_val
 endf
 
 fun! s:UpdatePlaceholderTabStops()

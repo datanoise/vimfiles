@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
-" @Last Change: 2011-05-20.
-" @Revision:    0.1.955
+" @Last Change: 2011-05-19.
+" @Revision:    0.1.943
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -62,7 +62,6 @@ let s:prototype = tlib#Object#New({
             \ 'state': 'display', 
             \ 'state_handlers': [],
             \ 'sticky': 0,
-            \ 'temp_prompt': [],
             \ 'timeout': 0,
             \ 'timeout_resolution': 2,
             \ 'type': '', 
@@ -751,8 +750,9 @@ function! s:prototype.DisplayHelp() dict "{{{3
                 \ '',
                 \ 'Exact matches and matches at word boundaries is given more weight.',
                 \ 'Warning: Please don''t resize the window with the mouse.',
+                \ '',
+                \ 'Press any key to continue.',
                 \ ]
-    let self.temp_prompt = ['Press any key to continue.', 'Question']
     " call tlib#normal#WithRegister('gg"tdG', 't')
     call tlib#buffer#DeleteRange('1', '$')
     call append(0, help)
@@ -822,7 +822,6 @@ function! s:prototype.DisplayList(query, ...) dict "{{{3
         call self.ScrollToOffset()
     elseif self.state == 'help'
         call self.DisplayHelp()
-        call self.SetStatusline(a:query)
     else
         " TLogVAR query
         " let ll = len(list)
@@ -874,34 +873,19 @@ endf
 
 
 function! s:prototype.SetStatusline(query) dict "{{{3
-    if !empty(self.temp_prompt)
-        let echo = get(self.temp_prompt, 0, '')
-        let hl = get(self.temp_prompt, 1, 'Normal')
-        let self.temp_prompt = []
-    else
-        let hl = 'Normal'
-        let query   = a:query
-        let options = [self.matcher.name]
-        if self.sticky
-            call add(options, '#')
-        endif
-        if !empty(options)
-            let sopts = printf('[%s]', join(options, ', '))
-            " let echo  = query . repeat(' ', &columns - len(sopts) - len(query) - 20) . sopts
-            let echo  = query . '  ' . sopts
-            " let query .= '%%='. sopts .' '
-        endif
-        " TLogVAR &l:statusline, query
-        " let &l:statusline = query
+    let query   = a:query
+    let options = [self.matcher.name]
+    if self.sticky
+        call add(options, '#')
     endif
-    echo
-    if hl != 'Normal'
-        exec 'echohl' hl
-        echo echo
-        echohl None
-    else
-        echo echo
+    if !empty(options)
+        let sopts = printf('[%s]', join(options, ', '))
+        " let echo  = query . repeat(' ', &columns - len(sopts) - len(query) - 20) . sopts
+        let echo  = query . '  ' . sopts
+        " let query .= '%%='. sopts .' '
     endif
+    " TLogVAR &l:statusline, query
+    let &l:statusline = query
 endf
 
 

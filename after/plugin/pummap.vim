@@ -1,7 +1,7 @@
 " <CR> must cancel pum when pressed
-exe "imap <Plug>OldCR <Plug>delimitMateCR<Plug>DiscretionaryEnd"
-imap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<Plug>OldCR"
+imap <Plug>NoPumCR <Plug>delimitMateCR<Plug>DiscretionaryEnd
+imap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<Plug>NoPumCR"
 
 " keyword completion on <Tab>
-exe "imap <Plug>OldTab " . maparg('<Tab>', 'i')
-imap <expr> <Tab> pumvisible() ? "\<C-N>" : "\<Plug>OldTab"
+exe "imap <Plug>NoPumTab " . maparg('<Tab>', 'i')
+imap <expr> <Tab> pumvisible() ? "\<C-N>" : "\<Plug>NoPumTab"

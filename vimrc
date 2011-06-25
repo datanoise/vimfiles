@@ -335,4 +335,4 @@ let g:alternateExtensions_h = "c,cpp,cxx,cc,CC,m,mm"
 let g:alternateExtensions_m = "h"
 let g:alternateExtensions_mm = "h"
 let g:yankring_history_file = '.yring_hist'
-let g:user_zen_leader_key = '<c-e>'
+let g:SuperTabDefaultCompletionType= '<C-n>'

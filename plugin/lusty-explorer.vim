@@ -318,13 +318,13 @@ augroup End
 
 ruby << EOF
 
-require 'pathname'
+Kernel.require 'pathname'
 # For IO#ready -- but Cygwin doesn't have io/wait.
-require 'io/wait' unless RUBY_PLATFORM =~ /cygwin/
+Kernel.require 'io/wait' unless RUBY_PLATFORM =~ /cygwin/
 # Needed for String#each_char in Ruby 1.8 on some platforms.
-require 'jcode' unless "".respond_to? :each_char
+Kernel.require 'jcode' unless "".respond_to? :each_char
 # Needed for Array#each_slice in Ruby 1.8 on some platforms.
-require 'enumerator' unless [].respond_to? :each_slice
+Kernel.require 'enumerator' unless [].respond_to? :each_slice
 
 $LUSTY_PROFILING = false
 

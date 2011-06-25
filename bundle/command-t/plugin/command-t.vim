@@ -142,8 +142,8 @@ ruby << EOF
   # require Ruby files
   begin
     # prepare controller
-    require 'command-t/vim'
-    require 'command-t/controller'
+    Kernel.require 'command-t/vim'
+    Kernel.require 'command-t/controller'
     $command_t = CommandT::Controller.new
   rescue LoadError
     load_path_modified = false

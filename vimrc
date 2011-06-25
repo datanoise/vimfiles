@@ -324,15 +324,18 @@ function! MyGetSnips(scopes, word)
 endfunction
 let g:snipMate = {'get_snippets': function('MyGetSnips')}
 
+" a settings
+let g:alternateExtensions_h = "c,cpp,cxx,cc,CC,m,mm"
+let g:alternateExtensions_m = "h"
+let g:alternateExtensions_mm = "h"
+
 " Misc settings
 let g:dbext_default_history_file = $HOME."/.dbext_history"
 let g:CSApprox_verbose_level = 0 " to shut it up
 let c_comment_strings = 1 " I like highlighting strings inside C comments
-let g:xml_syntax_folding = 1
+let g:xml_syntax_folding = 1 " enable folding in xml files
 let g:syntastic_jsl_conf='~/.jsl.conf'
 let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
-let g:alternateExtensions_h = "c,cpp,cxx,cc,CC,m,mm"
-let g:alternateExtensions_m = "h"
-let g:alternateExtensions_mm = "h"
 let g:yankring_history_file = '.yring_hist'
 let g:SuperTabDefaultCompletionType= '<C-n>'
+let g:filetype_m = 'objc' " always open *.m files with objc filetype

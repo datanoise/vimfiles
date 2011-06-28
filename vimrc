@@ -21,7 +21,6 @@ set smartindent
 set smarttab
 set expandtab
 " }}}
-
 " backup options {{{2
 set nobackup
 if has("win32")
@@ -34,7 +33,6 @@ endif
 set undodir=~/tmp/undofile
 set undofile
 " }}}
-
 " search options {{{2
 " always use incremental search
 set incsearch
@@ -43,7 +41,6 @@ set nohlsearch
 " case-sensitive search when using camel case search criteria
 set smartcase
 " }}}
-
 " status line options {{{2
 set laststatus=2
 function! GetCurDir()
@@ -57,7 +54,6 @@ set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*%=
 set statusline+=\ %-16(\ %l,%c-%v\ %)%P
 " }}}
-
 " cscope settings {{{2
 if has('cscope')
   set cscopequickfix=s-,c-,d-,i-,t-,e-
@@ -73,7 +69,6 @@ if has('cscope')
   endif
   set csverb
 endif " }}}
-
 " line breaks settings {{{2
 set linebreak
 set showbreak=»
@@ -82,7 +77,6 @@ if exists('&breakindent')
   set breakindent
 endif
 " }}}
-
 " invisible chars display options {{{2
 set list
 if has("win32")
@@ -97,7 +91,6 @@ endif
 au FileType help  setlocal nolist
 au FileType otl   setlocal nolist
 " }}}
-
 " wild options {{{2
 set wildmenu
 set wildmode=full
@@ -106,18 +99,20 @@ set showcmd
 " the above doesn't always work. the following enforces it
 au VimEnter * set showcmd
 " }}}
-
 " mouse options {{{2
 set mousehide
 " enable mouse in the terminal
 set mouse=a
 " }}}
-
 " folding options {{{2
 set foldmethod=marker
 set foldlevel=99 " always expand folds
 " }}}
-
+" input method options {{{2
+set keymap=russian-jcukenwin
+set iminsert=0
+set imsearch=0
+"}}}
 " uncategorized options {{{2
 set bg=dark
 " colo candycode_mod
@@ -147,7 +142,7 @@ set timeoutlen=1000 " A little bit more time for macros
 set ttimeoutlen=100  " Make Esc work faster
 " do not search included files, it's a way too slow
 set complete-=i
-" do not display :into screen at startup
+" do not display :intro screen at startup
 set shortmess+=I
 set nofsync " don't spin my disk
 if executable('ack') && !exists('g:ackprg')
@@ -161,9 +156,8 @@ au FileType ruby setlocal completefunc=syntaxcomplete#Complete
 au FileType ruby setlocal balloonexpr&
 au FileType scala,ruby exe 'compiler '. expand('<amatch>')
 " save undo point when leaving vim window
-au CursorHoldI * call feedkeys("\<C-G>u", "nt")
+" au CursorHoldI * call feedkeys("\<C-G>u", "nt")
 "}}}
-
 
 " Section: Keybindings {{{1
 "--------------------------------------------------
@@ -236,7 +230,6 @@ endif
 
 " insert modeline
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
-inoremap <c-_> <c-^>
 
 au FileType help nnoremap <buffer> q :bd<CR>
 au FileType vim  nnoremap <buffer> K :h <c-r>=expand('<cword>')<CR><CR>

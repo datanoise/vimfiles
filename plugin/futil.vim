@@ -22,10 +22,10 @@ endfunction
 "
 " :Rm[!]
 "
-command! -nargs=0 Rm :call Rm()
+command! -nargs=0 Rm :call Rmove()
 
-fun! Rm()
-  if input('Are you sure (y or n)? ') == 'y'
+fun! Rmove()
+  if confirm('Are you sure?', "&Yes\n&No") == 1
     sil !rm %
     bwipe!
   endif

@@ -77,7 +77,11 @@ if !has('ruby')
   finish
 endif
 
+let s:initialized = 0
 function s:Initialize()
+  if s:initialized
+    return
+  endif
 ruby << EOF
   # require Ruby files
   begin
@@ -102,6 +106,7 @@ ruby << EOF
     $command_t = CommandT::Stub.new
   end
 EOF
+  let s:initialized = 1
 endfunction
 
 function CommandTHandleKey(arg)

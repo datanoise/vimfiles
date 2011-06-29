@@ -1,4 +1,4 @@
-" -*- vim -*- vim:set ft=vim et sw=2 sts=4:
+" -*- vim -*- vim:set ft=vim et sw=2 sts=2:
 
 " Section: Global Setting {{{1
 " ----------------------------------------
@@ -152,6 +152,11 @@ if executable('ack') && !exists('g:ackprg')
 endif
 set completeopt=menu " don't hide completion menu when typing
 set clipboard+=unnamed
+let g:filetype_m = 'objc' " always open *.m files with objc filetype
+if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app' && has('cursorshape')
+  let &t_SI = "\<Esc>]50;CursorShape=2\x7"
+  let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+endif
 au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs
 au FileType ruby setlocal completefunc=syntaxcomplete#Complete
 au FileType ruby setlocal balloonexpr&
@@ -328,4 +333,3 @@ let g:xml_syntax_folding = 1 " enable folding in xml files
 let g:syntastic_jsl_conf='~/.jsl.conf'
 let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
 let g:SuperTabDefaultCompletionType= '<C-n>'
-let g:filetype_m = 'objc' " always open *.m files with objc filetype

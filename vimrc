@@ -114,6 +114,7 @@ set iminsert=0
 set imsearch=0
 "}}}
 " uncategorized options {{{2
+au ColorScheme * hi! link ColorColumn StatusLine
 set bg=dark
 " colo candycode_mod
 colo ir_black_mod

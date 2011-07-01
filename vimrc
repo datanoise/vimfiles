@@ -45,7 +45,7 @@ set smartcase
 set laststatus=2
 function! GetCurDir()
   let result = substitute(getcwd(), '^'.$HOME, '~', '')
-  let result = substitute(result, '^.\+\ze.\{30,}', '<', '')
+  let result = substitute(result, '^.\+\ze.\{20,}', '<', '')
   return '('.result.')'
 endfunction
 set statusline=[%n]%m\ %<%.99f\ %{GetCurDir()}\ %h%w%r%y
@@ -162,8 +162,7 @@ au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs
 au FileType ruby setlocal completefunc=syntaxcomplete#Complete
 au FileType ruby setlocal balloonexpr&
 au FileType scala,ruby exe 'compiler '. expand('<amatch>')
-" save undo point when leaving vim window
-" au CursorHoldI * call feedkeys("\<C-G>u", "nt")
+au BufReadPost quickfix nmap <silent> <buffer> q :ccl<CR>
 "}}}
 
 " Section: Keybindings {{{1
@@ -314,8 +313,14 @@ let delimitMate_expand_cr = 1
 
 " snipmate settings
 function! MyGetSnips(scopes, word)
-  if index(a:scopes, 'eruby') >= 0
+  if &ft == 'eruby'
     call add(a:scopes, b:eruby_subtype)
+    if exists('b:rails_root')
+      call add(a:scopes, 'eruby-rails')
+    endif
+  endif
+  if &ft == 'ruby' && exists('b:rails_root')
+    call add(a:scopes, 'ruby-rails')
   endif
   return snipMate#GetSnippets(a:scopes, a:word)
 endfunction

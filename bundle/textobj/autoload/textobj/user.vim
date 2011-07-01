@@ -1,7 +1,7 @@
 " textobj-user - Support for user-defined text objects
-" Version: 0.3.8
-" Copyright (C) 2007-2008 kana <http://whileimautomaton.net/>
-" License: MIT license  {{{
+" Version: @@VERSION@@
+" Copyright (C) 2007-2010 kana <http://whileimautomaton.net/>
+" License: So-called MIT/X license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
 "     "Software"), to deal in the Software without restriction, including
@@ -148,31 +148,31 @@ function! textobj#user#define(pat0, pat1, pat2, guideline)  "{{{2
     for lhs in lhss
       if function_name == 'move-to-next'
         execute 'nnoremap' s:mapargs_single_move(lhs, pat0, '', 'n')
-        execute 'xnoremap' s:mapargs_single_move(lhs, pat0, '', 'v')
+        execute 'vnoremap' s:mapargs_single_move(lhs, pat0, '', 'v')
         execute 'onoremap' s:mapargs_single_move(lhs, pat0, '', 'o')
       elseif function_name == 'move-to-next-end'
         execute 'nnoremap' s:mapargs_single_move(lhs, pat0, 'e', 'n')
-        execute 'xnoremap' s:mapargs_single_move(lhs, pat0, 'e', 'v')
+        execute 'vnoremap' s:mapargs_single_move(lhs, pat0, 'e', 'v')
         execute 'onoremap' s:mapargs_single_move(lhs, pat0, 'e', 'o')
       elseif function_name == 'move-to-prev'
         execute 'nnoremap' s:mapargs_single_move(lhs, pat0, 'b', 'n')
-        execute 'xnoremap' s:mapargs_single_move(lhs, pat0, 'b', 'v')
+        execute 'vnoremap' s:mapargs_single_move(lhs, pat0, 'b', 'v')
         execute 'onoremap' s:mapargs_single_move(lhs, pat0, 'b', 'o')
       elseif function_name == 'move-to-prev-end'
         execute 'nnoremap' s:mapargs_single_move(lhs, pat0, 'be', 'n')
-        execute 'xnoremap' s:mapargs_single_move(lhs, pat0, 'be', 'v')
+        execute 'vnoremap' s:mapargs_single_move(lhs, pat0, 'be', 'v')
         execute 'onoremap' s:mapargs_single_move(lhs, pat0, 'be', 'o')
       elseif function_name == 'select-next' || function_name == 'select'
-        execute 'xnoremap' s:mapargs_single_select(lhs, pat0, '', 'v')
+        execute 'vnoremap' s:mapargs_single_select(lhs, pat0, '', 'v')
         execute 'onoremap' s:mapargs_single_select(lhs, pat0, '', 'o')
       elseif function_name == 'select-prev'
-        execute 'xnoremap' s:mapargs_single_select(lhs, pat0, 'b', 'v')
+        execute 'vnoremap' s:mapargs_single_select(lhs, pat0, 'b', 'v')
         execute 'onoremap' s:mapargs_single_select(lhs, pat0, 'b', 'o')
       elseif function_name == 'select-pair-all'
-        execute 'xnoremap' s:mapargs_pair_select(lhs, pat1, pat2, 'a', 'v')
+        execute 'vnoremap' s:mapargs_pair_select(lhs, pat1, pat2, 'a', 'v')
         execute 'onoremap' s:mapargs_pair_select(lhs, pat1, pat2, 'a', 'o')
       elseif function_name == 'select-pair-inner'
-        execute 'xnoremap' s:mapargs_pair_select(lhs, pat1, pat2, 'i', 'v')
+        execute 'vnoremap' s:mapargs_pair_select(lhs, pat1, pat2, 'i', 'v')
         execute 'onoremap' s:mapargs_pair_select(lhs, pat1, pat2, 'i', 'o')
       else
         throw 'Unknown function name: ' . string(function_name)
@@ -466,20 +466,24 @@ endfunction
 
 
 function! s:noremap(forced_p, lhs, rhs)
-  call s:_map(['nnoremap', 'xnoremap', 'onoremap'], a:forced_p, a:lhs, a:rhs)
+  let v = s:proper_visual_mode(a:lhs)
+  call s:_map(['nnoremap', v.'noremap', 'onoremap'], a:forced_p, a:lhs, a:rhs)
 endfunction
 
 function! s:objnoremap(forced_p, lhs, rhs)
-  call s:_map(['xnoremap', 'onoremap'], a:forced_p, a:lhs, a:rhs)
+  let v = s:proper_visual_mode(a:lhs)
+  call s:_map([v.'noremap', 'onoremap'], a:forced_p, a:lhs, a:rhs)
 endfunction
 
 
 function! s:map(forced_p, lhs, rhs)
-  call s:_map(['nmap', 'xmap', 'omap'], a:forced_p, a:lhs, a:rhs)
+  let v = s:proper_visual_mode(a:lhs)
+  call s:_map(['nmap', v.'map', 'omap'], a:forced_p, a:lhs, a:rhs)
 endfunction
 
 function! s:objmap(forced_p, lhs, rhs)
-  call s:_map(['xmap', 'omap'], a:forced_p, a:lhs, a:rhs)
+  let v = s:proper_visual_mode(a:lhs)
+  call s:_map([v.'map', 'omap'], a:forced_p, a:lhs, a:rhs)
 endfunction
 
 
@@ -534,7 +538,7 @@ function! s:snr_prefix(sfile)
 
   for line in split(result, '\n')
     let _ = matchlist(line, '^\s*\(\d\+\):\s*\(.*\)$')
-    if a:sfile ==# _[2]
+    if a:sfile ==# expand(_[2])
       return printf("\<SNR>%d_", _[1])
     endif
   endfor
@@ -547,6 +551,29 @@ function! s:wise(default)
   return (exists('v:motion_force') && v:motion_force != ''
   \       ? v:motion_force
   \       : a:default)
+endfunction
+
+
+function! s:proper_visual_mode(lhs)
+  " Return the mode prefix of proper "visual" mode for a:lhs key sequence.
+  " a:lhs should not be defined in Select mode if a:lhs starts with
+  " a printable character.  Otherwise a:lhs may be defined in Select mode.
+
+  " a:lhs may be prefixed with :map-arguments such as <buffer>.
+  " It's necessary to remove them to determine the first character in a:lhs.
+  let s1 = substitute(
+  \   a:lhs,
+  \   '\v^(\<(buffer|silent|special|script|expr|unique)\>\s*)*',
+  \   '',
+  \   ''
+  \ )
+  " All characters in a:lhs are printable characters, so it's necessary to
+  " convert <>-escaped notation into corresponding characters.
+  let s2 = substitute(s1,
+  \                   '^\(<[^<>]\+>\)',
+  \                   '\=eval("\"\\" . submatch(1) . "\"")',
+  \                   '')
+  return s2 =~# '^\p' ? 'x' : 'v'
 endfunction
 
 

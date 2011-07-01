@@ -287,7 +287,8 @@ function GetRubyIndent()
 
   " If the previous line ended with a block opening, add a level of indent.
   if s:Match(lnum, s:block_regex)
-    return indent(s:GetMSL(lnum)) + &sw
+    " return indent(s:GetMSL(lnum)) + &sw
+    return indent(lnum) + &sw
   endif
 
   " If the previous line contained an opening bracket, and we are still in it,

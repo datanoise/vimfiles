@@ -116,8 +116,13 @@ set imsearch=0
 " uncategorized options {{{2
 au ColorScheme * hi! link ColorColumn StatusLine
 set bg=dark
-" colo candycode_mod
-colo ir_black_mod
+if has('gui_running')
+  colo moria
+  Colo dark
+else
+  " colo candycode_mod
+  colo ir_black_mod
+endif
 if exists('&mc')
   au BufNew,BufRead * set mc=81
 endif
@@ -126,8 +131,6 @@ set sidescrolloff=5  " keep at least 5 lines left/right
 set autoread         " disable annoying confirmations
 set hidden
 set title
-" set colorcolumn=80
-" au FileType help setlocal cc=0
 " set number
 if exists("&macmeta")
   set macmeta " on Mac use Option key as Meta
@@ -150,7 +153,7 @@ if executable('ack') && !exists('g:ackprg')
   " always use ack for faster searching
   set grepprg=ack\ -a\ --ignore-dir=log\ --ignore-dir=tmp\ $*\\\|grep\ -v\ '^tags'
 endif
-set completeopt=menu " don't hide completion menu when typing
+set completeopt=longest,menu " don't hide completion menu when typing
 set clipboard+=unnamed
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
 if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app' && has('cursorshape')
@@ -237,16 +240,15 @@ endif
 " insert modeline
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
 
-au FileType help nnoremap <buffer> q :bd<CR>
-au FileType vim  nnoremap <buffer> K :h <c-r>=expand('<cword>')<CR><CR>
-au FileType ruby inoremap <buffer> <c-l> <c-r>= pumvisible() ? "\<lt>c-l>" : " => "<CR>
+au FileType help nnoremap <silent> <buffer> q :bd<CR>
+au FileType vim  nnoremap <silent> <buffer> K :h <c-r>=expand('<cword>')<CR><CR>
+au FileType ruby inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "
 au FileType ruby nnoremap <buffer> <F5> :!ruby %<CR>
 au FileType php nnoremap <buffer> <F5> :!php %<CR>
 " this is taken care of by delimitMate
 " au FileType php,c,cpp,java,javascript,html,eruby,css,scala,scss,objc inoremap <buffer> {<CR> {<CR>}<Esc>O
 au FileType xml setlocal foldmethod=syntax
-au BufReadPre,BufNewFile *.iphone.erb let b:eruby_subtype = 'html'
-au BufReadPre,BufNewFile *.ipad.erb let b:eruby_subtype = 'html'
+au BufReadPre,BufNewFile *.{iphone,ipad}.erb let b:eruby_subtype = 'html'
 autocmd BufReadPost fugitive://* set bufhidden=delete
 if has("mac")
   au FileType html nnoremap <silent> <D-r> :sil !open %<CR>

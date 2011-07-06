@@ -310,8 +310,9 @@ let g:syntastic_auto_loc_list=2
 let g:syntastic_stl_format = '[ERR:%F(%t)]'
 
 " delimitMate settings
-let delimitMate_expand_space = 1
 let delimitMate_expand_cr = 1
+" setting this setting breaks iabbr
+let delimitMate_expand_space = 0
 
 " snipmate settings
 function! MyGetSnips(scopes, word)

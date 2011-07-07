@@ -131,7 +131,7 @@ set sidescrolloff=5  " keep at least 5 lines left/right
 set autoread         " disable annoying confirmations
 set hidden
 set title
-" set number
+set number
 if exists("&macmeta")
   set macmeta " on Mac use Option key as Meta
 endif

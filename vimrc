@@ -117,8 +117,7 @@ set imsearch=0
 au ColorScheme * hi! link ColorColumn StatusLine
 set bg=dark
 if has('gui_running')
-  colo moria
-  Colo dark
+  colo xorium
 else
   " colo candycode_mod
   colo ir_black_mod

@@ -164,7 +164,10 @@ au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs
 au FileType ruby setlocal completefunc=syntaxcomplete#Complete
 au FileType ruby setlocal balloonexpr&
 au FileType scala,ruby exe 'compiler '. expand('<amatch>')
-au BufReadPost quickfix nmap <silent> <buffer> q :ccl<CR>
+fun! CloseQuickFix()
+  ccl | lcl
+endf
+au BufReadPost quickfix nmap <silent> <buffer> q :call CloseQuickFix()<CR>
 "}}}
 
 " Section: Keybindings {{{1
@@ -304,7 +307,7 @@ if !has('gui_running')
 end
 
 " syntastic settings
-let g:syntastic_disabled_filetypes = ['coffee', 'cpp', 'c', 'scss']
+let g:syntastic_disabled_filetypes = ['coffee', 'cpp', 'c', 'scss', 'puppet']
 let g:syntastic_auto_loc_list=2
 let g:syntastic_stl_format = '[ERR:%F(%t)]'
 

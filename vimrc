@@ -1,4 +1,4 @@
-" -*- vim -*- vim:set ft=vim et sw=2 sts=2:
+" -*- vim -*- vim:set ft=vim et sw=2 sts=2 fdc=3:
 
 " Section: Global Setting {{{1
 " ----------------------------------------
@@ -168,6 +168,9 @@ fun! CloseQuickFix()
   ccl | lcl
 endf
 au BufReadPost quickfix nmap <silent> <buffer> q :call CloseQuickFix()<CR>
+au FileType xml setlocal foldmethod=syntax
+au BufReadPre,BufNewFile *.{iphone,ipad}.erb let b:eruby_subtype = 'html'
+autocmd BufReadPost fugitive://* set bufhidden=delete
 "}}}
 
 " Section: Keybindings {{{1
@@ -179,11 +182,6 @@ nnoremap <leader>sg :source ~/.gvimrc
 nnoremap \vv :e ~/.vimrc
 nnoremap \vg :e ~/.gvimrc
 
-nnoremap <silent> \[  :TlistOpen<CR>
-nnoremap <silent> <leader>n  :CommandT<CR>
-nnoremap <silent> <leader>l  :CommandTBuffer<CR>
-nnoremap <silent> <leader>m  :exec 'NERDTree' . expand('%:p:h')<CR>
-nnoremap <silent> <leader>y  :YRShow<CR>
 " visual select of the line's content
 nnoremap <silent> <leader>v ^v$h
 " visual select of the last pasted text
@@ -195,8 +193,6 @@ nnoremap <silent> \n :set nu!<CR>
 nnoremap <silent> <leader>p p:'[,']normal ==<CR>
 nnoremap <silent> <leader>P P:'[,']normal ==<CR>
 nnoremap <silent> <leader>sd mx:%s/\s\+$//<CR>`x
-nnoremap <silent> g= :Tabularize assignment<CR>
-vnoremap <silent> g= :Tabularize assignment<CR>
 
 nnoremap <C-J> <C-D>
 nnoremap <C-K> <C-U>
@@ -209,13 +205,15 @@ nnoremap L :
 nnoremap [s [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
 nnoremap <F2> <C-w><C-w>
 nnoremap <F4> :sil make %<CR><c-l>:cc<CR>
+
 function! SwitchPrevBuf()
   if bufloaded(bufname("#")) != 0
-    exec "b#"
+    b#
   else
     echo "No buffer to switch to"
   endif
 endfunction
+
 nnoremap <silent> <C-tab> :call SwitchPrevBuf()<CR>
 nnoremap <silent> <C-^> :call SwitchPrevBuf()<CR>
 if has('mac')
@@ -246,15 +244,9 @@ au FileType help nnoremap <silent> <buffer> q :bd<CR>
 au FileType vim  nnoremap <silent> <buffer> K :h <c-r>=expand('<cword>')<CR><CR>
 au FileType ruby inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "
 au FileType ruby nnoremap <buffer> <F5> :!ruby %<CR>
-au FileType php nnoremap <buffer> <F5> :!php %<CR>
+au FileType php  nnoremap <buffer> <F5> :!php %<CR>
 " this is taken care of by delimitMate
 " au FileType php,c,cpp,java,javascript,html,eruby,css,scala,scss,objc inoremap <buffer> {<CR> {<CR>}<Esc>O
-au FileType xml setlocal foldmethod=syntax
-au BufReadPre,BufNewFile *.{iphone,ipad}.erb let b:eruby_subtype = 'html'
-autocmd BufReadPost fugitive://* set bufhidden=delete
-if has("mac")
-  au FileType html nnoremap <silent> <D-r> :sil !open %<CR>
-endif
 
 " Section: Commands && Abbrivations {{{1
 " --------------------------------------------------
@@ -275,7 +267,7 @@ command! SynName :call SynName()
 
 " Section: Plugin settings {{{1
 " --------------------------------------------------
-" TagList settings
+" TagList settings" {{{2
 let Tlist_Close_On_Select = 1
 let Tlist_Enable_Fold_Column = 0
 let Tlist_Show_One_File = 1
@@ -283,20 +275,22 @@ let TList_Auto_Update = 0 " Don't autoupdate tags, I use 'u' command for that
 let Tlist_Inc_Winwidth = 0 " Don't resize my window!
 let tlist_objc_settings    = 'objc;i:interface;c:class;m:method;p:property'
 let tlist_javascript_settings = 'js;c:class;f:function'
+nnoremap <silent> \[  :TlistOpen<CR>
 
-" NERD_tree settings
+" NERD_tree settings {{{2
 let NERDTreeQuitOnOpen = 1 " Close NERDTree when a file is opened
 let g:NERDTreeHijackNetrw = 0
 let NERDTreeIgnore=['\.o$', '\~$', '\.class$']
 let NERDTreeMinimalUI=0
 let NERDTreeDirArrows=1
+nnoremap <silent> <leader>m  :exec 'NERDTree' . expand('%:p:h')<CR>
 
-" Rubycomplete plugin settings
+" rubycomplete plugin settings {{{2
 let g:rubycomplete_buffer_loading = 1
 let g:rubycomplete_rails = 0
 let g:rubycomplete_classes_in_global = 1
 
-" command-t settings
+" command-t settings {{{2
 " let g:CommandTMatchWindowReverse=1
 let g:CommandTCancelMap=['<C-c>', '<Esc>']
 let g:CommandTMaxHeight=10
@@ -305,18 +299,21 @@ if !has('gui_running')
   let g:CommandTSelectNextMap=['<Esc>OB', '<C-n>']
   let g:CommandTSelectPrevMap=['<Esc>OA', '<C-p>']
 end
+nnoremap <silent> <leader>n  :CommandT<CR>
+nnoremap <silent> <leader>l  :CommandTBuffer<CR>
 
-" syntastic settings
+" syntastic settings {{{2
 let g:syntastic_disabled_filetypes = ['coffee', 'cpp', 'c', 'scss', 'puppet']
 let g:syntastic_auto_loc_list=2
 let g:syntastic_stl_format = '[ERR:%F(%t)]'
 
-" delimitMate settings
+" delimitMate settings {{{2
 let delimitMate_expand_cr = 1
 " setting this setting breaks iabbr
 let delimitMate_expand_space = 0
+imap <C-g><C-g> <Plug>delimitMateS-Tab
 
-" snipmate settings
+" snipmate settings {{{2
 function! MyGetSnips(scopes, word)
   if &ft == 'eruby'
     call add(a:scopes, b:eruby_subtype)
@@ -331,12 +328,16 @@ function! MyGetSnips(scopes, word)
 endfunction
 let g:snipMate = {'get_snippets': function('MyGetSnips')}
 
-" a settings
+" a settings {{{2
 let g:alternateExtensions_h = "c,cpp,cxx,cc,CC,m,mm"
 let g:alternateExtensions_m = "h"
 let g:alternateExtensions_mm = "h"
 
-" Misc settings
+" tabular settings {{{2
+nnoremap <silent> g= :Tabularize assignment<CR>
+vnoremap <silent> g= :Tabularize assignment<CR>
+
+" Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"
 let g:CSApprox_verbose_level = 0 " to shut it up
 let c_comment_strings = 1 " I like highlighting strings inside C comments
@@ -344,3 +345,5 @@ let g:xml_syntax_folding = 1 " enable folding in xml files
 let g:syntastic_jsl_conf='~/.jsl.conf'
 let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
 let g:SuperTabDefaultCompletionType= '<C-n>'
+
+" }}}

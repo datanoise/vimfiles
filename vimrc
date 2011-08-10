@@ -119,8 +119,8 @@ set bg=dark
 if has('gui_running')
   colo xorium
 else
-  " colo candycode_mod
-  colo ir_black_mod
+  colo candycode_mod
+  " colo ir_black_mod
 endif
 if exists('&mc')
   au BufNew,BufRead * set mc=81
@@ -130,7 +130,7 @@ set sidescrolloff=5  " keep at least 5 lines left/right
 set autoread         " disable annoying confirmations
 set hidden
 set title
-set number
+" set number
 if exists("&macmeta")
   set macmeta " on Mac use Option key as Meta
 endif

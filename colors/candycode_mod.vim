@@ -50,7 +50,7 @@ hi DiffText     guifg=#ffffff       guibg=#976398       gui=NONE
 " }}}
 " borders / separators / menus {{{
 
-hi FoldColumn   guifg=#c8bcb9       guibg=#786d65       gui=NONE
+hi FoldColumn   guifg=#c8bcb9       guibg=#202020       gui=NONE
             \   ctermfg=lightgray   ctermbg=darkgray    cterm=NONE
 hi SignColumn   guifg=#c8bcb9       guibg=#786d65       gui=NONE
             \   ctermfg=lightgray   ctermbg=darkgray    cterm=NONE

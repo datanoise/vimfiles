@@ -316,10 +316,10 @@ endfunction
 
 call s:add_methods('readable',['end_of','last_opening_line','last_method_line','last_method','last_format','define_pattern'])
 
-let s:view_types = 'rhtml,erb,rxml,builder,rjs,mab,liquid,haml,dryml,mn'
+let s:view_types = split('rhtml,erb,rxml,builder,rjs,mab,liquid,haml,dryml,mn,slim',',')
 
 function! s:viewspattern()
-  return '\%('.s:gsub(s:view_types,',','\\|').'\)'
+  return '\%('.join(s:view_types,'\|').'\)'
 endfunction
 
 function! s:controller(...)
@@ -1135,7 +1135,9 @@ function! s:Rake(bang,lnum,arg)
   let old_makeprg = &l:makeprg
   let old_errorformat = &l:errorformat
   try
-    if &l:makeprg !~# 'rake'
+    if exists('b:bundler_root') && b:bundler_root ==# rails#app().path()
+      let &l:makeprg = 'bundle exec rake'
+    else
       let &l:makeprg = 'rake'
     endif
     let &l:errorformat = s:efm_backtrace
@@ -2615,7 +2617,7 @@ function! s:findview(name)
     return pre.name
   else
     for format in ['.'.s:format('html'), '']
-      for type in split(s:view_types,',')
+      for type in s:view_types
         if self.app().has_file(pre.name.format.'.'.type)
           return pre.name.format.'.'.type
         endif
@@ -3618,7 +3620,7 @@ function! s:BufSyntax()
       syn keyword rubyRailsMethod debugger
       syn keyword rubyRailsMethod alias_attribute alias_method_chain attr_accessor_with_default attr_internal attr_internal_accessor attr_internal_reader attr_internal_writer delegate mattr_accessor mattr_reader mattr_writer superclass_delegating_accessor superclass_delegating_reader superclass_delegating_writer
       syn keyword rubyRailsMethod cattr_accessor cattr_reader cattr_writer class_inheritable_accessor class_inheritable_array class_inheritable_array_writer class_inheritable_hash class_inheritable_hash_writer class_inheritable_option class_inheritable_reader class_inheritable_writer inheritable_attributes read_inheritable_attribute reset_inheritable_attributes write_inheritable_array write_inheritable_attribute write_inheritable_hash
-      syn keyword rubyRailsInclude require_dependency gem
+      syn keyword rubyRailsInclude require_dependency
 
       syn region  rubyString   matchgroup=rubyStringDelimiter start=+\%(:order\s*=>\s*\)\@<="+ skip=+\\\\\|\\"+ end=+"+ contains=@rubyStringSpecial,railsOrderSpecial
       syn region  rubyString   matchgroup=rubyStringDelimiter start=+\%(:order\s*=>\s*\)\@<='+ skip=+\\\\\|\\'+ end=+'+ contains=@rubyStringSpecial,railsOrderSpecial
@@ -4444,29 +4446,7 @@ function! RailsBufInit(path)
     let g:RAILS_HISTORY = s:sub(g:RAILS_HISTORY,'%(.{-}\n){,'.g:rails_history_size.'}\zs.*','')
   endif
   call app.source_callback("config/syntax.vim")
-  if &ft == "mason"
-    setlocal filetype=eruby
-  elseif &ft =~ '^\%(conf\|ruby\)\=$' && expand("%:e") =~ '^\%(rjs\|rxml\|builder\|rake\|mab\)$'
-    setlocal filetype=ruby
-  elseif &ft =~ '^\%(conf\|ruby\)\=$' && expand("%:t") =~ '^\%(\%(Rake\|Gem\|Cap\)file\|Isolate\)$'
-    setlocal filetype=ruby
-  elseif &ft =~ '^\%(liquid\)\=$' && expand("%:e") == "liquid"
-    setlocal filetype=liquid
-  elseif &ft =~ '^\%(haml\|x\=html\)\=$' && expand("%:e") == "haml"
-    setlocal filetype=haml
-  elseif &ft =~ '^\%(sass\|conf\)\=$' && expand("%:e") == "sass"
-    setlocal filetype=sass
-  elseif &ft =~ '^\%(scss\|conf\)\=$' && expand("%:e") == "scss"
-    setlocal filetype=scss
-  elseif &ft =~ '^\%(lesscss\|conf\)\=$' && expand("%:e") == "less"
-    setlocal filetype=lesscss
-  elseif &ft =~ '^\%(dryml\)\=$' && expand("%:e") == "dryml"
-    setlocal filetype=dryml
-  elseif (&ft == "" || v:version < 701) && expand("%:e") =~ '^\%(rhtml\|erb\)$'
-    setlocal filetype=eruby
-  elseif (&ft == "" || v:version < 700) && expand("%:e") == 'yml'
-    setlocal filetype=yaml
-  elseif &ft =~ '^\%(conf\|yaml\)\=$' && expand("%:t") =~ '\.yml\.example$'
+  if expand('%:t') =~ '\.yml\.example$'
     setlocal filetype=yaml
   elseif firsttime
     " Activate custom syntax
@@ -4554,7 +4534,7 @@ function! s:BufSettings()
   endif
   if has("gui_win32") || has("gui_running")
     let code      = '*.rb;*.rake;Rakefile'
-    let templates = '*.'.s:gsub(s:view_types,',',';*.')
+    let templates = '*.'.join(s:view_types,';*.')
     let fixtures  = '*.yml;*.csv'
     let statics   = '*.html;*.css;*.js;*.xml;*.xsd;*.sql;.htaccess;README;README_FOR_APP'
     let b:browsefilter = ""
@@ -4566,7 +4546,7 @@ function! s:BufSettings()
           \."All Files (*.*)\t*.*\n"
   endif
   call self.setvar('&includeexpr','RailsIncludeexpr()')
-  call self.setvar('&suffixesadd', ".rb,.".s:gsub(s:view_types,',',',.').",.css,.js,.yml,.csv,.rake,.sql,.html,.xml")
+  call self.setvar('&suffixesadd', ".rb,.".join(s:view_types,',.'))
   let ft = self.getvar('&filetype')
   if ft =~ '^\%(e\=ruby\|[yh]aml\|javascript\|css\|s[ac]ss\|lesscss\)$'
     call self.setvar('&shiftwidth',2)
@@ -4577,7 +4557,6 @@ function! s:BufSettings()
     endif
   endif
   if ft == 'ruby'
-    call self.setvar('&suffixesadd',".rb,.".s:gsub(s:view_types,',',',.').",.yml,.csv,.rake,s.rb")
     call self.setvar('&define',self.define_pattern())
     " This really belongs in after/ftplugin/ruby.vim but we'll be nice
     if exists('g:loaded_surround') && self.getvar('surround_101') == ''
@@ -4587,9 +4566,7 @@ function! s:BufSettings()
     endif
   elseif ft == 'yaml' || fnamemodify(self.name(),':e') == 'yml'
     call self.setvar('&define',self.define_pattern())
-    call self.setvar('&suffixesadd',".yml,.csv,.rb,.".s:gsub(s:view_types,',',',.').",.rake,s.rb")
   elseif ft =~# '^eruby\>'
-    call self.setvar('&suffixesadd',".".s:gsub(s:view_types,',',',.').",.rb,.css,.js,.html,.yml,.csv")
     if exists("g:loaded_allml")
       call self.setvar('allml_stylesheet_link_tag', "<%= stylesheet_link_tag '\r' %>")
       call self.setvar('allml_javascript_include_tag', "<%= javascript_include_tag '\r' %>")

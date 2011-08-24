@@ -233,7 +233,7 @@ fun! snipMate#jumpTabStop(backwards)
 	if s:curPos < 0 | let s:curPos = s:snipLen - 1 | endif
 
 	if s:curPos == s:snipLen
-		let sMode = s:endCol < g:snipPos[s:curPos-1][1]+g:snipPos[s:curPos-1][2]
+		let sMode = s:endCol == g:snipPos[s:curPos-1][1]+g:snipPos[s:curPos-1][2]
 		call s:RemoveSnippet()
 		return sMode ? "\<tab>" : TriggerSnippet()
 	endif
@@ -683,8 +683,7 @@ fun! snipMate#RetabSnip() range
 endf
 
 fun! snipMate#OpenSnippetFiles()
-  let scopes = s:AddScopeAliases([&ft])
-  let dict = snipMate#GetSnippetFiles(0, scopes, '*')
+  let dict = snipMate#GetSnippetFiles(0, snipMate#ScopesByFile(), '*')
   " sort by files wether they exist - put existing files first
   let exists = []
   let notExists = []
@@ -704,5 +703,9 @@ fun! snipMate#OpenSnippetFiles()
   endfor
 endf
 
+fun! snipMate#ScopesByFile()
+	" duplicates are removed in AddScopeAliases
+	return funcref#Call(s:snipMate.get_scopes)
+endf
 
 " vim:noet:sw=4:ts=4:ft=vim

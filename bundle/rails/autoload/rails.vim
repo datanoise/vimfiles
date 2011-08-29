@@ -6,7 +6,7 @@
 if exists('g:autoloaded_rails') || &cp
   finish
 endif
-let g:autoloaded_rails = '4.3'
+let g:autoloaded_rails = '4.4'
 
 let s:cpo_save = &cpo
 set cpo&vim
@@ -1688,19 +1688,19 @@ endfunction
 function! s:BufNavCommands()
   command! -buffer -bar -nargs=? -complete=customlist,s:Complete_cd Rcd   :cd `=rails#app().path(<q-args>)`
   command! -buffer -bar -nargs=? -complete=customlist,s:Complete_cd Rlcd :lcd `=rails#app().path(<q-args>)`
-  command! -buffer -bar -nargs=* -count=1 -complete=customlist,s:Complete_find Rfind    :call s:Find(<count>,'<bang>' ,<f-args>)
-  command! -buffer -bar -nargs=* -count=1 -complete=customlist,s:Complete_find REfind   :call s:Find(<count>,'E<bang>',<f-args>)
-  command! -buffer -bar -nargs=* -count=1 -complete=customlist,s:Complete_find RSfind   :call s:Find(<count>,'S<bang>',<f-args>)
-  command! -buffer -bar -nargs=* -count=1 -complete=customlist,s:Complete_find RVfind   :call s:Find(<count>,'V<bang>',<f-args>)
-  command! -buffer -bar -nargs=* -count=1 -complete=customlist,s:Complete_find RTfind   :call s:Find(<count>,'T<bang>',<f-args>)
-  command! -buffer -bar -nargs=* -count=1 -complete=customlist,s:Complete_find Rsfind   :<count>RSfind<bang> <args>
-  command! -buffer -bar -nargs=* -count=1 -complete=customlist,s:Complete_find Rtabfind :<count>RTfind<bang> <args>
-  command! -buffer -bar -nargs=* -bang    -complete=customlist,s:Complete_edit Redit    :call s:Edit(<count>,'<bang>' ,<f-args>)
-  command! -buffer -bar -nargs=* -bang    -complete=customlist,s:Complete_edit REedit   :call s:Edit(<count>,'E<bang>',<f-args>)
-  command! -buffer -bar -nargs=* -bang    -complete=customlist,s:Complete_edit RSedit   :call s:Edit(<count>,'S<bang>',<f-args>)
-  command! -buffer -bar -nargs=* -bang    -complete=customlist,s:Complete_edit RVedit   :call s:Edit(<count>,'V<bang>',<f-args>)
-  command! -buffer -bar -nargs=* -bang    -complete=customlist,s:Complete_edit RTedit   :call s:Edit(<count>,'T<bang>',<f-args>)
-  command! -buffer -bar -nargs=* -range=0 -complete=customlist,s:Complete_edit RDedit   :call s:Edit(<count>,'<line1>D<bang>',<f-args>)
+  command! -buffer -bar -nargs=* -count=1 -complete=customlist,s:Complete_find Rfind    :call s:warn( 'Rfind has been deprecated in favor of :1R or :find' )|call s:Find(<count>,'<bang>' ,<f-args>)
+  command! -buffer -bar -nargs=* -count=1 -complete=customlist,s:Complete_find REfind   :call s:warn('REfind has been deprecated in favor of :1RE or :find')|call s:Find(<count>,'E<bang>',<f-args>)
+  command! -buffer -bar -nargs=* -count=1 -complete=customlist,s:Complete_find RSfind   :call s:warn('RSfind has been deprecated in favor of :1RS or :find')|call s:Find(<count>,'S<bang>',<f-args>)
+  command! -buffer -bar -nargs=* -count=1 -complete=customlist,s:Complete_find RVfind   :call s:warn('RVfind has been deprecated in favor of :1RV or :find')|call s:Find(<count>,'V<bang>',<f-args>)
+  command! -buffer -bar -nargs=* -count=1 -complete=customlist,s:Complete_find RTfind   :call s:warn('RTfind has been deprecated in favor of :1RT or :find')|call s:Find(<count>,'T<bang>',<f-args>)
+  command! -buffer -bar -nargs=* -count=1 -complete=customlist,s:Complete_find Rsfind   :call s:warn('Rsfind has been deprecated in favor of :1RS or :sfind')|<count>RSfind<bang> <args>
+  command! -buffer -bar -nargs=* -count=1 -complete=customlist,s:Complete_find Rtabfind :call s:warn('Rtabfind has been deprecated in favor of :1RT or :tabfind')|<count>RTfind<bang> <args>
+  command! -buffer -bar -nargs=* -bang    -complete=customlist,s:Complete_edit Redit    :call s:warn( 'Redit has been deprecated in favor of :R')|call s:Edit(<count>,'<bang>' ,<f-args>)
+  command! -buffer -bar -nargs=* -bang    -complete=customlist,s:Complete_edit REedit   :call s:warn('REedit has been deprecated in favor of :RE')|call s:Edit(<count>,'E<bang>',<f-args>)
+  command! -buffer -bar -nargs=* -bang    -complete=customlist,s:Complete_edit RSedit   :call s:warn('RSedit has been deprecated in favor of :RS')|call s:Edit(<count>,'S<bang>',<f-args>)
+  command! -buffer -bar -nargs=* -bang    -complete=customlist,s:Complete_edit RVedit   :call s:warn('RVedit has been deprecated in favor of :RV')|call s:Edit(<count>,'V<bang>',<f-args>)
+  command! -buffer -bar -nargs=* -bang    -complete=customlist,s:Complete_edit RTedit   :call s:warn('RTedit has been deprecated in favor of :RT')|call s:Edit(<count>,'T<bang>',<f-args>)
+  command! -buffer -bar -nargs=* -range=0 -complete=customlist,s:Complete_edit RDedit   :call s:warn('RDedit has been deprecated in favor of :RD')|call s:Edit(<count>,'<line1>D<bang>',<f-args>)
   command! -buffer -bar -nargs=* -range=0 -complete=customlist,s:Complete_related A     :call s:Alternate('<bang>', <line1>,<line2>,<count>,<f-args>)
   command! -buffer -bar -nargs=* -range=0 -complete=customlist,s:Complete_related AE    :call s:Alternate('E<bang>',<line1>,<line2>,<count>,<f-args>)
   command! -buffer -bar -nargs=* -range=0 -complete=customlist,s:Complete_related AS    :call s:Alternate('S<bang>',<line1>,<line2>,<count>,<f-args>)
@@ -1797,8 +1797,7 @@ function! s:Complete_find(ArgLead, CmdLine, CursorPos)
       endfor
     endif
   endfor
-  let results = sort(map(keys(seen),'s:sub(v:val,"[.]rb$","")'))
-  return s:autocamelize(results,a:ArgLead)
+  return s:autocamelize(sort(keys(seen)),a:ArgLead)
 endfunction
 
 function! s:Complete_edit(ArgLead, CmdLine, CursorPos)
@@ -3804,100 +3803,13 @@ function! rails#log_syntax()
 endfunction
 
 " }}}1
-" Statusline {{{1
-
-function! s:addtostatus(letter,status)
-  let status = a:status
-  if status !~ 'rails' && status !~ '^%!' && g:rails_statusline
-    let   status=substitute(status,'\C%'.tolower(a:letter),'%'.tolower(a:letter).'%{rails#statusline()}','')
-    if status !~ 'rails'
-      let status=substitute(status,'\C%'.toupper(a:letter),'%'.toupper(a:letter).'%{rails#STATUSLINE()}','')
-    endif
-  endif
-  return status
-endfunction
-
-function! s:BufInitStatusline()
-  if g:rails_statusline
-    if &l:statusline == ''
-      let &l:statusline = &g:statusline
-    endif
-    if &l:statusline == ''
-      let &l:statusline='%<%f %h%m%r%='
-      if &ruler
-        let &l:statusline .= '%-14.(%l,%c%V%) %P'
-      endif
-    endif
-    let &l:statusline = s:InjectIntoStatusline(&l:statusline)
-  endif
-endfunction
-
-function! s:InitStatusline()
-  if g:rails_statusline
-    if &g:statusline == ''
-      let &g:statusline='%<%f %h%m%r%='
-      if &ruler
-        let &g:statusline .= '%-16( %l,%c-%v %)%P'
-      endif
-    endif
-    let &g:statusline = s:InjectIntoStatusline(&g:statusline)
-  endif
-endfunction
-
-function! s:InjectIntoStatusline(status)
-  let status = a:status
-  if status !~ 'rails'
-    let status = s:addtostatus('y',status)
-    let status = s:addtostatus('r',status)
-    let status = s:addtostatus('m',status)
-    let status = s:addtostatus('w',status)
-    let status = s:addtostatus('h',status)
-    if status !~ 'rails'
-      let status=substitute(status,'%=','%{rails#statusline()}%=','')
-    endif
-    if status !~ 'rails' && status != ''
-      let status .= '%{rails#statusline()}'
-    endif
-  endif
-  return status
-endfunction
-
-function! rails#statusline(...)
-  if exists("b:rails_root")
-    let t = rails#buffer().type_name()
-    if t != "" && a:0 && a:1
-      return "[Rails-".t."]"
-    else
-      return "[Rails]"
-    endif
-  else
-    return ""
-  endif
-endfunction
-
-function! rails#STATUSLINE(...)
-  if exists("b:rails_root")
-    let t = rails#buffer().type_name()
-    if t != "" && a:0 && a:1
-      return ",RAILS-".toupper(t)
-    else
-      return ",RAILS"
-    endif
-  else
-    return ""
-  endif
-endfunction
-
-" }}}1
 " Mappings {{{1
 
 function! s:BufMappings()
-  nnoremap <buffer> <silent> <Plug>RailsAlternate  :<C-U>A<CR>
-  nnoremap <buffer> <silent> <Plug>RailsRelated    :<C-U>R<CR>
-  nnoremap <buffer> <silent> <Plug>RailsFind       :<C-U>REfind<CR>
-  nnoremap <buffer> <silent> <Plug>RailsSplitFind  :<C-U>RSfind<CR>
-  nnoremap <buffer> <silent> <Plug>RailsVSplitFind :<C-U>RVfind<CR>
-  nnoremap <buffer> <silent> <Plug>RailsTabFind    :<C-U>RTfind<CR>
+  nnoremap <buffer> <silent> <Plug>RailsFind       :<C-U>call <SID>Find(v:count1,'E')<CR>
+  nnoremap <buffer> <silent> <Plug>RailsSplitFind  :<C-U>call <SID>Find(v:count1,'S')<CR>
+  nnoremap <buffer> <silent> <Plug>RailsVSplitFind :<C-U>call <SID>Find(v:count1,'V')<CR>
+  nnoremap <buffer> <silent> <Plug>RailsTabFind    :<C-U>call <SID>Find(v:count1,'T')<CR>
   if g:rails_mappings
     if !hasmapto("<Plug>RailsFind")
       nmap <buffer> gf              <Plug>RailsFind
@@ -3907,12 +3819,6 @@ function! s:BufMappings()
     endif
     if !hasmapto("<Plug>RailsTabFind")
       nmap <buffer> <C-W>gf         <Plug>RailsTabFind
-    endif
-    if !hasmapto("<Plug>RailsAlternate")
-      nmap <buffer> [f              <Plug>RailsAlternate
-    endif
-    if !hasmapto("<Plug>RailsRelated")
-      nmap <buffer> ]f              <Plug>RailsRelated
     endif
     if exists("$CREAM")
       imap <buffer> <C-CR> <C-O><Plug>RailsFind
@@ -4448,12 +4354,11 @@ function! RailsBufInit(path)
   call app.source_callback("config/syntax.vim")
   if expand('%:t') =~ '\.yml\.example$'
     setlocal filetype=yaml
+  elseif expand('%:e') =~ '^\%(rjs\|rxml\|builder\)$'
+    setlocal filetype=ruby
   elseif firsttime
     " Activate custom syntax
     let &syntax = &syntax
-  endif
-  if firsttime
-    call s:BufInitStatusline()
   endif
   if expand('%:e') == 'log'
     nnoremap <buffer> <silent> R :checktime<CR>
@@ -4548,7 +4453,7 @@ function! s:BufSettings()
   call self.setvar('&includeexpr','RailsIncludeexpr()')
   call self.setvar('&suffixesadd', ".rb,.".join(s:view_types,',.'))
   let ft = self.getvar('&filetype')
-  if ft =~ '^\%(e\=ruby\|[yh]aml\|javascript\|css\|s[ac]ss\|lesscss\)$'
+  if ft =~ '^\%(e\=ruby\|[yh]aml\|coffee\|css\|s[ac]ss\|lesscss\)$'
     call self.setvar('&shiftwidth',2)
     call self.setvar('&softtabstop',2)
     call self.setvar('&expandtab',1)

@@ -11,7 +11,6 @@ surround-targets	surround.txt	/*surround-targets*
 surround.txt	surround.txt	/*surround.txt*
 vS	surround.txt	/*vS*
 vgS	surround.txt	/*vgS*
-vs	surround.txt	/*vs*
 yS	surround.txt	/*yS*
 ySS	surround.txt	/*ySS*
 ys	surround.txt	/*ys*

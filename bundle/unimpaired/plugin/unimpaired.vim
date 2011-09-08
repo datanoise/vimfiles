@@ -75,31 +75,6 @@ nnoremap <silent> <Plug>unimpairedOPrevious :<C-U>edit `=<SID>FileByOffset(-v:co
 nmap ]o <Plug>unimpairedONext
 nmap [o <Plug>unimpairedOPrevious
 
-nmap [, :call search('^[<=>]\{7\}','bW')<CR>
-nmap ], :call search('^[<=>]\{7\}','W')<CR>
-omap [, V:call search('^[<=>]\{7\}','bW')<CR>
-omap ], V:call search('^[<=>]\{7\}','W')<CR>
-xmap [, :<C-U>exe 'norm! gv'<Bar>call search('^[<=>]\{7\}','bW')<CR>
-xmap ], :<C-U>exe 'norm! gv'<Bar>call search('^[<=>]\{7\}','W')<CR>
-nmap [< :call search('^<<<<<<<','bW')<CR>
-nmap [= :call search('^=======','bW')<CR>
-nmap [> :call search('^>>>>>>>','bW')<CR>
-nmap ]< :call search('^<<<<<<<','W')<CR>
-nmap ]= :call search('^=======','W')<CR>
-nmap ]> :call search('^>>>>>>>','W')<CR>
-xmap [< :<C-U>exe 'norm! gv'<Bar>call search('^<<<<<<<','bW')<CR>
-xmap [= :<C-U>exe 'norm! gv'<Bar>call search('^=======','bW')<CR>
-xmap [> :<C-U>exe 'norm! gv'<Bar>call search('^>>>>>>>','bW')<CR>
-xmap ]< :<C-U>exe 'norm! gv'<Bar>call search('^<<<<<<<','W')<CR>
-xmap ]= :<C-U>exe 'norm! gv'<Bar>call search('^=======','W')<CR>
-xmap ]> :<C-U>exe 'norm! gv'<Bar>call search('^>>>>>>>','W')<CR>
-omap [< V:call search('^<<<<<<<','bW')<CR>
-omap [= V:call search('^=======','bW')<CR>
-omap [> V:call search('^>>>>>>>','bW')<CR>
-omap ]< V:call search('^<<<<<<<','W')<CR>
-omap ]= V:call search('^=======','W')<CR>
-omap ]> V:call search('^>>>>>>>','W')<CR>
-
 " }}}1
 " Line operations {{{1
 
@@ -110,7 +85,7 @@ nmap [<Space> <Plug>unimpairedBlankUp
 nmap ]<Space> <Plug>unimpairedBlankDown
 
 nnoremap <silent> <Plug>unimpairedMoveUp   :<C-U>exe 'norm! m`'<Bar>exe 'move--'.v:count1<Bar>norm! ``<CR>
-nnoremap <silent> <Plug>unimpairedMoveDown :<C-U>exe 'norm! m`'<Bar>exe 'move+'.v:count1<CR>norm! ``<CR>
+nnoremap <silent> <Plug>unimpairedMoveDown :<C-U>exe 'norm! m`'<Bar>exe 'move+'.v:count1<Bar>norm! ``<CR>
 xnoremap <silent> <Plug>unimpairedMoveUp   :<C-U>exe 'norm m`'<Bar>exe '''<,''>move--'.v:count1<CR>``
 xnoremap <silent> <Plug>unimpairedMoveDown :<C-U>exe 'norm m`'<Bar>exe '''<,''>move''>+'.v:count1<CR>``
 

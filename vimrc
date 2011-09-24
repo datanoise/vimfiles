@@ -311,6 +311,7 @@ let g:syntastic_stl_format = '[ERR:%F(%t)]'
 let delimitMate_expand_cr = 1
 " setting this setting breaks iabbr
 let delimitMate_expand_space = 0
+let delimitMate_matchpairs = "(:),[:],{:}"
 imap <C-g><C-g> <Plug>delimitMateS-Tab
 
 " snipmate settings {{{2

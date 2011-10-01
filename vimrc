@@ -205,6 +205,8 @@ nnoremap L :
 nnoremap [s [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
 nnoremap <F2> <C-w><C-w>
 nnoremap <F4> :sil make %<CR><c-l>:cc<CR>
+au FileType coffee nnoremap <buffer> <F3> :CoffeeCompile<CR>
+au FileType coffee nnoremap <buffer> <F4> :CoffeeRun<CR>
 
 function! SwitchPrevBuf()
   if bufloaded(bufname("#")) != 0

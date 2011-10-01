@@ -165,8 +165,7 @@ function! s:CoffeeCompile(startline, endline, args)
       exec 'vertical resize' width
     else
       " Try to guess the compiled output's height.
-      let height = size ? size : min([winheight(src_win) / 2,
-      \                               a:endline - a:startline + 2])
+      let height = size ? size : winheight(src_win) / 2
 
       botright new
       exec 'resize' height

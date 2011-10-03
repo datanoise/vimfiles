@@ -313,13 +313,6 @@ let g:syntastic_disabled_filetypes = ['coffee', 'cpp', 'c', 'scss', 'puppet', 'h
 let g:syntastic_auto_loc_list=2
 let g:syntastic_stl_format = '[ERR:%F(%t)]'
 
-" delimitMate settings {{{2
-let delimitMate_expand_cr = 1
-" setting this setting breaks iabbr
-let delimitMate_expand_space = 0
-let delimitMate_matchpairs = "(:),[:],{:}"
-imap <C-g><C-g> <Plug>delimitMateS-Tab
-
 " snipmate settings {{{2
 function! MyGetSnips(scopes, word)
   if &ft == 'eruby'

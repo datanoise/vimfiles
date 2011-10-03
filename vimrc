@@ -206,10 +206,13 @@ nnoremap [s [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
 nnoremap <F2> <C-w><C-w>
 nnoremap <F4> :sil make %<CR><c-l>:cc<CR>
 au FileType coffee nnoremap <buffer> <F3> :CoffeeCompile<CR>
+au FileType coffee vnoremap <buffer> <F3> :CoffeeCompile<CR>
 au FileType coffee nnoremap <buffer> <F4> :CoffeeRun<CR>
+au FileType cucumber nnoremap <buffer> <F4> :!cucumber %<CR>
 
 function! SwitchPrevBuf()
-  if bufloaded(bufname("#")) != 0
+  let prev = bufname("#")
+  if prev != '__InputList__' && bufloaded(prev) != 0
     b#
   else
     echo "No buffer to switch to"
@@ -247,8 +250,8 @@ au FileType vim  nnoremap <silent> <buffer> K :h <c-r>=expand('<cword>')<CR><CR>
 au FileType ruby inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "
 au FileType ruby nnoremap <buffer> <F5> :!ruby %<CR>
 au FileType php  nnoremap <buffer> <F5> :!php %<CR>
-" this is taken care of by delimitMate
-" au FileType php,c,cpp,java,javascript,html,eruby,css,scala,scss,objc inoremap <buffer> {<CR> {<CR>}<Esc>O
+au FileType php,c,cpp,java,javascript,html,ruby,eruby,css,scala,scss,objc inoremap <buffer> {<CR> {<CR>}<Esc>O
+au FileType ruby,javascript,objc,java,c,cpp,php inoremap <buffer> [<CR> [<CR>]<Esc>O
 
 " Section: Commands && Abbrivations {{{1
 " --------------------------------------------------

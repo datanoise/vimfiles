@@ -250,8 +250,10 @@ au FileType vim  nnoremap <silent> <buffer> K :h <c-r>=expand('<cword>')<CR><CR>
 au FileType ruby inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "
 au FileType ruby nnoremap <buffer> <F5> :!ruby %<CR>
 au FileType php  nnoremap <buffer> <F5> :!php %<CR>
-au FileType php,c,cpp,java,javascript,html,ruby,eruby,css,scala,scss,objc inoremap <buffer> {<CR> {<CR>}<Esc>O
-au FileType ruby,javascript,objc,java,c,cpp,php inoremap <buffer> [<CR> [<CR>]<Esc>O
+inoremap {<CR> {<CR>}<Esc>O
+inoremap [<CR> [<CR>]<Esc>O
+inoremap {<Space> {}<Esc>i<Space><Space><Esc>i
+inoremap [<Space> []<Esc>i<Space><Space><Esc>i
 
 " Section: Commands && Abbrivations {{{1
 " --------------------------------------------------

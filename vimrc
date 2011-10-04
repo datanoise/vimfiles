@@ -209,6 +209,7 @@ au FileType coffee nnoremap <buffer> <F3> :CoffeeCompile<CR>
 au FileType coffee vnoremap <buffer> <F3> :CoffeeCompile<CR>
 au FileType coffee nnoremap <buffer> <F4> :CoffeeRun<CR>
 au FileType cucumber nnoremap <buffer> <F4> :!cucumber %<CR>
+au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <F4> :!rspec --format doc -c %<CR>|endif
 
 function! SwitchPrevBuf()
   let prev = bufname("#")

@@ -1,5 +1,5 @@
 if match(expand("%"), 'spec') != -1
-  syntax keyword rspecGroupMethods describe it
+  syntax keyword rspecGroupMethods describe context it
   highlight link rspecGroupMethods Define
 
   syntax keyword rspecBeforeAndAfter after after_suite_parts append_after append_before before before_suite_parts prepend_after prepend_before

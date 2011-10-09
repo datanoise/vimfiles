@@ -89,7 +89,7 @@ if version >= 700
   set listchars+=nbsp:+
 endif
 au FileType help  setlocal nolist
-au FileType otl   setlocal nolist
+au FileType qf    setlocal nolist
 " }}}
 " wild options {{{2
 set wildmenu

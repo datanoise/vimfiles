@@ -11,4 +11,5 @@ coffee-script-settings	coffee-script.txt	/*coffee-script-settings*
 coffee-script.txt	coffee-script.txt	/*coffee-script.txt*
 compiler-coffee-script	coffee-script.txt	/*compiler-coffee-script*
 ft-coffee-script-syntax	coffee-script.txt	/*ft-coffee-script-syntax*
+g:coffee_compile_vert	coffee-script.txt	/*g:coffee_compile_vert*
 g:coffee_make_options	coffee-script.txt	/*g:coffee_make_options*

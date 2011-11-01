@@ -26,8 +26,10 @@ command! -nargs=0 Rm :call Rmove()
 
 fun! Rmove()
   if confirm('Are you sure?', "&Yes\n&No") == 1
-    sil !rm %
+    let l:curfile = expand("%:p")
+    if delete(l:curfile)
+      echoerr "Could not delete " . l:curfile
+    endif
     bwipe!
   endif
-  echo
 endf

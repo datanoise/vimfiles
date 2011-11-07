@@ -50,6 +50,9 @@ endif
 
 if exists("b:eruby_subtype") && b:eruby_subtype != ''
   exe "runtime! syntax/".b:eruby_subtype.".vim"
+  if b:eruby_subtype == 'html'
+    runtime! syntax/html/html5.vim
+  endif
   unlet! b:current_syntax
 endif
 syn include @rubyTop syntax/ruby.vim

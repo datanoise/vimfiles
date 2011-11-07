@@ -20,8 +20,10 @@
 if exists("b:did_indent")
     finish
 endif
+runtime! indent/javascript.vim
+unlet! b:did_indent
+set indentexpr=
 let b:did_indent = 1
-
 
 " [-- local settings (must come before aborting the script) --]
 setlocal indentexpr=HtmlIndentGet(v:lnum)
@@ -250,7 +252,8 @@ fun! HtmlIndentGet(lnum)
             if restore_ic == 0
               setlocal noic
             endif
-            return cindent(a:lnum)
+            " return cindent(a:lnum)
+            return GetJavascriptIndent()
         endif
     endif
 

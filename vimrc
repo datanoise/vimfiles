@@ -152,7 +152,7 @@ if executable('ack') && !exists('g:ackprg')
   " always use ack for faster searching
   set grepprg=ack\ -a\ --ignore-dir=log\ --ignore-dir=tmp\ $*\\\|grep\ -v\ '^tags'
 endif
-set completeopt=longest,menu " don't hide completion menu when typing
+set completeopt=menu " don't hide completion menu when typing
 set clipboard+=unnamed
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
 if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app' && has('cursorshape')
@@ -203,13 +203,13 @@ nnoremap Y y$
 nnoremap z- 1z=
 nnoremap L :
 nnoremap [s [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
+inoremap {<CR> {<CR>}<Esc>O
+inoremap [<CR> [<CR>]<Esc>O
+inoremap {<Space> {}<Esc>i<Space><Space><Esc>i
+inoremap [<Space> []<Esc>i<Space><Space><Esc>i
+inoremap <C-\> <C-n>
 nnoremap <F2> <C-w><C-w>
 nnoremap <F4> :sil make %<CR><c-l>:cc<CR>
-au FileType coffee nnoremap <buffer> <F3> :CoffeeCompile<CR>
-au FileType coffee vnoremap <buffer> <F3> :CoffeeCompile<CR>
-au FileType coffee nnoremap <buffer> <F4> :CoffeeRun<CR>
-au FileType cucumber nnoremap <buffer> <F4> :!cucumber %<CR>
-au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <F4> :!rspec --format doc -c %<CR>|endif
 
 function! SwitchPrevBuf()
   let prev = bufname("#")
@@ -231,7 +231,7 @@ cnoremap <M-q> qa!
 " this one for xterm
 cnoremap q  qa!
 
-" mappings for cscope
+" mappings for cscope" {{{2
 if has("cscope")
   nmap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
   nmap <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
@@ -241,20 +241,23 @@ if has("cscope")
   nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
   nmap <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
   nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
-endif
+endif "}}}
 
 " insert modeline
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
 
+" file type bindings {{{2
+au FileType coffee nnoremap <buffer> <F3> :CoffeeCompile<CR>
+au FileType coffee vnoremap <buffer> <F3> :CoffeeCompile<CR>
+au FileType coffee nnoremap <buffer> <F4> :CoffeeRun<CR>
+au FileType cucumber nnoremap <buffer> <F4> :!cucumber %<CR>
+au FileType cucumber inoremap <buffer> \| \|<Esc>:Tab /\|<CR>A
 au FileType help nnoremap <silent> <buffer> q :bd<CR>
 au FileType vim  nnoremap <silent> <buffer> K :h <c-r>=expand('<cword>')<CR><CR>
+au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <F4> :!rspec --format doc -c %<CR>|endif
 au FileType ruby inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "
 au FileType ruby nnoremap <buffer> <F5> :!ruby %<CR>
 au FileType php  nnoremap <buffer> <F5> :!php %<CR>
-inoremap {<CR> {<CR>}<Esc>O
-inoremap [<CR> [<CR>]<Esc>O
-inoremap {<Space> {}<Esc>i<Space><Space><Esc>i
-inoremap [<Space> []<Esc>i<Space><Space><Esc>i
 
 " Section: Commands && Abbrivations {{{1
 " --------------------------------------------------
@@ -312,7 +315,7 @@ nnoremap <silent> <leader>l  :CommandTBuffer<CR>
 
 " syntastic settings {{{2
 " puppet is too slow, html/tidy doesn't support HTML5
-let g:syntastic_disabled_filetypes = ['coffee', 'cpp', 'c', 'scss', 'puppet', 'html']
+let g:syntastic_disabled_filetypes = ['coffee', 'cpp', 'c', 'scss', 'puppet', 'html', 'cucumber']
 let g:syntastic_auto_loc_list=2
 let g:syntastic_stl_format = '[ERR:%F(%t)]'
 

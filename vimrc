@@ -312,6 +312,7 @@ if !has('gui_running')
 end
 nnoremap <silent> <leader>n  :CommandT<CR>
 nnoremap <silent> <leader>l  :CommandTBuffer<CR>
+nnoremap <silent> <leader>rs :CommandTFlush<CR>
 
 " syntastic settings {{{2
 " puppet is too slow, html/tidy doesn't support HTML5

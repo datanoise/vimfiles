@@ -435,7 +435,7 @@ function! s:BEMapKeys()
   nnoremap <buffer> <silent> <s-cr>        :call <SID>BESelectBuffer("tab")<cr>
 
   nnoremap <buffer> <silent> dd            :call <SID>BERemoveBuffer("delete", "n")<cr>
-  xnoremap <buffer> <silent> dd            :call <SID>BERemoveBuffer("delete", "v")<cr>
+  xnoremap <buffer> <silent> d             :call <SID>BERemoveBuffer("delete", "v")<cr>
   nnoremap <buffer> <silent> D             :call <SID>BERemoveBuffer("wipe", "n")<cr>
   xnoremap <buffer> <silent> D             :call <SID>BERemoveBuffer("wipe", "v")<cr>
 

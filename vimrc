@@ -295,7 +295,7 @@ let g:NERDTreeHijackNetrw = 0
 let NERDTreeIgnore=['\.o$', '\~$', '\.class$']
 let NERDTreeMinimalUI=0
 let NERDTreeDirArrows=1
-nnoremap <silent> <leader>m  :exec 'NERDTree' . expand('%:p:h')<CR>
+nnoremap <silent> <leader>f  :exec 'NERDTree' . expand('%:p:h')<CR>
 
 " rubycomplete plugin settings {{{2
 let g:rubycomplete_buffer_loading = 1
@@ -311,9 +311,9 @@ if !has('gui_running')
   let g:CommandTSelectNextMap=['<Esc>OB', '<C-n>']
   let g:CommandTSelectPrevMap=['<Esc>OA', '<C-p>']
 end
-nnoremap <silent> <leader>n  :CommandT<CR>
-nnoremap <silent> <leader>l  :CommandTBuffer<CR>
-nnoremap <silent> <leader>rs :CommandTFlush<CR>
+nnoremap <silent> <leader>m :CommandT<CR>
+nnoremap <silent> <leader>l :CommandTBuffer<CR>
+nnoremap <silent> <leader>b :CommandTFlush<CR>
 
 " syntastic settings {{{2
 " puppet is too slow, html/tidy doesn't support HTML5

@@ -711,6 +711,9 @@ endf
 
 " used by both: completion and insert snippet
 fun! snipMate#GetSnippetsForWordBelowCursor(word, suffix, break_on_first_match)
+	if a:word == '{'
+		return []
+	endif
 	" Setup lookups: '1.2.3' becomes [1.2.3] + [3, 2.3]
 	let parts = split(a:word, '\W\zs')
 	if len(parts) > 2

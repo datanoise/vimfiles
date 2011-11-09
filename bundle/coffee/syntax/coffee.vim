@@ -47,7 +47,7 @@ hi def link coffeeOperator Operator
 " The first case matches symbol operators only if they have an operand before.
 syn match coffeeExtendedOp /\%(\S\s*\)\@<=[+\-*/%&|\^=!<>?.]\+\|[-=]>\|--\|++\|::/
 \                          display
-syn match coffeeExtendedOp /\%(and\|or\)=/ display
+syn match coffeeExtendedOp /\<\%(and\|or\)=/ display
 hi def link coffeeExtendedOp coffeeOperator
 
 " This is separate from `coffeeExtendedOp` to help differentiate commas from
@@ -95,6 +95,7 @@ hi def link coffeeString String
 syn match coffeeNumber /\i\@<![-+]\?\d\+\%([eE][+-]\?\d\+\)\?/ display
 " A hex number
 syn match coffeeNumber /\<0[xX]\x\+\>/ display
+syn match coffeeNumber /\<0b[01]\+\>/ display
 hi def link coffeeNumber Number
 
 " A floating-point number, including a leading plus or minus

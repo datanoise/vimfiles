@@ -203,6 +203,7 @@ nnoremap Y y$
 nnoremap z- 1z=
 nnoremap L :
 nnoremap [s [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
+nnoremap <leader>a :let align = input("Align to: ")<Bar>exe ":Tab /" . align<CR>
 inoremap {<CR> {<CR>}<Esc>O
 inoremap [<CR> [<CR>]<Esc>O
 inoremap {<Space> {}<Esc>i<Space><Space><Esc>i

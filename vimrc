@@ -217,7 +217,8 @@ function! SwitchPrevBuf()
   if prev != '__InputList__' && bufloaded(prev) != 0
     b#
   else
-    echo "No buffer to switch to"
+    " echo "No buffer to switch to"
+    LustyBufferExplorer
   endif
 endfunction
 
@@ -313,7 +314,7 @@ if !has('gui_running')
 end
 nnoremap <silent> <leader>m :CommandT<CR>
 nnoremap <silent> <leader>l :CommandTBuffer<CR>
-nnoremap <silent> <leader>b :CommandTFlush<CR>
+nnoremap <silent> <leader>n :CommandTFlush<CR>
 
 " syntastic settings {{{2
 " puppet is too slow, html/tidy doesn't support HTML5

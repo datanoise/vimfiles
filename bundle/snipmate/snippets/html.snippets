@@ -286,7 +286,7 @@ snippet div
 	<div>
 		${1}
 	</div>
-snippet div.
+snippet divc
 	<div class="${1}">
 		${2}
 	</div>
@@ -417,23 +417,23 @@ snippet head
 snippet header
 	<header>
 		${1}
-	</header>${2}
-snippet header.
+	</header>
+snippet headerc
 	<header class="${1}">
 		${2}
-	</header>${3}
+	</header>
 snippet header#
 	<header id="${1}">
 		${2}
-	</header>${3}
+	</header>
 snippet hgroup
 	<hgroup>
 		${1}
-	</hgroup>${2}
-snippet hgroup.
+	</hgroup>
+snippet hgroupc
 	<hgroup class="${1}>
 		${2}
-	</hgroup>${3}
+	</hgroup>
 snippet hr
 	<hr />${1}
 snippet html
@@ -525,16 +525,16 @@ snippet label:s
 snippet legend
 	<legend>${1}</legend>${2}
 snippet legend+
-	<legend><span>${1}</span></legend>${2}
+	<legend><span>${1}</span></legend>
 snippet li
-	<li>${1}</li>${2}
-snippet li.
-	<li class="${1}">${2}</li>${3}
+	<li>${1}</li>
+snippet lic
+	<li class="${1}">${2}</li>
 snippet li+
 	<li>${1}</li>
 	li+${2}
 snippet lia
-	<li><a href="${2:#}">${1}</a></li>${3}
+	<li><a href="${2:#}">${1}</a></li>
 snippet lia+
 	<li><a href="${2:#}">${1}</a></li>
 	lia+${3}
@@ -641,31 +641,31 @@ snippet ol+
 		li+${2}
 	</ol>
 snippet opt
-	<option value="${1}">${2:$1}</option>${3}
+	<option value="${1}">${2:$1}</option>
 snippet opt+
 	<option value="${1}">${2:$1}</option>
 	opt+${3}
 snippet optt
-	<option>${1}</option>${2}
+	<option>${1}</option>
 snippet optgroup
 	<optgroup>
 		<option value="${1}">${2:$1}</option>
 		opt+${3}
 	</optgroup>
 snippet output
-	<output>${1}</output>${2}
+	<output>${1}</output>
 snippet p
-	<p>${1}</p>${2}
+	<p>${1}</p>
 snippet param
-	<param name="${1}" value="${2}" />${3}
+	<param name="${1}" value="${2}" />
 snippet pre
 	<pre>
 		${1}
 	</pre>${2}
 snippet progress
-	<progress>${1}</progress>${2}
+	<progress>${1}</progress>
 snippet q
-	<q>${1}</q>${2}
+	<q>${1}</q>
 snippet rp
 	<rp>${1}</rp>
 snippet rt
@@ -712,25 +712,25 @@ snippet select+
 		opt+${5}
 	</select>
 snippet small
-	<small>${1}</small>${2}
+	<small>${1}</small>
 snippet source
-	<source src="${1}" type="${2}" media="${3}" />${4}
+	<source src="${1}" type="${2}" media="${3}" />
 snippet span
-	<span>${1}</span>${2}
+	<span>${1}</span>
 snippet strong
-	<strong>${1}</strong>${2}
+	<strong>${1}</strong>
 snippet style
 	<style type="text/css" media="${1:all}">
 		${2}
 	</style>
 snippet sub
-	<sub>${1}</sub>${2}
+	<sub>${1}</sub>
 snippet summary
 	<summary>
 		${1}
 	</summary>
 snippet sup
-	<sup>${1}</sup>${2}
+	<sup>${1}</sup>
 snippet table
 	<table border="${1:0}">
 		${2}

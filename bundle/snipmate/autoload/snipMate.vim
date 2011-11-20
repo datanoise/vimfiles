@@ -692,7 +692,7 @@ fun! snipMate#OpenSnippetFiles()
 	let v['file'] = file
 	if v['exists']
 	  call add(exists, v)
-	else
+	.lse
 	  call add(notExists, v)
 	endif
   endfor
@@ -711,9 +711,6 @@ endf
 
 " used by both: completion and insert snippet
 fun! snipMate#GetSnippetsForWordBelowCursor(word, suffix, break_on_first_match)
-	if a:word == '{'
-		return []
-	endif
 	" Setup lookups: '1.2.3' becomes [1.2.3] + [3, 2.3]
 	let parts = split(a:word, '\W\zs')
 	if len(parts) > 2
@@ -730,7 +727,7 @@ fun! snipMate#GetSnippetsForWordBelowCursor(word, suffix, break_on_first_match)
 
 	" allow matching '.'
 	if a:word =~ '\.$'
-		call insert(lookups, '.'.a:suffix, 0)
+		call insert(lookups, '.'.a:suffix, len(lookups))
 	endif
 
 	call filter(lookups, 'v:val != ""')

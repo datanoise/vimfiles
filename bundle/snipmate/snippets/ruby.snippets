@@ -570,3 +570,11 @@ snippet aft
 #debugging
 snippet debug
 	require 'ruby-debug'; debugger; true;
+
+#rails
+snippet pa
+	params[:${1:id}]
+snippet fla
+	flash[:${1:alert}] = "${2:}"
+snippet rtn
+	redirect_to ${1:path}, ${2:notice}: "${3:}"

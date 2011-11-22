@@ -1,4 +1,4 @@
-" -*- vim -*- vim:set ft=vim et sw=2 sts=2 fdc=3:
+ -*- vim -*- vim:set ft=vim et sw=2 sts=2 fdc=3:
 
 " Section: Global Setting {{{1
 " ----------------------------------------
@@ -48,7 +48,7 @@ function! GetCurDir()
   let result = substitute(result, '^.\+\ze.\{20,}', '<', '')
   return '('.result.')'
 endfunction
-set statusline=[%n]%m\ %<%.99f\ %{GetCurDir()}\ %h%w%r%y
+set statusline=%m%<%.99f\ %{GetCurDir()}\ %h%w%r%y
 set statusline+=\ %#errormsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*%=
@@ -88,8 +88,9 @@ set listchars+=extends:>,precedes:<
 if version >= 700
   set listchars+=nbsp:+
 endif
-au FileType help  setlocal nolist
-au FileType qf    setlocal nolist
+au FileType help      setlocal nolist
+au FileType qf        setlocal nolist
+au FileType gitcommit setlocal nolist
 " }}}
 " wild options {{{2
 set wildmenu
@@ -152,7 +153,7 @@ if executable('ack') && !exists('g:ackprg')
   " always use ack for faster searching
   set grepprg=ack\ -a\ --ignore-dir=log\ --ignore-dir=tmp\ $*\\\|grep\ -v\ '^tags'
 endif
-set completeopt=menu " don't hide completion menu when typing
+set completeopt=
 set clipboard+=unnamed
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
 if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app' && has('cursorshape')
@@ -253,6 +254,7 @@ au FileType coffee nnoremap <buffer> <F3> :CoffeeCompile<CR>
 au FileType coffee vnoremap <buffer> <F3> :CoffeeCompile<CR>
 au FileType coffee nnoremap <buffer> <F4> :CoffeeRun<CR>
 au FileType cucumber nnoremap <buffer> <F4> :!cucumber %<CR>
+au FileType cucumber nnoremap <buffer> <F5> :exe '!cucumber ' . expand('%') . ':' . line('.')<CR>
 au FileType cucumber inoremap <buffer> \| \|<Esc>:Tab /\|<CR>A
 au FileType help nnoremap <silent> <buffer> q :bd<CR>
 au FileType vim  nnoremap <silent> <buffer> K :h <c-r>=expand('<cword>')<CR><CR>
@@ -267,7 +269,6 @@ func! Eatchar(pat)
    let c = nr2char(getchar(0))
    return (c =~ a:pat) ? '' : c
 endfunc
-cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
 " NOTE: that doesn't work in MacVim gui mode if sudo requests a password!!!
 command! -bar -nargs=0 SudoW   :exe "write !sudo tee % >/dev/null"|silent edit!
 au FileType ruby iabbrev <buffer> rb! #!<C-R>=substitute(system('which ruby'),'\n$','','')<CR><C-R>=Eatchar('\s')<CR>
@@ -276,7 +277,9 @@ func! SynName()
   echo synIDattr(synID(line('.'), col('.'), 0), 'name')
 endfunc
 command! SynName :call SynName()
-
+cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
+iabbr THen Then
+iabbr WHen When
 
 " Section: Plugin settings {{{1
 " --------------------------------------------------

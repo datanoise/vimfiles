@@ -6,7 +6,7 @@
 snippet rc
 	<% ${1} %>
 snippet rce
-	<%= ${1} %>${2}
+	<%= ${1} %>
 snippet end
 	<% end %>${1}
 snippet for
@@ -122,3 +122,7 @@ snippet rej
 	reject { |${1:e}|, ${2} }
 snippet sel
 	select { |${1:e}|, ${2} }
+snippet form_for
+	<%= form_for ${1:@object} do |f| %>
+		${2}
+	<% end %>

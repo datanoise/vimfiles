@@ -20,6 +20,8 @@ g:tcommentGuessFileType_vim	tcomment.txt	/*g:tcommentGuessFileType_vim*
 g:tcommentIgnoreTypes_php	tcomment.txt	/*g:tcommentIgnoreTypes_php*
 g:tcommentInlineC	tcomment.txt	/*g:tcommentInlineC*
 g:tcommentInlineXML	tcomment.txt	/*g:tcommentInlineXML*
+g:tcommentMapLeader1	tcomment.txt	/*g:tcommentMapLeader1*
+g:tcommentMapLeader2	tcomment.txt	/*g:tcommentMapLeader2*
 g:tcommentMapLeaderOp1	tcomment.txt	/*g:tcommentMapLeaderOp1*
 g:tcommentMapLeaderOp2	tcomment.txt	/*g:tcommentMapLeaderOp2*
 g:tcommentOpModeExtra	tcomment.txt	/*g:tcommentOpModeExtra*

@@ -43,21 +43,40 @@ if !exists("g:syntastic_quiet_warnings")
     let g:syntastic_quiet_warnings = 0
 endif
 
-if !exists("g:syntastic_disabled_filetypes")
-    let g:syntastic_disabled_filetypes = []
-endif
-
 if !exists("g:syntastic_stl_format")
     let g:syntastic_stl_format = '[Syntax: line:%F (%t)]'
 endif
 
+if !exists("g:syntastic_mode_map")
+    let g:syntastic_mode_map = {}
+endif
+
+if !has_key(g:syntastic_mode_map, "mode")
+    let g:syntastic_mode_map['mode'] = 'active'
+endif
+
+if !has_key(g:syntastic_mode_map, "active_filetypes")
+    let g:syntastic_mode_map['active_filetypes'] = []
+endif
+
+if !has_key(g:syntastic_mode_map, "passive_filetypes")
+    let g:syntastic_mode_map['passive_filetypes'] = []
+endif
+
+command! -nargs=0 SyntasticToggleMode call s:ToggleMode()
+command SyntasticCheck -nargs=0 call s:UpdateErrors(0) <bar> redraw!
+command Errors call s:ShowLocList()
+
 "refresh and redraw all the error info for this buf when saving or reading
-autocmd bufreadpost,bufwritepost * call s:UpdateErrors()
-function! s:UpdateErrors()
+autocmd bufreadpost,bufwritepost * call s:UpdateErrors(1)
+function! s:UpdateErrors(auto_invoked)
     if &buftype == 'quickfix'
         return
     endif
-    call s:CacheErrors()
+
+    if !a:auto_invoked || s:ModeMapAllowsAutoChecking()
+        call s:CacheErrors()
+    end
 
     if g:syntastic_enable_balloons && has('balloon_eval')
         let b:syntastic_balloons = {}
@@ -74,7 +93,7 @@ function! s:UpdateErrors()
     if s:BufHasErrorsOrWarningsToDisplay()
         call setloclist(0, b:syntastic_loclist)
         if g:syntastic_auto_jump
-            silent!ll
+            silent! ll
         endif
     elseif g:syntastic_auto_loc_list == 2
         lclose
@@ -103,6 +122,41 @@ function! s:CacheErrors()
             if s:Checkable(ft)
                 let b:syntastic_loclist = extend(b:syntastic_loclist, SyntaxCheckers_{ft}_GetLocList())
             endif
+        endfor
+    endif
+endfunction
+
+"toggle the g:syntastic_mode_map['mode']
+function! s:ToggleMode()
+    if g:syntastic_mode_map['mode'] == "active"
+        let g:syntastic_mode_map['mode'] = "passive"
+    else
+        let g:syntastic_mode_map['mode'] = "active"
+    endif
+
+    echo "Syntastic: " . g:syntastic_mode_map['mode'] . " mode enabled"
+endfunction
+
+"check the current filetypes against g:syntastic_mode_map to determine whether
+"active mode syntax checking should be done
+function! s:ModeMapAllowsAutoChecking()
+    if g:syntastic_mode_map['mode'] == 'passive'
+
+        "check at least one filetype is active
+        for ft in split(&ft, '\.')
+            if index(g:syntastic_mode_map['active_filetypes'], ft) != -1
+                return 1
+            endif
+            return 0
+        endfor
+    else
+
+        "check no filetypes are passive
+        for ft in split(&ft, '\.')
+            if index(g:syntastic_mode_map['passive_filetypes'], ft) != -1
+                return 0
+            endif
+            return 1
         endfor
     endif
 endfunction
@@ -203,8 +257,6 @@ function! s:ShowLocList()
     endif
 endfunction
 
-command Errors call s:ShowLocList()
-
 "return a string representing the state of buffer according to
 "g:syntastic_stl_format
 "
@@ -286,6 +338,10 @@ function! SyntasticMake(options)
     let &shellpipe=old_shellpipe
     let &shell=old_shell
 
+    if !s:running_windows && s:uname =~ "FreeBSD"
+        redraw!
+    endif
+
     return errors
 endfunction
 
@@ -294,40 +350,7 @@ function! s:Checkable(ft)
         exec "runtime syntax_checkers/" . a:ft . ".vim"
     endif
 
-    return exists("*SyntaxCheckers_". a:ft ."_GetLocList") &&
-                \ index(g:syntastic_disabled_filetypes, a:ft) == -1
-endfunction
-
-command! -nargs=? SyntasticEnable call s:Enable(<f-args>)
-command! -nargs=? SyntasticDisable call s:Disable(<f-args>)
-
-"disable syntax checking for the given filetype (defaulting to current ft)
-function! s:Disable(...)
-    let ft = a:0 ? a:1 : &filetype
-
-    if !empty(ft) && index(g:syntastic_disabled_filetypes, ft) == -1
-        call add(g:syntastic_disabled_filetypes, ft)
-    endif
-
-    "will cause existing errors to be cleared
-    call s:UpdateErrors()
-endfunction
-
-"enable syntax checking for the given filetype (defaulting to current ft)
-function! s:Enable(...)
-    let ft = a:0 ? a:1 : &filetype
-
-    let i = index(g:syntastic_disabled_filetypes, ft)
-    if i != -1
-        call remove(g:syntastic_disabled_filetypes, i)
-    endif
-
-    if !&modified
-        call s:UpdateErrors()
-        redraw!
-    else
-        echom "Syntasic: enabled for the '" . ft . "' filetype. :write out to update errors"
-    endif
+    return exists("*SyntaxCheckers_". a:ft ."_GetLocList")
 endfunction
 
 " vim: set et sts=4 sw=4:

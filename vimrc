@@ -95,7 +95,7 @@ au FileType gitcommit setlocal nolist
 " wild options {{{2
 set wildmenu
 set wildmode=full
-set wildignore=*.o,*.bundle,*.png,*.jpg,*.gif,*.class,*.log
+set wildignore=*.o,*.bundle,*.png,*.jpg,*.gif,*.class,*.log,tmp/**
 set showcmd
 " the above doesn't always work. the following enforces it
 au VimEnter * set showcmd
@@ -262,6 +262,7 @@ au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer>
 au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F5> :exe '!rspec --format doc -c ' . expand('%') . ':' . line('.')<CR>|else|nnoremap <buffer> <F5> :!ruby %<CR>|endif
 au FileType ruby inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "
 au FileType php  nnoremap <buffer> <F5> :!php %<CR>
+au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
 
 " Section: Commands && Abbrivations {{{1
 " --------------------------------------------------

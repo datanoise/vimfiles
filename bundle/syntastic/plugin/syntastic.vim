@@ -2,8 +2,8 @@
 "File:        syntastic.vim
 "Description: vim plugin for on the fly syntax checking
 "Maintainer:  Martin Grenfell <martin.grenfell at gmail dot com>
-"Version:     1.2.0
-"Last Change: 28 Oct, 2010
+"Version:     2.0.0
+"Last Change: 2 Dec, 2011
 "License:     This program is free software. It comes without any warranty,
 "             to the extent permitted by applicable law. You can redistribute
 "             it and/or modify it under the terms of the Do What The Fuck You
@@ -24,15 +24,15 @@ if !s:running_windows
 endif
 
 if !exists("g:syntastic_enable_signs") || !has('signs')
-    let g:syntastic_enable_signs = 0
+    let g:syntastic_enable_signs = 1
 endif
 
 if !exists("g:syntastic_enable_balloons") || !has('balloon_eval')
-    let g:syntastic_enable_balloons = 0
+    let g:syntastic_enable_balloons = 1
 endif
 
 if !exists("g:syntastic_auto_loc_list")
-    let g:syntastic_auto_loc_list = 0
+    let g:syntastic_auto_loc_list = 2
 endif
 
 if !exists("g:syntastic_auto_jump")
@@ -64,8 +64,8 @@ if !has_key(g:syntastic_mode_map, "passive_filetypes")
 endif
 
 command! -nargs=0 SyntasticToggleMode call s:ToggleMode()
-command SyntasticCheck -nargs=0 call s:UpdateErrors(0) <bar> redraw!
-command Errors call s:ShowLocList()
+command! -nargs=0 SyntasticCheck call s:UpdateErrors(0) <bar> redraw!
+command! Errors call s:ShowLocList()
 
 "refresh and redraw all the error info for this buf when saving or reading
 autocmd bufreadpost,bufwritepost * call s:UpdateErrors(1)
@@ -78,12 +78,8 @@ function! s:UpdateErrors(auto_invoked)
         call s:CacheErrors()
     end
 
-    if g:syntastic_enable_balloons && has('balloon_eval')
-        let b:syntastic_balloons = {}
-        for i in b:syntastic_loclist
-            let b:syntastic_balloons[i['lnum']] = i['text']
-        endfor
-        set beval bexpr=syntastic#ErrorBalloonExpr()
+    if g:syntastic_enable_balloons
+        call s:RefreshBalloons()
     endif
 
     if g:syntastic_enable_signs
@@ -257,6 +253,24 @@ function! s:ShowLocList()
     endif
 endfunction
 
+function! s:ClearErrorHighlights()
+    for i in s:ErrorHighlightIds()
+        call matchdelete(i)
+    endfor
+    let b:syntastic_error_highlight_ids = []
+endfunction
+
+function! s:HighlightError(group, pattern)
+    call add(s:ErrorHighlightIds(), matchadd(a:group, a:pattern))
+endfunction
+
+function! s:ErrorHighlightIds()
+    if !exists("b:syntastic_error_highlight_ids")
+        let b:syntastic_error_highlight_ids = []
+    endif
+    return b:syntastic_error_highlight_ids
+endfunction
+
 "return a string representing the state of buffer according to
 "g:syntastic_stl_format
 "
@@ -343,6 +357,40 @@ function! SyntasticMake(options)
     endif
 
     return errors
+endfunction
+
+function! s:RefreshBalloons()
+    if s:BufHasErrorsOrWarningsToDisplay() && has('balloon_eval')
+        let b:syntastic_balloons = {}
+        for i in b:syntastic_loclist
+            let b:syntastic_balloons[i['lnum']] = i['text']
+        endfor
+        set beval bexpr=SyntasticErrorBalloonExpr()
+    endif
+endfunction
+
+function! SyntasticErrorBalloonExpr()
+    if !exists('b:syntastic_balloons') | return '' | endif
+    return get(b:syntastic_balloons, v:beval_lnum, '')
+endfunction
+
+function! SyntasticHighlightErrors(errors, termfunc, ...)
+    call s:ClearErrorHighlights()
+
+    let forcecb = a:0 && a:1
+    for item in a:errors
+        let group = item['type'] == 'E' ? 'SpellBad' : 'SpellCap'
+        if item['col'] && !forcecb
+            let lastcol = col([item['lnum'], '$'])
+            let lcol = min([lastcol, item['col']])
+            call s:HighlightError(group, '\%'.item['lnum'].'l\%'.lcol.'c')
+        else
+            let term = a:termfunc(item)
+            if len(term) > 0
+                call s:HighlightError(group, '\%' . item['lnum'] . 'l' . term)
+            endif
+        endif
+    endfor
 endfunction
 
 function! s:Checkable(ft)

@@ -36,4 +36,5 @@ tcomment#OperatorAnyway()	tcomment.txt	/*tcomment#OperatorAnyway()*
 tcomment#OperatorLine()	tcomment.txt	/*tcomment#OperatorLine()*
 tcomment#OperatorLineAnyway()	tcomment.txt	/*tcomment#OperatorLineAnyway()*
 tcomment-maps	tcomment.txt	/*tcomment-maps*
+tcomment-operator	tcomment.txt	/*tcomment-operator*
 tcomment.txt	tcomment.txt	/*tcomment.txt*

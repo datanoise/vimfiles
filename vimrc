@@ -322,7 +322,8 @@ nnoremap <silent> <leader>n :CommandTFlush<CR>
 
 " syntastic settings {{{2
 " puppet is too slow, html/tidy doesn't support HTML5
-let g:syntastic_disabled_filetypes = ['coffee', 'cpp', 'c', 'scss', 'puppet', 'html', 'cucumber']
+let g:syntastic_mode_map = { 'mode': 'active', 'active_filetypes': [],
+      \ 'passive_filetypes': ['coffee', 'cpp', 'c', 'scss', 'puppet', 'html', 'cucumber'] }
 let g:syntastic_auto_loc_list=2
 let g:syntastic_stl_format = '[ERR:%F(%t)]'
 

@@ -5,7 +5,7 @@
 runtime! macros/matchit.vim
 set nocompatible      " We're running Vim, not Vi!
 call pathogen#runtime_append_all_bundles()
-call pathogen#helptags()
+" call pathogen#helptags()
 syntax on             " Enable syntax highlighting
 filetype on           " Enable filetype detection
 filetype indent on    " Enable filetype-specific indenting
@@ -212,6 +212,8 @@ inoremap [<Space> []<Esc>i<Space><Space><Esc>i
 inoremap <C-\> <C-p>
 nnoremap <F2> <C-w><C-w>
 nnoremap <F4> :sil make %<CR><c-l>:cc<CR>
+nnoremap <leader># :exe ':Ack ' . expand('<cword>')<CR><CR>
+nnoremap <leader>* :exe ':Ack ' . expand('<cword>')<CR><CR>
 
 function! SwitchPrevBuf()
   let prev = bufname("#")
@@ -295,11 +297,11 @@ let tlist_javascript_settings = 'js;c:class;f:function'
 nnoremap <silent> \[  :TlistOpen<CR>
 
 " NERD_tree settings {{{2
-let NERDTreeQuitOnOpen = 1 " Close NERDTree when a file is opened
+let g:NERDTreeQuitOnOpen = 1 " Close NERDTree when a file is opened
 let g:NERDTreeHijackNetrw = 0
-let NERDTreeIgnore=['\.o$', '\~$', '\.class$']
-let NERDTreeMinimalUI=0
-let NERDTreeDirArrows=1
+let g:NERDTreeIgnore=['\.o$', '\~$', '\.class$']
+let g:NERDTreeMinimalUI=0
+let g:NERDTreeDirArrows=1
 nnoremap <silent> <leader>f  :exec 'NERDTree' . expand('%:p:h')<CR>
 
 " rubycomplete plugin settings {{{2

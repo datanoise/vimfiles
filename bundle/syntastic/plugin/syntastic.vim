@@ -23,12 +23,12 @@ if !s:running_windows
     let s:uname = system('uname')
 endif
 
-if !exists("g:syntastic_enable_signs") || !has('signs')
-    let g:syntastic_enable_signs = 1
+if !exists("g:syntastic_enable_signs")
+    let g:syntastic_enable_signs = has('signs')? 1 : 0
 endif
 
-if !exists("g:syntastic_enable_balloons") || !has('balloon_eval')
-    let g:syntastic_enable_balloons = 1
+if !exists("g:syntastic_enable_balloons")
+    let g:syntastic_enable_balloons = has('balloon_eval')? 1 : 0
 endif
 
 if !exists("g:syntastic_auto_loc_list")
@@ -257,7 +257,7 @@ function! s:ClearErrorHighlights()
     for i in s:ErrorHighlightIds()
         call matchdelete(i)
     endfor
-    let b:syntastic_error_highlight_ids = []
+    let w:syntastic_error_highlight_ids = []
 endfunction
 
 function! s:HighlightError(group, pattern)
@@ -265,10 +265,10 @@ function! s:HighlightError(group, pattern)
 endfunction
 
 function! s:ErrorHighlightIds()
-    if !exists("b:syntastic_error_highlight_ids")
-        let b:syntastic_error_highlight_ids = []
+    if !exists("w:syntastic_error_highlight_ids")
+        let w:syntastic_error_highlight_ids = []
     endif
-    return b:syntastic_error_highlight_ids
+    return w:syntastic_error_highlight_ids
 endfunction
 
 "return a string representing the state of buffer according to
@@ -360,8 +360,8 @@ function! SyntasticMake(options)
 endfunction
 
 function! s:RefreshBalloons()
+    let b:syntastic_balloons = {}
     if s:BufHasErrorsOrWarningsToDisplay() && has('balloon_eval')
-        let b:syntastic_balloons = {}
         for i in b:syntastic_loclist
             let b:syntastic_balloons[i['lnum']] = i['text']
         endfor

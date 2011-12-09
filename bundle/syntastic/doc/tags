@@ -1,6 +1,7 @@
 'syntastic_auto_jump'	syntastic.txt	/*'syntastic_auto_jump'*
 'syntastic_auto_loc_list'	syntastic.txt	/*'syntastic_auto_loc_list'*
 'syntastic_enable_balloons'	syntastic.txt	/*'syntastic_enable_balloons'*
+'syntastic_enable_highlighting'	syntastic.txt	/*'syntastic_enable_highlighting'*
 'syntastic_enable_signs'	syntastic.txt	/*'syntastic_enable_signs'*
 'syntastic_mode_map'	syntastic.txt	/*'syntastic_mode_map'*
 'syntastic_quiet_warnings'	syntastic.txt	/*'syntastic_quiet_warnings'*

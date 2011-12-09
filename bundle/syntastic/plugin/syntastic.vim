@@ -24,11 +24,21 @@ if !s:running_windows
 endif
 
 if !exists("g:syntastic_enable_signs")
-    let g:syntastic_enable_signs = has('signs')? 1 : 0
+    let g:syntastic_enable_signs = 1
+endif
+if !has('signs')
+    let g:syntastic_enable_signs = 0
 endif
 
 if !exists("g:syntastic_enable_balloons")
-    let g:syntastic_enable_balloons = has('balloon_eval')? 1 : 0
+    let g:syntastic_enable_balloons = 1
+endif
+if !has('balloon_eval')
+    let g:syntastic_enable_balloons = 0
+endif
+
+if !exists("g:syntastic_enable_highlighting")
+    let g:syntastic_enable_highlighting = 1
 endif
 
 if !exists("g:syntastic_auto_loc_list")
@@ -287,7 +297,7 @@ endfunction
 "set up error ballons for the current set of errors
 function! s:RefreshBalloons()
     let b:syntastic_balloons = {}
-    if s:BufHasErrorsOrWarningsToDisplay() && has('balloon_eval')
+    if s:BufHasErrorsOrWarningsToDisplay()
         for i in b:syntastic_loclist
             let b:syntastic_balloons[i['lnum']] = i['text']
         endfor
@@ -345,6 +355,9 @@ endfunction
 "
 "The corresponding options are set for the duration of the function call. They
 "are set with :let, so dont escape spaces.
+"
+"a:options may also contain:
+"   'defaults' - a dict containing default values for the returned errors
 function! SyntasticMake(options)
     let old_loclist = getloclist(0)
     let old_makeprg = &makeprg
@@ -380,6 +393,10 @@ function! SyntasticMake(options)
         redraw!
     endif
 
+    if has_key(a:options, 'defaults')
+        call SyntasticAddToErrors(errors, a:options['defaults'])
+    endif
+
     return errors
 endfunction
 
@@ -400,6 +417,10 @@ endfunction
 "an optional boolean third argument can be provided to force a:termfunc to be
 "used regardless of whether a 'col' key is present for the error
 function! SyntasticHighlightErrors(errors, termfunc, ...)
+    if !g:syntastic_enable_highlighting
+        return
+    endif
+
     call s:ClearErrorHighlights()
 
     let force_callback = a:0 && a:1
@@ -416,6 +437,18 @@ function! SyntasticHighlightErrors(errors, termfunc, ...)
             endif
         endif
     endfor
+endfunction
+
+"take a list of errors and add default values to them from a:options
+function! SyntasticAddToErrors(errors, options)
+    for i in range(0, len(a:errors)-1)
+        for key in keys(a:options)
+            if empty(a:errors[i][key])
+                let a:errors[i][key] = a:options[key]
+            endif
+        endfor
+    endfor
+    return a:errors
 endfunction
 
 " vim: set et sts=4 sw=4:

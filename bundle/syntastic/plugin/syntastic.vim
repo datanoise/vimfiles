@@ -41,6 +41,10 @@ if !exists("g:syntastic_enable_highlighting")
     let g:syntastic_enable_highlighting = 1
 endif
 
+if !exists("g:syntastic_echo_current_error")
+    let g:syntastic_echo_current_error = 1
+endif
+
 if !exists("g:syntastic_auto_loc_list")
     let g:syntastic_auto_loc_list = 2
 endif
@@ -73,12 +77,23 @@ if !has_key(g:syntastic_mode_map, "passive_filetypes")
     let g:syntastic_mode_map['passive_filetypes'] = []
 endif
 
-command! -nargs=0 SyntasticToggleMode call s:ToggleMode()
-command! -nargs=0 SyntasticCheck call s:UpdateErrors(0) <bar> redraw!
+command! SyntasticToggleMode call s:ToggleMode()
+command! SyntasticCheck call s:UpdateErrors(0) <bar> redraw!
 command! Errors call s:ShowLocList()
 
+highlight link SyntasticError SpellBad
+highlight link SyntasticWarning SpellCap
+
+augroup syntastic
+    if g:syntastic_echo_current_error
+        autocmd cursormoved * call s:EchoCurrentError()
+    endif
+
+    autocmd bufreadpost,bufwritepost * call s:UpdateErrors(1)
+augroup END
+
+
 "refresh and redraw all the error info for this buf when saving or reading
-autocmd bufreadpost,bufwritepost * call s:UpdateErrors(1)
 function! s:UpdateErrors(auto_invoked)
     if &buftype == 'quickfix'
         return
@@ -265,23 +280,11 @@ endfunction
 
 "remove all error highlights from the window
 function! s:ClearErrorHighlights()
-    for i in s:ErrorHighlightIds()
-        call matchdelete(i)
+    for match in getmatches()
+        if stridx(match['group'], 'Syntastic') == 0
+            call matchdelete(match['id'])
+        endif
     endfor
-    let w:syntastic_error_highlight_ids = []
-endfunction
-
-"add an error highlight to the window
-function! s:HighlightError(group, pattern)
-    call add(s:ErrorHighlightIds(), matchadd(a:group, a:pattern))
-endfunction
-
-"get (and/or init) the array of error highlights for the current window
-function! s:ErrorHighlightIds()
-    if !exists("w:syntastic_error_highlight_ids")
-        let w:syntastic_error_highlight_ids = []
-    endif
-    return w:syntastic_error_highlight_ids
 endfunction
 
 "check if a syntax checker exists for the given filetype - and attempt to
@@ -303,6 +306,37 @@ function! s:RefreshBalloons()
         endfor
         set beval bexpr=SyntasticErrorBalloonExpr()
     endif
+endfunction
+
+"print as much of a:msg as possible without "Press Enter" prompt appearing
+function! s:WideMsg(msg)
+    let old_ruler = &ruler
+    let old_showcmd = &showcmd
+
+    set noruler noshowcmd
+    redraw
+    echo strpart(a:msg, 0, winwidth(0)-1)
+
+    let &ruler=old_ruler
+    let &showcmd=old_showcmd
+endfunction
+
+"echo out the first error we find for the current line in the cmd window
+function! s:EchoCurrentError()
+    if !exists('b:syntastic_loclist')
+        return
+    endif
+
+    "If we have an error or warning at the current line, show it
+    let lnum = line(".")
+    for i in b:syntastic_loclist
+        if lnum == i['lnum']
+            return s:WideMsg(i['text'])
+        endif
+    endfor
+
+    "Otherwise, clear the status line
+    echo
 endfunction
 
 "return a string representing the state of buffer according to
@@ -425,15 +459,15 @@ function! SyntasticHighlightErrors(errors, termfunc, ...)
 
     let force_callback = a:0 && a:1
     for item in a:errors
-        let group = item['type'] == 'E' ? 'SpellBad' : 'SpellCap'
+        let group = item['type'] == 'E' ? 'SyntasticError' : 'SyntasticWarning'
         if item['col'] && !force_callback
             let lastcol = col([item['lnum'], '$'])
             let lcol = min([lastcol, item['col']])
-            call s:HighlightError(group, '\%'.item['lnum'].'l\%'.lcol.'c')
+            call matchadd(group, '\%'.item['lnum'].'l\%'.lcol.'c')
         else
             let term = a:termfunc(item)
             if len(term) > 0
-                call s:HighlightError(group, '\%' . item['lnum'] . 'l' . term)
+                call matchadd(group, '\%' . item['lnum'] . 'l' . term)
             endif
         endif
     endfor

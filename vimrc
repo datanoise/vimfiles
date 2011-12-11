@@ -191,8 +191,9 @@ nnoremap <silent> <leader>h :set hlsearch!<CR>
 nnoremap <silent> \l :setlocal list!<CR>
 nnoremap <silent> \n :set nu!<CR>
 " indented paste
-nnoremap <silent> <leader>p p:'[,']normal ==<CR>
-nnoremap <silent> <leader>P P:'[,']normal ==<CR>
+nnoremap <silent> <leader>p p`]=`[
+nnoremap <silent> <leader>P P=`]
+" remove end-line spaces
 nnoremap <silent> <leader>sd mx:%s/\s\+$//<CR>`x
 
 nnoremap <C-J> <C-D>
@@ -281,6 +282,7 @@ func! SynName()
 endfunc
 command! SynName :call SynName()
 cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
+cabbr ack Ack
 iabbr THen Then
 iabbr WHen When
 
@@ -320,6 +322,7 @@ if !has('gui_running')
 end
 nnoremap <silent> <leader>m :CommandT<CR>
 nnoremap <silent> <leader>l :CommandTBuffer<CR>
+nnoremap <silent> <leader>j :CommandTJump<CR>
 nnoremap <silent> <leader>n :CommandTFlush<CR>
 
 " syntastic settings {{{2

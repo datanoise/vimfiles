@@ -144,7 +144,13 @@ nmap ]<Space> <Plug>unimpairedBlankDown
 
 function! s:Move(cmd, count, map) abort
   normal! m`
-  exe 'move'.a:cmd.a:count
+  try
+    exe 'move'.a:cmd.a:count
+  catch 'E14'
+    echohl ErrorMsg | echo v:exception | echohl None
+    return
+  endtry
+  echo
   norm! ``
   silent! call repeat#set("\<Plug>unimpairedMove".a:map, a:count)
 endfunction

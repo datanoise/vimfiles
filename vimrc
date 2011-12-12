@@ -193,6 +193,7 @@ nnoremap <silent> \n :set nu!<CR>
 " indented paste
 nnoremap <silent> <leader>p p`]=`[
 nnoremap <silent> <leader>P P=`]
+nnoremap <silent> <leader>gp "_ddP=`]
 " remove end-line spaces
 nnoremap <silent> <leader>sd mx:%s/\s\+$//<CR>`x
 

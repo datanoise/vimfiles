@@ -11,32 +11,32 @@
 " Don't load script when already loaded
 " or when not on Mac
 if exists("g:loaded_colorchooser") || !has('mac')
-        finish
+  finish
 endif
 let g:loaded_colorchooser = 1
 
 let s:app = 'iTerm.app'
-if has('gui_macvim')
-        let s:app = 'MacVim.app'
+if has('gui_macvim') && has('gui_running')
+  let s:app = 'MacVim.app'
 endif
 
-let s:ascrpt = ['-e "tell application \"' . s:app . '\""', 
-                        \ '-e "activate"', 
-                        \ "-e \"set AppleScript's text item delimiters to {\\\",\\\"}\"",
-                        \ '-e "set col to (choose color) as text"',
-                        \ '-e "end tell"']
+let s:ascrpt = ['-e "tell application \"' . s:app . '\""',
+      \ '-e "activate"',
+      \ "-e \"set AppleScript's text item delimiters to {\\\",\\\"}\"",
+      \ '-e "set col to (choose color) as text"',
+      \ '-e "end tell"']
 
 function! s:colour_rgb()
-        return system("osascript " . join(s:ascrpt, ' '))
+  return system("osascript " . join(s:ascrpt, ' '))
 endfunction
 
 function! s:append_colour(col)
-        exe "normal a" . a:col
+  exe "normal a" . a:col
 endfunction
 
 function! s:colour_hex()
-        let rgb = split(s:colour_rgb(), ',')
-        return printf('#%02X%02X%02X', str2nr(rgb[0])/256, str2nr(rgb[1])/256, str2nr(rgb[2])/256)
+  let rgb = split(s:colour_rgb(), ',')
+  return printf('#%02X%02X%02X', str2nr(rgb[0])/256, str2nr(rgb[1])/256, str2nr(rgb[2])/256)
 endfunction
 
 command! ColorRGB :call s:append_colour(s:colour_rgb())

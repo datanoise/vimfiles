@@ -16,6 +16,9 @@ set cpo&vim
 hi Normal       guifg=#f6f3e8       guibg=#050505       gui=NONE
             \   ctermfg=white       ctermbg=black       cterm=NONE
 
+hi Conceal      guifg=#f6f3e8       guibg=#050505       gui=NONE
+            \   ctermfg=white       ctermbg=black       cterm=NONE
+
 hi Folded       guifg=#c2bfa5       guibg=#050505       gui=NONE
             \   ctermfg=lightgray   ctermbg=black       cterm=NONE
 

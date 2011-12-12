@@ -313,9 +313,18 @@ function! s:WideMsg(msg)
     let old_ruler = &ruler
     let old_showcmd = &showcmd
 
+    let msg = strpart(a:msg, 0, winwidth(0)-1)
+
+    "This is here because it is possible for some error messages to begin with
+    "\n which will cause a "press enter" prompt. I have noticed this in the
+    "javascript:jshint checker and have been unable to figure out why it
+    "happens
+    let msg = substitute(msg, "\n", "", "g")
+
     set noruler noshowcmd
     redraw
-    echo strpart(a:msg, 0, winwidth(0)-1)
+
+    echo msg
 
     let &ruler=old_ruler
     let &showcmd=old_showcmd
@@ -331,12 +340,16 @@ function! s:EchoCurrentError()
     let lnum = line(".")
     for i in b:syntastic_loclist
         if lnum == i['lnum']
+            let b:syntastic_echoing_error = 1
             return s:WideMsg(i['text'])
         endif
     endfor
 
     "Otherwise, clear the status line
-    echo
+    if exists("b:syntastic_echoing_error")
+        echo
+        unlet b:syntastic_echoing_error
+    endif
 endfunction
 
 "return a string representing the state of buffer according to

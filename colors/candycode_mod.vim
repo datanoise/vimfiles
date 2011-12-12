@@ -52,7 +52,7 @@ hi DiffText     guifg=#ffffff       guibg=#976398       gui=NONE
 
 hi FoldColumn   guifg=#c8bcb9       guibg=#202020       gui=NONE
             \   ctermfg=lightgray   ctermbg=darkgray    cterm=NONE
-hi SignColumn   guifg=#c8bcb9       guibg=#786d65       gui=NONE
+hi SignColumn   guifg=#c8bcb9       guibg=#202020       gui=none
             \   ctermfg=lightgray   ctermbg=darkgray    cterm=NONE
 
 hi PmenuSbar    guifg=NONE          guibg=#555555       gui=NONE

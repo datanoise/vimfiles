@@ -257,7 +257,7 @@ au FileType coffee nnoremap <buffer> <F3> :CoffeeCompile<CR>
 au FileType coffee vnoremap <buffer> <F3> :CoffeeCompile<CR>
 au FileType coffee nnoremap <buffer> <F4> :CoffeeRun<CR>
 au FileType cucumber nnoremap <buffer> <F4> :!cucumber %<CR>
-au FileType cucumber nnoremap <buffer> <F5> :exe '!cucumber ' . expand('%') . ':' . line('.')<CR>
+au FileType cucumber nnoremap <buffer> <F5> ^:exe '!cucumber ' . expand('%') . ':' . search('^\s*Scenario:','bnW')<CR>
 au FileType cucumber inoremap <buffer> \| \|<Esc>:Tab /\|<CR>A
 au FileType help nnoremap <silent> <buffer> q :bd<CR>
 au FileType vim  nnoremap <silent> <buffer> K :h <c-r>=expand('<cword>')<CR><CR>
@@ -283,6 +283,7 @@ endfunc
 command! SynName :call SynName()
 cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
 cabbr ack Ack
+cabbr cmdt CommandT<CR>
 iabbr THen Then
 iabbr WHen When
 
@@ -330,7 +331,9 @@ nnoremap <silent> <leader>n :CommandTFlush<CR>
 let g:syntastic_mode_map = { 'mode': 'active', 'active_filetypes': [],
       \ 'passive_filetypes': ['coffee', 'cpp', 'c', 'scss', 'puppet', 'html', 'cucumber'] }
 let g:syntastic_auto_loc_list=2
+let g:syntastic_enable_signs=1
 let g:syntastic_stl_format = '[ERR:%F(%t)]'
+let g:syntastic_javascript_jsl_conf = "~/.jsl.conf"
 
 " snipmate settings {{{2
 function! MyGetSnips(scopes, word)

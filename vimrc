@@ -229,6 +229,7 @@ endfunction
 
 nnoremap <silent> <C-tab> :call SwitchPrevBuf()<CR>
 nnoremap <silent> <C-^> :call SwitchPrevBuf()<CR>
+nnoremap <silent> <C-6> :call SwitchPrevBuf()<CR>
 if has('mac')
   nnoremap <silent> <D-[> :bprev<CR>
   nnoremap <silent> <D-]> :bnext<CR>

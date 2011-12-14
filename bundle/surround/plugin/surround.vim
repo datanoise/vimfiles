@@ -551,6 +551,8 @@ if !exists("g:surround_no_mappings") || ! g:surround_no_mappings
   nmap ySS <Plug>YSsurround
   xmap S   <Plug>VSurround
   xmap gS  <Plug>VgSurround
+  xmap s   <Plug>VSurround
+  xmap gs  <Plug>VgSurround
   if maparg('s', 'x') ==# ''
     xnoremap <silent> s :<C-U>echoerr 'surround.vim: Visual mode s has been removed in favor of S'<CR>
   endif

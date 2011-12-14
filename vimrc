@@ -32,6 +32,7 @@ else
 endif
 set undodir=~/tmp/undofile
 set undofile
+set history=1000
 " }}}
 " search options {{{2
 " always use incremental search

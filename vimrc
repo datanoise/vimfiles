@@ -215,8 +215,8 @@ inoremap [<Space> []<Esc>i<Space><Space><Esc>i
 inoremap <C-\> <C-p>
 nnoremap <F2> <C-w><C-w>
 nnoremap <F4> :sil make %<CR><c-l>:cc<CR>
-nnoremap <leader># :exe ':Ack ' . expand('<cword>')<CR><CR>
-nnoremap <leader>* :exe ':Ack ' . expand('<cword>')<CR><CR>
+nnoremap [f :exe ':Ack ' . expand('<cword>')<CR><CR>
+nnoremap ]f :exe ':Ack ' . matchstr(getline('.'), '\%'.virtcol('.').'v\w*')<CR><CR>
 
 function! SwitchPrevBuf()
   let prev = bufname("#")

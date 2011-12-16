@@ -208,15 +208,37 @@ function! s:ErrorsForType(type)
     if !exists("b:syntastic_loclist")
         return []
     endif
-    return filter(copy(b:syntastic_loclist), 'v:val["type"] ==? "' . a:type . '"')
+    return s:FilterLocList(b:syntastic_loclist, {'type': a:type})
 endfunction
 
-function s:Errors()
+function! s:Errors()
     return extend(s:ErrorsForType("E"), s:ErrorsForType(''))
 endfunction
 
-function s:Warnings()
+function! s:Warnings()
     return s:ErrorsForType("W")
+endfunction
+
+"Filter a:llist by a:filters
+"e.g.
+"  s:FilterLocList(list, {'bufnr': 10, 'type': 'e'})
+"
+"would return all errors for buffer 10.
+"
+"Note that all comparisons are done with ==?
+function! s:FilterLocList(llist, filters)
+    let rv = deepcopy(a:llist)
+    for error in a:llist
+        for key in keys(a:filters)
+            let rhs = a:filters[key]
+            if type(rhs) == 1 "string
+                let rhs = '"' . rhs . '"'
+            endif
+
+            call filter(rv, "v:val['".key."'] ==? " . rhs)
+        endfor
+    endfor
+    return rv
 endfunction
 
 if g:syntastic_enable_signs
@@ -232,23 +254,33 @@ let s:first_sign_id = 5000
 let s:next_sign_id = s:first_sign_id
 
 "place signs by all syntax errs in the buffer
-function s:SignErrors()
+function! s:SignErrors()
     if s:BufHasErrorsOrWarningsToDisplay()
-        for i in b:syntastic_loclist
-            if i['bufnr'] != bufnr("")
-                continue
-            endif
 
+        let errors = s:FilterLocList(b:syntastic_loclist, {'bufnr': bufnr('') })
+        for i in errors
             let sign_type = 'SyntasticError'
-            if i['type'] == 'W'
+            if i['type'] ==? 'W'
                 let sign_type = 'SyntasticWarning'
             endif
 
-            exec "sign place ". s:next_sign_id ." line=". i['lnum'] ." name=". sign_type ." file=". expand("%:p")
-            call add(s:BufSignIds(), s:next_sign_id)
-            let s:next_sign_id += 1
+            if !s:WarningMasksError(i, errors)
+                exec "sign place ". s:next_sign_id ." line=". i['lnum'] ." name=". sign_type ." file=". expand("%:p")
+                call add(s:BufSignIds(), s:next_sign_id)
+                let s:next_sign_id += 1
+            endif
         endfor
     endif
+endfunction
+
+"return true if the given error item is a warning that, if signed, would
+"potentially mask an error if displayed at the same time
+function! s:WarningMasksError(error, llist)
+    if a:error['type'] !=? 'w'
+        return 0
+    endif
+
+    return len(s:FilterLocList(a:llist, { 'type': "E", 'lnum': a:error['lnum'] })) > 0
 endfunction
 
 "remove the signs with the given ids from this buffer
@@ -345,13 +377,16 @@ function! s:EchoCurrentError()
     endif
 
     "If we have an error or warning at the current line, show it
-    let lnum = line(".")
-    for i in b:syntastic_loclist
-        if lnum == i['lnum']
-            let b:syntastic_echoing_error = 1
-            return s:WideMsg(i['text'])
-        endif
-    endfor
+    let errors = s:FilterLocList(b:syntastic_loclist, {'lnum': line("."), "type": 'e'})
+    let warnings = s:FilterLocList(b:syntastic_loclist, {'lnum': line("."), "type": 'w'})
+
+    let b:syntastic_echoing_error = len(errors) || len(warnings)
+    if len(errors)
+        return s:WideMsg(errors[0]['text'])
+    endif
+    if len(warnings)
+        return s:WideMsg(warnings[0]['text'])
+    endif
 
     "Otherwise, clear the status line
     if exists("b:syntastic_echoing_error")

@@ -2,8 +2,8 @@
 "File:        syntastic.vim
 "Description: vim plugin for on the fly syntax checking
 "Maintainer:  Martin Grenfell <martin.grenfell at gmail dot com>
-"Version:     2.0.0
-"Last Change: 2 Dec, 2011
+"Version:     2.1.0
+"Last Change: 14 Dec, 2011
 "License:     This program is free software. It comes without any warranty,
 "             to the extent permitted by applicable law. You can redistribute
 "             it and/or modify it under the terms of the Do What The Fuck You
@@ -159,6 +159,9 @@ function! s:ToggleMode()
     else
         let g:syntastic_mode_map['mode'] = "active"
     endif
+
+    let b:syntastic_loclist = []
+    call s:UpdateErrors(1)
 
     echo "Syntastic: " . g:syntastic_mode_map['mode'] . " mode enabled"
 endfunction

@@ -29,7 +29,7 @@ hi Question term=standout ctermfg=green gui=bold guifg=olivedrab1
 hi WarningMsg   term=standout ctermfg=red gui=bold guifg=red3
 hi WildMenu term=standout ctermfg=black ctermbg=yellow guifg=black guibg=gold2
 hi Folded   term=standout ctermfg=blue ctermbg=white guifg=royalblue1 guibg=white
-hi FoldColumn   term=standout ctermfg=blue ctermbg=white guifg=royalblue3 guibg=white
+hi FoldColumn   term=standout ctermfg=blue ctermbg=gray guifg=royalblue3 guibg=black
 hi DiffAdd  term=bold ctermbg=blue guibg=royalblue2
 hi DiffChange   term=bold ctermbg=darkmagenta guibg=maroon
 hi DiffDelete   term=bold cterm=bold ctermfg=lightblue ctermbg=cyan gui=bold guifg=lightblue guibg=cyan4

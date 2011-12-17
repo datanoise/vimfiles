@@ -4,6 +4,12 @@ if !exists('g:snipMate')
 endif
 let s:snipMate = g:snipMate
 
+try
+	call tlib#input#List('mi', '', [])
+catch /.*/
+	echoe "you're missing tlib. See install instructions at ".expand('<sfile>:h:h').'/README.rst'
+endtry
+
 " if filetype is objc, cpp, or cs also append snippets from scope 'c'
 " you can add multiple by separating scopes by ',', see s:AddScopeAliases
 " TODO add documentation to doc/*
@@ -692,7 +698,7 @@ fun! snipMate#OpenSnippetFiles()
 	let v['file'] = file
 	if v['exists']
 	  call add(exists, v)
-	.lse
+	else
 	  call add(notExists, v)
 	endif
   endfor
@@ -727,7 +733,7 @@ fun! snipMate#GetSnippetsForWordBelowCursor(word, suffix, break_on_first_match)
 
 	" allow matching '.'
 	if a:word =~ '\.$'
-		call insert(lookups, '.'.a:suffix, len(lookups))
+		call insert(lookups, '.'.a:suffix, 0)
 	endif
 
 	call filter(lookups, 'v:val != ""')

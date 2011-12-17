@@ -121,7 +121,8 @@ set bg=dark
 if has('gui_running')
   colo xorium
 else
-  colo candycode_mod
+  colo dante
+  " colo candycode_mod
   " colo ir_black_mod
 endif
 if exists('&mc')

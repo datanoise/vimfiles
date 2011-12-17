@@ -89,13 +89,15 @@ augroup syntastic
         autocmd cursormoved * call s:EchoCurrentError()
     endif
 
-    autocmd bufreadpost,bufwritepost * call s:UpdateErrors(1)
+    autocmd BufReadPost,BufWritePost * call s:UpdateErrors(1)
+    autocmd BufWinEnter * if empty(&bt) | call s:AutoToggleLocList() | endif
+    autocmd BufWinLeave * if empty(&bt) | call s:Lclose() | endif
 augroup END
 
 
 "refresh and redraw all the error info for this buf when saving or reading
 function! s:UpdateErrors(auto_invoked)
-    if &buftype == 'quickfix'
+    if !empty(&buftype)
         return
     endif
 
@@ -111,24 +113,64 @@ function! s:UpdateErrors(auto_invoked)
         call s:RefreshSigns()
     endif
 
+    call s:AutoToggleLocList()
+endfunction
+
+function s:AutoToggleLocList()
     if s:BufHasErrorsOrWarningsToDisplay()
-        call setloclist(0, b:syntastic_loclist)
+        call setloclist(0, s:LocList())
         if g:syntastic_auto_jump
             silent! ll
         endif
     elseif g:syntastic_auto_loc_list == 2
-        lclose
+        call s:Lclose()
     endif
 
     if g:syntastic_auto_loc_list == 1
         if s:BufHasErrorsOrWarningsToDisplay()
             call s:ShowLocList()
         else
-            "TODO: this will close the loc list window if one was opened by
-            "something other than syntastic
-            lclose
+            call s:Lclose()
         endif
     endif
+endfunction
+
+"close the current loc list if it contains only syntastic data
+"
+"Note that we cant just compare the 2 lists since calling setloclist() adds
+"some extra default data to the loclist
+function! s:Lclose()
+    if empty(s:LocList())
+        return
+    endif
+
+    let llist = getloclist(0)
+
+    if len(llist) != len(s:LocList())
+        return
+    endif
+
+    "make sure the line number and message is the same for all elements"
+    for i in range(0,len(llist)-1)
+        if llist[i]['lnum'] != s:LocList()[i]['lnum'] || llist[i]['text'] != s:LocList()[i]['text']
+            return
+        endif
+    endfor
+
+    lclose
+endfunction
+
+"lazy init the loc list for the current buffer
+function! s:LocList()
+    if !exists("b:syntastic_loclist")
+        let b:syntastic_loclist = []
+    endif
+    return b:syntastic_loclist
+endfunction
+
+"clear the loc list for the buffer
+function! s:ClearLocList()
+    let b:syntastic_loclist = []
 endfunction
 
 "detect and cache all syntax errors in this buffer
@@ -136,7 +178,7 @@ endfunction
 "depends on a function called SyntaxCheckers_{&ft}_GetLocList() existing
 "elsewhere
 function! s:CacheErrors()
-    let b:syntastic_loclist = []
+    call s:ClearLocList()
 
     if filereadable(expand("%"))
 
@@ -146,7 +188,7 @@ function! s:CacheErrors()
 
         for ft in split(fts, '\.')
             if s:Checkable(ft)
-                let b:syntastic_loclist = extend(b:syntastic_loclist, SyntaxCheckers_{ft}_GetLocList())
+                call extend(s:LocList(), SyntaxCheckers_{ft}_GetLocList())
             endif
         endfor
     endif
@@ -160,7 +202,7 @@ function! s:ToggleMode()
         let g:syntastic_mode_map['mode'] = "active"
     endif
 
-    let b:syntastic_loclist = []
+    call s:ClearLocList()
     call s:UpdateErrors(1)
 
     echo "Syntastic: " . g:syntastic_mode_map['mode'] . " mode enabled"
@@ -192,7 +234,7 @@ endfunction
 
 "return true if there are cached errors/warnings for this buf
 function! s:BufHasErrorsOrWarnings()
-    return exists("b:syntastic_loclist") && !empty(b:syntastic_loclist)
+    return !empty(s:LocList())
 endfunction
 
 "return true if there are cached errors for this buf
@@ -205,10 +247,7 @@ function! s:BufHasErrorsOrWarningsToDisplay()
 endfunction
 
 function! s:ErrorsForType(type)
-    if !exists("b:syntastic_loclist")
-        return []
-    endif
-    return s:FilterLocList(b:syntastic_loclist, {'type': a:type})
+    return s:FilterLocList({'type': a:type})
 endfunction
 
 function! s:Errors()
@@ -219,16 +258,18 @@ function! s:Warnings()
     return s:ErrorsForType("W")
 endfunction
 
-"Filter a:llist by a:filters
+"Filter a loc list (defaults to s:LocList()) by a:filters
 "e.g.
-"  s:FilterLocList(list, {'bufnr': 10, 'type': 'e'})
+"  s:FilterLocList({'bufnr': 10, 'type': 'e'})
 "
-"would return all errors for buffer 10.
+"would return all errors in s:LocList() for buffer 10.
 "
 "Note that all comparisons are done with ==?
-function! s:FilterLocList(llist, filters)
-    let rv = deepcopy(a:llist)
-    for error in a:llist
+function! s:FilterLocList(filters, ...)
+    let llist = a:0 ? a:1 : s:LocList()
+
+    let rv = deepcopy(llist)
+    for error in llist
         for key in keys(a:filters)
             let rhs = a:filters[key]
             if type(rhs) == 1 "string
@@ -257,7 +298,7 @@ let s:next_sign_id = s:first_sign_id
 function! s:SignErrors()
     if s:BufHasErrorsOrWarningsToDisplay()
 
-        let errors = s:FilterLocList(b:syntastic_loclist, {'bufnr': bufnr('') })
+        let errors = s:FilterLocList({'bufnr': bufnr('')})
         for i in errors
             let sign_type = 'SyntasticError'
             if i['type'] ==? 'W'
@@ -280,7 +321,7 @@ function! s:WarningMasksError(error, llist)
         return 0
     endif
 
-    return len(s:FilterLocList(a:llist, { 'type': "E", 'lnum': a:error['lnum'] })) > 0
+    return len(s:FilterLocList({ 'type': "E", 'lnum': a:error['lnum'] }, a:llist)) > 0
 endfunction
 
 "remove the signs with the given ids from this buffer
@@ -309,7 +350,7 @@ endfunction
 
 "display the cached errors for this buf in the location list
 function! s:ShowLocList()
-    if exists("b:syntastic_loclist")
+    if !empty(s:LocList())
         let num = winnr()
         lopen
         if num != winnr()
@@ -341,7 +382,7 @@ endfunction
 function! s:RefreshBalloons()
     let b:syntastic_balloons = {}
     if s:BufHasErrorsOrWarningsToDisplay()
-        for i in b:syntastic_loclist
+        for i in s:LocList()
             let b:syntastic_balloons[i['lnum']] = i['text']
         endfor
         set beval bexpr=SyntasticErrorBalloonExpr()
@@ -372,13 +413,9 @@ endfunction
 
 "echo out the first error we find for the current line in the cmd window
 function! s:EchoCurrentError()
-    if !exists('b:syntastic_loclist')
-        return
-    endif
-
     "If we have an error or warning at the current line, show it
-    let errors = s:FilterLocList(b:syntastic_loclist, {'lnum': line("."), "type": 'e'})
-    let warnings = s:FilterLocList(b:syntastic_loclist, {'lnum': line("."), "type": 'w'})
+    let errors = s:FilterLocList({'lnum': line("."), "type": 'e'})
+    let warnings = s:FilterLocList({'lnum': line("."), "type": 'w'})
 
     let b:syntastic_echoing_error = len(errors) || len(warnings)
     if len(errors)
@@ -418,10 +455,10 @@ function! SyntasticStatuslineFlag()
         "sub in the total errors/warnings/both
         let output = substitute(output, '\C%w', len(warnings), 'g')
         let output = substitute(output, '\C%e', len(errors), 'g')
-        let output = substitute(output, '\C%t', len(b:syntastic_loclist), 'g')
+        let output = substitute(output, '\C%t', len(s:LocList()), 'g')
 
         "first error/warning line num
-        let output = substitute(output, '\C%F', b:syntastic_loclist[0]['lnum'], 'g')
+        let output = substitute(output, '\C%F', s:LocList()[0]['lnum'], 'g')
 
         "first error line num
         let output = substitute(output, '\C%fe', len(errors) ? errors[0]['lnum'] : '', 'g')

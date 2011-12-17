@@ -15,6 +15,12 @@ endif
 let loaded_snips = 1
 if !exists('snips_author') | let snips_author = 'Me' | endif
 
+try
+	call funcref#Function('')
+catch /.*/
+	echoe "you're missing vim-addon-mw-utils. See install instructions at ".expand('<sfile>:h:h').'/README.rst'
+endtry
+
 if (!exists('g:snipMateSources'))
   let g:snipMateSources = {}
   " default source: get snippets based on runtimepath:
@@ -38,7 +44,7 @@ let s:snipMate['get_snippets'] = get(s:snipMate, 'get_snippets', funcref#Functio
 " old snippets_dir: function returning list of paths which is used to read
 " snippets. You can replace it with your own implementation. Defaults to all
 " directories in &rtp/snippets/*
-let s:snipMate['snippet_dirs'] = get(s:snipMate, 'snippets_dirs', funcref#Function('return split(&runtimepath,",")'))
+let s:snipMate['snippet_dirs'] = get(s:snipMate, 'snippet_dirs', funcref#Function('return split(&runtimepath,",")'))
 
 " _ is default scope added always
 "

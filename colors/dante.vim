@@ -28,7 +28,7 @@ hi ModeMsg  term=bold cterm=bold gui=bold
 hi Question term=standout ctermfg=green gui=bold guifg=olivedrab1
 hi WarningMsg   term=standout ctermfg=red gui=bold guifg=red3
 hi WildMenu term=standout ctermfg=black ctermbg=yellow guifg=black guibg=gold2
-hi Folded   term=standout ctermfg=blue ctermbg=white guifg=royalblue1 guibg=white
+hi Folded   term=standout ctermfg=blue ctermbg=darkgray guifg=royalblue1 guibg=#050505
 hi FoldColumn   term=standout ctermfg=blue ctermbg=gray guifg=royalblue3 guibg=black
 hi DiffAdd  term=bold ctermbg=blue guibg=royalblue2
 hi DiffChange   term=bold ctermbg=darkmagenta guibg=maroon
@@ -36,8 +36,12 @@ hi DiffDelete   term=bold cterm=bold ctermfg=lightblue ctermbg=cyan gui=bold gui
 hi DiffText term=reverse cterm=bold ctermbg=red gui=bold guibg=red3
 hi Cursor   guifg=bg guibg=fg
 hi lCursor  guifg=bg guibg=fg
-hi StatusLine   term=reverse cterm=reverse gui=reverse guifg=gray60
-hi StatusLineNC term=reverse cterm=reverse gui=reverse guifg=gray40
+" hi StatusLine   term=reverse cterm=reverse gui=reverse guifg=gray60
+" hi StatusLineNC term=reverse cterm=reverse gui=reverse guifg=gray40
+hi StatusLine   guifg=#CCCCCC       guibg=#202020       gui=none
+            \   ctermfg=white       ctermbg=darkgray    cterm=NONE
+hi StatusLineNC guifg=black         guibg=#202020       gui=NONE
+            \   ctermfg=blue        ctermbg=darkgray    cterm=NONE
 hi VertSplit    term=reverse cterm=reverse gui=bold,reverse guifg=gray40
 hi Title    term=bold ctermfg=magenta gui=bold guifg=aquamarine
 

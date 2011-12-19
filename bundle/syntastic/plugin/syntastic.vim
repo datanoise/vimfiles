@@ -91,7 +91,7 @@ augroup syntastic
 
     autocmd BufReadPost,BufWritePost * call s:UpdateErrors(1)
     autocmd BufWinEnter * if empty(&bt) | call s:AutoToggleLocList() | endif
-    autocmd BufWinLeave * if empty(&bt) | call s:Lclose() | endif
+    autocmd BufWinLeave * if empty(&bt) | lclose | endif
 augroup END
 
 
@@ -123,41 +123,18 @@ function s:AutoToggleLocList()
             silent! ll
         endif
     elseif g:syntastic_auto_loc_list == 2
-        call s:Lclose()
+        lclose
     endif
 
     if g:syntastic_auto_loc_list == 1
         if s:BufHasErrorsOrWarningsToDisplay()
             call s:ShowLocList()
         else
-            call s:Lclose()
+            "TODO: this will close the loc list window if one was opened by
+            "something other than syntastic
+            lclose
         endif
     endif
-endfunction
-
-"close the current loc list if it contains only syntastic data
-"
-"Note that we cant just compare the 2 lists since calling setloclist() adds
-"some extra default data to the loclist
-function! s:Lclose()
-    if empty(s:LocList())
-        return
-    endif
-
-    let llist = getloclist(0)
-
-    if len(llist) != len(s:LocList())
-        return
-    endif
-
-    "make sure the line number and message is the same for all elements"
-    for i in range(0,len(llist)-1)
-        if llist[i]['lnum'] != s:LocList()[i]['lnum'] || llist[i]['text'] != s:LocList()[i]['text']
-            return
-        endif
-    endfor
-
-    lclose
 endfunction
 
 "lazy init the loc list for the current buffer
@@ -184,13 +161,13 @@ function! s:CacheErrors()
 
         "sub - for _ in filetypes otherwise we cant name syntax checker
         "functions legally for filetypes like "gentoo-metadata"
-        let fts = substitute(&ft, '-', '_', 'g')
-
-        for ft in split(fts, '\.')
-            if s:Checkable(ft)
-                call extend(s:LocList(), SyntaxCheckers_{ft}_GetLocList())
-            endif
-        endfor
+        let ft = substitute(&ft, '-', '_', 'g')
+        if s:Checkable(ft)
+            let errors = SyntaxCheckers_{ft}_GetLocList()
+            "make errors have type "E" by default
+            call SyntasticAddToErrors(errors, {'type': 'E'})
+            call extend(s:LocList(), errors)
+        endif
     endif
 endfunction
 
@@ -208,27 +185,13 @@ function! s:ToggleMode()
     echo "Syntastic: " . g:syntastic_mode_map['mode'] . " mode enabled"
 endfunction
 
-"check the current filetypes against g:syntastic_mode_map to determine whether
+"check the current filetype against g:syntastic_mode_map to determine whether
 "active mode syntax checking should be done
 function! s:ModeMapAllowsAutoChecking()
     if g:syntastic_mode_map['mode'] == 'passive'
-
-        "check at least one filetype is active
-        for ft in split(&ft, '\.')
-            if index(g:syntastic_mode_map['active_filetypes'], ft) != -1
-                return 1
-            endif
-            return 0
-        endfor
+        return index(g:syntastic_mode_map['active_filetypes'], &ft) != -1
     else
-
-        "check no filetypes are passive
-        for ft in split(&ft, '\.')
-            if index(g:syntastic_mode_map['passive_filetypes'], ft) != -1
-                return 0
-            endif
-            return 1
-        endfor
+        return index(g:syntastic_mode_map['passive_filetypes'], &ft) == -1
     endif
 endfunction
 
@@ -251,7 +214,7 @@ function! s:ErrorsForType(type)
 endfunction
 
 function! s:Errors()
-    return extend(s:ErrorsForType("E"), s:ErrorsForType(''))
+    return s:ErrorsForType("E")
 endfunction
 
 function! s:Warnings()

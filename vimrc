@@ -121,8 +121,8 @@ set bg=dark
 if has('gui_running')
   colo xorium
 else
-  " colo dante
-  colo candycode_mod
+  colo dante
+  " colo candycode_mod
   " colo ir_black_mod
 endif
 if exists('&mc')
@@ -334,10 +334,11 @@ nnoremap <silent> <leader>n :CommandTFlush<CR>
 " puppet is too slow, html/tidy doesn't support HTML5
 let g:syntastic_mode_map = { 'mode': 'active', 'active_filetypes': [],
       \ 'passive_filetypes': ['coffee', 'cpp', 'c', 'scss', 'puppet', 'html', 'cucumber'] }
-let g:syntastic_auto_loc_list=2
-let g:syntastic_enable_signs=1
-let g:syntastic_stl_format = '[ERR:%F(%t)]'
+let g:syntastic_auto_loc_list       = 2
+let g:syntastic_enable_signs        = 1
+let g:syntastic_stl_format          = '[ERR:%F(%t)]'
 let g:syntastic_javascript_jsl_conf = "~/.jsl.conf"
+let g:syntastic_echo_current_error  = 0
 
 " snipmate settings {{{2
 function! MyGetSnips(scopes, word)

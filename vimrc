@@ -142,6 +142,7 @@ set vb t_vb= " no visual bell or beep, damn it
 if has("win32")
   au VimEnter * set vb t_vb=
 endif
+set path+=*/** " allow :find to search subdirectories
 set tags+=../tags,../../tags,../../../tags,../../../../tags,./tmp/tags
 set cpoptions+=d
 set timeoutlen=1000 " A little bit more time for macros
@@ -338,7 +339,7 @@ let g:syntastic_auto_loc_list       = 2
 let g:syntastic_enable_signs        = 1
 let g:syntastic_stl_format          = '[ERR:%F(%t)]'
 let g:syntastic_javascript_jsl_conf = "~/.jsl.conf"
-let g:syntastic_echo_current_error  = 0
+let g:syntastic_echo_current_error  = 1
 
 " snipmate settings {{{2
 function! MyGetSnips(scopes, word)

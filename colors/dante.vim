@@ -37,6 +37,8 @@ hi DiffDelete   term=bold cterm=bold ctermfg=lightblue ctermbg=cyan gui=bold gui
 hi DiffText term=reverse cterm=bold ctermbg=red gui=bold guibg=red3
 hi Cursor   guifg=bg guibg=fg
 hi lCursor  guifg=bg guibg=fg
+hi CursorLine   guifg=NONE          guibg=#1b1b1b       gui=NONE
+            \   ctermfg=NONE        ctermbg=NONE        cterm=NONE
 " hi StatusLine   term=reverse cterm=reverse gui=reverse guifg=gray60
 " hi StatusLineNC term=reverse cterm=reverse gui=reverse guifg=gray40
 hi StatusLine   guifg=#CCCCCC       guibg=#202020       gui=none

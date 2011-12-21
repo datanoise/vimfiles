@@ -294,27 +294,25 @@ iabbr WHen When
 
 " Section: Plugin settings {{{1
 " --------------------------------------------------
-" TagList settings" {{{2
-let Tlist_Close_On_Select = 1
-let Tlist_Enable_Fold_Column = 0
-let Tlist_Show_One_File = 1
-let TList_Auto_Update = 0 " Don't autoupdate tags, I use 'u' command for that
-let Tlist_Inc_Winwidth = 0 " Don't resize my window!
-let tlist_objc_settings    = 'objc;i:interface;c:class;m:method;p:property'
-let tlist_javascript_settings = 'js;c:class;f:function'
-nnoremap <silent> \[  :TlistOpen<CR>
+" Tagbar settings  {{{2
+let g:tagbar_left      = 1
+let g:tagbar_width     = 30
+let g:tagbar_autoclose = 1
+let g:tagbar_autofocus = 1
+let g:tagbar_sort = 0
+nnoremap <silent> \[  :TagbarToggle<CR>
 
 " NERD_tree settings {{{2
-let g:NERDTreeQuitOnOpen = 1 " Close NERDTree when a file is opened
+let g:NERDTreeQuitOnOpen  = 1 " Close NERDTree when a file is opened
 let g:NERDTreeHijackNetrw = 0
-let g:NERDTreeIgnore=['\.o$', '\~$', '\.class$']
-let g:NERDTreeMinimalUI=0
-let g:NERDTreeDirArrows=1
+let g:NERDTreeIgnore      = ['\.o$', '\~$', '\.class$']
+let g:NERDTreeMinimalUI   = 0
+let g:NERDTreeDirArrows   = 1
 nnoremap <silent> <leader>f  :exec 'NERDTree' . expand('%:p:h')<CR>
 
 " rubycomplete plugin settings {{{2
-let g:rubycomplete_buffer_loading = 1
-let g:rubycomplete_rails = 0
+let g:rubycomplete_buffer_loading    = 1
+let g:rubycomplete_rails             = 0
 let g:rubycomplete_classes_in_global = 1
 
 " command-t settings {{{2

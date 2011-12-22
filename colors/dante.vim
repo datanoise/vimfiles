@@ -49,6 +49,12 @@ hi SignColumn   guifg=#c8bcb9       guibg=#202020       gui=none
             \   ctermfg=lightgray   ctermbg=darkgray    cterm=NONE
 hi VertSplit    term=reverse cterm=reverse gui=bold,reverse guifg=gray40
 hi Title    term=bold ctermfg=magenta gui=bold guifg=aquamarine
+hi TabLine      guifg=#000000       guibg=#c2bfa5       gui=NONE
+            \   ctermfg=black       ctermbg=white       cterm=NONE
+hi TabLineFill  guifg=#000000       guibg=#c2bfa5       gui=NONE
+            \   ctermfg=black       ctermbg=white       cterm=NONE
+hi TabLineSel   guifg=#ffffff       guibg=#133293       gui=NONE
+            \   ctermfg=white       ctermbg=black       cterm=NONE
 
 " syntax hi colors
 hi Comment  term=bold ctermfg=darkcyan guifg=cyan4

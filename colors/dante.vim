@@ -55,6 +55,14 @@ hi TabLineFill  guifg=#000000       guibg=#c2bfa5       gui=NONE
             \   ctermfg=black       ctermbg=white       cterm=NONE
 hi TabLineSel   guifg=#ffffff       guibg=#133293       gui=NONE
             \   ctermfg=white       ctermbg=black       cterm=NONE
+hi PmenuSbar    guifg=NONE          guibg=#555555       gui=NONE
+            \   ctermfg=black       ctermbg=black       cterm=NONE
+hi PmenuThumb   guifg=NONE          guibg=#cccccc       gui=NONE
+            \   ctermfg=gray        ctermbg=gray        cterm=NONE
+hi Pmenu        guifg=#f6f3e8       guibg=#444444       gui=NONE
+            \   ctermfg=NONE        ctermbg=NONE        cterm=NONE
+hi PmenuSel     guifg=#000000       guibg=#cae682       gui=NONE
+            \   ctermfg=NONE        ctermbg=NONE        cterm=NONE
 
 " syntax hi colors
 hi Comment  term=bold ctermfg=darkcyan guifg=cyan4

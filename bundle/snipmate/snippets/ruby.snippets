@@ -13,8 +13,9 @@ snippet rb
 	#!/usr/bin/env ruby -wKU
 snippet beg
 	begin
+		${2}
+	rescue ${1:Exception}
 		${3}
-	rescue ${1:Exception} => ${2:e}
 	end
 
 snippet req
@@ -385,6 +386,10 @@ snippet do
 	do
 		${1}
 	end
+snippet bl-
+	{ |${1}|
+		${2}
+	}
 snippet doo
 	do |${1:variable}|
 		${2}
@@ -532,17 +537,6 @@ snippet tas
 # block
 snippet b
 	{|${1:var}| ${2}}
-snippet begin
-	begin
-		raise 'A test exception.'
-	rescue Exception => e
-		puts e.message
-		puts e.backtrace.inspect
-	else
-		# other exception
-	ensure
-		# always executed
-	end
 
 #migrations
 snippet mac

@@ -191,6 +191,7 @@ nnoremap <silent> <leader>v ^v$h
 " visual select of the last pasted text
 nnoremap <silent> <leader>V `[v`]
 nnoremap <silent> <leader>h :set hlsearch!<CR>
+nnoremap <silent> <C-l> :noh<CR><C-l>
 nnoremap <silent> \l :setlocal list!<CR>
 nnoremap <silent> \n :set nu!<CR>
 " indented paste

@@ -73,17 +73,8 @@ if s:ftype_out !~# 'detection:ON'
 endif
 unlet s:ftype_out
 
-if has('multi_byte') && has('unix') && &encoding == 'utf-8' &&
- \ (empty(&termencoding) || &termencoding == 'utf-8')
-    let s:icon_closed = '▶'
-    let s:icon_open   = '▼'
-elseif has('multi_byte') && (has('win32') || has('win64')) && g:tagbar_usearrows
-    let s:icon_closed = '▷'
-    let s:icon_open   = '◢'
-else
-    let s:icon_closed = '+'
-    let s:icon_open   = '-'
-endif
+let s:icon_closed = g:tagbar_iconchars[0]
+let s:icon_open   = g:tagbar_iconchars[1]
 
 let s:type_init_done    = 0
 let s:autocommands_done = 0
@@ -417,7 +408,7 @@ function! s:InitTypes()
     " complete name. So ctags has to be fixed before I can do anything here.
     " Alternatively jsctags/doctorjs will be used if available.
     let type_javascript = {}
-    let type_javascript.ctagstype = 'js'
+    let type_javascript.ctagstype = 'javascript'
     let jsctags = s:CheckFTCtags('jsctags', 'javascript')
     if jsctags != ''
         let type_javascript.kinds = [

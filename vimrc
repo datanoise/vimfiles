@@ -216,6 +216,7 @@ inoremap [<CR> [<CR>]<Esc>O
 inoremap {<Space> {}<Esc>i<Space><Space><Esc>i
 inoremap [<Space> []<Esc>i<Space><Space><Esc>i
 inoremap <C-\> <C-p>
+inoremap <silent> <C-j> <Esc>:call search('[{("\[\]'')}]', 'W', line('.'))<CR>a
 nnoremap <F2> <C-w><C-w>
 nnoremap <F4> :sil make %<CR><c-l>:cc<CR>
 nnoremap [f :exe ':Ack ' . expand('<cword>')<CR><CR>

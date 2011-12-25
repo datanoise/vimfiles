@@ -2,8 +2,8 @@
 "File:        syntastic.vim
 "Description: vim plugin for on the fly syntax checking
 "Maintainer:  Martin Grenfell <martin.grenfell at gmail dot com>
-"Version:     2.1.0
-"Last Change: 14 Dec, 2011
+"Version:     2.2.0
+"Last Change: 24 Dec, 2011
 "License:     This program is free software. It comes without any warranty,
 "             to the extent permitted by applicable law. You can redistribute
 "             it and/or modify it under the terms of the Do What The Fuck You
@@ -77,6 +77,10 @@ if !has_key(g:syntastic_mode_map, "passive_filetypes")
     let g:syntastic_mode_map['passive_filetypes'] = []
 endif
 
+if !exists("g:syntastic_check_on_open")
+    let g:syntastic_check_on_open = 0
+endif
+
 command! SyntasticToggleMode call s:ToggleMode()
 command! SyntasticCheck call s:UpdateErrors(0) <bar> redraw!
 command! Errors call s:ShowLocList()
@@ -89,7 +93,9 @@ augroup syntastic
         autocmd cursormoved * call s:EchoCurrentError()
     endif
 
-    autocmd BufReadPost,BufWritePost * call s:UpdateErrors(1)
+    autocmd BufReadPost * if g:syntastic_check_on_open | call s:UpdateErrors(1) | endif
+    autocmd BufWritePost * call s:UpdateErrors(1)
+
     autocmd BufWinEnter * if empty(&bt) | call s:AutoToggleLocList() | endif
     autocmd BufWinLeave * if empty(&bt) | lclose | endif
 augroup END
@@ -105,6 +111,10 @@ function! s:UpdateErrors(auto_invoked)
         call s:CacheErrors()
     end
 
+    if s:BufHasErrorsOrWarningsToDisplay()
+        call setloclist(0, s:LocList())
+    endif
+
     if g:syntastic_enable_balloons
         call s:RefreshBalloons()
     endif
@@ -113,23 +123,23 @@ function! s:UpdateErrors(auto_invoked)
         call s:RefreshSigns()
     endif
 
+    if g:syntastic_auto_jump && s:BufHasErrorsOrWarningsToDisplay()
+        silent! ll
+    endif
+
     call s:AutoToggleLocList()
 endfunction
 
-function s:AutoToggleLocList()
+"automatically open/close the location list window depending on the users
+"config and buffer error state
+function! s:AutoToggleLocList()
     if s:BufHasErrorsOrWarningsToDisplay()
-        call setloclist(0, s:LocList())
-        if g:syntastic_auto_jump
-            silent! ll
-        endif
-    elseif g:syntastic_auto_loc_list == 2
-        lclose
-    endif
-
-    if g:syntastic_auto_loc_list == 1
-        if s:BufHasErrorsOrWarningsToDisplay()
+        if g:syntastic_auto_loc_list == 1
             call s:ShowLocList()
-        else
+        endif
+    else
+        if g:syntastic_auto_loc_list > 0
+
             "TODO: this will close the loc list window if one was opened by
             "something other than syntastic
             lclose

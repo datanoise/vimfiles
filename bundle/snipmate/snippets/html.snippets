@@ -98,12 +98,6 @@ snippet docx
 # Attributes
 snippet attr
 	${1:attribute}="${2:property}"
-snippet attr+
-	${1:attribute}="${2:property}" attr+${3}
-snippet .
-	class="${1}"${2}
-snippet #
-	id="${1}"${2}
 snippet alt
 	alt="${1}"${2}
 snippet charset
@@ -809,3 +803,7 @@ snippet video
 	<video src="${1} height="${2}" width="${3}" preload="${5:none}" autoplay="${6:autoplay}>${7}</video>${8}
 snippet wbr
 	<wbr />${1}
+#snippet .
+#	class="${1}"${2}
+snippet #
+	id="${1}"${2}

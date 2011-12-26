@@ -290,7 +290,6 @@ endfunc
 command! SynName :call SynName()
 cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
 cabbr ack Ack
-cabbr cmdt CommandT<CR>
 iabbr THen Then
 iabbr WHen When
 
@@ -329,7 +328,9 @@ end
 nnoremap <silent> <leader>m :CommandT<CR>
 nnoremap <silent> <leader>l :CommandTBuffer<CR>
 nnoremap <silent> <leader>j :CommandTJump<CR>
+nnoremap <silent> <leader>e :CommandTOldFiles<CR>
 nnoremap <silent> <leader>n :CommandTFlush<CR>
+cabbr cmdt CommandT<CR>
 
 " syntastic settings {{{2
 " puppet is too slow, html/tidy doesn't support HTML5

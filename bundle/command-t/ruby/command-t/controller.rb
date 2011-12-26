@@ -24,6 +24,7 @@
 require 'command-t/finder/buffer_finder'
 require 'command-t/finder/jump_finder'
 require 'command-t/finder/file_finder'
+require 'command-t/finder/oldfiles_finder'
 require 'command-t/match_window'
 require 'command-t/prompt'
 require 'command-t/vim/path_utilities'
@@ -45,6 +46,12 @@ module CommandT
     def show_jump_finder
       @path          = VIM::pwd
       @active_finder = jump_finder
+      show
+    end
+
+    def show_oldfiles_finder
+      @path          = VIM::pwd
+      @active_finder = oldfiles_finder
       show
     end
 
@@ -325,6 +332,10 @@ module CommandT
 
     def jump_finder
       @jump_finder ||= CommandT::JumpFinder.new
+    end
+
+    def oldfiles_finder
+      @oldfiles_finder ||= CommandT::OldFilesFinder.new
     end
   end # class Controller
 end # module commandT

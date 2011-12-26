@@ -13,11 +13,11 @@ endif
 let g:colors_name = "dante"
 
 " General colors
-hi Normal   ctermfg=gray guifg=peachpuff3 guibg=black
+hi Normal   ctermfg=gray guifg=peachpuff3 guibg=#141414
 hi Conceal  ctermfg=gray guifg=peachpuff3 guibg=black
 hi Directory    term=bold ctermfg=blue guifg=royalblue
 hi ErrorMsg term=standout ctermfg=white ctermbg=red guifg=white guibg=red3
-hi NonText  term=bold ctermfg=darkgray guibg=gray3 guifg=gray20
+hi NonText  term=bold ctermfg=darkgray guibg=#141414 guifg=gray20
 hi SpecialKey   term=bold ctermfg=darkgray guifg=gray30
 hi LineNr   term=underline ctermfg=darkgray guifg=ivory4 guibg=gray4
 hi IncSearch    term=reverse cterm=reverse gui=reverse,bold guifg=darkgoldenrod2

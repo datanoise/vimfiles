@@ -32,8 +32,8 @@ exec 'xnoremap ' . g:snips_trigger_key. ' s<c-o>:let<space>g:snipmate_content_vi
 snor <bs> b<bs>
 snor <right> <esc>a
 snor <left> <esc>bi
-snor ' b<bs>'
-snor ` b<bs>`
+" snor ' b<bs>'
+" snor ` b<bs>`
 snor % b<bs>%
 snor U b<bs>U
 snor ^ b<bs>^

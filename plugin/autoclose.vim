@@ -68,10 +68,10 @@ function! s:IsForbidden(char)
     return l:result && l:region == 'Comment'
 endfunction
 
-function! s:InsertPair(char)
+function! s:InsertPair(char, mode)
     let l:next = s:GetNextChar()
     let l:result = a:char
-    if s:running && !s:IsForbidden(a:char) && (l:next == "\0" || l:next !~ '\w')
+    if s:running && (a:mode == 's' || !s:IsForbidden(a:char) && (l:next == "\0" || l:next !~ '\w'))
         let l:result .= s:charsToClose[a:char] . "\<Left>"
     endif
     return l:result
@@ -86,7 +86,7 @@ function! s:ClosePair(char)
     return l:result
 endfunction
 
-function! s:CheckPair(char)
+function! s:CheckPair(char, mode)
     let l:lastpos = 0
     let l:occur = stridx(getline('.'), a:char, l:lastpos) == 0 ? 1 : 0
 
@@ -102,7 +102,7 @@ function! s:CheckPair(char)
 
     if l:occur == 0 || l:occur%2 == 0
         " Opening char
-        return s:InsertPair(a:char)
+        return s:InsertPair(a:char, a:mode)
     else
         " Closing char
         return s:ClosePair(a:char)
@@ -175,10 +175,12 @@ for key in keys(s:charsToClose)
     endif 
      
     if key == s:charsToClose[key]
-        exec "inoremap <silent> " . key . " <C-R>=<SID>SetVEAll()<CR><C-R>=<SID>CheckPair(" . open_func_arg . ")<CR><C-R>=<SID>RestoreVE()<CR>"
+        exec "inoremap <silent> " . key . " <C-R>=<SID>SetVEAll()<CR><C-R>=<SID>CheckPair(" . open_func_arg . ", 'i')<CR><C-R>=<SID>RestoreVE()<CR>"
+        exec "snoremap <silent> <expr> " . key . " <SID>CheckPair(" . open_func_arg . ", 's')"
     else
         exec "inoremap <silent> " . s:charsToClose[key] . " <C-R>=<SID>SetVEAll()<CR><C-R>=<SID>ClosePair(" . close_func_arg . ")<CR><C-R>=<SID>RestoreVE()<CR>"
-        exec "inoremap <silent> " . key . " <C-R>=<SID>SetVEAll()<CR><C-R>=<SID>InsertPair(" . open_func_arg . ")<CR><C-R>=<SID>RestoreVE()<CR>"
+        exec "inoremap <silent> " . key . " <C-R>=<SID>SetVEAll()<CR><C-R>=<SID>InsertPair(" . open_func_arg . ", 'i')<CR><C-R>=<SID>RestoreVE()<CR>"
+        exec "snoremap <silent> <expr> " . key . " <SID>InsertPair(" . open_func_arg . ", 's')"
     endif
 endfor
 exec "inoremap <silent> <BS> <C-R>=<SID>SetVEAll()<CR><C-R>=<SID>Backspace()<CR><C-R>=<SID>RestoreVE()<CR>"

@@ -278,7 +278,7 @@ module CommandT
       { 'Backspace'             => '<BS>',
         'Delete'                => '<Del>',
         'AcceptSelection'       => '<CR>',
-        'AcceptSelectionSplit'  => ['<C-CR>', '<C-s>'],
+        'AcceptSelectionSplit'  => ['<C-CR>', '<C-s>', '<C-d>'],
         'AcceptSelectionTab'    => '<C-t>',
         'AcceptSelectionVSplit' => '<C-v>',
         'ToggleFocus'           => '<Tab>',

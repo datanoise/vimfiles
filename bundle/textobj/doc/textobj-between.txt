@@ -63,8 +63,8 @@ unless [!] is given.
 
 	{lhs}	{rhs}			~
 	-----	----------------------	~
-	ac	<Plug>(textobj-between-a)
-	ic	<Plug>(textobj-between-i)
+	ak	<Plug>(textobj-between-a)
+	ik	<Plug>(textobj-between-i)
 
 
 

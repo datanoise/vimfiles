@@ -17,8 +17,8 @@ set cpo&vim
 call textobj#user#plugin('between', {
 \      '-': {
 \        '*sfile*': expand('<sfile>:p'),
-\        'select-a': 'ac',  '*select-a-function*': 's:select_a',
-\        'select-i': 'ic',  '*select-i-function*': 's:select_i',
+\        'select-a': 'ak',  '*select-a-function*': 's:select_a',
+\        'select-i': 'ik',  '*select-i-function*': 's:select_i',
 \      }
 \    })
 

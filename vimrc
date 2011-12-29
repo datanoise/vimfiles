@@ -369,5 +369,6 @@ let g:xml_syntax_folding = 1 " enable folding in xml files
 let g:syntastic_jsl_conf='~/.jsl.conf'
 let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
 let g:SuperTabDefaultCompletionType= '<C-n>'
+let g:blockle_mapping='<leader>bb'
 
 " }}}

@@ -100,6 +100,7 @@ function! s:ConvertDoEndToBrackets()
     " if search('  \+', 'c', begin_num) | :.s/\([^ ]\)  \+/\1 /g | endif
     call setpos('.', do_pos)
   endif
+  call search("{", "cW", getline('.'))
 endfunction
 
 function! s:goToNearestBlockBounds()

@@ -369,4 +369,4 @@ hi def link rubySpaceError		rubyError
 
 let b:current_syntax = "ruby"
 
-" vim: nowrap sw=2 sts=2 ts=8 noet:
+" vim: wrap sw=2 sts=2 ts=8 noet:

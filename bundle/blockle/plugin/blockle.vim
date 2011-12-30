@@ -82,9 +82,9 @@ function! s:ConvertDoEndToBrackets()
   let do_pos = getpos('.')
   let begin_num = line('.')
   norm %
+  let end_pos = getpos('.')
   let lines = (line('.')-begin_num+1)
 
-  norm ciw}
   call setpos('.', do_pos)
   norm de
 
@@ -94,13 +94,16 @@ function! s:ConvertDoEndToBrackets()
 
   call setline(begin_num, before_do_str . "{" . after_do_str)
 
+  call setpos('.', end_pos)
+  norm ciw}
+  norm %
+
   if lines == 3
     norm! JJ
     " Remove extraneous spaces
     " if search('  \+', 'c', begin_num) | :.s/\([^ ]\)  \+/\1 /g | endif
     call setpos('.', do_pos)
   endif
-  call search("{", "cW", getline('.'))
 endfunction
 
 function! s:goToNearestBlockBounds()

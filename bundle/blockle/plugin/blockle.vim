@@ -1,5 +1,6 @@
 " blockle.vim - Ruby Block Toggling
 " Author:       Joshua Davey <josh@joshuadavey.com>
+" Maintainer:   Kent Sibilev <ksibilev@gmail.com>
 " Version:      0.4
 "
 " Licensed under the same terms as Vim itself.
@@ -106,19 +107,48 @@ function! s:ConvertDoEndToBrackets()
   endif
 endfunction
 
-function! s:goToNearestBlockBounds()
-  let char = getline('.')[col('.')-1]
-  if char == '{' || char == '}'
-    return char
+function! s:ComparePos(pos1, pos2)
+  if a:pos1[1] < a:pos2[1]
+    return 1
+  elseif a:pos1[1] > a:pos2[1]
+    return -1
+  else
+    if a:pos1[2] < a:pos2[2]
+      return 1
+    elseif a:pos1[2] > a:pos2[2]
+      return -1
+    else
+      return 0
+    endif
   endif
-  let word = expand('<cword>')
-  if (word == 'do' || word == 'end') && char != ' '
-    return word
-  elseif searchpair('{', '', '}', 'bcW') > 0
-    return getline('.')[col('.')-1]
-  elseif searchpair('\<do\>', '', '\<end\>\zs', 'bcW',
+endfunction
+
+function! s:goToNearestBlockBounds()
+  let pos = getpos('.')
+  if searchpair('{', '', '}', 'bcW') > 0
+    let pos1 = getpos('.')
+    call setpos('.', pos)
+  endif
+  if searchpair('\<do\>', '', '\<end\>\zs', 'bcW',
         \ 'synIDattr(synID(line("."), col("."), 0), "name") =~? "string"') > 0
+    let pos2 = getpos('.')
+    call setpos('.', pos)
+  endif
+  if exists('pos1') && !exists('pos2')
+    call setpos('.', pos1)
+    return getline('.')[col('.')-1]
+  elseif !exists('pos1') && exists('pos2')
+    call setpos('.', pos2)
     return expand('<cword>')
+  elseif exists('pos1') && exists('pos2')
+    let c = s:ComparePos(pos1, pos2)
+    if c == 1
+      call setpos('.', pos2)
+      return expand('<cword>')
+    elseif c == -1
+      call setpos('.', pos1)
+      return getline('.')[col('.')-1]
+    endif
   endif
 
   return ''

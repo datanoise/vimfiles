@@ -98,10 +98,10 @@ module CommandT
             ::VIM::command 'setlocal conceallevel=2'
             ::VIM::command 'setlocal concealcursor=nvic'
             ::VIM::command "syntax region CommandTCharMatched matchgroup=CommandTCharMatched start=+#{MH_START}+ matchgroup=CommandTCharMatchedEnd end=+#{MH_END}+ concealends"
-            ::VIM::command 'highlight def CommandTCharMatched term=bold,underline cterm=bold,underline gui=bold,underline'
+            ::VIM::command 'highlight def CommandTCharMatched term=underline cterm=underline gui=underline'
         end
 
-        ::VIM::command 'highlight link CommandTSelection CursorLine'
+        ::VIM::command 'highlight link CommandTSelection Visual'
         ::VIM::command 'highlight link CommandTNoEntries Error'
         ::VIM::evaluate 'clearmatches()'
 

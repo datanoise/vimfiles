@@ -187,12 +187,10 @@ module CommandT
 
     def matches= matches
       matches = matches.reverse if @reverse_list
-      if matches != @matches
-        @matches = matches
-        @selection = @reverse_list ? @matches.length - 1 : 0
-        print_matches
-        move_cursor_to_selected_line
-      end
+      @matches = matches
+      @selection = @reverse_list ? @matches.length - 1 : 0
+      print_matches
+      move_cursor_to_selected_line
     end
 
     def focus

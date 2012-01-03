@@ -30,7 +30,9 @@ module CommandT
     include VIM::PathUtilities
 
     def paths
-      filenames = oldfiles.reject{|f| f =~ /GoToFile/}.map do |f|
+      runtime = ::VIM.evaluate '$VIMRUNTIME'
+      filter = /GoToFile|fugitive|^#{Regexp.escape(runtime)}|__[A-Za-z]+__|NERD_tree|COMMIT_EDITMSG/
+      filenames = oldfiles.reject{|f| f =~ filter}.map do |f|
         relative_path_under_working_directory File.expand_path(f)
       end
     end

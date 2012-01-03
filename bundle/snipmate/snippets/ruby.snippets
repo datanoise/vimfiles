@@ -82,28 +82,17 @@ snippet cla class .. initialize .. end
 		def initialize(${2:args})
 			${3}
 		end
-
-
 	end
-snippet cla class .. < ParentClass .. initialize .. end
+snippet cla class .. < ParentClass .. end
 	class ${1:`substitute(Filename(), '\(^\|_\)\(.\)', '\u\2', 'g')`} < ${2:ParentClass}
-		def initialize(${3:args})
-			${4}
-		end
-
-
+		${3}
 	end
 snippet cla ClassName = Struct .. do .. end
 	${1:`substitute(Filename(), '\(^\|_\)\(.\)', '\u\2', 'g')`} = Struct.new(:${2:attr_names}) do
 		def ${3:method_name}
 			${4}
 		end
-
-
 	end
-snippet cla class BlankSlate .. initialize .. end
-	class ${1:BlankSlate}
-		instance_methods.each { |meth| undef_method(meth) unless meth =~ /\A__/ }
 snippet cla class << self .. end
 	class << ${1:self}
 		${2}
@@ -116,8 +105,6 @@ snippet cla-
 
 			${5}
 		end
-
-
 	end
 snippet mod module .. end
 	module ${1:`substitute(Filename(), '\(^\|_\)\(.\)', '\u\2', 'g')`}
@@ -567,9 +554,6 @@ snippet let
 	let(:${1:obj}) { ${2:init...} }
 snippet letf
 	let(:${1:obj}) { Factory(:${2:obj}) }
-#debugging
-snippet debug
-	require 'ruby-debug'; debugger; true;
 #rails
 snippet pa
 	params[:${1:id}]

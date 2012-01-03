@@ -63,6 +63,9 @@ hi Pmenu        guifg=#f6f3e8       guibg=#444444       gui=NONE
             \   ctermfg=NONE        ctermbg=NONE        cterm=NONE
 hi PmenuSel     guifg=#000000       guibg=#cae682       gui=NONE
             \   ctermfg=NONE        ctermbg=NONE        cterm=NONE
+hi CommandTCharMatched ctermfg=red  ctermbg=NONE guifg=#ff0000 guibg=NONE
+hi CommandTCharMatchedSel term=bold,reverse cterm=bold,reverse ctermfg=red
+            \   ctermbg=black gui=bold,reverse guifg=#ff0000 guibg=black
 
 " syntax hi colors
 hi Comment  term=bold ctermfg=darkcyan guifg=cyan4

@@ -187,6 +187,11 @@ hi TemplateItem
 
 hi TemplateMark
             \   ctermbg=black gui=none guifg=white guibg=black
+
+hi CommandTCharMatched ctermfg=red  ctermbg=NONE guifg=#ff0000 guibg=NONE
+
+hi CommandTCharMatchedSel       guifg=#ff0000       guibg=#606070       gui=NONE
+            \   ctermfg=red       ctermbg=lightblue   cterm=NONE
 " }}}
 
 let &cpo = save_cpo

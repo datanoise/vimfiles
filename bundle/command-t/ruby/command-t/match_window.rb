@@ -90,15 +90,17 @@ module CommandT
 
       # syntax coloring
       if VIM::has_syntax?
-        ::VIM::command "syntax match CommandTSelection \"^#{SELECTION_MARKER}.\\+$\""
+        ::VIM::command "syntax match CommandTSelection \"^#{SELECTION_MARKER}.\\+$\"#{' contains=CommandTCharMatchedSel' if VIM::has_conceal?}"
         ::VIM::command 'syntax match CommandTNoEntries "^-- NO MATCHES --$"'
         ::VIM::command 'syntax match CommandTNoEntries "^-- NO SUCH FILE OR DIRECTORY --$"'
 
         if VIM::has_conceal?
-            ::VIM::command 'setlocal conceallevel=2'
+            ::VIM::command 'setlocal conceallevel=3'
             ::VIM::command 'setlocal concealcursor=nvic'
             ::VIM::command "syntax region CommandTCharMatched matchgroup=CommandTCharMatched start=+#{MH_START}+ matchgroup=CommandTCharMatchedEnd end=+#{MH_END}+ concealends"
-            ::VIM::command 'highlight def CommandTCharMatched term=underline cterm=underline gui=underline'
+            ::VIM::command "syntax region CommandTCharMatchedSel matchgroup=CommandTCharMatched start=+#{MH_START}+ matchgroup=CommandTCharMatchedEnd end=+#{MH_END}+ concealends contained"
+            ::VIM::command 'highlight default link CommandTCharMatched Normal'
+            ::VIM::command 'highlight default link CommandTCharMatchedSel Visual'
         end
 
         ::VIM::command 'highlight link CommandTSelection Visual'
@@ -289,24 +291,26 @@ module CommandT
             prefix = SELECTION_MARKER
             suffix = padding_for_selected_match match
         else
-            if VIM::has_syntax? && VIM::has_conceal?
-                match = add_syntax_highlight match
-            end
             prefix = UNSELECTED_MARKER
             suffix = ''
+        end
+        if VIM::has_syntax? && VIM::has_conceal?
+          match = add_syntax_highlight match
         end
         prefix + match + suffix
     end
 
     def add_syntax_highlight match
         list = match.split(//)
+        pos = 0
         @prompt.abbrev.split(//).each do |ch|
-            list.each_index do |i|
-                if list[i] == ch
-                    list[i] = [MH_START, ch, MH_END]
-                    break
-                end
+          list[pos..-1].each_index do |i|
+            if list[pos + i] == ch
+              list[pos + i] = [MH_START, ch, MH_END]
+              pos += i + 1
+              break
             end
+          end
         end
         list.flatten.join
     end

@@ -116,3 +116,6 @@ hi treeOpenable   ctermfg=150  guifg=#afdf87
 hi treePart       ctermfg=244  guifg=#808080
 hi treeDirSlash   ctermfg=244  guifg=#808080
 hi treeLink       ctermfg=182  guifg=#dfafdf
+""" Comment-T {{{3
+hi CommandTCharMatched ctermfg=104  ctermbg=NONE guifg=#9b9bde guibg=NONE
+hi CommandTCharMatchedSel ctermfg=104 ctermbg=220 guifg=#9b9bde guibg=#ffd000

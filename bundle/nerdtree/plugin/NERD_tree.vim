@@ -399,7 +399,7 @@ function! s:Bookmark.openInNewTab(options)
         exec "tabedit " . self.path.str({'format': 'Edit'})
     endif
 
-    if has_key(a:options, 'stayInCurrentTab')
+    if s:has_opt(a:options, 'stayInCurrentTab')
         exec "tabnext " . currentTab
     endif
 endfunction
@@ -509,11 +509,13 @@ endfunction
 "FUNCTION: KeyMap.bind() {{{3
 function! s:KeyMap.bind()
     let mapkey = self.key
-    if mapkey =~ '^[CM]-'
+    if mapkey =~? '^\([CM]-\|middlerelease\|2-leftmouse\|leftrelease\)'
         let mapkey = '<' . mapkey . '>'
     endif
 
-    exec 'nnoremap <buffer> <silent> '. mapkey .' :call <SID>KeyMap_Invoke("'. self.key .'")<cr>'
+    let premap = self.key == "leftrelease" ? " <leftrelease>" : " "
+
+    exec 'nnoremap <buffer> <silent> '. mapkey . premap . ':call <SID>KeyMap_Invoke("'. self.key .'")<cr>'
 endfunction
 
 "FUNCTION: KeyMap.invoke() {{{3
@@ -1341,13 +1343,13 @@ endfunction
 function! s:TreeFileNode.openInNewTab(options)
     let currentTab = tabpagenr()
 
-    if !has_key(a:options, 'keepTreeOpen')
+    if !s:has_opt(a:options, 'keepTreeOpen')
         call s:closeTreeIfQuitOnOpen()
     endif
 
     exec "tabedit " . self.path.str({'format': 'Edit'})
 
-    if has_key(a:options, 'stayInCurrentTab') && a:options['stayInCurrentTab']
+    if s:has_opt(a:options, 'stayInCurrentTab')
         exec "tabnext " . currentTab
     endif
 
@@ -1803,14 +1805,14 @@ unlet s:TreeDirNode.openInNewTab
 function! s:TreeDirNode.openInNewTab(options)
     let currentTab = tabpagenr()
 
-    if !has_key(a:options, 'keepTreeOpen') || !a:options['keepTreeOpen']
+    if !s:has_opt(a:options, 'keepTreeOpen')
         call s:closeTreeIfQuitOnOpen()
     endif
 
     tabnew
     call s:initNerdTree(self.path.str())
 
-    if has_key(a:options, 'stayInCurrentTab') && a:options['stayInCurrentTab']
+    if s:has_opt(a:options, 'stayInCurrentTab')
         exec "tabnext " . currentTab
     endif
 endfunction
@@ -2482,7 +2484,7 @@ function! s:Path.str(...)
         let toReturn = self._str()
     endif
 
-    if has_key(options, 'escape') && options['escape']
+    if s:has_opt(options, 'escape')
         let toReturn = shellescape(toReturn)
     endif
 
@@ -2686,6 +2688,12 @@ function! s:findAndRevealPath()
     call s:putCursorInTreeWin()
     call b:NERDTreeRoot.reveal(p)
 endfunction
+
+" FUNCTION: s:has_opt(options, name) {{{2
+function! s:has_opt(options, name)
+    return has_key(a:options, a:name) && a:options[a:name] == 1
+endfunction
+
 "FUNCTION: s:initNerdTree(name) {{{2
 "Initialise the nerd tree for this tab. The tree will start in either the
 "given directory, or the directory associated with the given bookmark
@@ -3661,12 +3669,14 @@ endfunction
 
 "FUNCTION: s:bindMappings() {{{2
 function! s:bindMappings()
-    " set up mappings and commands for this buffer
-    nnoremap <silent> <buffer> <middlerelease> :call <SID>handleMiddleMouse()<cr>
-    nnoremap <silent> <buffer> <leftrelease> <leftrelease>:call <SID>checkForActivate()<cr>
-    nnoremap <silent> <buffer> <2-leftmouse> :call <SID>activateNode(0)<cr>
-
     let s = '<SNR>' . s:SID() . '_'
+
+    call NERDTreeAddKeyMap({ 'key': 'middlerelease', 'scope': "all", 'callback': s."handleMiddleMouse" })
+    call NERDTreeAddKeyMap({ 'key': 'leftrelease', 'scope': "all", 'callback': s."handleLeftClick" })
+    call NERDTreeAddKeyMap({ 'key': '2-leftmouse', 'scope': "Node", 'callback': s."activateNode" })
+    call NERDTreeAddKeyMap({ 'key': '2-leftmouse', 'scope': "Bookmark", 'callback': s."activateBookmark" })
+    call NERDTreeAddKeyMap({ 'key': '2-leftmouse', 'scope': "all", 'callback': s."activateAll" })
+
 
     call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapActivateNode, 'scope': "Node", 'callback': s."activateNode" })
     call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapActivateNode, 'scope': "Bookmark", 'callback': s."activateBookmark" })
@@ -3751,29 +3761,6 @@ function! s:bookmarkNode(...)
         endtry
     else
         call s:echo("select a node first")
-    endif
-endfunction
-"FUNCTION: s:checkForActivate() {{{2
-"Checks if the click should open the current node
-function! s:checkForActivate()
-    let currentNode = s:TreeFileNode.GetSelected()
-    if currentNode != {}
-        let startToCur = strpart(getline(line(".")), 0, col("."))
-
-        if currentNode.path.isDirectory
-            if startToCur =~# s:tree_markup_reg . '$' && startToCur =~# '[+~▾▸]$'
-                call s:activateNode(0)
-                return
-            endif
-        endif
-
-        if (g:NERDTreeMouseMode ==# 2 && currentNode.path.isDirectory) || g:NERDTreeMouseMode ==# 3
-            let char = strpart(startToCur, strlen(startToCur)-1, 1)
-            if char !~# s:tree_markup_reg
-                call s:activateNode(0)
-                return
-            endif
-        endif
     endif
 endfunction
 
@@ -3868,6 +3855,38 @@ function! s:displayHelp()
     call s:centerView()
 endfunction
 
+"FUNCTION: s:handleLeftClick() {{{2
+"Checks if the click should open the current node
+function! s:handleLeftClick()
+    let currentNode = s:TreeFileNode.GetSelected()
+    if currentNode != {}
+
+        "the dir arrows are multibyte chars, and vim's string functions only
+        "deal with single bytes - so split the line up with the hack below and
+        "take the line substring manually
+        let line = split(getline(line(".")), '\zs')
+        let startToCur = ""
+        for i in range(0,virtcol(".")-1)
+            let startToCur .= line[i]
+        endfor
+
+        if currentNode.path.isDirectory
+            if startToCur =~# s:tree_markup_reg . '$' && startToCur =~# '[+~▾▸]$'
+                call s:activateNode(currentNode)
+                return
+            endif
+        endif
+
+        if (g:NERDTreeMouseMode ==# 2 && currentNode.path.isDirectory) || g:NERDTreeMouseMode ==# 3
+            let char = strpart(startToCur, strlen(startToCur)-1, 1)
+            if char !~# s:tree_markup_reg
+                call s:activateNode(currentNode)
+                return
+            endif
+        endif
+    endif
+endfunction
+
 " FUNCTION: s:handleMiddleMouse() {{{2
 function! s:handleMiddleMouse()
     let curNode = s:TreeFileNode.GetSelected()
@@ -3877,7 +3896,7 @@ function! s:handleMiddleMouse()
     endif
 
     if curNode.path.isDirectory
-        call s:openExplorer()
+        call s:openExplorer(curNode)
     else
         call s:openEntrySplit(0,0)
     endif

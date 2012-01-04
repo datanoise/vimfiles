@@ -19,7 +19,9 @@ snippet beg
 	end
 
 snippet req
-	require "${1}"${2}
+	require '${1}'${2}
+snippet reqr
+	require_relative '${1}'${2}
 snippet #
 	# =>
 snippet end
@@ -71,6 +73,10 @@ snippet for
 	end
 snippet until
 	until ${1:condition}
+		${2}
+	end
+snippet tap
+	tap do |${1:obj}|
 		${2}
 	end
 snippet cla class .. end

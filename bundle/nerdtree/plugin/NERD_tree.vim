@@ -149,7 +149,12 @@ endif
 let s:NERDTreeBufName = 'NERD_tree_'
 
 let s:tree_wid = 2
-let s:tree_markup_reg = '^[ `|]*[\-+~▾▸ ]\+'
+
+if g:NERDTreeDirArrows
+    let s:tree_markup_reg = '^ *\([▾▸] \)\?'
+else
+    let s:tree_markup_reg = '^[ `|]*[\-+~]'
+endif
 let s:tree_up_dir_line = '.. (up a dir)'
 
 "the number to add to the nerd tree buffer name to make the buf name unique
@@ -172,12 +177,6 @@ augroup NERDTree
 
     "disallow insert mode in the NERDTree
     exec "autocmd BufEnter ". s:NERDTreeBufName ."* stopinsert"
-
-    "cache bookmarks when vim loads
-    autocmd VimEnter * call s:Bookmark.CacheBookmarks(0)
-
-    "load all nerdtree plugins after vim starts
-    autocmd VimEnter * runtime! nerdtree_plugin/**/*.vim
 augroup END
 
 if g:NERDTreeHijackNetrw
@@ -492,7 +491,7 @@ endfunction
 "FUNCTION: KeyMap.FindFor(key, scope) {{{3
 function! s:KeyMap.FindFor(key, scope)
     for i in s:KeyMap.All()
-        if i.key == a:key && i.scope == a:scope
+         if i.key ==# a:key && i.scope ==# a:scope
             return i
         endif
     endfor
@@ -521,10 +520,11 @@ endfunction
 "FUNCTION: KeyMap.invoke() {{{3
 "Call the KeyMaps callback function
 function! s:KeyMap.invoke(...)
+    let Callback = function(self.callback)
     if a:0
-        call function(self.callback)(a:1)
+        call Callback(a:1)
     else
-        call function(self.callback)()
+        call Callback()
     endif
 endfunction
 
@@ -2311,6 +2311,10 @@ function! s:Path.ignore()
         return 1
     endif
 
+    if exists("*NERDTreeCustomIgnoreFilter") && NERDTreeCustomIgnoreFilter(self)
+        return 1
+    endif
+
     return 0
 endfunction
 
@@ -2533,6 +2537,12 @@ function! s:Path._strForEdit()
     "return a relative path if we can
     if stridx(p, cwd) ==# 0
         let p = strpart(p, strlen(cwd))
+
+        "handle the edge case where the file begins with a + (vim interprets
+        "the +foo in `:e +foo` as an option to :edit)
+        if p[0] == "+"
+            let p = '\' . p
+        endif
     endif
 
     if p ==# ''
@@ -2841,6 +2851,13 @@ function! s:nextBufferName()
     let name = s:NERDTreeBufName . s:next_buffer_number
     let s:next_buffer_number += 1
     return name
+endfunction
+" FUNCTION: s:postSourceActions() {{{2
+function! s:postSourceActions()
+    call s:Bookmark.CacheBookmarks(0)
+
+    "load all nerdtree plugins
+    runtime! nerdtree_plugin/**/*.vim
 endfunction
 " FUNCTION: s:tabpagevar(tabnr, var) {{{2
 function! s:tabpagevar(tabnr, var)
@@ -3664,7 +3681,7 @@ endfunction
 "FUNCTION: s:activateBookmark() {{{2
 "handle the user activating a bookmark
 function! s:activateBookmark(bm)
-    call a:bm.activate(0)
+    call a:bm.activate()
 endfunction
 
 "FUNCTION: s:bindMappings() {{{2
@@ -4112,6 +4129,8 @@ function! s:upDirCurrentRootClosed()
     call s:upDir(0)
 endfunction
 
+" Post Source Actions {{{1
+call s:postSourceActions()
 
 "reset &cpo back to users setting
 let &cpo = s:old_cpo

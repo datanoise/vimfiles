@@ -90,6 +90,8 @@ hi Label        guifg=#000000 gui=bold
 hi StorageClass guifg=#000000 gui=bold
 hi Structure    guifg=#000000 gui=bold
 hi TypeDef      guifg=#000000 gui=bold
+hi CommandTCharMatched guifg=red guibg=NONE
+hi CommandTCharMatchedSel guifg=red guibg=#3465a4
 " }}}
 
 " {{{ Completion menus

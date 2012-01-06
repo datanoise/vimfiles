@@ -1,7 +1,7 @@
  -*- vim -*- vim:set ft=vim et sw=2 sts=2 fdc=3:
 
 " Section: Global Setting {{{1
-" ----------------------------------------
+" ------------------------------------------------------------------------------
 runtime! macros/matchit.vim
 set nocompatible      " We're running Vim, not Vi!
 call pathogen#runtime_append_all_bundles()
@@ -11,8 +11,48 @@ filetype on           " Enable filetype detection
 filetype indent on    " Enable filetype-specific indenting
 filetype plugin on    " Enable filetype-specific plugins
 
+" Section: Functions {{{1
+" ------------------------------------------------------------------------------
+function! GetCurDir()
+  let result = substitute(getcwd(), '^'.$HOME, '~', '')
+  let result = substitute(result, '^.\+\ze.\{20,}', '<', '')
+  return '('.result.')'
+endfunction
+
+function! SynName()
+  return synIDattr(synID(line('.'), col('.'), 0), 'name')
+endfunction
+
+function! SynNameStatus()
+  let syn_name = SynName()
+  if exists('g:syn_name_status') && g:syn_name_status && syn_name != ''
+    return ' {'.syn_name.'}'
+  else
+    return ''
+  endif
+endfunction
+
+function! CloseQuickFix()
+  ccl | lcl
+endfunction
+
+function! SwitchPrevBuf()
+  let prev = bufname("#")
+  if prev != '__InputList__' && bufloaded(prev) != 0
+    b#
+  else
+    " echo "No buffer to switch to"
+    LustyBufferExplorer
+  endif
+endfunction
+
+function! Eatchar(pat)
+   let c = nr2char(getchar(0))
+   return (c =~ a:pat) ? '' : c
+endfunction
+
 " Section: Options {{{1
-" --------------------------------------------------
+" ------------------------------------------------------------------------------
 " tab options {{{2
 set tabstop=8
 set shiftwidth=2
@@ -44,15 +84,11 @@ set smartcase
 " }}}
 " status line options {{{2
 set laststatus=2
-function! GetCurDir()
-  let result = substitute(getcwd(), '^'.$HOME, '~', '')
-  let result = substitute(result, '^.\+\ze.\{20,}', '<', '')
-  return '('.result.')'
-endfunction
 set statusline=%m%<%.99f\ %{GetCurDir()}\ %h%w%r%y
-set statusline+=\ %#errormsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*%=
+" set statusline+=%{fugitive#statusline()}
+set statusline+=%{SynNameStatus()}
+set statusline+=\ %#errormsg#%{SyntasticStatuslineFlag()}%*
+set statusline+=%=
 set statusline+=\ %-16(\ %l,%c-%v\ %)%P
 " }}}
 " cscope settings {{{2
@@ -166,9 +202,6 @@ au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs
 au FileType ruby setlocal completefunc=syntaxcomplete#Complete
 au FileType ruby setlocal balloonexpr&
 au FileType scala,ruby exe 'compiler '. expand('<amatch>')
-fun! CloseQuickFix()
-  ccl | lcl
-endf
 au BufReadPost quickfix nmap <silent> <buffer> q :call CloseQuickFix()<CR>
 au FileType xml setlocal foldmethod=syntax
 au BufReadPre,BufNewFile *.{iphone,ipad}.erb let b:eruby_subtype = 'html'
@@ -176,7 +209,7 @@ autocmd BufReadPost fugitive://* set bufhidden=delete
 "}}}
 
 " Section: Keybindings {{{1
-"--------------------------------------------------
+" ------------------------------------------------------------------------------
 let mapleader = ','
 nnoremap <leader>ss :w<CR>
 nnoremap <leader>sv :source ~/.vimrc
@@ -192,6 +225,8 @@ nnoremap <silent> <leader>h :set hlsearch!<CR>
 nnoremap <silent> <C-l> :noh<CR><C-l>
 nnoremap <silent> \l :setlocal list!<CR>
 nnoremap <silent> \n :set nu!<CR>
+nnoremap <silent> \s :let g:syn_name_status =
+      \ exists('g:syn_name_status') ? (g:syn_name_status + 1) % 2 : 1<CR>
 " indented paste
 nnoremap <silent> <leader>p p`]=`[
 nnoremap <silent> <leader>P P=`]
@@ -219,17 +254,6 @@ nnoremap <F2> <C-w><C-w>
 nnoremap <F4> :sil make %<CR><c-l>:cc<CR>
 nnoremap [f :exe ':Ack ' . expand('<cword>')<CR><CR>
 nnoremap ]f :exe ':Ack ' . matchstr(getline('.'), '\%'.virtcol('.').'v\w*')<CR><CR>
-
-function! SwitchPrevBuf()
-  let prev = bufname("#")
-  if prev != '__InputList__' && bufloaded(prev) != 0
-    b#
-  else
-    " echo "No buffer to switch to"
-    LustyBufferExplorer
-  endif
-endfunction
-
 nnoremap <silent> <C-tab> :call SwitchPrevBuf()<CR>
 nnoremap <silent> <C-^> :call SwitchPrevBuf()<CR>
 nnoremap <silent> <C-6> :call SwitchPrevBuf()<CR>
@@ -273,26 +297,19 @@ au FileType php  nnoremap <buffer> <F5> :!php %<CR>
 au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
 
 " Section: Commands && Abbrivations {{{1
-" --------------------------------------------------
-func! Eatchar(pat)
-   let c = nr2char(getchar(0))
-   return (c =~ a:pat) ? '' : c
-endfunc
+" ------------------------------------------------------------------------------
 " NOTE: that doesn't work in MacVim gui mode if sudo requests a password!!!
 command! -bar -nargs=0 SudoW   :exe "write !sudo tee % >/dev/null"|silent edit!
 au FileType ruby iabbrev <buffer> rb! #!<C-R>=substitute(system('which ruby'),'\n$','','')<CR><C-R>=Eatchar('\s')<CR>
 " display name of the syntax ID at the cursor
-func! SynName()
-  echo synIDattr(synID(line('.'), col('.'), 0), 'name')
-endfunc
-command! SynName :call SynName()
+command! SynName :echo SynName()
 cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
 cabbr ack Ack
 iabbr THen Then
 iabbr WHen When
 
 " Section: Plugin settings {{{1
-" --------------------------------------------------
+" ------------------------------------------------------------------------------
 " Tagbar settings  {{{2
 let g:tagbar_left      = 1
 let g:tagbar_width     = 30

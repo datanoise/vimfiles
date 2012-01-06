@@ -192,13 +192,15 @@ endif
 "============================================================
 let s:Bookmark = {}
 " FUNCTION: Bookmark.activate() {{{3
-function! s:Bookmark.activate()
+function! s:Bookmark.activate(...)
+    let opts = a:0 ? a:1 : {}
+
     if self.path.isDirectory
         call self.toRoot()
     else
         if self.validate()
             let n = s:TreeFileNode.New(self.path)
-            call n.open()
+            call n.open(opts)
             call s:closeTreeIfQuitOnOpen()
         endif
     endif
@@ -905,12 +907,9 @@ endfunction
 "classes.
 "============================================================
 let s:TreeFileNode = {}
-"FUNCTION: TreeFileNode.activate(forceKeepWinOpen) {{{3
-function! s:TreeFileNode.activate(forceKeepWinOpen)
-    call self.open()
-    if !a:forceKeepWinOpen
-        call s:closeTreeIfQuitOnOpen()
-    end
+"FUNCTION: TreeFileNode.activate(...) {{{3
+function! s:TreeFileNode.activate(...)
+    call self.open(a:0 ? a:1 : {})
 endfunction
 "FUNCTION: TreeFileNode.bookmark(name) {{{3
 "bookmark this node with a:name
@@ -1216,45 +1215,82 @@ function! s:TreeFileNode.New(path)
 endfunction
 
 "FUNCTION: TreeFileNode.open() {{{3
-"Open the file represented by the given node in the current window, splitting
-"the window if needed
+"Args:
+"A dictionary containing the following keys (all optional):
+"  'split': Specifies whether the node should be opened in new split/tab or in
+"           the previous window. Can be either 'v' or 'h' or 't' (for open in
+"           new tab)
+"  'reuse': if a window is displaying the file then jump the cursor there
+"  'keepopen': dont close the tree window
+"  'stay': open the file, but keep the cursor in the tree win
 "
-"ARGS:
-"treenode: file node to open
-function! s:TreeFileNode.open()
+function! s:TreeFileNode.open(...)
+    let opts = a:0 ? a:1 : {}
+
+    let currentBuf = bufnr("")
+    let currentTab = tabpagenr()
+
+    if s:has_opt(opts, 'reuse') && self._putCursorInBufWin()
+        return
+    endif
+
+    if has_key(opts, 'split')
+        if opts['split'] == 'v'
+            call self._openVSplit()
+        elseif opts['split'] == 'h'
+            call self._openSplit()
+        else
+            call self._openInNewTab(opts)
+        endif
+    else
+        call self._open()
+    endif
+
+    if !s:has_opt(opts, 'keepopen')
+        call s:closeTreeIfQuitOnOpen()
+    endif
+
+    if s:has_opt(opts, 'stay')
+        call s:exec('normal ' . currentTab . 'gt')
+        call s:exec(bufwinnr(currentBuf) . 'wincmd w')
+    endif
+endfunction
+
+"FUNCTION: TreeFileNode._open() {{{3
+function! s:TreeFileNode._open()
+
     if b:NERDTreeType ==# "secondary"
         exec 'edit ' . self.path.str({'format': 'Edit'})
         return
     endif
 
-    "if the file is already open in this tab then just stick the cursor in it
-    let winnr = bufwinnr('^' . self.path.str() . '$')
-    if winnr != -1
-        call s:exec(winnr . "wincmd w")
-
+    if !s:isWindowUsable(winnr("#")) && s:firstUsableWindow() ==# -1
+        call self._openSplit()
     else
-        if !s:isWindowUsable(winnr("#")) && s:firstUsableWindow() ==# -1
-            call self.openSplit()
-        else
-            try
-                if !s:isWindowUsable(winnr("#"))
-                    call s:exec(s:firstUsableWindow() . "wincmd w")
-                else
-                    call s:exec('wincmd p')
-                endif
-                exec ("edit " . self.path.str({'format': 'Edit'}))
-            catch /^Vim\%((\a\+)\)\=:E37/
-                call s:putCursorInTreeWin()
-                throw "NERDTree.FileAlreadyOpenAndModifiedError: ". self.path.str() ." is already open and modified."
-            catch /^Vim\%((\a\+)\)\=:/
-                echo v:exception
-            endtry
-        endif
+        try
+            if !s:isWindowUsable(winnr("#"))
+                call s:exec(s:firstUsableWindow() . "wincmd w")
+            else
+                call s:exec('wincmd p')
+            endif
+            exec ("edit " . self.path.str({'format': 'Edit'}))
+        catch /^Vim\%((\a\+)\)\=:E37/
+            call s:putCursorInTreeWin()
+            throw "NERDTree.FileAlreadyOpenAndModifiedError: ". self.path.str() ." is already open and modified."
+        catch /^Vim\%((\a\+)\)\=:/
+            echo v:exception
+        endtry
     endif
 endfunction
 "FUNCTION: TreeFileNode.openSplit() {{{3
 "Open this node in a new window
 function! s:TreeFileNode.openSplit()
+    call s:deprecated('TreeFileNode.openSplit', 'is deprecated, use .open() instead.')
+    call self.open({'split': 'h'})
+endfunction
+"FUNCTION: TreeFileNode._openSplit() {{{3
+"Open this node in a new window
+function! s:TreeFileNode._openSplit()
 
     if b:NERDTreeType ==# "secondary"
         exec "split " . self.path.str({'format': 'Edit'})
@@ -1321,6 +1357,12 @@ endfunction
 "FUNCTION: TreeFileNode.openVSplit() {{{3
 "Open this node in a new vertical window
 function! s:TreeFileNode.openVSplit()
+    call s:deprecated('TreeFileNode.openVSplit', 'is deprecated, use .open() instead.')
+    call self.open({'split': 'v'})
+endfunction
+"FUNCTION: TreeFileNode._openVSplit() {{{3
+"Open this node in a new vertical window
+function! s:TreeFileNode._openVSplit()
     if b:NERDTreeType ==# "secondary"
         exec "vnew " . self.path.str({'format': 'Edit'})
         return
@@ -1341,19 +1383,42 @@ function! s:TreeFileNode.openVSplit()
 endfunction
 "FUNCTION: TreeFileNode.openInNewTab(options) {{{3
 function! s:TreeFileNode.openInNewTab(options)
+    echomsg 'TreeFileNode.openInNewTab is deprecated'
+    call self.open(extend({'split': 't'}, a:options))
+endfunction
+"FUNCTION: TreeFileNode._openInNewTab(options) {{{3
+function! s:TreeFileNode._openInNewTab(options)
     let currentTab = tabpagenr()
-
-    if !s:has_opt(a:options, 'keepTreeOpen')
-        call s:closeTreeIfQuitOnOpen()
-    endif
-
     exec "tabedit " . self.path.str({'format': 'Edit'})
 
     if s:has_opt(a:options, 'stayInCurrentTab')
         exec "tabnext " . currentTab
     endif
-
 endfunction
+"FUNCTION: TreeFileNode._putCursorInBufWin(){{{3
+"put the cursor in the first window we find for this file
+"
+"return 1 if we were successful
+function! s:TreeFileNode._putCursorInBufWin(...)
+    "check the current tab for the window
+    let winnr = bufwinnr('^' . self.path.str() . '$')
+    if winnr != -1
+        call s:exec(winnr . "wincmd w")
+        return 1
+    else
+        "check other tabs
+        let tabnr = self.path.tabnr()
+        if tabnr
+            call s:exec('normal! ' . tabnr . 'gt')
+            let winnr = bufwinnr('^' . self.path.str() . '$')
+            call s:exec(winnr . "wincmd w")
+            return 1
+        endif
+    endif
+    return 0
+endfunction
+
+
 "FUNCTION: TreeFileNode.putCursorHere(isJump, recurseUpward){{{3
 "Places the cursor on the line number this node is rendered on
 "
@@ -1509,10 +1574,11 @@ function! s:TreeDirNode.AbsoluteTreeRoot()
     endwhile
     return currentNode
 endfunction
-"FUNCTION: TreeDirNode.activate(forceKeepWinOpen) {{{3
+"FUNCTION: TreeDirNode.activate([options]) {{{3
 unlet s:TreeDirNode.activate
-function! s:TreeDirNode.activate(forceKeepWinOpen)
-    call self.toggleOpen()
+function! s:TreeDirNode.activate(...)
+    let opts = a:0 ? a:1 : {}
+    call self.toggleOpen(opts)
     call s:renderView()
     call self.putCursorHere(0, 0)
 endfunction
@@ -1773,17 +1839,42 @@ function! s:TreeDirNode.New(path)
 
     return newTreeNode
 endfunction
-"FUNCTION: TreeDirNode.open() {{{3
-"Reads in all this nodes children
+"FUNCTION: TreeDirNode.open([opts]) {{{3
+"Open the dir in the current tree or in a new tree elsewhere.
 "
-"Return: the number of child nodes read
+"Args:
+"
+"A dictionary containing the following keys (all optional):
+"  'split': 't' if the tree should be opened in a new tab
+"  'keepopen': dont close the tree window
+"  'stay': open the file, but keep the cursor in the tree win
+"
 unlet s:TreeDirNode.open
-function! s:TreeDirNode.open()
-    let self.isOpen = 1
-    if self.children ==# []
-        return self._initChildren(0)
+function! s:TreeDirNode.open(...)
+    let opts = a:0 ? a:1 : {}
+
+    if has_key(opts, 'split') && opts['split'] == 't'
+        let currentBuf = bufnr("")
+        let currentTab = tabpagenr()
+
+        call self._openInNewTab()
+
+        if s:has_opt(opts, 'stay')
+            call s:exec('normal ' . currentTab . 'gt')
+            call s:exec(bufwinnr(currentBuf) . 'wincmd w')
+        endif
+
+        if !s:has_opt(opts, 'keepopen')
+            call s:closeTreeIfQuitOnOpen()
+        endif
+
     else
-        return 0
+        let self.isOpen = 1
+        if self.children ==# []
+            return self._initChildren(0)
+        else
+            return 0
+        endif
     endif
 endfunction
 
@@ -1803,18 +1894,14 @@ endfunction
 "FUNCTION: TreeDirNode.openInNewTab(options) {{{3
 unlet s:TreeDirNode.openInNewTab
 function! s:TreeDirNode.openInNewTab(options)
-    let currentTab = tabpagenr()
-
-    if !s:has_opt(a:options, 'keepTreeOpen')
-        call s:closeTreeIfQuitOnOpen()
-    endif
-
+    call s:deprecated('TreeDirNode.openInNewTab', 'is deprecated, use open() instead')
+    call self.open({'split': 't'})
+endfunction
+"FUNCTION: TreeDirNode._openInNewTab() {{{3
+unlet s:TreeDirNode._openInNewTab
+function! s:TreeDirNode._openInNewTab()
     tabnew
     call s:initNerdTree(self.path.str())
-
-    if s:has_opt(a:options, 'stayInCurrentTab')
-        exec "tabnext " . currentTab
-    endif
 endfunction
 "FUNCTION: TreeDirNode.openRecursively() {{{3
 "Opens this treenode and all of its children whose paths arent 'ignored'
@@ -1954,13 +2041,14 @@ function! s:TreeDirNode.sortChildren()
     call sort(self.children, CompareFunc)
 endfunction
 
-"FUNCTION: TreeDirNode.toggleOpen() {{{3
+"FUNCTION: TreeDirNode.toggleOpen([options]) {{{3
 "Opens this directory if it is closed and vice versa
-function! s:TreeDirNode.toggleOpen()
+function! s:TreeDirNode.toggleOpen(...)
+    let opts = a:0 ? a:1 : {}
     if self.isOpen ==# 1
         call self.close()
     else
-        call self.open()
+        call self.open(opts)
     endif
 endfunction
 
@@ -2291,19 +2379,17 @@ endfunction
 "FUNCTION: Path.ignore() {{{3
 "returns true if this path should be ignored
 function! s:Path.ignore()
-    let lastPathComponent = self.getLastPathComponent(0)
-
     "filter out the user specified paths to ignore
     if b:NERDTreeIgnoreEnabled
         for i in g:NERDTreeIgnore
-            if lastPathComponent =~# i
+            if self._ignorePatternMatches(i)
                 return 1
             endif
         endfor
     endif
 
     "dont show hidden files unless instructed to
-    if b:NERDTreeShowHidden ==# 0 && lastPathComponent =~# '^\.'
+    if b:NERDTreeShowHidden ==# 0 && self.getLastPathComponent(0) =~# '^\.'
         return 1
     endif
 
@@ -2318,6 +2404,24 @@ function! s:Path.ignore()
     return 0
 endfunction
 
+"FUNCTION: Path._ignorePatternMatches(pattern) {{{3
+"returns true if this path matches the given ignore pattern
+function! s:Path._ignorePatternMatches(pattern)
+    let pat = a:pattern
+    if strpart(pat,len(pat)-7) == '[[dir]]'
+        if !self.isDirectory
+            return 0
+        endif
+        let pat = strpart(pat,0, len(pat)-7)
+    elseif strpart(pat,len(pat)-8) == '[[file]]'
+        if self.isDirectory
+            return 0
+        endif
+        let pat = strpart(pat,0, len(pat)-8)
+    endif
+
+    return self.getLastPathComponent(0) =~# pat
+endfunction
 "FUNCTION: Path.isUnder(path) {{{3
 "return 1 if this path is somewhere under the given path in the filesystem.
 "
@@ -2522,20 +2626,18 @@ endfunction
 "Return: the string for this path that is suitable to be used with the :edit
 "command
 function! s:Path._strForEdit()
-    let p = self.str({'format': 'UI'})
-    let cwd = getcwd()
-
-    if s:running_windows
-        let p = tolower(self.str())
-        let cwd = tolower(getcwd())
-    endif
-
-    let p = escape(p, s:escape_chars)
-
-    let cwd = cwd . s:Path.Slash()
+    let p = escape(self.str({'format': 'UI'}), s:escape_chars)
+    let cwd = getcwd() . s:Path.Slash()
 
     "return a relative path if we can
-    if stridx(p, cwd) ==# 0
+    let isRelative = 0
+    if s:running_windows
+        let isRelative = stridx(tolower(p), tolower(cwd)) == 0
+    else
+        let isRelative = stridx(p, cwd) == 0
+    endif
+
+    if isRelative
         let p = strpart(p, strlen(cwd))
 
         "handle the edge case where the file begins with a + (vim interprets
@@ -2550,7 +2652,6 @@ function! s:Path._strForEdit()
     endif
 
     return p
-
 endfunction
 "FUNCTION: Path._strForGlob() {{{3
 function! s:Path._strForGlob()
@@ -2590,6 +2691,21 @@ function! s:Path.strTrunk()
     return self.drive . '/' . join(self.pathSegments[0:-2], '/')
 endfunction
 
+" FUNCTION: Path.tabnr() {{{3
+" return the number of the first tab that is displaying this file
+"
+" return 0 if no tab was found
+function! s:Path.tabnr()
+    let str = self.str()
+    for t in range(tabpagenr('$'))
+        for b in tabpagebuflist(t+1)
+            if str == expand('#' . b . ':p')
+                return t+1
+            endif
+        endfor
+    endfor
+    return 0
+endfunction
 "FUNCTION: Path.WinToUnixPath(pathstr){{{3
 "Takes in a windows path and returns the unix equiv
 "
@@ -2655,6 +2771,20 @@ endfunction
 " completion function for the bookmark commands
 function! s:completeBookmarks(A,L,P)
     return filter(s:Bookmark.BookmarkNames(), 'v:val =~# "^' . a:A . '"')
+endfunction
+" FUNCTION: s:deprecated(func, [msg]) {{{2
+" Issue a deprecation warning for a:func. If a second arg is given, use this
+" as the deprecation message
+function! s:deprecated(func, ...)
+    let msg = a:0 ? a:func . ' ' . a:1 : a:func . ' is deprecated'
+
+    if !exists('s:deprecationWarnings')
+        let s:deprecationWarnings = {}
+    endif
+    if !has_key(s:deprecationWarnings, a:func)
+        let s:deprecationWarnings[a:func] = 1
+        echomsg msg
+    endif
 endfunction
 " FUNCTION: s:exec(cmd) {{{2
 " same as :exec cmd  but eventignore=all is set for the duration
@@ -2991,9 +3121,9 @@ function! s:closeTree()
 
     if winnr("$") != 1
         if winnr() == s:getTreeWinNum()
-            wincmd p
+            call s:exec("wincmd p")
             let bufnr = bufnr("")
-            wincmd p
+            call s:exec("wincmd p")
         else
             let bufnr = bufnr("")
         endif
@@ -3356,35 +3486,6 @@ function! s:jumpToSibling(currentNode, forward)
     endif
 endfunction
 
-
-
-" FUNCTION: s:openEntrySplit(vertical, forceKeepWindowOpen) {{{2
-function! s:openEntrySplit(vertical, forceKeepWindowOpen)
-    let treenode = s:TreeFileNode.GetSelected()
-    if treenode != {}
-        if a:vertical
-            call treenode.openVSplit()
-        else
-            call treenode.openSplit()
-        endif
-        if !a:forceKeepWindowOpen
-            call s:closeTreeIfQuitOnOpen()
-        endif
-    else
-        call s:echo("select a node first")
-    endif
-endfunction
-
-"FUNCTION: s:previewNode(node, openNewWin) {{{2
-function! s:previewNode(node, openNewWin)
-    let currentBuf = bufnr("")
-    if a:openNewWin > 0
-        call s:openEntrySplit(a:openNewWin ==# 2,1)
-    else
-        call s:activateNode(a:node)
-    end
-    call s:exec(bufwinnr(currentBuf) . "wincmd w")
-endfunction
 "FUNCTION: s:promptToDelBuffer(bufnum, msg){{{2
 "prints out the given msg and, if the user responds by pushing 'y' then the
 "buffer with the given bufnum is deleted
@@ -3675,7 +3776,7 @@ endfunction
 "FUNCTION: s:activateNode() {{{2
 "handle the user activating a tree node
 function! s:activateNode(node)
-    call a:node.activate(0)
+    call a:node.activate({'reuse': 1})
 endfunction
 
 "FUNCTION: s:activateBookmark() {{{2
@@ -3915,10 +4016,9 @@ function! s:handleMiddleMouse()
     if curNode.path.isDirectory
         call s:openExplorer(curNode)
     else
-        call s:openEntrySplit(0,0)
+        call curNode.open({'split': 'h'})
     endif
 endfunction
-
 
 " FUNCTION: s:jumpToFirstChild() {{{2
 " wrapper for the jump to child method
@@ -3981,12 +4081,12 @@ endfunction
 
 " FUNCTION: s:openHSplit(node) {{{2
 function! s:openHSplit(node)
-    call a:node.openSplit()
+    call a:node.activate({'split': 'h'})
 endfunction
 
 " FUNCTION: s:openVSplit(node) {{{2
 function! s:openVSplit(node)
-    call a:node.openVSplit()
+    call a:node.activate({'split': 'v'})
 endfunction
 
 " FUNCTION: s:openExplorer(node) {{{2
@@ -3996,12 +4096,12 @@ endfunction
 
 " FUNCTION: s:openInNewTab(target) {{{2
 function! s:openInNewTab(target)
-    call a:target.openInNewTab({})
+    call a:target.activate({'split': 't'})
 endfunction
 
 " FUNCTION: s:openInNewTabSilent(target) {{{2
 function! s:openInNewTabSilent(target)
-    call a:target.openInNewTab({'stayInCurrentTab': 1})
+    call a:target.activate({'split': 't', 'stayInCurrentTab': 1})
 endfunction
 
 " FUNCTION: s:openNodeRecursively(node) {{{2
@@ -4015,17 +4115,17 @@ endfunction
 
 "FUNCTION: s:previewNodeCurrent(node) {{{2
 function! s:previewNodeCurrent(node)
-    call s:previewNode(a:node, 0)
+    call a:node.open({'stay': 1})
 endfunction
 
 "FUNCTION: s:previewNodeHSplit(node) {{{2
 function! s:previewNodeHSplit(node)
-    call s:previewNode(a:node, 1)
+    call a:node.open({'stay': 1, 'split': 'h'})
 endfunction
 
 "FUNCTION: s:previewNodeVSplit(node) {{{2
 function! s:previewNodeVSplit(node)
-    call s:previewNode(a:node, 2)
+    call a:node.open({'stay': 1, 'split': 'v'})
 endfunction
 
 
@@ -4129,7 +4229,7 @@ function! s:upDirCurrentRootClosed()
     call s:upDir(0)
 endfunction
 
-" Post Source Actions {{{1
+" SECTION: Post Source Actions {{{1
 call s:postSourceActions()
 
 "reset &cpo back to users setting

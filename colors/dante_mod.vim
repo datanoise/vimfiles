@@ -64,10 +64,10 @@ hi Pmenu        guifg=#f6f3e8       guibg=#444444       gui=NONE
             \   ctermfg=NONE        ctermbg=NONE        cterm=NONE
 hi PmenuSel     guifg=#000000       guibg=#cae682       gui=NONE
             \   ctermfg=NONE        ctermbg=NONE        cterm=NONE
-" hi CommandTCharMatched ctermfg=darkyellow  ctermbg=NONE guifg=gold3 guibg=NONE
-" hi CommandTCharMatchedSel ctermfg=darkyellow ctermbg=lightgray guifg=gold3 guibg=gray40
-hi CommandTCharMatched ctermfg=red  ctermbg=NONE guifg=red guibg=NONE
-hi CommandTCharMatchedSel ctermfg=red ctermbg=lightgray guifg=red guibg=gray40
+hi CommandTCharMatched ctermfg=darkblue  ctermbg=NONE guifg=dodgerblue4 guibg=NONE
+" hi CommandTCharMatchedSel ctermfg=darkcyan ctermbg=lightgray guifg=white guibg=black
+hi link CommandTCharMatchedSel CommandTCharMatched
+hi link CommandTSelection Normal
 
 " syntax hi colors
 hi Comment  term=bold ctermfg=darkcyan guifg=cyan4

@@ -103,8 +103,8 @@ module CommandT
             ::VIM::command 'highlight default link CommandTCharMatchedSel Visual'
         end
 
-        ::VIM::command 'highlight link CommandTSelection Visual'
-        ::VIM::command 'highlight link CommandTNoEntries Error'
+        ::VIM::command 'highlight default link CommandTSelection Visual'
+        ::VIM::command 'highlight default link CommandTNoEntries Error'
         ::VIM::evaluate 'clearmatches()'
 
         # hide cursor

@@ -337,8 +337,8 @@ let g:CommandTCancelMap=['<C-c>', '<Esc>']
 let g:CommandTMaxHeight=10
 if !has('gui_running')
   " fix for arrow keys in console mode
-  let g:CommandTSelectNextMap=['<Esc>OB', '<C-n>']
-  let g:CommandTSelectPrevMap=['<Esc>OA', '<C-p>']
+  let g:CommandTSelectNextMap=['<Esc>OB', '<C-j>', '<C-n>']
+  let g:CommandTSelectPrevMap=['<Esc>OA', '<C-k>', '<C-p>']
 end
 nnoremap <silent> <leader>m :CommandT<CR>
 nnoremap <silent> <leader>l :CommandTBuffer<CR>

@@ -289,10 +289,11 @@ au FileType cucumber nnoremap <buffer> <F4> :!cucumber %<CR>
 au FileType cucumber nnoremap <buffer> <F5> ^:exe '!cucumber ' . expand('%') . ':' . search('^\s*Scenario:','bnW')<CR>
 au FileType cucumber inoremap <buffer> \| \|<Esc>:Tab /\|<CR>A
 au FileType help nnoremap <silent> <buffer> q :bd<CR>
+au FileType netrw nnoremap <silent> <buffer> qq :bw<CR>
 au FileType vim  nnoremap <silent> <buffer> K :h <c-r>=expand('<cword>')<CR><CR>
 au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F4> :!rspec --format doc -c %<CR>|endif
 au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F5> :exe '!rspec --format doc -c ' . expand('%') . ':' . line('.')<CR>|else|nnoremap <buffer> <F5> :!ruby %<CR>|endif
-au FileType ruby inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "
+au FileType ruby,puppet inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "
 au FileType php  nnoremap <buffer> <F5> :!php %<CR>
 au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
 

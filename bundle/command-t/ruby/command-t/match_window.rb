@@ -299,9 +299,9 @@ module CommandT
     end
 
     def add_syntax_highlight match
-        list = match.split(//)
+        list = match.split(//).reverse
         pos = 0
-        @prompt.abbrev.split(//).each do |ch|
+        @prompt.abbrev.reverse.split(//).each do |ch|
           list[pos..-1].each_index do |i|
             if list[pos + i] == ch
               list[pos + i] = [MH_START, ch, MH_END]
@@ -310,7 +310,7 @@ module CommandT
             end
           end
         end
-        list.flatten.join
+        list.reverse.flatten.join
     end
 
     # Print just the specified match.

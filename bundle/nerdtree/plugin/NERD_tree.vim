@@ -151,7 +151,7 @@ let s:NERDTreeBufName = 'NERD_tree_'
 let s:tree_wid = 2
 
 if g:NERDTreeDirArrows
-    let s:tree_markup_reg = '^ *\([▾▸] \)\?'
+    let s:tree_markup_reg = '^\([▾▸] \| \+[▾▸] \| \+\)'
 else
     let s:tree_markup_reg = '^[ `|]*[\-+~]'
 endif
@@ -193,17 +193,7 @@ endif
 let s:Bookmark = {}
 " FUNCTION: Bookmark.activate() {{{3
 function! s:Bookmark.activate(...)
-    let opts = a:0 ? a:1 : {}
-
-    if self.path.isDirectory
-        call self.toRoot()
-    else
-        if self.validate()
-            let n = s:TreeFileNode.New(self.path)
-            call n.open(opts)
-            call s:closeTreeIfQuitOnOpen()
-        endif
-    endif
+    call self.open(a:0 ? a:1 : {})
 endfunction
 " FUNCTION: Bookmark.AddBookmark(name, path) {{{3
 " Class method to add a new bookmark to the list, if a previous bookmark exists
@@ -389,20 +379,31 @@ function! s:Bookmark.New(name, path)
     let newBookmark.path = a:path
     return newBookmark
 endfunction
+" FUNCTION: Bookmark.open([options]) {{{3
+"Args:
+"A dictionary containing the following keys (all optional):
+"  'where': Specifies whether the node should be opened in new split/tab or in
+"           the previous window. Can be either 'v' (vertical split), 'h'
+"           (horizontal split), 't' (new tab) or 'p' (previous window).
+"  'reuse': if a window is displaying the file then jump the cursor there
+"  'keepopen': dont close the tree window
+"  'stay': open the file, but keep the cursor in the tree win
+"
+function! s:Bookmark.open(...)
+    let opts = a:0 ? a:1 : {}
+
+    if self.path.isDirectory && !has_key(opts, 'where')
+        call self.toRoot()
+    else
+        let opener = s:Opener.New(self.path, opts)
+        call opener.open(self)
+    endif
+endfunction
 " FUNCTION: Bookmark.openInNewTab(options) {{{3
 " Create a new bookmark object with the given name and path object
 function! s:Bookmark.openInNewTab(options)
-    let currentTab = tabpagenr()
-    if self.path.isDirectory
-        tabnew
-        call s:initNerdTree(self.name)
-    else
-        exec "tabedit " . self.path.str({'format': 'Edit'})
-    endif
-
-    if s:has_opt(a:options, 'stayInCurrentTab')
-        exec "tabnext " . currentTab
-    endif
+    call s:deprecated('Bookmark.openInNewTab', 'is deprecated, use open() instead')
+    call self.open(a:options)
 endfunction
 " Function: Bookmark.setPath(path)   {{{3
 " makes this bookmark point to the given path
@@ -519,6 +520,15 @@ function! s:KeyMap.bind()
     exec 'nnoremap <buffer> <silent> '. mapkey . premap . ':call <SID>KeyMap_Invoke("'. self.key .'")<cr>'
 endfunction
 
+"FUNCTION: KeyMap.Remove(key, scope) {{{3
+function! s:KeyMap.Remove(key, scope)
+    let maps = s:KeyMap.All()
+    for i in range(len(maps))
+         if maps[i].key ==# a:key && maps[i].scope ==# a:scope
+            return remove(maps, i)
+        endif
+    endfor
+endfunction
 "FUNCTION: KeyMap.invoke() {{{3
 "Call the KeyMaps callback function
 function! s:KeyMap.invoke(...)
@@ -605,11 +615,7 @@ endfunction
 
 "FUNCTION: KeyMap.Add(keymap) {{{3
 function! s:KeyMap.Add(keymap)
-    let oldmap = s:KeyMap.FindFor(a:keymap.key, a:keymap.scope)
-    if !empty(oldmap)
-        call remove(s:KeyMap.All(), index(s:KeyMap.All(), oldmap))
-    endif
-
+    call s:KeyMap.Remove(a:keymap.key, a:keymap.scope)
     call add(s:KeyMap.All(), a:keymap)
 endfunction
 
@@ -1215,210 +1221,30 @@ function! s:TreeFileNode.New(path)
 endfunction
 
 "FUNCTION: TreeFileNode.open() {{{3
-"Args:
-"A dictionary containing the following keys (all optional):
-"  'split': Specifies whether the node should be opened in new split/tab or in
-"           the previous window. Can be either 'v' or 'h' or 't' (for open in
-"           new tab)
-"  'reuse': if a window is displaying the file then jump the cursor there
-"  'keepopen': dont close the tree window
-"  'stay': open the file, but keep the cursor in the tree win
-"
 function! s:TreeFileNode.open(...)
+    echomsg self.path.str()
     let opts = a:0 ? a:1 : {}
-
-    let currentBuf = bufnr("")
-    let currentTab = tabpagenr()
-
-    if s:has_opt(opts, 'reuse') && self._putCursorInBufWin()
-        return
-    endif
-
-    if has_key(opts, 'split')
-        if opts['split'] == 'v'
-            call self._openVSplit()
-        elseif opts['split'] == 'h'
-            call self._openSplit()
-        else
-            call self._openInNewTab(opts)
-        endif
-    else
-        call self._open()
-    endif
-
-    if !s:has_opt(opts, 'keepopen')
-        call s:closeTreeIfQuitOnOpen()
-    endif
-
-    if s:has_opt(opts, 'stay')
-        call s:exec('normal ' . currentTab . 'gt')
-        call s:exec(bufwinnr(currentBuf) . 'wincmd w')
-    endif
+    let opener = s:Opener.New(self.path, opts)
+    call opener.open(self)
 endfunction
 
-"FUNCTION: TreeFileNode._open() {{{3
-function! s:TreeFileNode._open()
-
-    if b:NERDTreeType ==# "secondary"
-        exec 'edit ' . self.path.str({'format': 'Edit'})
-        return
-    endif
-
-    if !s:isWindowUsable(winnr("#")) && s:firstUsableWindow() ==# -1
-        call self._openSplit()
-    else
-        try
-            if !s:isWindowUsable(winnr("#"))
-                call s:exec(s:firstUsableWindow() . "wincmd w")
-            else
-                call s:exec('wincmd p')
-            endif
-            exec ("edit " . self.path.str({'format': 'Edit'}))
-        catch /^Vim\%((\a\+)\)\=:E37/
-            call s:putCursorInTreeWin()
-            throw "NERDTree.FileAlreadyOpenAndModifiedError: ". self.path.str() ." is already open and modified."
-        catch /^Vim\%((\a\+)\)\=:/
-            echo v:exception
-        endtry
-    endif
-endfunction
 "FUNCTION: TreeFileNode.openSplit() {{{3
 "Open this node in a new window
 function! s:TreeFileNode.openSplit()
     call s:deprecated('TreeFileNode.openSplit', 'is deprecated, use .open() instead.')
-    call self.open({'split': 'h'})
-endfunction
-"FUNCTION: TreeFileNode._openSplit() {{{3
-"Open this node in a new window
-function! s:TreeFileNode._openSplit()
-
-    if b:NERDTreeType ==# "secondary"
-        exec "split " . self.path.str({'format': 'Edit'})
-        return
-    endif
-
-    " Save the user's settings for splitbelow and splitright
-    let savesplitbelow=&splitbelow
-    let savesplitright=&splitright
-
-    " 'there' will be set to a command to move from the split window
-    " back to the explorer window
-    "
-    " 'back' will be set to a command to move from the explorer window
-    " back to the newly split window
-    "
-    " 'right' and 'below' will be set to the settings needed for
-    " splitbelow and splitright IF the explorer is the only window.
-    "
-    let there= g:NERDTreeWinPos ==# "left" ? "wincmd h" : "wincmd l"
-    let back = g:NERDTreeWinPos ==# "left" ? "wincmd l" : "wincmd h"
-    let right= g:NERDTreeWinPos ==# "left"
-    let below=0
-
-    " Attempt to go to adjacent window
-    call s:exec(back)
-
-    let onlyOneWin = (winnr("$") ==# 1)
-
-    " If no adjacent window, set splitright and splitbelow appropriately
-    if onlyOneWin
-        let &splitright=right
-        let &splitbelow=below
-    else
-        " found adjacent window - invert split direction
-        let &splitright=!right
-        let &splitbelow=!below
-    endif
-
-    let splitMode = onlyOneWin ? "vertical" : ""
-
-    " Open the new window
-    try
-        exec(splitMode." sp " . self.path.str({'format': 'Edit'}))
-    catch /^Vim\%((\a\+)\)\=:E37/
-        call s:putCursorInTreeWin()
-        throw "NERDTree.FileAlreadyOpenAndModifiedError: ". self.path.str() ." is already open and modified."
-    catch /^Vim\%((\a\+)\)\=:/
-        "do nothing
-    endtry
-
-    "resize the tree window if no other window was open before
-    if onlyOneWin
-        let size = exists("b:NERDTreeOldWindowSize") ? b:NERDTreeOldWindowSize : g:NERDTreeWinSize
-        call s:exec(there)
-        exec("silent ". splitMode ." resize ". size)
-        call s:exec('wincmd p')
-    endif
-
-    " Restore splitmode settings
-    let &splitbelow=savesplitbelow
-    let &splitright=savesplitright
+    call self.open({'where': 'h'})
 endfunction
 "FUNCTION: TreeFileNode.openVSplit() {{{3
 "Open this node in a new vertical window
 function! s:TreeFileNode.openVSplit()
     call s:deprecated('TreeFileNode.openVSplit', 'is deprecated, use .open() instead.')
-    call self.open({'split': 'v'})
-endfunction
-"FUNCTION: TreeFileNode._openVSplit() {{{3
-"Open this node in a new vertical window
-function! s:TreeFileNode._openVSplit()
-    if b:NERDTreeType ==# "secondary"
-        exec "vnew " . self.path.str({'format': 'Edit'})
-        return
-    endif
-
-    let winwidth = winwidth(".")
-    if winnr("$")==#1
-        let winwidth = g:NERDTreeWinSize
-    endif
-
-    call s:exec("wincmd p")
-    exec "vnew " . self.path.str({'format': 'Edit'})
-
-    "resize the nerd tree back to the original size
-    call s:putCursorInTreeWin()
-    exec("silent vertical resize ". winwidth)
-    call s:exec('wincmd p')
+    call self.open({'where': 'v'})
 endfunction
 "FUNCTION: TreeFileNode.openInNewTab(options) {{{3
 function! s:TreeFileNode.openInNewTab(options)
     echomsg 'TreeFileNode.openInNewTab is deprecated'
-    call self.open(extend({'split': 't'}, a:options))
+    call self.open(extend({'where': 't'}, a:options))
 endfunction
-"FUNCTION: TreeFileNode._openInNewTab(options) {{{3
-function! s:TreeFileNode._openInNewTab(options)
-    let currentTab = tabpagenr()
-    exec "tabedit " . self.path.str({'format': 'Edit'})
-
-    if s:has_opt(a:options, 'stayInCurrentTab')
-        exec "tabnext " . currentTab
-    endif
-endfunction
-"FUNCTION: TreeFileNode._putCursorInBufWin(){{{3
-"put the cursor in the first window we find for this file
-"
-"return 1 if we were successful
-function! s:TreeFileNode._putCursorInBufWin(...)
-    "check the current tab for the window
-    let winnr = bufwinnr('^' . self.path.str() . '$')
-    if winnr != -1
-        call s:exec(winnr . "wincmd w")
-        return 1
-    else
-        "check other tabs
-        let tabnr = self.path.tabnr()
-        if tabnr
-            call s:exec('normal! ' . tabnr . 'gt')
-            let winnr = bufwinnr('^' . self.path.str() . '$')
-            call s:exec(winnr . "wincmd w")
-            return 1
-        endif
-    endif
-    return 0
-endfunction
-
-
 "FUNCTION: TreeFileNode.putCursorHere(isJump, recurseUpward){{{3
 "Places the cursor on the line number this node is rendered on
 "
@@ -1842,32 +1668,14 @@ endfunction
 "FUNCTION: TreeDirNode.open([opts]) {{{3
 "Open the dir in the current tree or in a new tree elsewhere.
 "
-"Args:
-"
-"A dictionary containing the following keys (all optional):
-"  'split': 't' if the tree should be opened in a new tab
-"  'keepopen': dont close the tree window
-"  'stay': open the file, but keep the cursor in the tree win
-"
+"If opening in the current tree, return the number of cached nodes.
 unlet s:TreeDirNode.open
 function! s:TreeDirNode.open(...)
     let opts = a:0 ? a:1 : {}
 
-    if has_key(opts, 'split') && opts['split'] == 't'
-        let currentBuf = bufnr("")
-        let currentTab = tabpagenr()
-
-        call self._openInNewTab()
-
-        if s:has_opt(opts, 'stay')
-            call s:exec('normal ' . currentTab . 'gt')
-            call s:exec(bufwinnr(currentBuf) . 'wincmd w')
-        endif
-
-        if !s:has_opt(opts, 'keepopen')
-            call s:closeTreeIfQuitOnOpen()
-        endif
-
+    if has_key(opts, 'where') && !empty(opts['where'])
+        let opener = s:Opener.New(self.path, opts)
+        call opener.open(self)
     else
         let self.isOpen = 1
         if self.children ==# []
@@ -1882,23 +1690,15 @@ endfunction
 " opens an explorer window for this node in the previous window (could be a
 " nerd tree or a netrw)
 function! s:TreeDirNode.openExplorer()
-    let oldwin = winnr()
-    call s:exec('wincmd p')
-    if oldwin ==# winnr() || (&modified && s:bufInWindows(winbufnr(winnr())) < 2)
-        call s:exec('wincmd p')
-        call self.openSplit()
-    else
-        exec ("silent edit " . self.path.str({'format': 'Edit'}))
-    endif
+    call self.open({'where': 'p'})
 endfunction
 "FUNCTION: TreeDirNode.openInNewTab(options) {{{3
 unlet s:TreeDirNode.openInNewTab
 function! s:TreeDirNode.openInNewTab(options)
     call s:deprecated('TreeDirNode.openInNewTab', 'is deprecated, use open() instead')
-    call self.open({'split': 't'})
+    call self.open({'where': 't'})
 endfunction
 "FUNCTION: TreeDirNode._openInNewTab() {{{3
-unlet s:TreeDirNode._openInNewTab
 function! s:TreeDirNode._openInNewTab()
     tabnew
     call s:initNerdTree(self.path.str())
@@ -2069,6 +1869,265 @@ function! s:TreeDirNode.transplantChild(newNode)
     endfor
 endfunction
 "============================================================
+"CLASS: Opener {{{2
+"============================================================
+let s:Opener = {}
+
+"FUNCTION: Opener._checkToCloseTree(newtab) {{{3
+"Check the class options and global options (i.e. NERDTreeQuitOnOpen) to see
+"if the tree should be closed now.
+"
+"Args:
+"a:newtab - boolean. If set, only close the tree now if we are opening the
+"target in a new tab. This is needed because we have to close tree before we
+"leave the tab
+function! s:Opener._checkToCloseTree(newtab)
+    if self._keepopen
+        return
+    endif
+
+    if (a:newtab && self._where == 't') || !a:newtab
+        call s:closeTreeIfQuitOnOpen()
+    endif
+endfunction
+
+"FUNCTION: Opener._gotoTargetWin() {{{3
+function! s:Opener._gotoTargetWin()
+    if b:NERDTreeType ==# "secondary"
+        if self._where == 'v'
+            vsplit
+        elseif self._where == 'h'
+            split
+        elseif self._where == 't'
+            tabnew
+        endif
+    else
+        call self._checkToCloseTree(1)
+
+        if self._where == 'v'
+            call self._newVSplit()
+        elseif self._where == 'h'
+            call self._newSplit()
+        elseif self._where == 't'
+            tabnew
+        elseif self._where == 'p'
+            call self._previousWindow()
+        endif
+
+        call self._checkToCloseTree(0)
+    endif
+endfunction
+
+"FUNCTION: Opener.New(path, opts) {{{3
+"Args:
+"
+"a:path: The path object that is to be opened.
+"
+"a:opts:
+"
+"A dictionary containing the following keys (all optional):
+"  'where': Specifies whether the node should be opened in new split/tab or in
+"           the previous window. Can be either 'v' or 'h' or 't' (for open in
+"           new tab)
+"  'reuse': if a window is displaying the file then jump the cursor there
+"  'keepopen': dont close the tree window
+"  'stay': open the file, but keep the cursor in the tree win
+function! s:Opener.New(path, opts)
+    let newObj = copy(self)
+
+    let newObj._path = a:path
+    let newObj._stay = s:has_opt(a:opts, 'stay')
+    let newObj._reuse = s:has_opt(a:opts, 'reuse')
+    let newObj._keepopen = s:has_opt(a:opts, 'keepopen')
+    let newObj._where = has_key(a:opts, 'where') ? a:opts['where'] : ''
+    let newObj._treetype = b:NERDTreeType
+    call newObj._saveCursorPos()
+
+    return newObj
+endfunction
+
+"FUNCTION: Opener._newSplit() {{{3
+function! s:Opener._newSplit()
+    " Save the user's settings for splitbelow and splitright
+    let savesplitbelow=&splitbelow
+    let savesplitright=&splitright
+
+    " 'there' will be set to a command to move from the split window
+    " back to the explorer window
+    "
+    " 'back' will be set to a command to move from the explorer window
+    " back to the newly split window
+    "
+    " 'right' and 'below' will be set to the settings needed for
+    " splitbelow and splitright IF the explorer is the only window.
+    "
+    let there= g:NERDTreeWinPos ==# "left" ? "wincmd h" : "wincmd l"
+    let back = g:NERDTreeWinPos ==# "left" ? "wincmd l" : "wincmd h"
+    let right= g:NERDTreeWinPos ==# "left"
+    let below=0
+
+    " Attempt to go to adjacent window
+    call s:exec(back)
+
+    let onlyOneWin = (winnr("$") ==# 1)
+
+    " If no adjacent window, set splitright and splitbelow appropriately
+    if onlyOneWin
+        let &splitright=right
+        let &splitbelow=below
+    else
+        " found adjacent window - invert split direction
+        let &splitright=!right
+        let &splitbelow=!below
+    endif
+
+    let splitMode = onlyOneWin ? "vertical" : ""
+
+    " Open the new window
+    try
+        exec(splitMode." sp ")
+    catch /^Vim\%((\a\+)\)\=:E37/
+        call s:putCursorInTreeWin()
+        throw "NERDTree.FileAlreadyOpenAndModifiedError: ". self._path.str() ." is already open and modified."
+    catch /^Vim\%((\a\+)\)\=:/
+        "do nothing
+    endtry
+
+    "resize the tree window if no other window was open before
+    if onlyOneWin
+        let size = exists("b:NERDTreeOldWindowSize") ? b:NERDTreeOldWindowSize : g:NERDTreeWinSize
+        call s:exec(there)
+        exec("silent ". splitMode ." resize ". size)
+        call s:exec('wincmd p')
+    endif
+
+    " Restore splitmode settings
+    let &splitbelow=savesplitbelow
+    let &splitright=savesplitright
+endfunction
+
+"FUNCTION: Opener._newVSplit() {{{3
+function! s:Opener._newVSplit()
+    let winwidth = winwidth(".")
+    if winnr("$")==#1
+        let winwidth = g:NERDTreeWinSize
+    endif
+
+    call s:exec("wincmd p")
+    vnew
+
+    "resize the nerd tree back to the original size
+    call s:putCursorInTreeWin()
+    exec("silent vertical resize ". winwidth)
+    call s:exec('wincmd p')
+endfunction
+
+"FUNCTION: Opener.open(target) {{{3
+function! s:Opener.open(target)
+    if self._path.isDirectory
+        call self._openDirectory(a:target)
+    else
+        call self._openFile()
+    endif
+endfunction
+
+"FUNCTION: Opener._openFile() {{{3
+function! s:Opener._openFile()
+    if self._reuse && self._reuseWindow()
+        return
+    endif
+
+    call self._gotoTargetWin()
+
+    if self._treetype ==# "secondary"
+        call self._path.edit()
+    else
+        call self._path.edit()
+
+
+        if self._stay
+            call self._restoreCursorPos()
+        endif
+    endif
+endfunction
+
+"FUNCTION: Opener._openDirectory(node) {{{3
+function! s:Opener._openDirectory(node)
+    if self._treetype ==# "secondary"
+        call self._gotoTargetWin()
+        call s:initNerdTreeInPlace(a:node.path.str())
+    else
+        call self._gotoTargetWin()
+        if empty(self._where)
+            call a:node.makeRoot()
+            call s:renderView()
+            call a:node.putCursorHere(0, 0)
+        elseif self._where == 't'
+            call s:initNerdTree(a:node.path.str())
+        else
+            call s:initNerdTreeInPlace(a:node.path.str())
+        endif
+    endif
+endfunction
+
+"FUNCTION: Opener._previousWindow() {{{3
+function! s:Opener._previousWindow()
+    if !s:isWindowUsable(winnr("#")) && s:firstUsableWindow() ==# -1
+        call self._newSplit()
+    else
+        try
+            if !s:isWindowUsable(winnr("#"))
+                call s:exec(s:firstUsableWindow() . "wincmd w")
+            else
+                call s:exec('wincmd p')
+            endif
+            exec ("edit " . self._path.str({'format': 'Edit'}))
+        catch /^Vim\%((\a\+)\)\=:E37/
+            call s:putCursorInTreeWin()
+            throw "NERDTree.FileAlreadyOpenAndModifiedError: ". self._path.str() ." is already open and modified."
+        catch /^Vim\%((\a\+)\)\=:/
+            echo v:exception
+        endtry
+    endif
+endfunction
+
+"FUNCTION: Opener._restoreCursorPos(){{{3
+function! s:Opener._restoreCursorPos()
+    call s:exec('normal ' . self._tabnr . 'gt')
+    call s:exec(bufwinnr(self._bufnr) . 'wincmd w')
+endfunction
+
+"FUNCTION: Opener._reuseWindow(){{{3
+"put the cursor in the first window we find for this file
+"
+"return 1 if we were successful
+function! s:Opener._reuseWindow()
+    "check the current tab for the window
+    let winnr = bufwinnr('^' . self._path.str() . '$')
+    if winnr != -1
+        call s:exec(winnr . "wincmd w")
+        call self._checkToCloseTree(0)
+        return 1
+    else
+        "check other tabs
+        let tabnr = self._path.tabnr()
+        if tabnr
+            call self._checkToCloseTree(1)
+            call s:exec('normal! ' . tabnr . 'gt')
+            let winnr = bufwinnr('^' . self._path.str() . '$')
+            call s:exec(winnr . "wincmd w")
+            return 1
+        endif
+    endif
+    return 0
+endfunction
+
+"FUNCTION: Opener._saveCursorPos(){{{3
+function! s:Opener._saveCursorPos()
+    let self._bufnr = bufnr("")
+    let self._tabnr = tabpagenr()
+endfunction
+
 "CLASS: Path {{{2
 "============================================================
 let s:Path = {}
@@ -2300,6 +2359,10 @@ function! s:Path.displayString()
 
     return self.cachedDisplayString
 endfunction
+"FUNCTION: Path.edit() {{{3
+function! s:Path.edit()
+    exec "edit " . self.str({'format': 'Edit'})
+endfunction
 "FUNCTION: Path.extractDriveLetter(fullpath) {{{3
 "
 "If running windows, cache the drive letter for this path
@@ -2480,6 +2543,16 @@ function! s:Path.Slash()
     return s:running_windows ? '\' : '/'
 endfunction
 
+"FUNCTION: Path.Resolve() {{{3
+"Invoke the vim resolve() function and return the result
+"This is necessary because in some versions of vim resolve() removes trailing
+"slashes while in other versions it doesn't.  This always removes the trailing
+"slash
+function! s:Path.Resolve(path)
+    let tmp = resolve(a:path)
+    return tmp =~# '/$' ? substitute(tmp, '/$', '', '') : tmp
+endfunction
+
 "FUNCTION: Path.readInfoFromDisk(fullpath) {{{3
 "
 "
@@ -2514,12 +2587,12 @@ function! s:Path.readInfoFromDisk(fullpath)
     let lastPathComponent = self.getLastPathComponent(0)
 
     "get the path to the new node with the parent dir fully resolved
-    let hardPath = resolve(self.strTrunk()) . lastPathComponent
+    let hardPath = s:Path.Resolve(self.strTrunk()) . '/' . lastPathComponent
 
     "if  the last part of the path is a symlink then flag it as such
-    let self.isSymLink = (resolve(hardPath) != hardPath)
+    let self.isSymLink = (s:Path.Resolve(hardPath) != hardPath)
     if self.isSymLink
-        let self.symLinkDest = resolve(fullpath)
+        let self.symLinkDest = s:Path.Resolve(fullpath)
 
         "if the link is a dir then slap a / on the end of its dest
         if isdirectory(self.symLinkDest)
@@ -2692,13 +2765,9 @@ function! s:Path._str()
 endfunction
 
 "FUNCTION: Path.strTrunk() {{{3
-"Gets the path without the last segment on the end, always with an endslash
+"Gets the path without the last segment on the end.
 function! s:Path.strTrunk()
-    let toReturn = self.drive . '/' . join(self.pathSegments[0:-2], '/')
-    if toReturn !~# '\/$'
-        let toReturn .= '/'
-    endif
-    return toReturn
+    return self.drive . '/' . join(self.pathSegments[0:-2], '/')
 endfunction
 
 " FUNCTION: Path.tabnr() {{{3
@@ -2785,6 +2854,75 @@ endfunction
 function! s:completeBookmarks(A,L,P)
     return filter(s:Bookmark.BookmarkNames(), 'v:val =~# "^' . a:A . '"')
 endfunction
+" FUNCTION: s:createDefaultBindings() {{{2
+function! s:createDefaultBindings()
+    let s = '<SNR>' . s:SID() . '_'
+
+    call NERDTreeAddKeyMap({ 'key': 'middlerelease', 'scope': "all", 'callback': s."handleMiddleMouse" })
+    call NERDTreeAddKeyMap({ 'key': 'leftrelease', 'scope': "all", 'callback': s."handleLeftClick" })
+    call NERDTreeAddKeyMap({ 'key': '2-leftmouse', 'scope': "DirNode", 'callback': s."activateDirNode" })
+    call NERDTreeAddKeyMap({ 'key': '2-leftmouse', 'scope': "FileNode", 'callback': s."activateFileNode" })
+    call NERDTreeAddKeyMap({ 'key': '2-leftmouse', 'scope': "Bookmark", 'callback': s."activateBookmark" })
+    call NERDTreeAddKeyMap({ 'key': '2-leftmouse', 'scope': "all", 'callback': s."activateAll" })
+
+
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapActivateNode, 'scope': "DirNode", 'callback': s."activateDirNode" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapActivateNode, 'scope': "FileNode", 'callback': s."activateFileNode" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapActivateNode, 'scope': "Bookmark", 'callback': s."activateBookmark" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapActivateNode, 'scope': "all", 'callback': s."activateAll" })
+
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapOpenSplit, 'scope': "Node", 'callback': s."openHSplit" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapOpenVSplit, 'scope': "Node", 'callback': s."openVSplit" })
+
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapOpenSplit, 'scope': "Bookmark", 'callback': s."openHSplit" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapOpenVSplit, 'scope': "Bookmark", 'callback': s."openVSplit" })
+
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapPreview, 'scope': "Node", 'callback': s."previewNodeCurrent" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapPreviewVSplit, 'scope': "Node", 'callback': s."previewNodeVSplit" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapPreviewSplit, 'scope': "Node", 'callback': s."previewNodeHSplit" })
+
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapOpenRecursively, 'scope': "DirNode", 'callback': s."openNodeRecursively" })
+
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapUpdir, 'scope': "all", 'callback': s."upDirCurrentRootClosed" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapUpdirKeepOpen, 'scope': "all", 'callback': s."upDirCurrentRootOpen" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapChangeRoot, 'scope': "Node", 'callback': s."chRoot" })
+
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapChdir, 'scope': "Node", 'callback': s."chCwd" })
+
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapQuit, 'scope': "all", 'callback': s."closeTreeWindow" })
+
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapRefreshRoot, 'scope': "all", 'callback': s."refreshRoot" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapRefresh, 'scope': "Node", 'callback': s."refreshCurrent" })
+
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapHelp, 'scope': "all", 'callback': s."displayHelp" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapToggleZoom, 'scope': "all", 'callback': s."toggleZoom" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapToggleHidden, 'scope': "all", 'callback': s."toggleShowHidden" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapToggleFilters, 'scope': "all", 'callback': s."toggleIgnoreFilter" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapToggleFiles, 'scope': "all", 'callback': s."toggleShowFiles" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapToggleBookmarks, 'scope': "all", 'callback': s."toggleShowBookmarks" })
+
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapCloseDir, 'scope': "Node", 'callback': s."closeCurrentDir" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapCloseChildren, 'scope': "DirNode", 'callback': s."closeChildren" })
+
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapMenu, 'scope': "Node", 'callback': s."showMenu" })
+
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapJumpParent, 'scope': "Node", 'callback': s."jumpToParent" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapJumpFirstChild, 'scope': "Node", 'callback': s."jumpToFirstChild" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapJumpLastChild, 'scope': "Node", 'callback': s."jumpToLastChild" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapJumpRoot, 'scope': "all", 'callback': s."jumpToRoot" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapJumpNextSibling, 'scope': "Node", 'callback': s."jumpToNextSibling" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapJumpPrevSibling, 'scope': "Node", 'callback': s."jumpToPrevSibling" })
+
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapOpenInTab, 'scope': "Node", 'callback': s."openInNewTab" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapOpenInTabSilent, 'scope': "Node", 'callback': s."openInNewTabSilent" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapOpenInTab, 'scope': "Bookmark", 'callback': s."openInNewTab" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapOpenInTabSilent, 'scope': "Bookmark", 'callback': s."openInNewTabSilent" })
+
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapOpenExpl, 'scope': "DirNode", 'callback': s."openExplorer" })
+
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapDeleteBookmark, 'scope': "Bookmark", 'callback': s."deleteBookmark" })
+
+endfunction
 " FUNCTION: s:deprecated(func, [msg]) {{{2
 " Issue a deprecation warning for a:func. If a second arg is given, use this
 " as the deprecation message
@@ -2864,7 +3002,7 @@ function! s:initNerdTree(name)
         if dir =~# '^\.'
             let dir = getcwd() . s:Path.Slash() . dir
         endif
-        let dir = resolve(dir)
+        let dir = s:Path.Resolve(dir)
 
         try
             let path = s:Path.New(dir)
@@ -2998,6 +3136,7 @@ endfunction
 " FUNCTION: s:postSourceActions() {{{2
 function! s:postSourceActions()
     call s:Bookmark.CacheBookmarks(0)
+    call s:createDefaultBindings()
 
     "load all nerdtree plugins
     runtime! nerdtree_plugin/**/*.vim
@@ -3681,6 +3820,8 @@ function! s:setCommonBufOptions()
     setlocal bufhidden=hide
     setlocal nowrap
     setlocal foldcolumn=0
+    setlocal foldmethod=manual
+    setlocal nofoldenable
     setlocal nobuflisted
     setlocal nospell
     if g:NERDTreeShowLineNumbers
@@ -3786,83 +3927,29 @@ function! s:activateAll()
     endif
 endfunction
 
-"FUNCTION: s:activateNode() {{{2
+"FUNCTION: s:activateDirNode() {{{2
 "handle the user activating a tree node
-function! s:activateNode(node)
+function! s:activateDirNode(node)
     call a:node.activate({'reuse': 1})
+endfunction
+
+"FUNCTION: s:activateFileNode() {{{2
+"handle the user activating a tree node
+function! s:activateFileNode(node)
+    call a:node.activate({'reuse': 1, 'where': 'p'})
 endfunction
 
 "FUNCTION: s:activateBookmark() {{{2
 "handle the user activating a bookmark
 function! s:activateBookmark(bm)
-    call a:bm.activate()
+    call a:bm.activate(!a:bm.path.isDirectory ? {'where': 'p'} : {})
 endfunction
 
 "FUNCTION: s:bindMappings() {{{2
 function! s:bindMappings()
-    let s = '<SNR>' . s:SID() . '_'
-
-    call NERDTreeAddKeyMap({ 'key': 'middlerelease', 'scope': "all", 'callback': s."handleMiddleMouse" })
-    call NERDTreeAddKeyMap({ 'key': 'leftrelease', 'scope': "all", 'callback': s."handleLeftClick" })
-    call NERDTreeAddKeyMap({ 'key': '2-leftmouse', 'scope': "Node", 'callback': s."activateNode" })
-    call NERDTreeAddKeyMap({ 'key': '2-leftmouse', 'scope': "Bookmark", 'callback': s."activateBookmark" })
-    call NERDTreeAddKeyMap({ 'key': '2-leftmouse', 'scope': "all", 'callback': s."activateAll" })
-
-
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapActivateNode, 'scope': "Node", 'callback': s."activateNode" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapActivateNode, 'scope': "Bookmark", 'callback': s."activateBookmark" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapActivateNode, 'scope': "all", 'callback': s."activateAll" })
+    "make <cr> do the same as the default 'o' mapping
     exec "nnoremap <silent> <buffer> <cr> :call <SID>KeyMap_Invoke('". g:NERDTreeMapActivateNode ."')<cr>"
 
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapOpenSplit, 'scope': "Node", 'callback': s."openHSplit" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapOpenVSplit, 'scope': "Node", 'callback': s."openVSplit" })
-
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapPreview, 'scope': "Node", 'callback': s."previewNodeCurrent" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapPreviewVSplit, 'scope': "Node", 'callback': s."previewNodeVSplit" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapPreviewSplit, 'scope': "Node", 'callback': s."previewNodeHSplit" })
-
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapOpenRecursively, 'scope': "DirNode", 'callback': s."openNodeRecursively" })
-
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapUpdir, 'scope': "all", 'callback': s."upDirCurrentRootClosed" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapUpdirKeepOpen, 'scope': "all", 'callback': s."upDirCurrentRootOpen" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapChangeRoot, 'scope': "Node", 'callback': s."chRoot" })
-
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapChdir, 'scope': "Node", 'callback': s."chCwd" })
-
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapQuit, 'scope': "all", 'callback': s."closeTreeWindow" })
-
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapRefreshRoot, 'scope': "all", 'callback': s."refreshRoot" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapRefresh, 'scope': "Node", 'callback': s."refreshCurrent" })
-
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapHelp, 'scope': "all", 'callback': s."displayHelp" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapToggleZoom, 'scope': "all", 'callback': s."toggleZoom" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapToggleHidden, 'scope': "all", 'callback': s."toggleShowHidden" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapToggleFilters, 'scope': "all", 'callback': s."toggleIgnoreFilter" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapToggleFiles, 'scope': "all", 'callback': s."toggleShowFiles" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapToggleBookmarks, 'scope': "all", 'callback': s."toggleShowBookmarks" })
-
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapCloseDir, 'scope': "Node", 'callback': s."closeCurrentDir" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapCloseChildren, 'scope': "DirNode", 'callback': s."closeChildren" })
-
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapMenu, 'scope': "Node", 'callback': s."showMenu" })
-
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapJumpParent, 'scope': "Node", 'callback': s."jumpToParent" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapJumpFirstChild, 'scope': "Node", 'callback': s."jumpToFirstChild" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapJumpLastChild, 'scope': "Node", 'callback': s."jumpToLastChild" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapJumpRoot, 'scope': "all", 'callback': s."jumpToRoot" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapJumpNextSibling, 'scope': "Node", 'callback': s."jumpToNextSibling" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapJumpPrevSibling, 'scope': "Node", 'callback': s."jumpToPrevSibling" })
-
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapOpenInTab, 'scope': "Node", 'callback': s."openInNewTab" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapOpenInTabSilent, 'scope': "Node", 'callback': s."openInNewTabSilent" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapOpenInTab, 'scope': "Bookmark", 'callback': s."openInNewTab" })
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapOpenInTabSilent, 'scope': "Bookmark", 'callback': s."openInNewTabSilent" })
-
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapOpenExpl, 'scope': "DirNode", 'callback': s."openExplorer" })
-
-    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapDeleteBookmark, 'scope': "Bookmark", 'callback': s."deleteBookmark" })
-
-    "bind all the user custom maps
     call s:KeyMap.BindAll()
 
     command! -buffer -nargs=? Bookmark :call <SID>bookmarkNode('<args>')
@@ -4002,8 +4089,8 @@ function! s:handleLeftClick()
         endfor
 
         if currentNode.path.isDirectory
-            if startToCur =~# s:tree_markup_reg . '$' && startToCur =~# '[+~▾▸]$'
-                call s:activateNode(currentNode)
+            if startToCur =~# s:tree_markup_reg && startToCur =~# '[+~▾▸] \?$'
+                call currentNode.activate()
                 return
             endif
         endif
@@ -4011,7 +4098,11 @@ function! s:handleLeftClick()
         if (g:NERDTreeMouseMode ==# 2 && currentNode.path.isDirectory) || g:NERDTreeMouseMode ==# 3
             let char = strpart(startToCur, strlen(startToCur)-1, 1)
             if char !~# s:tree_markup_reg
-                call s:activateNode(currentNode)
+                if currentNode.path.isDirectory
+                    call currentNode.activate()
+                else
+                    call currentNode.activate({'reuse': 1, 'where': 'p'})
+                endif
                 return
             endif
         endif
@@ -4029,7 +4120,7 @@ function! s:handleMiddleMouse()
     if curNode.path.isDirectory
         call s:openExplorer(curNode)
     else
-        call curNode.open({'split': 'h'})
+        call curNode.open({'where': 'h'})
     endif
 endfunction
 
@@ -4088,18 +4179,18 @@ function! s:openBookmark(name)
     if targetNode.path.isDirectory
         call targetNode.openExplorer()
     else
-        call targetNode.open()
+        call targetNode.open({'where': 'p'})
     endif
 endfunction
 
-" FUNCTION: s:openHSplit(node) {{{2
-function! s:openHSplit(node)
-    call a:node.activate({'split': 'h'})
+" FUNCTION: s:openHSplit(target) {{{2
+function! s:openHSplit(target)
+    call a:target.activate({'where': 'h'})
 endfunction
 
-" FUNCTION: s:openVSplit(node) {{{2
-function! s:openVSplit(node)
-    call a:node.activate({'split': 'v'})
+" FUNCTION: s:openVSplit(target) {{{2
+function! s:openVSplit(target)
+    call a:target.activate({'where': 'v'})
 endfunction
 
 " FUNCTION: s:openExplorer(node) {{{2
@@ -4109,12 +4200,12 @@ endfunction
 
 " FUNCTION: s:openInNewTab(target) {{{2
 function! s:openInNewTab(target)
-    call a:target.activate({'split': 't'})
+    call a:target.activate({'where': 't'})
 endfunction
 
 " FUNCTION: s:openInNewTabSilent(target) {{{2
 function! s:openInNewTabSilent(target)
-    call a:target.activate({'split': 't', 'stayInCurrentTab': 1})
+    call a:target.activate({'where': 't', 'stay': 1})
 endfunction
 
 " FUNCTION: s:openNodeRecursively(node) {{{2
@@ -4128,19 +4219,18 @@ endfunction
 
 "FUNCTION: s:previewNodeCurrent(node) {{{2
 function! s:previewNodeCurrent(node)
-    call a:node.open({'stay': 1})
+    call a:node.open({'stay': 1, 'where': 'p', 'keepopen': 1})
 endfunction
 
 "FUNCTION: s:previewNodeHSplit(node) {{{2
 function! s:previewNodeHSplit(node)
-    call a:node.open({'stay': 1, 'split': 'h'})
+    call a:node.open({'stay': 1, 'where': 'h', 'keepopen': 1})
 endfunction
 
 "FUNCTION: s:previewNodeVSplit(node) {{{2
 function! s:previewNodeVSplit(node)
-    call a:node.open({'stay': 1, 'split': 'v'})
+    call a:node.open({'stay': 1, 'where': 'v', 'keepopen': 1})
 endfunction
-
 
 " FUNCTION: s:revealBookmark(name) {{{2
 " put the cursor on the node associate with the given name

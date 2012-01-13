@@ -9,6 +9,10 @@ if exists("b:did_ftplugin")
 endif
 let b:did_ftplugin = 1
 
+setlocal formatoptions-=t formatoptions+=croql
+setlocal comments=:#
+setlocal commentstring=#\ %s
+
 if !exists("no_plugin_maps") && !exists("no_puppet_maps")
     if !hasmapto("<Plug>AlignRange")
         map <buffer> <LocalLeader>= <Plug>AlignRange

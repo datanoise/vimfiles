@@ -394,16 +394,16 @@ function! s:plugin.define_interface_key_mappings()  "{{{3
       elseif has_key(specs, '*pattern*')
         if spec_name =~# '^move-[npNP]$'
           let flags = ''
-          let flags .= (spec_name =~ '[pP]$' ? 'b' : '')
-          let flags .= (spec_name =~ '[NP]$' ? 'e' : '')
+          let flags .= (spec_name =~# '[pP]$' ? 'b' : '')
+          let flags .= (spec_name =~# '[NP]$' ? 'e' : '')
           let impl_fname = 'move'
         elseif spec_name ==# 'select'
           let flags = ''
           let impl_fname = 'select'
         elseif spec_name =~# '^select-[ai]$'
           let flags = ''
-          let flags .= (spec_name =~ 'a$' ? 'a' : '')
-          let flags .= (spec_name =~ 'i$' ? 'i' : '')
+          let flags .= (spec_name =~# 'a$' ? 'a' : '')
+          let flags .= (spec_name =~# 'i$' ? 'i' : '')
           let impl_fname = 'select_pair'
         else
           echoerr 'Unknown spec:' string(spec_name)
@@ -538,7 +538,7 @@ function! s:snr_prefix(sfile)
 
   for line in split(result, '\n')
     let _ = matchlist(line, '^\s*\(\d\+\):\s*\(.*\)$')
-    if a:sfile ==# expand(_[2])
+    if fnamemodify(a:sfile, ':p') ==# fnamemodify(_[2], ':p')
       return printf("\<SNR>%d_", _[1])
     endif
   endfor

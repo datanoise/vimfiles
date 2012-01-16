@@ -7,6 +7,7 @@
 :TextobjFunctionDefaultKeyMappings	textobj-function.txt	/*:TextobjFunctionDefaultKeyMappings*
 :TextobjIndentDefaultKeyMappings	textobj-indent.txt	/*:TextobjIndentDefaultKeyMappings*
 :TextobjLastpatDefaultKeyMappings	textobj-lastpat.txt	/*:TextobjLastpatDefaultKeyMappings*
+:TextobjLineDefaultKeyMappings	textobj-line.txt	/*:TextobjLineDefaultKeyMappings*
 :TextobjRubyblockDefaultKeyMappings	textobj-rubyblock.txt	/*:TextobjRubyblockDefaultKeyMappings*
 :TextobjSyntaxDefaultKeyMappings	textobj-syntax.txt	/*:TextobjSyntaxDefaultKeyMappings*
 <Plug>(textobj-between-a)	textobj-between.txt	/*<Plug>(textobj-between-a)*
@@ -38,6 +39,8 @@
 <Plug>(textobj-indent-i)	textobj-indent.txt	/*<Plug>(textobj-indent-i)*
 <Plug>(textobj-lastpat-N)	textobj-lastpat.txt	/*<Plug>(textobj-lastpat-N)*
 <Plug>(textobj-lastpat-n)	textobj-lastpat.txt	/*<Plug>(textobj-lastpat-n)*
+<Plug>(textobj-line-a)	textobj-line.txt	/*<Plug>(textobj-line-a)*
+<Plug>(textobj-line-i)	textobj-line.txt	/*<Plug>(textobj-line-i)*
 <Plug>(textobj-rubyblock-a)	textobj-rubyblock.txt	/*<Plug>(textobj-rubyblock-a)*
 <Plug>(textobj-rubyblock-i)	textobj-rubyblock.txt	/*<Plug>(textobj-rubyblock-i)*
 <Plug>(textobj-syntax-a)	textobj-syntax.txt	/*<Plug>(textobj-syntax-a)*
@@ -53,6 +56,7 @@ g:textobj_fold_no_default_key_mappings	textobj-fold.txt	/*g:textobj_fold_no_defa
 g:textobj_function_no_default_key_mappings	textobj-function.txt	/*g:textobj_function_no_default_key_mappings*
 g:textobj_indent_no_default_key_mappings	textobj-indent.txt	/*g:textobj_indent_no_default_key_mappings*
 g:textobj_lastpat_no_default_key_mappings	textobj-lastpat.txt	/*g:textobj_lastpat_no_default_key_mappings*
+g:textobj_line_no_default_key_mappings	textobj-line.txt	/*g:textobj_line_no_default_key_mappings*
 g:textobj_rubyblock_no_default_key_mappings	textobj-rubyblock.txt	/*g:textobj_rubyblock_no_default_key_mappings*
 g:textobj_syntax_no_default_key_mappings	textobj-syntax.txt	/*g:textobj_syntax_no_default_key_mappings*
 iy	textobj-syntax.txt	/*iy*
@@ -155,6 +159,17 @@ textobj-lastpat-interface	textobj-lastpat.txt	/*textobj-lastpat-interface*
 textobj-lastpat-introduction	textobj-lastpat.txt	/*textobj-lastpat-introduction*
 textobj-lastpat-mappings	textobj-lastpat.txt	/*textobj-lastpat-mappings*
 textobj-lastpat.txt	textobj-lastpat.txt	/*textobj-lastpat.txt*
+textobj-line	textobj-line.txt	/*textobj-line*
+textobj-line-bugs	textobj-line.txt	/*textobj-line-bugs*
+textobj-line-changelog	textobj-line.txt	/*textobj-line-changelog*
+textobj-line-changelog-0.0.0	textobj-line.txt	/*textobj-line-changelog-0.0.0*
+textobj-line-contents	textobj-line.txt	/*textobj-line-contents*
+textobj-line-default-key-mappings	textobj-line.txt	/*textobj-line-default-key-mappings*
+textobj-line-interface	textobj-line.txt	/*textobj-line-interface*
+textobj-line-introduction	textobj-line.txt	/*textobj-line-introduction*
+textobj-line-key-mappings	textobj-line.txt	/*textobj-line-key-mappings*
+textobj-line-named-key-mappings	textobj-line.txt	/*textobj-line-named-key-mappings*
+textobj-line.txt	textobj-line.txt	/*textobj-line.txt*
 textobj-rubyblock	textobj-rubyblock.txt	/*textobj-rubyblock*
 textobj-rubyblock-bugs	textobj-rubyblock.txt	/*textobj-rubyblock-bugs*
 textobj-rubyblock-changelog	textobj-rubyblock.txt	/*textobj-rubyblock-changelog*

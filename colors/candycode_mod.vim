@@ -178,22 +178,6 @@ hi Todo         guifg=#ffffff       guibg=#ee7700       gui=NONE
 hi rubySymbol     guifg=#FFA16E  guibg=NONE          gui=NONE
             \   ctermfg=red         ctermbg=NONE        cterm=NONE
 
-hi XPTIgnoredMark
-            \   guifg=#CCCCCC       guibg=#202020       gui=NONE
-            \   ctermfg=white       ctermbg=yellow      cterm=NONE
-
-hi TemplateItem
-            \   ctermbg=black gui=none guifg=white guibg=black
-
-hi TemplateMark
-            \   ctermbg=black gui=none guifg=white guibg=black
-
-hi CommandTCharMatched ctermfg=red  ctermbg=NONE guifg=#ff6050 guibg=NONE
-
-hi link CommandTCharMatchedSel CommandTCharMatched
-
-hi link CommandTSelection Normal
-
 " }}}
 
 let &cpo = save_cpo

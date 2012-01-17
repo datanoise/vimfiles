@@ -68,10 +68,6 @@ hi Pmenu        guifg=#f6f3e8       guibg=#444444       gui=NONE
             \   ctermfg=NONE        ctermbg=NONE        cterm=NONE
 hi PmenuSel     guifg=#000000       guibg=#cae682       gui=NONE
             \   ctermfg=NONE        ctermbg=NONE        cterm=NONE
-hi CommandTCharMatched ctermfg=darkblue  ctermbg=NONE guifg=dodgerblue4 guibg=NONE
-" hi CommandTCharMatchedSel ctermfg=darkcyan ctermbg=lightgray guifg=white guibg=black
-hi link CommandTCharMatchedSel CommandTCharMatched
-hi link CommandTSelection Normal
 
 " syntax hi colors
 hi Comment  term=bold ctermfg=darkcyan guifg=cyan4

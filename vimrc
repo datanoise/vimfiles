@@ -261,7 +261,7 @@ if has('mac')
   nnoremap <silent> <D-[> :bprev<CR>
   nnoremap <silent> <D-]> :bnext<CR>
 endif
-nnoremap <silent> <leader>rt :!ctags --extra=+f -R *<CR><CR>
+nnoremap <silent> <leader>t :!ctags --extra=+f -R *<CR><CR>
 cnoremap <M-q> qa!
 " this one for xterm
 cnoremap q  qa!
@@ -364,10 +364,11 @@ vnoremap <silent> g= :Tabularize assignment<CR>
 " ctrlp settings {{{2
 let g:ctrlp_match_window_reversed=0
 let g:ctrlp_dotfiles=0
-let g:ctrlp_extensions = ['buffertag', 'quickfix', 'dir', 'rtscript']
+let g:ctrlp_extensions = ['buffertag', 'quickfix', 'dir', 'rtscript', 'undo', 'line']
 nnoremap <silent> <leader>m :CtrlPCurWD<CR>
+nnoremap <silent> <leader>r :CtrlPRoot<CR>
 nnoremap <silent> <leader>l :CtrlPBuffer<CR>
-nnoremap <silent> <leader>n :ClearCtrlPCache<CR>
+nnoremap <silent> <leader>c :ClearCtrlPCache<CR>
 
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"

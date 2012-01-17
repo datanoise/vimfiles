@@ -27,6 +27,7 @@
 'g:ctrlp_mruf_case_sensitive'	ctrlp.txt	/*'g:ctrlp_mruf_case_sensitive'*
 'g:ctrlp_mruf_exclude'	ctrlp.txt	/*'g:ctrlp_mruf_exclude'*
 'g:ctrlp_mruf_include'	ctrlp.txt	/*'g:ctrlp_mruf_include'*
+'g:ctrlp_mruf_last_entered'	ctrlp.txt	/*'g:ctrlp_mruf_last_entered'*
 'g:ctrlp_mruf_max'	ctrlp.txt	/*'g:ctrlp_mruf_max'*
 'g:ctrlp_mruf_relative'	ctrlp.txt	/*'g:ctrlp_mruf_relative'*
 'g:ctrlp_open_multi'	ctrlp.txt	/*'g:ctrlp_open_multi'*

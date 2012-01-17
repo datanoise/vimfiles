@@ -45,6 +45,7 @@ fu! s:opts()
 	endfo
 	if !exists('g:ctrlp_newcache') | let g:ctrlp_newcache = 0 | en
 	let s:maxdepth = min([s:maxdepth, 100])
+	let s:mxheight = max([s:mxheight, 1])
 	let s:igntype = empty(s:usrign) ? -1 : type(s:usrign)
 	" Extensions
 	let g:ctrlp_builtins = 2
@@ -1087,11 +1088,10 @@ fu! s:findroot(curr, mark, depth, type)
 	let [depth, notfound] = [a:depth + 1, empty(s:glbpath(a:curr, a:mark, 1))]
 	if !notfound || depth > s:maxdepth
 		if notfound | cal ctrlp#setdir(s:cwd) | en
-		if a:type | if depth <= s:maxdepth
+		if a:type && depth <= s:maxdepth
 			let s:vcsroot = a:curr
-		en | el
-			cal ctrlp#setdir(a:curr)
-			let s:foundroot = 1
+		elsei !a:type && !notfound
+			cal ctrlp#setdir(a:curr) | let s:foundroot = 1
 		en
 	el
 		let parent = s:getparent(a:curr)
@@ -1100,7 +1100,8 @@ fu! s:findroot(curr, mark, depth, type)
 endf
 
 fu! s:glbpath(...)
-	retu call('globpath',  v:version > 701 ? a:000 : a:000[:1])
+	let cond = ( v:version == 702 && has('patch051') ) || v:version > 702
+	retu call('globpath', cond ? a:000 : a:000[:1])
 endf
 
 fu! ctrlp#fnesc(path)

@@ -42,7 +42,7 @@ function! SwitchPrevBuf()
     b#
   else
     " echo "No buffer to switch to"
-    LustyBufferExplorer
+    CtrlPBuffer
   endif
 endfunction
 
@@ -332,22 +332,6 @@ let g:rubycomplete_buffer_loading    = 1
 let g:rubycomplete_rails             = 0
 let g:rubycomplete_classes_in_global = 1
 
-" command-t settings {{{2
-" let g:CommandTMatchWindowReverse=1
-let g:CommandTCancelMap=['<C-c>', '<Esc>']
-let g:CommandTMaxHeight=10
-if !has('gui_running')
-  " fix for arrow keys in console mode
-  let g:CommandTSelectNextMap=['<Esc>OB', '<C-j>', '<C-n>']
-  let g:CommandTSelectPrevMap=['<Esc>OA', '<C-k>', '<C-p>']
-end
-nnoremap <silent> <leader>m :CommandT<CR>
-nnoremap <silent> <leader>l :CommandTBuffer<CR>
-nnoremap <silent> <leader>j :CommandTJump<CR>
-nnoremap <silent> <leader>e :CommandTOldFiles<CR>
-nnoremap <silent> <leader>n :CommandTFlush<CR>
-cabbr cmdt CommandT<CR>
-
 " syntastic settings {{{2
 " puppet is too slow, html/tidy doesn't support HTML5
 let g:syntastic_mode_map = { 'mode': 'active', 'active_filetypes': [],
@@ -376,6 +360,14 @@ let g:alternateExtensions_mm = "h"
 " tabular settings {{{2
 nnoremap <silent> g= :Tabularize assignment<CR>
 vnoremap <silent> g= :Tabularize assignment<CR>
+
+" ctrlp settings {{{2
+let g:ctrlp_match_window_reversed=0
+let g:ctrlp_dotfiles=0
+let g:ctrlp_extensions = ['buffertag', 'quickfix', 'dir', 'rtscript']
+nnoremap <silent> <leader>m :CtrlPCurWD<CR>
+nnoremap <silent> <leader>l :CtrlPBuffer<CR>
+nnoremap <silent> <leader>n :ClearCtrlPCache<CR>
 
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"

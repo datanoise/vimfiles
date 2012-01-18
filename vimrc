@@ -16,7 +16,7 @@ filetype plugin on    " Enable filetype-specific plugins
 function! GetCurDir()
   let result = substitute(getcwd(), '^'.$HOME, '~', '')
   let result = substitute(result, '^.\+\ze.\{20,}', '<', '')
-  return '('.result.')'
+  return result
 endfunction
 
 function! SynName()
@@ -84,7 +84,7 @@ set smartcase
 " }}}
 " status line options {{{2
 set laststatus=2
-set statusline=%m%<%.99f\ %{GetCurDir()}\ %h%w%r%y
+set statusline=%m%<%.99f\ (%{GetCurDir()})\ %h%w%r%y
 " set statusline+=%{fugitive#statusline()}
 set statusline+=%{SynNameStatus()}
 set statusline+=\ %#errormsg#%{SyntasticStatuslineFlag()}%*
@@ -379,5 +379,6 @@ let g:syntastic_jsl_conf='~/.jsl.conf'
 let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
 let g:SuperTabDefaultCompletionType= '<C-n>'
 let g:blockle_mapping='<leader>bb'
+let g:Powerline_symbols = 'fancy'
 
 " }}}

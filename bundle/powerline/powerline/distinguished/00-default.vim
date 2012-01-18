@@ -28,9 +28,9 @@ call Pl#Statusline(
 			\ Pl#HiNonCurrent(Pl#FG(245), Pl#Attr('bold'))
 			\ ),
 		\ Pl#Segment("%M ",
-			\ Pl#HiCurrent(   Pl#FG(196), Pl#Attr('bold')),
-			\ Pl#HiInsert(    Pl#FG(196), Pl#Attr('bold')),
-			\ Pl#HiNonCurrent(Pl#FG( 88))
+			\ Pl#HiCurrent(   Pl#FG(76), Pl#Attr('bold')),
+			\ Pl#HiInsert(    Pl#FG(178), Pl#Attr('bold')),
+			\ Pl#HiNonCurrent(Pl#FG( 76))
 			\ ),
 		\  Pl#Segment("%H%W ",
 			\ Pl#HiCurrent(   Pl#FG(250)),

@@ -15,7 +15,7 @@ if !exists('g:ctrlp_cmd') | let g:ctrlp_cmd = 'CtrlP' | en
 
 com! -n=? -com=dir CtrlP cal ctrlp#init(0, <q-args>)
 
-com! CtrlPBuffer   cal ctrlp#init(1)
+com! CtrlPBuffer   cal ctrlp#init(1, 0)
 com! CtrlPMRUFiles cal ctrlp#init(2)
 
 com! ClearCtrlPCache     cal ctrlp#clr()
@@ -59,4 +59,11 @@ if index(s:ext, 'rtscript') >= 0
 	com! CtrlPRTS cal ctrlp#init(ctrlp#rtscript#id())
 en
 
+if index(s:ext, 'undo') >= 0
+	com! CtrlPUndo cal ctrlp#init(ctrlp#undo#id())
+en
+
+if index(s:ext, 'line') >= 0
+	com! CtrlPLine cal ctrlp#init(ctrlp#line#id())
+en
 unl s:ext

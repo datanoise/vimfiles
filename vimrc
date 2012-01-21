@@ -4,6 +4,7 @@
 " ------------------------------------------------------------------------------
 runtime! macros/matchit.vim
 set nocompatible      " We're running Vim, not Vi!
+let g:pathogen_disabled = ['command-t']
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 syntax on             " Enable syntax highlighting
@@ -265,21 +266,9 @@ nnoremap <silent> <leader>t :!ctags --extra=+f -R *<CR><CR>
 cnoremap <M-q> qa!
 " this one for xterm
 cnoremap q  qa!
-
-" mappings for cscope" {{{2
-if has("cscope")
-  nmap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
-  nmap <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-  nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
-endif "}}}
-
 " insert modeline
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
+
 
 " file type bindings {{{2
 au FileType coffee nnoremap <buffer> <F3> :CoffeeCompile<CR>
@@ -296,6 +285,17 @@ au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer>
 au FileType ruby,puppet inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "
 au FileType php  nnoremap <buffer> <F5> :!php %<CR>
 au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
+if has("cscope")
+  au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+  au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+  au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+  au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+  au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+  au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+  au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+  au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+endif
+
 
 " Section: Commands && Abbrivations {{{1
 " ------------------------------------------------------------------------------
@@ -362,23 +362,32 @@ nnoremap <silent> g= :Tabularize assignment<CR>
 vnoremap <silent> g= :Tabularize assignment<CR>
 
 " ctrlp settings {{{2
+let g:ctrlp_extensions = ['buffertag', 'quickfix', 'dir', 'rtscript', 'undo', 'line']
 let g:ctrlp_match_window_reversed=0
 let g:ctrlp_dotfiles=0
 let g:ctrlp_mruf_relative=1
-let g:ctrlp_extensions = ['buffertag', 'quickfix', 'dir', 'rtscript', 'undo', 'line']
+let g:ctrlp_open_multi='tr'
+let g:ctrlp_open_new_file='h'
 nnoremap <silent> <leader>m :CtrlPCurWD<CR>
 nnoremap <silent> <leader>r :CtrlPRoot<CR>
 nnoremap <silent> <leader>l :CtrlPBuffer<CR>
 nnoremap <silent> <leader>c :ClearCtrlPCache<CR>
+nnoremap <silent> <leader>kf :CtrlP<CR>
+nnoremap <silent> <leader>kb :CtrlPBuffer<CR>
+nnoremap <silent> <leader>km :CtrlPMRUFiles<CR>
+nnoremap <silent> <leader>kt :CtrlPBufTag<CR>
+nnoremap <silent> <leader>kq :CtrlPQuickfix<CR>
+nnoremap <silent> <leader>kd :CtrlPDir<CR>
+nnoremap <silent> <leader>kr :CtrlPRTS<CR>
+nnoremap <silent> <leader>ku :CtrlPUndo<CR>
+nnoremap <silent> <leader>kl :CtrlPLine<CR>
 
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"
 let g:CSApprox_verbose_level = 0 " to shut it up
 let c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:xml_syntax_folding = 1 " enable folding in xml files
-let g:syntastic_jsl_conf='~/.jsl.conf'
 let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
-let g:SuperTabDefaultCompletionType= '<C-n>'
 let g:blockle_mapping='<leader>bb'
 let g:Powerline_symbols = 'fancy'
 

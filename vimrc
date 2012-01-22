@@ -134,11 +134,6 @@ au FileType gitcommit setlocal nolist
 set wildmenu
 set wildmode=full
 set wildignore=*.o,*.bundle,*.png,*.jpg,*.gif,*.class,*.log,tmp/**
-if has('unix')
-  set wildignore+=*/.git/*,*/.hg/*,*/.svn/*  " Linux/MacOSX
-else
-  set wildignore+=.git\*,.hg\*,.svn\*        " Windows
-endif
 set showcmd
 " the above doesn't always work. the following enforces it
 au VimEnter * set showcmd
@@ -248,6 +243,7 @@ nmap     <silent> <leader>o A<CR>
 nnoremap Y y$
 nnoremap z- 1z=
 nnoremap L :
+nnoremap <silent> <leader>q :bd<CR>
 nnoremap [s [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
 nnoremap <leader>a :let align = input("Align to: ")<Bar>exe ":Tab /" . align<CR>
 inoremap {<CR> {<CR>}<Esc>O
@@ -369,7 +365,7 @@ vnoremap <silent> g= :Tabularize assignment<CR>
 " ctrlp settings {{{2
 let g:ctrlp_extensions = ['buffertag', 'quickfix', 'dir', 'rtscript', 'undo', 'line']
 let g:ctrlp_match_window_reversed=0
-let g:ctrlp_dotfiles=1
+let g:ctrlp_dotfiles=0
 let g:ctrlp_mruf_relative=1
 let g:ctrlp_open_multi='tr'
 let g:ctrlp_open_new_file='h'

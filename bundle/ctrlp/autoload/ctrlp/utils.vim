@@ -51,21 +51,15 @@ fu! ctrlp#utils#readfile(file)
 endf
 
 fu! ctrlp#utils#mkdir(dir)
-	if exists('*mkdir') && !isdirectory(a:dir)
-		sil! cal mkdir(a:dir)
+	if exists('*mkdir')
+		sil! cal mkdir(a:dir, 'p')
 	en
 endf
 
-fu! ctrlp#utils#createpath(arr)
-	for each in a:arr
-		let curr = exists('curr') ? curr.s:lash(curr).each : each
-		cal ctrlp#utils#mkdir(curr)
-	endfo
-	retu curr
-endf
-
 fu! ctrlp#utils#writecache(lines, ...)
-	if isdirectory(ctrlp#utils#createpath(split(a:0 ? a:1 : s:cache_dir, '[\/]')))
+	let cache_dir = exists('a:1') ? a:1 : s:cache_dir
+	cal ctrlp#utils#mkdir(cache_dir)
+	if isdirectory(cache_dir)
 		sil! cal writefile(a:lines, exists('a:2') ? a:2 : ctrlp#utils#cachefile())
 		if !exists('a:1')
 			let g:ctrlp_newcache = 0

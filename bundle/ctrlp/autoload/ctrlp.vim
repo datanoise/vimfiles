@@ -2,7 +2,7 @@
 " File:          autoload/ctrlp.vim
 " Description:   Fuzzy file, buffer, mru and tag finder.
 " Author:        Kien Nguyen <github.com/kien>
-" Version:       1.6.7
+" Version:       1.6.8
 " =============================================================================
 
 " Static variables {{{1
@@ -403,6 +403,9 @@ fu! s:Update(str)
 		retu
 	en
 	let bfn = notail != '' && match(notail, '\v/|\\:@!') < 0
+	if s:regexp && match(notail, '\\:\@!') >= 0
+		let bfn = s:byfname
+	en
 	let lines = exists('g:ctrlp_nolimit') && empty(notail) ? copy(g:ctrlp_lines)
 		\ : s:MatchedItems(g:ctrlp_lines, copy(pats), s:mxheight, bfn)
 	cal s:Render(lines, pats[-1], bfn)
@@ -792,20 +795,24 @@ fu! s:CreateNewFile(...) "{{{1
 		if md == 'cancel' | retu | en
 	en
 	let str = s:sanstail(str)
-	let arr = split(str, '[\/]')
-	let fname = remove(arr, -1)
+	let parts = split(str, '[\/]\ze[^\/]\+[\/:]\?$')
+	if len(parts) == 1
+		let [base, fname] = ['', parts[0]]
+	elsei len(parts) == 2
+		let [base, fname] = parts
+	en
+	if fname =~ '^[\/]$' | retu | en
 	if exists('s:marked') && len(s:marked)
 		" Use the first marked file's path
-		let val = values(s:marked)[0]
-		let mrk = ctrlp#rmbasedir([val])[0]
-		if val != mrk
-			let arr = extend(split(mrk, '[\/]')[:-2], arr)
-			let pah = fnamemodify(val, ':p:h')
-			let str = ctrlp#rmbasedir([pah.s:lash(pah).str])[0]
-		en
+		let path = fnamemodify(values(s:marked)[0], ':p:h')
+		let base = path.s:lash(path).base
+		let str = fnamemodify(base.s:lash.fname, ':.')
 	en
-	if len(arr) | if isdirectory(ctrlp#utils#createpath(arr))
-		let optyp = str | en | el | let optyp = fname
+	if base == '' | let optyp = fname | el
+		cal ctrlp#utils#mkdir(base)
+		if isdirectory(base)
+			let optyp = str
+		en
 	en
 	if !exists('optyp') | retu | en
 	let filpath = fnamemodify(optyp, ':p')
@@ -1131,7 +1138,7 @@ fu! s:highlight(pat, grp, bfn)
 	cal clearmatches()
 	if !empty(a:pat) && s:ispathitem()
 		let pat = substitute(a:pat, '\~', '\\~', 'g')
-		if !s:regexp | let pat = escape(pat, '.') | en
+		let pat = s:regexp ? pat : escape(pat, '.')
 		" Match only filename
 		if s:byfname && a:bfn
 			let pat = substitute(pat, '\[\^\(.\{-}\)\]\\{-}', '[^\\/\1]\\{-}', 'g')

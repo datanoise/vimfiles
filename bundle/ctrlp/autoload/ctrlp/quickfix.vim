@@ -31,7 +31,7 @@ endf
 fu! ctrlp#quickfix#init()
 	let g:ctrlp_nolimit = 1
 	sy match CtrlPqfLineCol '|\zs\d\+:\d\+\ze|'
-	hi def link CtrlPqfLineCol Search
+	hi def link CtrlPqfLineCol String
 	retu map(getqflist(), 's:lineout(v:val)')
 endf
 

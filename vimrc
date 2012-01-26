@@ -155,11 +155,11 @@ set imsearch=0
 " uncategorized options {{{2
 au ColorScheme * hi! link ColorColumn StatusLine
 set bg=dark
-if has('gui_running')
-  colo candycode_mod
-else
+" if has('gui_running')
+"   colo candycode_mod
+" else
   colo dante_mod
-endif
+" endif
 if exists('&mc')
   au BufNew,BufRead * set mc=81
 endif
@@ -263,7 +263,7 @@ if has('mac')
   nnoremap <silent> <D-[> :bprev<CR>
   nnoremap <silent> <D-]> :bnext<CR>
 endif
-nnoremap <silent> <leader>t :!ctags --extra=+f -R *<CR><CR>
+nnoremap <silent> <leader>ct :!ctags --extra=+f -R *<CR><CR>
 cnoremap <M-q> qa!
 " this one for xterm
 cnoremap q  qa!
@@ -372,7 +372,9 @@ let g:ctrlp_open_new_file='h'
 nnoremap <silent> <leader>m :CtrlPCurWD<CR>
 nnoremap <silent> <leader>r :CtrlPRoot<CR>
 nnoremap <silent> <leader>l :CtrlPBuffer<CR>
-nnoremap <silent> <leader>c :ClearCtrlPCache<CR>
+nnoremap <silent> <leader>t :CtrlPBufTag<CR>
+nnoremap <silent> <leader>cc :ClearCtrlPCache<CR>
+nnoremap <silent> <leader>ca :ClearAllCtrlPCaches<CR>
 nnoremap <silent> <leader>kf :CtrlPCurFile<CR>
 nnoremap <silent> <leader>kb :CtrlPBuffer<CR>
 nnoremap <silent> <leader>km :CtrlPMRUFiles<CR>

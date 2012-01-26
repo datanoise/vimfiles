@@ -2,7 +2,7 @@
 " File:          autoload/ctrlp.vim
 " Description:   Fuzzy file, buffer, mru and tag finder.
 " Author:        Kien Nguyen <github.com/kien>
-" Version:       1.6.8
+" Version:       1.6.9
 " =============================================================================
 
 " Static variables {{{1
@@ -60,6 +60,8 @@ fu! s:opts()
 		\ 'PrtClear()':           ['<c-u>'],
 		\ 'PrtSelectMove("j")':   ['<c-j>', '<down>'],
 		\ 'PrtSelectMove("k")':   ['<c-k>', '<up>'],
+		\ 'PrtSelectMove("t")':   ['<home>'],
+		\ 'PrtSelectMove("b")':   ['<end>'],
 		\ 'PrtHistory(-1)':       ['<c-n>'],
 		\ 'PrtHistory(1)':        ['<c-p>'],
 		\ 'AcceptSelection("e")': ['<cr>', '<c-m>', '<2-LeftMouse>'],
@@ -72,7 +74,7 @@ fu! s:opts()
 		\ 'ToggleType(1)':        ['<c-f>', '<c-up>'],
 		\ 'ToggleType(-1)':       ['<c-b>', '<c-down>'],
 		\ 'PrtExpandDir()':       ['<tab>', '<c-i>'],
-		\ 'PrtInsert("w")':       ['<F2>'],
+		\ 'PrtInsert("w")':       ['<F2>', '<insert>'],
 		\ 'PrtInsert("s")':       ['<F3>'],
 		\ 'PrtInsert("v")':       ['<F4>'],
 		\ 'PrtInsert("+")':       ['<F6>'],
@@ -226,7 +228,11 @@ fu! s:Files()
 endf
 
 fu! s:GlobPath(dirs, depth)
-	let entries = split(globpath(a:dirs, s:glob), "\n")
+  try 
+    let entries = split(globpath(a:dirs, s:glob), "\n")
+  catch
+    return
+  endtry
 	let [dnf, depth] = [ctrlp#dirnfile(entries), a:depth + 1]
 	cal extend(g:ctrlp_allfiles, dnf[1])
 	if !empty(dnf[0]) && !s:maxf(len(g:ctrlp_allfiles)) && depth <= s:maxdepth
@@ -375,7 +381,7 @@ fu! s:Render(lines, pat, bfn)
 	en
 	if s:mwreverse | cal reverse(lines) | en
 	let s:matched = copy(lines)
-	cal map(lines, '"  ".v:val')
+	cal map(lines, '"> ".v:val')
 	cal setline(1, lines)
 	exe 'keepj norm!' s:mwreverse ? 'G' : 'gg'
 	keepj norm! 1|
@@ -402,8 +408,8 @@ fu! s:Update(str)
 	if notail == oldstr && !empty(notail) && !exists('s:force')
 		retu
 	en
-	let bfn = notail != '' && match(notail, '\v/|\\:@!') < 0
-	if s:regexp && match(notail, '\\:\@!') >= 0
+	let bfn = s:byfname && notail != '' && match(notail, '\v/|\\:@!') < 0
+	if s:byfname && s:regexp && match(notail, '\\:\@!') >= 0
 		let bfn = s:byfname
 	en
 	let lines = exists('g:ctrlp_nolimit') && empty(notail) ? copy(g:ctrlp_lines)
@@ -497,12 +503,7 @@ endf
 fu! s:PrtExpandDir()
 	let prt = s:prompt
 	if prt[0] == '' | retu | en
-	let parts = split(prt[0], '[\/]\ze[^\/]\+[\/:]\?$')
-	if len(parts) == 1
-		let [base, seed] = ['', parts[0]]
-	elsei len(parts) == 2
-		let [base, seed] = parts
-	en
+	let [base, seed] = s:headntail(prt[0])
 	let dirs = s:dircompl(base, seed)
 	if len(dirs) == 1
 		let prt[0] = dirs[0]
@@ -544,7 +545,7 @@ fu! s:PrtCurEnd()
 endf
 
 fu! s:PrtSelectMove(dir)
-	exe 'norm!' a:dir
+	exe 'keepj norm!' ( a:dir =~ '^[tb]$' ? {'t': 'gg', 'b': 'G'}[a:dir] : a:dir )
 	if !exists('g:ctrlp_nolimit') | let s:cline = line('.') | en
 	if line('$') > winheight(0) | cal s:BuildPrompt(0, s:Focus()) | en
 endf
@@ -751,12 +752,12 @@ endf
 
 fu! s:SpecInputs(str)
 	let [str, type] = [a:str, s:type()]
-	if str == '..' && type =~ '0\|dir'
+	if str == '..' && type =~ '\v^(0|dir)$'
 		cal s:parentdir(getcwd())
 		cal s:SetLines(s:itemtype)
 		cal s:PrtClear()
 		retu 1
-	elsei ( str == '/' || str == '\' ) && type =~ '0\|dir'
+	elsei str =~ '^[\/]$' && type =~ '\v^(0|dir)$'
 		cal s:SetWD(2, 0)
 		cal s:SetLines(s:itemtype)
 		cal s:PrtClear()
@@ -779,7 +780,7 @@ fu! s:AcceptSelection(mode)
 		\ && str !~ '\v^(\.\.|/|\\|\?)$'
 		cal s:CreateNewFile(a:mode) | retu
 	en
-	let matchstr = matchstr(line, '^  \zs.\+\ze\t*$')
+	let matchstr = matchstr(line, '^> \zs.\+\ze\t*$')
 	if empty(matchstr) | retu | en
 	" Do something with it
 	let actfunc = s:itemtype < 3 ? 'ctrlp#acceptfile'
@@ -795,12 +796,7 @@ fu! s:CreateNewFile(...) "{{{1
 		if md == 'cancel' | retu | en
 	en
 	let str = s:sanstail(str)
-	let parts = split(str, '[\/]\ze[^\/]\+[\/:]\?$')
-	if len(parts) == 1
-		let [base, fname] = ['', parts[0]]
-	elsei len(parts) == 2
-		let [base, fname] = parts
-	en
+	let [base, fname] = s:headntail(str)
 	if fname =~ '^[\/]$' | retu | en
 	if exists('s:marked') && len(s:marked)
 		" Use the first marked file's path
@@ -808,11 +804,8 @@ fu! s:CreateNewFile(...) "{{{1
 		let base = path.s:lash(path).base
 		let str = fnamemodify(base.s:lash.fname, ':.')
 	en
-	if base == '' | let optyp = fname | el
-		cal ctrlp#utils#mkdir(base)
-		if isdirectory(base)
-			let optyp = str
-		en
+	if base != '' | if isdirectory(ctrlp#utils#mkdir(base))
+		let optyp = str | en | el | let optyp = fname
 	en
 	if !exists('optyp') | retu | en
 	let filpath = fnamemodify(optyp, ':p')
@@ -1025,6 +1018,11 @@ fu! s:findcommon(items, seed)
 	retu cmn
 endf
 
+fu! s:headntail(str)
+	let parts = split(a:str, '[\/]\ze[^\/]\+[\/:]\?$')
+	retu len(parts) == 1 ? ['', parts[0]] : len(parts) == 2 ? parts : []
+endf
+
 fu! s:lash(...)
 	retu match(a:0 ? a:1 : getcwd(), '[\/]$') < 0 ? s:lash : ''
 endf
@@ -1131,7 +1129,7 @@ fu! s:syntax()
 	sy match CtrlPNoEntries '^ == NO ENTRIES ==$'
 	sy match CtrlPLineMarker '^>'
 	hi link CtrlPNoEntries Error
-	hi CtrlPLineMarker guifg=bg
+	hi CtrlPLineMarker guifg=bg ctermfg=bg
 endf
 
 fu! s:highlight(pat, grp, bfn)
@@ -1359,7 +1357,8 @@ fu! ctrlp#msg(msg)
 endf
 
 fu! s:openfile(cmd, filpath, ...)
-	let cmd = a:cmd =~ '^e$\|^b$' && &modified ? 'hid '.a:cmd : a:cmd
+	let cmd = a:cmd =~ '^[eb]$' && &modified ? 'hid '.a:cmd : a:cmd
+	let cmd = cmd =~ '^tab' ? tabpagenr('$').cmd : cmd
 	let tail = a:0 ? a:1 : s:tail()
 	try
 		exe cmd.tail.' '.ctrlp#fnesc(a:filpath)

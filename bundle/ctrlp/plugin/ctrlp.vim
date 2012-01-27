@@ -16,7 +16,7 @@ if !exists('g:ctrlp_cmd') | let g:ctrlp_cmd = 'CtrlP' | en
 com! -n=? -com=dir CtrlP cal ctrlp#init(0, <q-args>)
 
 com! CtrlPBuffer   cal ctrlp#init(1, 0)
-com! CtrlPMRUFiles cal ctrlp#init(2)
+com! CtrlPMRUFiles cal ctrlp#init(2, 0)
 
 com! ClearCtrlPCache     cal ctrlp#clr()
 com! ClearAllCtrlPCaches cal ctrlp#clra()

@@ -373,6 +373,7 @@ nnoremap <silent> <leader>m :CtrlPCurWD<CR>
 nnoremap <silent> <leader>r :CtrlPRoot<CR>
 nnoremap <silent> <leader>l :CtrlPBuffer<CR>
 nnoremap <silent> <leader>t :CtrlPBufTag<CR>
+nnoremap <silent> <leader>e :CtrlPMRUFiles<CR>
 nnoremap <silent> <leader>cc :ClearCtrlPCache<CR>
 nnoremap <silent> <leader>ca :ClearAllCtrlPCaches<CR>
 nnoremap <silent> <leader>kf :CtrlPCurFile<CR>

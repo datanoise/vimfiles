@@ -182,8 +182,9 @@ set tags+=../tags,../../tags,../../../tags,../../../../tags,./tmp/tags
 set cpoptions+=d
 set timeoutlen=1000 " A little bit more time for macros
 set ttimeoutlen=100  " Make Esc work faster
-" do not search included files, it's a way too slow
+" do not search included files and tags, it's a way too slow
 set complete-=i
+set complete-=t
 " do not display :intro screen at startup
 set shortmess+=I
 set nofsync " don't spin my disk

@@ -200,7 +200,11 @@ if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app' && has('cursorshape')
   let &t_SI = "\<Esc>]50;CursorShape=2\x7"
   let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 endif
-au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs
+if has('gui_running')
+  au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs\ --no-gems
+else
+  au FileType ruby setlocal keywordprg=ri\ --no-gems
+end
 au FileType ruby setlocal completefunc=syntaxcomplete#Complete
 au FileType ruby setlocal balloonexpr&
 au FileType scala,ruby exe 'compiler '. expand('<amatch>')

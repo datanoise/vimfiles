@@ -4,16 +4,14 @@ call Pl#Statusline(
 		\ Pl#HiInsert(    Pl#FG( 23), Pl#BG(231), Pl#Attr('bold'))
 		\ ),
 	\
-	\ Pl#Segment("%{Stl_GetBranch('$branch')}",
-		\ exists('g:loaded_fugitive') && g:loaded_fugitive == 1,
-		\
+	\ Pl#Segment(" %{GetCurDir()} ",
 		\ Pl#HiCurrent(   Pl#FG(250), Pl#BG(240)),
 		\ Pl#HiInsert(    Pl#FG(117), Pl#BG( 31)),
 		\ Pl#HiNonCurrent(Pl#FG(239), Pl#BG(235))
 		\ ),
 	\
 	\ Pl#SegmentGroup(
-		\ Pl#HiCurrent(   Pl#BG(240)),
+		\ Pl#HiCurrent(   Pl#BG(238)),
 		\ Pl#HiInsert(    Pl#BG( 31)),
 		\ Pl#HiNonCurrent(Pl#BG(235)),
 		\
@@ -45,26 +43,14 @@ call Pl#Statusline(
 			\ )
 		\ ),
 	\
-	\ Pl#Segment("%<%{Stl_GetCurrentFunction()}",
-		\ exists('g:cfi_disable') && g:cfi_disable == 0,
-		\
-		\ Pl#HiCurrent(   Pl#FG(247), Pl#BG(236)),
-		\ Pl#HiInsert(    Pl#FG(117), Pl#BG( 24))
-		\ ),
-	\
 	\ Pl#Split(
 		\ Pl#HiCurrent(   Pl#BG(236)),
 		\ Pl#HiInsert(    Pl#BG( 24)),
 		\ Pl#HiNonCurrent(Pl#BG(234))
 		\ ),
 	\
-	\ Pl#Segment("%{GetCurDir()} ",
-		\ Pl#HiCurrent(   Pl#FG(246), Pl#BG(236)),
-		\ Pl#HiInsert(    Pl#FG( 75), Pl#BG( 24))
-		\ ),
-	\
 	\ Pl#Segment(" $ft %{strlen(&ft) ? &ft : 'n/a'} ",
-		\ Pl#HiCurrent(   Pl#FG(246), Pl#BG(236)),
+		\ Pl#HiCurrent(   Pl#FG(246), Pl#BG(238)),
 		\ Pl#HiInsert(    Pl#FG( 75), Pl#BG( 24)),
 		\ ),
 	\

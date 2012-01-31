@@ -65,7 +65,11 @@ function! s:Bclose(bang, buffer)
       endif
     endif
   endfor
-  execute 'bdelete'.a:bang.' '.btarget
+  try
+    execute 'bdelete'.a:bang.' '.btarget
+  catch /E516/
+    " ignore it if the buffer is deleted on hide, like all fugitive's ones
+  endtry
   execute wcurrent.'wincmd w'
 endfunction
 command! -bang -complete=buffer -nargs=? Bclose call <SID>Bclose('<bang>', '<args>')

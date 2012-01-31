@@ -10,9 +10,8 @@ endif
 runtime! ftplugin/git.vim
 let b:did_ftplugin = 1
 
-set nomodeline
-
 let b:undo_ftplugin = 'setl modeline<'
+setlocal nomodeline
 
 if &textwidth == 0
   " make sure that log messages play nice with git-log on standard terminals

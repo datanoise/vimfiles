@@ -62,12 +62,9 @@ ctrlp-changelog	ctrlp.txt	/*ctrlp-changelog*
 ctrlp-commands	ctrlp.txt	/*ctrlp-commands*
 ctrlp-contents	ctrlp.txt	/*ctrlp-contents*
 ctrlp-credits	ctrlp.txt	/*ctrlp-credits*
-ctrlp-extending	ctrlp.txt	/*ctrlp-extending*
 ctrlp-input-formats	ctrlp.txt	/*ctrlp-input-formats*
 ctrlp-intro	ctrlp.txt	/*ctrlp-intro*
 ctrlp-mappings	ctrlp.txt	/*ctrlp-mappings*
 ctrlp-options	ctrlp.txt	/*ctrlp-options*
-ctrlp-thanks	ctrlp.txt	/*ctrlp-thanks*
-ctrlp-user-config	ctrlp.txt	/*ctrlp-user-config*
 ctrlp.txt	ctrlp.txt	/*ctrlp.txt*
 g:ctrlp-extensions	ctrlp.txt	/*g:ctrlp-extensions*

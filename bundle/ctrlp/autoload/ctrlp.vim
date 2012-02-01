@@ -705,7 +705,7 @@ endf
 fu! ctrlp#acceptfile(mode, matchstr, ...)
 	let [md, filpath] = [a:mode, fnamemodify(a:matchstr, ':p')]
 	cal s:PrtExit()
-	let [bufnr, tail] = [bufnr(filpath), s:tail()]
+	let [bufnr, tail] = [bufnr('^'.filpath.'$'), s:tail()]
 	if s:jmptobuf && bufnr > 0 && buflisted(bufnr) && md =~ 'e\|t'
 		let [jmpb, bufwinnr] = [1, bufwinnr(bufnr)]
 		let buftab = s:jmptobuf > 1 ? s:buftab(bufnr, md) : [0, 0]

@@ -31,7 +31,7 @@ endf
 fu! ctrlp#quickfix#init()
 	let g:ctrlp_nolimit = 1
 	sy match CtrlPqfLineCol '|\zs\d\+:\d\+\ze|'
-	hi def link CtrlPqfLineCol String
+	hi def link CtrlPqfLineCol Search
 	retu map(getqflist(), 's:lineout(v:val)')
 endf
 
@@ -43,13 +43,8 @@ fu! ctrlp#quickfix#accept(mode, str)
 	let cmd = md == 't' ? 'tabe' : md == 'h' ? 'new' : md == 'v' ? 'vne'
 		\ : ctrlp#normcmd('e')
 	let cmd = cmd == 'e' && &modified ? 'hid e' : cmd
-	try
-		exe cmd.' '.ctrlp#fnesc(filpath)
-	cat
-		cal ctrlp#msg("Invalid command or argument.")
-	fina
-		cal cursor(items[2], items[3]) | sil! norm! zvzz
-	endt
+	sil! exe cmd.' '.ctrlp#fnesc(filpath)
+	cal cursor(items[2], items[3]) | sil! norm! zvzz
 endf
 
 fu! ctrlp#quickfix#id()

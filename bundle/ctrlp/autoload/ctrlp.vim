@@ -18,7 +18,7 @@ fu! s:opts()
 		\ 'g:ctrlp_dotfiles':              ['s:dotfiles', 1],
 		\ 'g:ctrlp_extensions':            ['s:extensions', []],
 		\ 'g:ctrlp_follow_symlinks':       ['s:folsym', 0],
-		\ 'g:ctrlp_highlight_match':       ['s:mathi', [1, 'Identifier']],
+		\ 'g:ctrlp_highlight_match':       ['s:mathi', [1, 'CtrlPMatch']],
 		\ 'g:ctrlp_jump_to_buffer':        ['s:jmptobuf', 2],
 		\ 'g:ctrlp_lazy_update':           ['s:lazy', 0],
 		\ 'g:ctrlp_match_window_bottom':   ['s:mwbottom', 1],
@@ -116,7 +116,7 @@ fu! s:opts()
 	" Global options
 	let s:glbs = { 'magic': 1, 'to': 1, 'tm': 0, 'sb': 1, 'hls': 0, 'im': 0,
 		\ 'report': 9999, 'sc': 0, 'ss': 0, 'siso': 0, 'mfd': 200, 'mouse': 'n',
-		\ 'gcr': 'a:blinkon0', 'ic': 1, 'scs': 1 }
+		\ 'gcr': 'a:blinkon0', 'ic': 1, 'scs': 1, 'lmap': '' }
 	if s:lazy
 		cal extend(s:glbs, { 'ut': ( s:lazy > 1 ? s:lazy : 250 ) })
 	en
@@ -195,8 +195,8 @@ fu! ctrlp#clra(...)
 	cal ctrlp#clr()
 endf
 
-fu! ctrlp#reset()
-	if ( has('dialog_gui') || has('dialog_con') ) &&
+fu! ctrlp#reset(...)
+	if !exists('a:1') && ( has('dialog_gui') || has('dialog_con') ) &&
 		\ confirm("Reset and apply new options?", "&OK\n&Cancel") != 1 | retu | en
 	cal s:opts()
 	cal ctrlp#utils#opts()
@@ -420,9 +420,9 @@ fu! s:BuildPrompt(upd, ...)
 	sil! cal ctrlp#statusline()
 	" Toggling
 	let [hiactive, hicursor, base] = exists('a:1') && !a:1
-		\ ? ['Comment', 'Comment', tr(base, '>', '-')]
-		\ : ['Normal', 'Constant', base]
-	let hibase = 'Comment'
+		\ ? ['CtrlPPrtBase', 'CtrlPPrtBase', tr(base, '>', '-')]
+		\ : ['CtrlPPrtText', 'CtrlPPrtCursor', base]
+	let hibase = 'CtrlPPrtBase'
 	" Build it
 	redr
 	exe 'echoh' hibase '| echon "'.base.'"
@@ -850,7 +850,7 @@ fu! s:OpenMulti()
 	cal s:PrtExit()
 	" Move the cursor to a reusable window
 	let emptytail = empty(s:tail())
-	let useb = bufnr(mkd[0]) > 0 && emptytail
+	let useb = bufnr('^'.mkd[0].'$') > 0 && emptytail
 	let fst = call('ctrlp#normcmd', useb ? ['b', 'bo vert sb'] : ['e'])
 	" Check if it's a replaceable buffer
 	let repabl = ( empty(bufname('%')) && empty(&l:ft) ) || s:nosplit()
@@ -860,7 +860,7 @@ fu! s:OpenMulti()
 	let [swb, &swb] = [&swb, '']
 	" Open the files
 	for va in mkd
-		let bufnr = bufnr(va)
+		let bufnr = bufnr('^'.va.'$')
 		let useb = bufnr > 0 && emptytail
 		let snd = md != '' && has_key(cmds, md)
 			\ ? ( useb ? cmds[md][0] : cmds[md][1] ) : ( useb ? 'vert sb' : 'vne' )
@@ -965,12 +965,12 @@ fu! ctrlp#statusline()
 		let args = [focus, byfname, s:regexp, prv, item, nxt, marked]
 		let &l:stl = call(s:status['main'], args)
 	el
-		let item    = '%#Character# '.item.' %*'
-		let focus   = '%#LineNr# '.focus.' %*'
-		let byfname = '%#Character# '.byfname.' %*'
-		let regex   = s:regexp  ? '%#LineNr# regex %*' : ''
+		let item    = '%#CtrlPMode1# '.item.' %*'
+		let focus   = '%#CtrlPMode2# '.focus.' %*'
+		let byfname = '%#CtrlPMode1# '.byfname.' %*'
+		let regex   = s:regexp  ? '%#CtrlPMode2# regex %*' : ''
 		let slider  = ' <'.prv.'>={'.item.'}=<'.nxt.'>'
-		let dir     = ' %=%<%#LineNr# '.getcwd().' %*'
+		let dir     = ' %=%<%#CtrlPMode2# '.getcwd().' %*'
 		let &l:stl  = focus.byfname.regex.slider.marked.dir
 	en
 endf
@@ -983,7 +983,7 @@ endf
 fu! ctrlp#progress(enum)
 	if has('macunix') || has('mac') | sl 1m | en
 	let &l:stl = has_key(s:status, 'prog') ? call(s:status['prog'], [a:enum])
-		\ : '%#Function# '.a:enum.' %* %=%<%#LineNr# '.getcwd().' %*'
+		\ : '%#CtrlPStats# '.a:enum.' %* %=%<%#CtrlPMode2# '.getcwd().' %*'
 	redr
 endf
 " Paths {{{2
@@ -1110,17 +1110,20 @@ endf
 
 fu! ctrlp#setdir(path, ...)
 	let cmd = exists('a:1') ? a:1 : 'lc!'
-	try
-		exe cmd.' '.ctrlp#fnesc(a:path)
-	cat
-		cal ctrlp#msg("Can't change working directory.")
-	endt
+	sil! exe cmd.' '.ctrlp#fnesc(a:path)
 endf
 " Highlighting {{{2
 fu! s:syntax()
 	sy match CtrlPNoEntries '^ == NO ENTRIES ==$'
 	sy match CtrlPLinePre '^>'
 	hi link CtrlPNoEntries Error
+	hi link CtrlPMode1 Character
+	hi link CtrlPMode2 LineNr
+	hi link CtrlPStats Function
+	hi link CtrlPMatch Identifier
+	hi link CtrlPPrtBase Comment
+	hi link CtrlPPrtText Normal
+	hi link CtrlPPrtCursor Constant
 	if hlexists('Normal')
 		sil! exe 'hi CtrlPLinePre '.( has("gui_running") ? 'gui' : 'cterm' ).'fg=bg'
 	en
@@ -1345,25 +1348,17 @@ fu! s:migemo(str)
 	retu str
 endf
 
-fu! ctrlp#msg(msg)
-	redr | echoh Identifier | echon "CtrlP: ".a:msg | echoh None
-endf
-
 fu! s:openfile(cmd, filpath, ...)
 	let cmd = a:cmd =~ '^[eb]$' && &modified ? 'hid '.a:cmd : a:cmd
 	let cmd = cmd =~ '^tab' ? tabpagenr('$').cmd : cmd
 	let tail = a:0 ? a:1 : s:tail()
-	try
-		exe cmd.tail.' '.ctrlp#fnesc(a:filpath)
-	cat
-	fina
-		if !empty(tail)
-			sil! norm! zvzz
-		en
-		if exists('*haslocaldir')
-			cal ctrlp#setdir(getcwd(), haslocaldir() ? 'lc!' : 'cd!')
-		en
-	endt
+	sil! exe cmd.tail.' '.ctrlp#fnesc(a:filpath)
+	if !empty(tail)
+		sil! norm! zvzz
+	en
+	if exists('*haslocaldir')
+		cal ctrlp#setdir(getcwd(), haslocaldir() ? 'lc!' : 'cd!')
+	en
 endf
 
 fu! s:writecache(read_cache, cache_file)
@@ -1487,8 +1482,10 @@ fu! ctrlp#init(type, ...)
 	cal s:SetWD(a:0 ? a:1 : '')
 	cal s:MapKeys()
 	cal s:SetLines(a:type)
+	if has('syntax') && exists('g:syntax_on')
+		cal s:syntax()
+	en
 	cal s:BuildPrompt(1)
-	if has('syntax') && exists('g:syntax_on') | cal s:syntax() | en
 endf
 if has('autocmd') "{{{1
 	aug CtrlPAug

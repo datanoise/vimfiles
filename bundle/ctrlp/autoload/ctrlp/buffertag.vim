@@ -165,9 +165,6 @@ fu! s:esctagscmd(bin, args, ...)
 		let last = s:enc != &enc ? s:enc : !empty($LANG) ? $LANG : &enc
 		let cmd = iconv(cmd, &enc, last)
 	en
-	if empty(cmd)
-		cal ctrlp#msg("Encoding conversion failed!")
-	en
 	retu cmd
 endf
 
@@ -196,7 +193,7 @@ fu! s:parseline(line)
 	let eval = '\v^([^\t]+)\t(.+)\t\/\^(.+)\$\/\;\"\t(.+)\tline(no)?\:(\d+)'
 	let vals = matchlist(a:line, eval)
 	if empty(vals) | retu '' | en
-	let [bufnr, bufname] = [bufnr(vals[2]), fnamemodify(vals[2], ':p:t')]
+	let [bufnr, bufname] = [bufnr('^'.vals[2].'$'), fnamemodify(vals[2], ':p:t')]
 	retu vals[1].'	'.vals[4].'|'.bufnr.':'.bufname.'|'.vals[6].'| '.vals[3]
 endf
 " Public {{{1

@@ -258,6 +258,7 @@ inoremap {<Space> {}<Esc>i<Space><Space><Esc>i
 inoremap [<Space> []<Esc>i<Space><Space><Esc>i
 inoremap <C-\> <C-p>
 inoremap <silent> <C-j> <C-\><C-O>:call search('[{("\[\]'')}]', 'Wc', line('.'))<CR><Right>
+inoremap jj <Esc>
 nnoremap <F2> <C-w><C-w>
 nnoremap <F4> :sil make %<CR><c-l>:cc<CR>
 nnoremap [f :exe ':Ack ' . expand('<cword>')<CR><CR>
@@ -318,14 +319,10 @@ iabbr WHen When
 " borrowed from tpope's plugin
 augroup shebang_chmod
   autocmd!
-  autocmd BufNewFile  * let b:brand_new_file = 1
-  autocmd BufWritePost * unlet! b:brand_new_file
   autocmd BufWritePre *
-        \ if exists('b:brand_new_file') |
-        \   if getline(1) =~ '^#!' |
+        \   if getline(1) =~ '^#!' && match(getfperm(expand('<afile>')), 'x') == -1 |
         \     let b:chmod_post = '+x' |
         \   endif |
-        \ endif
   autocmd BufWritePost,FileWritePost *
         \ if exists('b:chmod_post') && executable('chmod') |
         \   silent! execute '!chmod '.b:chmod_post.' "<afile>"' |

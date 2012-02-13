@@ -2,7 +2,7 @@
 " File:          autoload/ctrlp.vim
 " Description:   Fuzzy file, buffer, mru and tag finder.
 " Author:        Kien Nguyen <github.com/kien>
-" Version:       1.6.9
+" Version:       1.7.1
 " =============================================================================
 
 " Static variables {{{1
@@ -135,6 +135,18 @@ let s:fpats = {
 	\ '^\S\*$': '\*',
 	\ '^\S\\?$': '\\?',
 	\ }
+
+" Highlight groups
+let s:hlgrps = {
+	\ 'NoEntries': 'Error',
+	\ 'Mode1': 'Character',
+	\ 'Mode2': 'LineNr',
+	\ 'Stats': 'Function',
+	\ 'Match': 'Identifier',
+	\ 'PrtBase': 'Comment',
+	\ 'PrtText': 'Normal',
+	\ 'PrtCursor': 'Constant',
+	\ }
 " * Open & Close {{{1
 fu! s:Open()
 	if exists('g:ctrlp_log') && g:ctrlp_log
@@ -159,7 +171,8 @@ fu! s:Open()
 endf
 
 fu! s:Close()
-	try | noa bun! | cat | noa clo! | endt
+	try | noa bun!
+	cat | noa clo! | endt
 	cal s:unmarksigns()
 	for key in keys(s:glbs)
 		sil! exe 'let &'.key.' = s:glb_'.key
@@ -170,7 +183,7 @@ fu! s:Close()
 		exe s:winres[0]
 	en
 	unl! s:focus s:hisidx s:hstgot s:marked s:statypes s:cline s:init s:savestr
-		\ g:ctrlp_nolimit
+		\ s:winh g:ctrlp_nolimit
 	cal ctrlp#recordhist()
 	cal s:onexit()
 	if exists('g:ctrlp_log') && g:ctrlp_log
@@ -180,12 +193,10 @@ fu! s:Close()
 endf
 " * Clear caches {{{1
 fu! ctrlp#clr(...)
-	exe 'let g:ctrlp_new'.( exists('a:1') ? a:1 : 'cache' ).' = 1'
+	exe 'let g:ctrlp_new'.( a:0 ? a:1 : 'cache' ).' = 1'
 endf
 
-fu! ctrlp#clra(...)
-	if !exists('a:1') && ( has('dialog_gui') || has('dialog_con') ) &&
-		\ confirm("Delete all cache files?", "&OK\n&Cancel") != 1 | retu | en
+fu! ctrlp#clra()
 	let cache_dir = ctrlp#utils#cachedir()
 	if isdirectory(cache_dir)
 		let cache_files = split(s:glbpath(cache_dir, '**', 1), "\n")
@@ -195,9 +206,7 @@ fu! ctrlp#clra(...)
 	cal ctrlp#clr()
 endf
 
-fu! ctrlp#reset(...)
-	if !exists('a:1') && ( has('dialog_gui') || has('dialog_con') ) &&
-		\ confirm("Reset and apply new options?", "&OK\n&Cancel") != 1 | retu | en
+fu! ctrlp#reset()
 	cal s:opts()
 	cal ctrlp#utils#opts()
 	cal ctrlp#mrufiles#opts()
@@ -213,7 +222,8 @@ fu! s:Files()
 			cal s:GlobPath(cwd, 0)
 		el
 			sil! cal ctrlp#progress('Indexing...')
-			try | cal s:UserCmd(cwd, lscmd) | cat | retu [] | endt
+			try | cal s:UserCmd(cwd, lscmd)
+			cat | retu [] | endt
 		en
 		" Remove base directory
 		cal ctrlp#rmbasedir(g:ctrlp_allfiles)
@@ -298,8 +308,9 @@ endf
 fu! s:MatchIt(items, pat, limit, mfunc)
 	let newitems = []
 	for item in a:items
-		try | if call(a:mfunc, [item, a:pat]) >= 0 | cal add(newitems, item) | en
-		cat | brea | endt
+		try | if call(a:mfunc, [item, a:pat]) >= 0
+			cal add(newitems, item)
+		en | cat | brea | endt
 		if a:limit > 0 && len(newitems) >= a:limit | brea | en
 	endfo
 	retu newitems
@@ -319,7 +330,7 @@ fu! s:MatchedItems(items, pat, limit)
 	retu newitems
 endf
 fu! s:SplitPattern(str) "{{{1
-	let str = s:sanstail(a:str)
+	let str = a:str
 	if s:migemo && s:regexp && len(str) > 0 && executable('cmigemo')
 		let str = s:migemo(str)
 	en
@@ -350,7 +361,7 @@ endf
 fu! s:Render(lines, pat)
 	let lines = a:lines
 	" Setup the match window
-	let s:height = min([len(lines), s:mxheight])
+	let s:height = min([len(lines), s:winh])
 	sil! exe '%d _ | res' s:height
 	" Print the new items
 	if empty(lines)
@@ -388,16 +399,14 @@ fu! s:Update(str)
 	" Get the previous string if existed
 	let oldstr = exists('s:savestr') ? s:savestr : ''
 	" Get the new string sans tail
-	let notail = substitute(a:str, '\\\\', '\', 'g')
-	let notail = substitute(notail, '\\\@<!:\([^:]\|\\:\)*$', '', '')
-	let notail = substitute(notail, '\\\ze:', '', 'g')
+	let str = s:sanstail(a:str)
 	" Stop if the string's unchanged
-	if notail == oldstr && !empty(notail) && !exists('s:force')
+	if str == oldstr && !empty(str) && !exists('s:force')
 		retu
 	en
-	let pat = s:SplitPattern(a:str)
-	let lines = exists('g:ctrlp_nolimit') && empty(notail) ? copy(g:ctrlp_lines)
-		\ : s:MatchedItems(g:ctrlp_lines, pat, s:mxheight)
+	let pat = s:SplitPattern(str)
+	let lines = exists('g:ctrlp_nolimit') && empty(str) ? copy(g:ctrlp_lines)
+		\ : s:MatchedItems(g:ctrlp_lines, pat, s:winh)
 	cal s:Render(lines, pat)
 endf
 
@@ -419,7 +428,7 @@ fu! s:BuildPrompt(upd, ...)
 	en
 	sil! cal ctrlp#statusline()
 	" Toggling
-	let [hiactive, hicursor, base] = exists('a:1') && !a:1
+	let [hiactive, hicursor, base] = a:0 && !a:1
 		\ ? ['CtrlPPrtBase', 'CtrlPPrtBase', tr(base, '>', '-')]
 		\ : ['CtrlPPrtText', 'CtrlPPrtCursor', base]
 	let hibase = 'CtrlPPrtBase'
@@ -430,7 +439,7 @@ fu! s:BuildPrompt(upd, ...)
 		\ | echoh' hicursor '| echon "'.prt[1].'"
 		\ | echoh' hiactive '| echon "'.prt[2].'" | echoh None'
 	" Append the cursor at the end
-	if empty(prt[1]) && ( !exists('a:1') || ( exists('a:1') && a:1 ) )
+	if empty(prt[1]) && !( a:0 && !a:1 )
 		exe 'echoh' hibase '| echon "_" | echoh None'
 	en
 endf
@@ -444,22 +453,22 @@ endf
 
 fu! s:PrtAdd(char)
 	unl! s:hstgot
-	let s:prompt[0] = s:prompt[0] . a:char
+	let s:prompt[0] .= a:char
 	cal s:BuildPrompt(1)
 endf
 
 fu! s:PrtBS()
 	unl! s:hstgot
 	let [prt, s:matches] = [s:prompt, 1]
-	let prt[0] = strpart(prt[0], -1, strlen(prt[0]))
+	let prt[0] = substitute(prt[0], '.$', '', '')
 	cal s:BuildPrompt(1)
 endf
 
 fu! s:PrtDelete()
 	unl! s:hstgot
 	let [prt, s:matches] = [s:prompt, 1]
-	let prt[1] = strpart(prt[2], 0, 1)
-	let prt[2] = strpart(prt[2], 1)
+	let prt[1] = matchstr(prt[2], '^.')
+	let prt[2] = substitute(prt[2], '^.', '', '')
 	cal s:BuildPrompt(1)
 endf
 
@@ -501,30 +510,28 @@ fu! s:PrtCurLeft()
 	if !empty(s:prompt[0])
 		let prt = s:prompt
 		let prt[2] = prt[1] . prt[2]
-		let prt[1] = strpart(prt[0], strlen(prt[0]) - 1)
-		let prt[0] = strpart(prt[0], -1, strlen(prt[0]))
+		let prt[1] = matchstr(prt[0], '.$')
+		let prt[0] = substitute(prt[0], '.$', '', '')
 	en
 	cal s:BuildPrompt(0)
 endf
 
 fu! s:PrtCurRight()
 	let prt = s:prompt
-	let prt[0] = prt[0] . prt[1]
-	let prt[1] = strpart(prt[2], 0, 1)
-	let prt[2] = strpart(prt[2], 1)
+	let prt[0] .= prt[1]
+	let prt[1] = matchstr(prt[2], '^.')
+	let prt[2] = substitute(prt[2], '^.', '', '')
 	cal s:BuildPrompt(0)
 endf
 
 fu! s:PrtCurStart()
-	let prt = s:prompt
-	let str = join(prt, '')
-	let [prt[0], prt[1], prt[2]] = ['', strpart(str, 0, 1), strpart(str, 1)]
+	let str = join(s:prompt, '')
+	let s:prompt = ['', matchstr(str, '^.'), substitute(str, '^.', '', '')]
 	cal s:BuildPrompt(0)
 endf
 
 fu! s:PrtCurEnd()
-	let prt = s:prompt
-	let [prt[0], prt[1], prt[2]] = [join(prt, ''), '', '']
+	let s:prompt = [join(s:prompt, ''), '', '']
 	cal s:BuildPrompt(0)
 endf
 
@@ -538,7 +545,7 @@ endf
 
 fu! s:PrtSelectJump(char, ...)
 	let lines = copy(s:matched)
-	if exists('a:1')
+	if a:0
 		cal map(lines, 'split(v:val, ''[\/]\ze[^\/]\+$'')[-1]')
 	en
 	" Cycle through matches, use s:jmpchr to store last jump
@@ -608,15 +615,16 @@ endf
 " * MapKeys() {{{1
 fu! s:MapKeys(...)
 	" Normal keys
-	let pfunc = exists('a:1') && !a:1 ? 'PrtSelectJump' : 'PrtAdd'
+	let pfunc = a:0 && !a:1 ? 'PrtSelectJump' : 'PrtAdd'
 	let dojmp = s:byfname && pfunc == 'PrtSelectJump' ? ', 1' : ''
 	for each in range(32, 126)
 		let cmd = "nn \<buffer> \<silent> \<char-%d> :\<c-u>cal \<SID>%s(\"%s\"%s)\<cr>"
 		exe printf(cmd, each, pfunc, escape(nr2char(each), '"|\'), dojmp)
 	endfo
-	if exists('a:2') | retu | en
 	" Special keys
-	cal call('s:MapSpecs', exists('a:1') && !a:1 ? [1] : [])
+	if a:0 < 2
+		cal call('s:MapSpecs', a:0 && !a:1 ? [1] : [])
+	en
 endf
 
 fu! s:MapSpecs(...)
@@ -627,7 +635,7 @@ fu! s:MapSpecs(...)
 			exe s:lcmap.' <esc>['.each
 		endfo
 	en
-	if exists('a:1')
+	if a:0
 		for ke in s:prtunmaps | for kp in s:prtmaps[ke]
 			exe s:lcmap kp '<Nop>'
 		endfo | endfo
@@ -666,11 +674,11 @@ fu! s:ToggleType(dir)
 	let s:itemtype = s:walker(g:ctrlp_builtins + ext, s:itemtype, a:dir)
 	if s:byfname && !s:ispathitem() | let s:byfname = 0 | en
 	unl! g:ctrlp_nolimit
-	cal s:SetLines(s:itemtype)
-	cal s:PrtSwitcher()
 	if has('syntax') && exists('g:syntax_on')
 		cal s:syntax()
 	en
+	cal s:SetLines(s:itemtype)
+	cal s:PrtSwitcher()
 endf
 
 fu! s:PrtSwitcher()
@@ -680,12 +688,12 @@ fu! s:PrtSwitcher()
 endf
 fu! s:SetWD(...) "{{{1
 	let pathmode = s:pathmode
-	if exists('a:1') && strlen(a:1) | if type(a:1)
+	if a:0 && strlen(a:1) | if type(a:1)
 		cal ctrlp#setdir(a:1) | retu
 	el
 		let pathmode = a:1
 	en | en
-	if !exists('a:2')
+	if a:0 < 2
 		if match(s:crfile, '^\<.\+\>://.*') >= 0 || !pathmode | retu | en
 		if exists('+acd') | let [s:glb_acd, &acd] = [&acd, 0] | en
 		cal ctrlp#setdir(s:crfpath)
@@ -706,10 +714,10 @@ fu! ctrlp#acceptfile(mode, matchstr, ...)
 	let [md, filpath] = [a:mode, fnamemodify(a:matchstr, ':p')]
 	cal s:PrtExit()
 	let [bufnr, tail] = [bufnr('^'.filpath.'$'), s:tail()]
+	let j2l = a:0 ? a:1 : str2nr(matchstr(tail, '^ +\D*\zs\d\+\ze\D*'))
 	if s:jmptobuf && bufnr > 0 && buflisted(bufnr) && md =~ 'e\|t'
 		let [jmpb, bufwinnr] = [1, bufwinnr(bufnr)]
 		let buftab = s:jmptobuf > 1 ? s:buftab(bufnr, md) : [0, 0]
-		let j2l = a:0 ? a:1 : str2nr(matchstr(tail, '^ +\D*\zs\d\+\ze\D*'))
 	en
 	" Switch to existing buffer or open new one
 	if exists('jmpb') && bufwinnr > 0 && md != 't'
@@ -728,11 +736,15 @@ fu! ctrlp#acceptfile(mode, matchstr, ...)
 			\ md == 'v' || s:splitwin == 3 ? ( useb ? 'vert sb' : 'vne' ) :
 			\ call('ctrlp#normcmd', useb ? ['b', 'bo vert sb'] : ['e'])
 		" Reset &switchbuf option
-		let [swb, &swb] = [&swb, '']
+		if useb
+			let [swb, &swb] = [&swb, '']
+		en
 		" Open new window/buffer
-		let fid = useb ? bufnr : filpath
-		cal call('s:openfile', a:0 ? [cmd, fid, ' +'.a:1] : [cmd, fid])
-		let &swb = swb
+		let args = [cmd, useb ? bufnr : filpath, a:0 ? ' +'.a:1 : tail, useb, j2l]
+		cal call('s:openfile', args)
+		if useb
+			let &swb = swb
+		en
 	en
 endf
 
@@ -794,7 +806,7 @@ fu! s:CreateNewFile(...) "{{{1
 		let optyp = str | en | el | let optyp = fname
 	en
 	if !exists('optyp') | retu | en
-	let filpath = fnamemodify(optyp, ':p')
+	let [filpath, tail] = [fnamemodify(optyp, ':p'), s:tail()]
 	cal s:insertcache(str)
 	cal s:PrtExit()
 	let cmd = md == 'r' ? ctrlp#normcmd('e') :
@@ -802,7 +814,7 @@ fu! s:CreateNewFile(...) "{{{1
 		\ s:newfop =~ '2\|h' || ( a:0 && a:1 == 'h' ) || md == 'h' ? 'new' :
 		\ s:newfop =~ '3\|v' || ( a:0 && a:1 == 'v' ) || md == 'v' ? 'vne' :
 		\ ctrlp#normcmd('e')
-	cal s:openfile(cmd, filpath)
+	cal s:openfile(cmd, filpath, tail)
 endf
 " * OpenMulti() {{{1
 fu! s:MarkToOpen()
@@ -849,7 +861,8 @@ fu! s:OpenMulti()
 	cal s:sanstail(join(s:prompt, ''))
 	cal s:PrtExit()
 	" Move the cursor to a reusable window
-	let emptytail = empty(s:tail())
+	let tail = s:tail()
+	let emptytail = empty(tail)
 	let useb = bufnr('^'.mkd[0].'$') > 0 && emptytail
 	let fst = call('ctrlp#normcmd', useb ? ['b', 'bo vert sb'] : ['e'])
 	" Check if it's a replaceable buffer
@@ -865,7 +878,7 @@ fu! s:OpenMulti()
 		let snd = md != '' && has_key(cmds, md)
 			\ ? ( useb ? cmds[md][0] : cmds[md][1] ) : ( useb ? 'vert sb' : 'vne' )
 		let fid = useb ? bufnr : va
-		cal s:openfile(ic == 1 && ( ucr == 'r' || repabl ) ? fst : snd, fid)
+		cal s:openfile(ic == 1 && ( ucr == 'r' || repabl ) ? fst : snd, fid, tail)
 		if ( nr != '' && nr > 1 && nr < ic ) || ( nr == '' && ic > 1 )
 			sil! hid clo! | el | let ic += 1
 		en
@@ -908,9 +921,9 @@ endf
 
 fu! s:matchlens(str, pat, ...)
 	if empty(a:pat) || index(['^', '$'], a:pat) >= 0 | retu {} | en
-	let st   = exists('a:1') ? a:1 : 0
-	let lens = exists('a:2') ? a:2 : {}
-	let nr   = exists('a:3') ? a:3 : 0
+	let st   = a:0 ? a:1 : 0
+	let lens = a:0 >= 2 ? a:2 : {}
+	let nr   = a:0 >= 3 ? a:3 : 0
 	if nr > 20 | retu {} | en
 	if match(a:str, a:pat, st) >= 0
 		let [mst, mnd] = [matchstr(a:str, a:pat, st), matchend(a:str, a:pat, st)]
@@ -1109,23 +1122,21 @@ fu! ctrlp#fnesc(path)
 endf
 
 fu! ctrlp#setdir(path, ...)
-	let cmd = exists('a:1') ? a:1 : 'lc!'
-	sil! exe cmd.' '.ctrlp#fnesc(a:path)
+	let cmd = a:0 ? a:1 : 'lc!'
+	sil! exe cmd ctrlp#fnesc(a:path)
 endf
 " Highlighting {{{2
 fu! s:syntax()
-	sy match CtrlPNoEntries '^ == NO ENTRIES ==$'
-	sy match CtrlPLinePre '^>'
-	hi link CtrlPNoEntries Error
-	hi link CtrlPMode1 Character
-	hi link CtrlPMode2 LineNr
-	hi link CtrlPStats Function
-	hi link CtrlPMatch Identifier
-	hi link CtrlPPrtBase Comment
-	hi link CtrlPPrtText Normal
-	hi link CtrlPPrtCursor Constant
-	if hlexists('Normal')
+	for [ke, va] in items(s:hlgrps) | if !hlexists('CtrlP'.ke)
+		exe 'hi link CtrlP'.ke va
+	en | endfo
+	if !hlexists('CtrlPLinePre')
+		\ && synIDattr(synIDtrans(hlID('Normal')), 'bg') !~ '^-1$\|^$'
 		sil! exe 'hi CtrlPLinePre '.( has("gui_running") ? 'gui' : 'cterm' ).'fg=bg'
+	en
+	sy match CtrlPNoEntries '^ == NO ENTRIES ==$'
+	if hlexists('CtrlPLinePre')
+		sy match CtrlPLinePre '^>'
 	en
 endf
 
@@ -1133,13 +1144,15 @@ fu! s:highlight(pat, grp)
 	cal clearmatches()
 	if !empty(a:pat) && s:ispathitem()
 		let pat = s:regexp ? substitute(a:pat, '\\\@<!\^', '^> \\zs', 'g') : a:pat
-		" Match only filename
 		if s:byfname
+			" Match only filename
 			let pat = substitute(pat, '\[\^\(.\{-}\)\]\\{-}', '[^\\/\1]\\{-}', 'g')
-			let pat = substitute(pat, '$', '\\ze[^\\/]*$', 'g')
+			let pat = substitute(pat, '\$\@<!$', '\\ze[^\\/]*$', 'g')
 		en
 		cal matchadd(a:grp, '\c'.pat)
-		cal matchadd('CtrlPLinePre', '^>')
+		if hlexists('CtrlPLinePre')
+			cal matchadd('CtrlPLinePre', '^>')
+		en
 	en
 endf
 
@@ -1263,7 +1276,7 @@ endf
 fu! s:leavepre()
 	if s:clrex && ( !has('clientserver') ||
 		\ ( has('clientserver') && len(split(serverlist(), "\n")) == 1 ) )
-		cal ctrlp#clra(1)
+		cal ctrlp#clra()
 	en
 endf
 
@@ -1308,6 +1321,7 @@ fu! s:argmaps(md, ...)
 endf
 " Misc {{{2
 fu! s:getenv()
+	let s:winh = min([s:mxheight, &lines])
 	let [s:cwd, s:winres] = [getcwd(), [winrestcmd(), &lines, winnr('$')]]
 	let [s:crfile, s:crfpath] = [expand('%:p', 1), expand('%:p:h', 1)]
 	let [s:crword, s:crline] = [expand('<cword>'), getline('.')]
@@ -1348,12 +1362,15 @@ fu! s:migemo(str)
 	retu str
 endf
 
-fu! s:openfile(cmd, filpath, ...)
+fu! s:openfile(cmd, fid, tail, ...)
 	let cmd = a:cmd =~ '^[eb]$' && &modified ? 'hid '.a:cmd : a:cmd
 	let cmd = cmd =~ '^tab' ? tabpagenr('$').cmd : cmd
-	let tail = a:0 ? a:1 : s:tail()
-	sil! exe cmd.tail.' '.ctrlp#fnesc(a:filpath)
-	if !empty(tail)
+	let j2l = a:0 && a:1 ? a:2 : 0
+	exe cmd.( a:0 && a:1 ? '' : a:tail ) ctrlp#fnesc(a:fid)
+	if j2l
+		exe j2l
+	en
+	if !empty(a:tail) || j2l
 		sil! norm! zvzz
 	en
 	if exists('*haslocaldir')
@@ -1481,10 +1498,10 @@ fu! ctrlp#init(type, ...)
 	cal s:Open()
 	cal s:SetWD(a:0 ? a:1 : '')
 	cal s:MapKeys()
-	cal s:SetLines(a:type)
 	if has('syntax') && exists('g:syntax_on')
 		cal s:syntax()
 	en
+	cal s:SetLines(a:type)
 	cal s:BuildPrompt(1)
 endf
 if has('autocmd') "{{{1

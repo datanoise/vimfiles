@@ -72,8 +72,10 @@ fu! ctrlp#tag#init(tagfiles)
 		let alltags = s:filter(ctrlp#utils#readfile(each))
 		cal extend(g:ctrlp_alltags, alltags)
 	endfo
+	if !hlexists('CtrlPTabExtra')
+		hi link CtrlPTabExtra Comment
+	en
 	sy match CtrlPTabExtra '\zs\t.*\ze$'
-	hi link CtrlPTabExtra Comment
 	retu g:ctrlp_alltags
 endf
 
@@ -93,11 +95,11 @@ fu! ctrlp#tag#accept(mode, str)
 	let cmd = cmd =~ '^tab' ? tabpagenr('$').cmd : cmd
 	if fnd[0] == 1
 		if cmd != ''
-			sil! exe cmd
+			exe cmd
 		en
-		sil! exe fnd[1].'ta' tg
+		exe fnd[1].'ta' tg
 	el
-		sil! exe cmd.' '.tg
+		exe cmd tg
 	en
 endf
 

@@ -4,7 +4,9 @@
 " ------------------------------------------------------------------------------
 runtime! macros/matchit.vim
 set nocompatible      " We're running Vim, not Vi!
-let g:pathogen_disabled = ['command-t']
+if $TERM != 'xterm-256color'
+  let g:pathogen_disabled = ['powerline']
+endif
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 syntax on             " Enable syntax highlighting
@@ -282,6 +284,7 @@ inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:
 au FileType coffee nnoremap <buffer> <F3> :CoffeeCompile<CR>
 au FileType coffee vnoremap <buffer> <F3> :CoffeeCompile<CR>
 au FileType coffee nnoremap <buffer> <F4> :CoffeeRun<CR>
+au FileType coffee nnoremap <buffer> <F5> :CoffeeMake<CR><CR>
 au FileType cucumber nnoremap <buffer> <F4> :!cucumber %<CR>
 au FileType cucumber nnoremap <buffer> <F5> ^:exe '!cucumber ' . expand('%') . ':' . search('^\s*Scenario:','bnW')<CR>
 au FileType cucumber inoremap <buffer> \| \|<Esc>:Tab /\|<CR>A

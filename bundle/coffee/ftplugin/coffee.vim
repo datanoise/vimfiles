@@ -19,6 +19,16 @@ if !len(&l:makeprg)
   compiler coffee
 endif
 
+" Check here too in case the compiler above isn't loaded.
+if !exists('coffee_compiler')
+  let coffee_compiler = 'coffee'
+endif
+
+" Path to coffeelint executable
+if !exists('coffee_linter')
+  let coffee_linter = 'coffeelint'
+endif
+
 " Options passed to CoffeeLint
 if !exists('coffee_lint_options')
   let coffee_lint_options = ''
@@ -32,16 +42,6 @@ function! s:CoffeeCompileResetVars()
 
   " If CoffeeCompile is watching a buffer
   let b:coffee_compile_watch = 0
-endfunction
-
-" Save the cursor in the CoffeeCompile buffer.
-function! s:CoffeeCompileSavePos()
-  let b:coffee_compile_pos = getpos('.')
-endfunction
-
-" Restore the cursor in the CoffeeCompile buffer.
-function! s:CoffeeCompileRestorePos()
-  call setpos('.', b:coffee_compile_pos)
 endfunction
 
 " Clean things up in the source buffer.
@@ -64,11 +64,11 @@ function! s:CoffeeCompileUpdate(startline, endline)
   endif
 
   " Compile input.
-  let output = system('coffee -scb 2>&1', input)
+  let output = system(g:coffee_compiler . ' -scb 2>&1', input)
 
   " Be sure we're in the CoffeeCompile buffer before overwriting.
   if exists('b:coffee_compile_buf')
-    echoerr 'Something is very wrong'
+    echoerr 'CoffeeCompile buffers are messed up'
     return
   endif
 
@@ -86,7 +86,7 @@ function! s:CoffeeCompileUpdate(startline, endline)
     setlocal filetype=javascript
   endif
 
-  call s:CoffeeCompileRestorePos()
+  call setpos('.', b:coffee_compile_pos)
 endfunction
 
 " Update the CoffeeCompile buffer with the whole source buffer.
@@ -99,6 +99,11 @@ endfunction
 " to prevent the cursor from being moved (and its position saved) before the
 " function is called.
 function! s:CoffeeCompile(startline, endline, args)
+  if !executable(g:coffee_compiler)
+    echoerr "Can't find CoffeeScript compiler `" . g:coffee_compiler . "`"
+    return
+  endif
+
   " If in the CoffeeCompile buffer, switch back to the source buffer and
   " continue.
   if !exists('b:coffee_compile_buf')
@@ -154,7 +159,8 @@ function! s:CoffeeCompile(startline, endline, args)
     setlocal nobuflisted nomodifiable noswapfile wrap
 
     autocmd BufWipeout <buffer> call s:CoffeeCompileClose()
-    autocmd BufLeave <buffer> call s:CoffeeCompileSavePos()
+    " Save the cursor when leaving the CoffeeCompile buffer.
+    autocmd BufLeave <buffer> let b:coffee_compile_pos = getpos('.')
 
     nnoremap <buffer> <silent> q :hide<CR>
 
@@ -197,6 +203,11 @@ endfunction
 " Run coffeelint on a file, and add any errors between @startline and @endline
 " to the quickfix list.
 function! s:CoffeeLint(startline, endline, bang, args)
+  if !executable(g:coffee_linter)
+    echoerr "Can't find CoffeeScript linter `" . g:coffee_linter . "`"
+    return
+  endif
+
   let filename = expand('%')
 
   if !len(filename)
@@ -204,8 +215,8 @@ function! s:CoffeeLint(startline, endline, bang, args)
     return
   endif
 
-  let lines = split(system('coffeelint ' . g:coffee_lint_options . ' ' . a:args
-  \                                      . ' ' . filename . ' 2>&1'), '\n')
+  let lines = split(system(g:coffee_linter . ' ' . g:coffee_lint_options . ' ' .
+  \                        a:args . ' ' . filename . ' 2>&1'), '\n')
   let qflist = []
 
   for line in lines

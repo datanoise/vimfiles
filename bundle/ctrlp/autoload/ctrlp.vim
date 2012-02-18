@@ -1231,8 +1231,7 @@ fu! s:normbuf()
 	let winnrs = []
 	for each in range(1, winnr('$'))
 		let bufnr = winbufnr(each)
-		if getbufvar(bufnr, '&bl') && empty(getbufvar(bufnr, '&bt'))
-			\ && getbufvar(bufnr, '&ma')
+		if  empty(getbufvar(bufnr, '&bt')) && getbufvar(bufnr, '&ma')
 			cal add(winnrs, each)
 		en
 	endfo

@@ -4,7 +4,7 @@
 " ------------------------------------------------------------------------------
 runtime! macros/matchit.vim
 set nocompatible      " We're running Vim, not Vi!
-if $TERM != 'xterm-256color'
+if $TERM != "" && $TERM != 'xterm-256color'
   let g:pathogen_disabled = ['powerline']
 endif
 call pathogen#runtime_append_all_bundles()

@@ -197,7 +197,8 @@ endif
 set completeopt=
 set clipboard+=unnamed
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
-if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app' && has('cursorshape')
+if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app'
+      \ && has('cursorshape') && empty($TMUX)
   " change the cursor shape based on the current mode
   let &t_SI = "\<Esc>]50;CursorShape=2\x7"
   let &t_EI = "\<Esc>]50;CursorShape=0\x7"

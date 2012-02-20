@@ -417,7 +417,8 @@ let g:CSApprox_verbose_level = 0 " to shut it up
 let c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:xml_syntax_folding = 1 " enable folding in xml files
 let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
-let g:blockle_mapping='<leader>bb'
+let g:blockle_mapping = '<leader>bb'
 let g:Powerline_symbols = 'fancy'
+let g:no_turbux_mappings = 1
 
 " }}}

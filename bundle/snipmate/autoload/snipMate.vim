@@ -252,7 +252,8 @@ fun! snipMate#jumpTabStop(backwards)
 	if s:curPos < 0 | let s:curPos = s:snipLen - 1 | endif
 
 	if s:curPos == s:snipLen
-		let sMode = s:endCol == g:snipPos[s:curPos-1][1]+g:snipPos[s:curPos-1][2]
+		" let sMode = s:endCol == g:snipPos[s:curPos-1][1]+g:snipPos[s:curPos-1][2]
+		let sMode = 0
 		call s:RemoveSnippet()
 		return sMode ? "\<tab>" : snipMate#TriggerSnippet()
 	endif

@@ -1,12 +1,14 @@
 "============================================================================
-"File:        pyflakes.vim
+"File:        flake8.vim
 "Description: Syntax checking plugin for syntastic.vim
-"Authors:     Martin Grenfell <martin.grenfell@gmail.com>
+"Authors:     Sylvain Soliman <Sylvain dot Soliman+git at gmail dot com>
 "             kstep <me@kstep.me>
-"             Parantapa Bhattacharya <parantapa@gmail.com>
 "
 "============================================================================
 function! SyntaxCheckers_python_GetHighlightRegex(i)
+    if a:i['type'] ==# 'E'
+        let a:i['text'] = "Syntax error"
+    endif
     if match(a:i['text'], 'is assigned to but never used') > -1
                 \ || match(a:i['text'], 'imported but unused') > -1
                 \ || match(a:i['text'], 'undefined name') > -1
@@ -23,12 +25,7 @@ function! SyntaxCheckers_python_GetHighlightRegex(i)
 endfunction
 
 function! SyntaxCheckers_python_GetLocList()
-    let makeprg = 'pyflakes '.g:syntastic_python_checker_args.' '.shellescape(expand('%'))
-    let errorformat = '%E%f:%l: could not compile,%-Z%p^,%E%f:%l:%c: %m,%E%f:%l: %m,%-G%.%#'
-
-    let errors = SyntasticMake({ 'makeprg': makeprg,
-                               \ 'errorformat': errorformat,
-                               \ 'defaults': {'text': "Syntax error"} })
-
-    return errors
+    let makeprg = 'flake8 '.g:syntastic_python_checker_args.' '.shellescape(expand('%'))
+    let errorformat = '%E%f:%l: could not compile,%-Z%p^,%W%f:%l:%c: %m,%W%f:%l: %m,%-G%.%#'
+    return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
 endfunction

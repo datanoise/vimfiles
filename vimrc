@@ -4,7 +4,7 @@
 " ------------------------------------------------------------------------------
 runtime! macros/matchit.vim
 set nocompatible      " We're running Vim, not Vi!
-if $TERM != "" && $TERM != 'xterm-256color'
+if $TERM != "" && $TERM != 'xterm-256color' && $TERM != 'screen-256color'
   let g:pathogen_disabled = ['powerline']
 endif
 call pathogen#runtime_append_all_bundles()
@@ -391,9 +391,10 @@ vnoremap <silent> g= :Tabularize assignment<CR>
 let g:ctrlp_extensions = ['buffertag', 'quickfix', 'dir', 'rtscript', 'undo', 'line']
 let g:ctrlp_match_window_reversed=0
 let g:ctrlp_dotfiles=0
-let g:ctrlp_mruf_relative=1
+let g:ctrlp_mruf_relative=0
 let g:ctrlp_open_multi='tr'
 let g:ctrlp_open_new_file='h'
+let g:ctrlp_mruf_exclude = '\.git'
 nnoremap <silent> <leader>m :CtrlPCurWD<CR>
 nnoremap <silent> <leader>r :CtrlPRoot<CR>
 nnoremap <silent> <leader>l :CtrlPBuffer<CR>

@@ -92,8 +92,8 @@ When opening a file with <cr>, |CtrlP| avoids opening it in windows created by
 plugins, help and quickfix. Use this to setup some exceptions: >
   let g:ctrlp_reuse_window = 'netrw'
 <
-Acceptable values are partial names or filetypes of the special buffers. Use
-|regexp| to specify the pattern.
+Acceptable values are partial name, filetype or buftype of the special buffers.
+Use |regexp| to specify the pattern.
 Example: >
   let g:ctrlp_reuse_window = 'netrw\|help\|quickfix'
 <
@@ -407,19 +407,19 @@ COMMANDS                                                       *ctrlp-commands*
 :CtrlPMRU
    Open |CtrlP| in find Most-Recently-Used file mode.
 
-                                                             *:ClearCtrlPCache*
-:ClearCtrlPCache
+                                                             *:CtrlPClearCache*
+:CtrlPClearCache
    Flush the cache for the current working directory. The same as pressing <F5>
    inside |CtrlP|.
    You can also enable/disable caching with the option |g:ctrlp_use_caching|.
 
-                                                         *:ClearAllCtrlPCaches*
-:ClearAllCtrlPCaches
+                                                         *:CtrlPClearAllCaches*
+:CtrlPClearAllCaches
    Delete all the cache files saved in |g:ctrlp_cache_dir|.
 
-                                                                  *:ResetCtrlP*
-:ResetCtrlP
-   Reset all options and take in new values of the option variables.
+                                                                 *:CtrlPReload*
+:CtrlPReload
+   Load new values for the option variables.
 
 -------------------------------------------------------------------------------
 The following commands ignore the current value of |g:ctrlp_working_path_mode|:
@@ -774,30 +774,25 @@ gibhub, bitbucket, and through email.
 Special thanks:~
 
     * Woojong Koh <github.com/wjkoh>
-        Forked and suggested the support for VCS listing commands.
-
-    * Yasuhiro Matsumoto <github.com/mattn>
-        Added option to use Migemo for Japanese filenames.
-
-    * Kyo Nagashima <github.com/hail2u>
-        Made some enhancements to file opening mappings.
-
-    * Piet Delport <github.com/pjdelport>
-        Changed the default cache directory to meet XDG spec.
-
-    * Kent Sibilev <github.com/datanoise>
-        Debugged and made various patches.
-
     * Simon Ruderich
+    * Yasuhiro Matsumoto <github.com/mattn>
     * Ken Earley <github.com/kenearley>
+    * Kyo Nagashima <github.com/hail2u>
     * Zak Johnson <github.com/zakj>
     * Diego Viola <github.com/diegoviola>
+    * Piet Delport <github.com/pjdelport>
     * Thibault Duplessis <github.com/ornicar>
+    * Kent Sibilev <github.com/datanoise>
     * Tacahiroy <github.com/tacahiroy>
-        Bugfixes/Corrections.
+    * Luca Pette <github.com/lucapette>
 
 ===============================================================================
 CHANGELOG                                                     *ctrlp-changelog*
+
+    + Rename:
+        *ClearCtrlPCache* -> |CtrlPClearCache|
+        *ClearAllCtrlPCaches* -> |CtrlPClearAllCaches|
+        *ResetCtrlP* -> |CtrlPReload|
 
 Before 2012/03/02~
 
@@ -872,7 +867,7 @@ Before 2011/09/29~
 
 Before 2011/09/19~
 
-    + New command: |ResetCtrlP|
+    + New command: ResetCtrlP
     + New options: |g:ctrlp_max_files|,
                    |g:ctrlp_max_depth|,
                    g:ctrlp_live_update

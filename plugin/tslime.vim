@@ -62,7 +62,7 @@ endfunction
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 command! -range ToTmux call s:Send_to_Tmux_Cmd(<line1>, <line2>)
-vmap <silent> <C-c><C-c> :ToTmux<CR>
-nmap <C-c><C-c> vip<C-c><C-c>
+" vmap <silent> <C-c><C-c> :ToTmux<CR>
+" nmap <C-c><C-c> vip<C-c><C-c>
 
 nmap <silent> <C-c>v :call <SID>Tmux_Vars()<CR>

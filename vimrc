@@ -388,7 +388,7 @@ nnoremap <silent> g= :Tabularize assignment<CR>
 vnoremap <silent> g= :Tabularize assignment<CR>
 
 " ctrlp settings {{{2
-let g:ctrlp_extensions = ['buffertag', 'quickfix', 'dir', 'rtscript', 'undo', 'line']
+let g:ctrlp_extensions = ['buffertag', 'quickfix', 'dir', 'rtscript', 'undo', 'line', 'changes']
 let g:ctrlp_match_window_reversed=0
 let g:ctrlp_dotfiles=0
 let g:ctrlp_mruf_relative=0

@@ -411,6 +411,7 @@ nnoremap <silent> <leader>kd :CtrlPDir<CR>
 nnoremap <silent> <leader>kr :CtrlPRTS<CR>
 nnoremap <silent> <leader>ku :CtrlPUndo<CR>
 nnoremap <silent> <leader>kl :CtrlPLine<CR>
+nnoremap <silent> <leader>kc :CtrlPChange<CR>
 
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"

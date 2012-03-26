@@ -263,6 +263,7 @@ inoremap <C-\> <C-p>
 inoremap <silent> <C-j> <C-\><C-O>:call search('[{("\[\]'')}]', 'Wc', line('.'))<CR><Right>
 inoremap jj <Esc>
 nnoremap <F2> <C-w><C-w>
+inoremap <F2> <Esc><C-w><C-w>
 nnoremap <F4> :sil make %<CR><c-l>:cc<CR>
 nnoremap [f :exe ':Ack ' . expand('<cword>')<CR><CR>
 nnoremap ]f :exe ':Ack ' . matchstr(getline('.'), '\%'.virtcol('.').'v\w*')<CR><CR>

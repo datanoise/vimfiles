@@ -390,12 +390,13 @@ vnoremap <silent> g= :Tabularize assignment<CR>
 
 " ctrlp settings {{{2
 let g:ctrlp_extensions = ['buffertag', 'quickfix', 'dir', 'rtscript', 'undo', 'line', 'changes']
-let g:ctrlp_match_window_reversed=0
-let g:ctrlp_dotfiles=0
-let g:ctrlp_mruf_relative=0
-let g:ctrlp_open_multi='tr'
-let g:ctrlp_open_new_file='h'
+let g:ctrlp_match_window_reversed = 0
+let g:ctrlp_dotfiles = 0
+let g:ctrlp_mruf_relative = 0
+let g:ctrlp_open_multi = 'tr'
+let g:ctrlp_open_new_file = 'h'
 let g:ctrlp_mruf_exclude = '\.git'
+let g:ctrlp_custom_ignore = 'tmp'
 nnoremap <silent> <leader>m :CtrlPCurWD<CR>
 nnoremap <silent> <leader>r :CtrlPRoot<CR>
 nnoremap <silent> <leader>l :CtrlPBuffer<CR>

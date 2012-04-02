@@ -29,12 +29,12 @@ endfunction
 
 " Session completion
 function! Tmux_Session_Names(A,L,P)
-  return system("tmux list-sessions | sed -e 's/:.*$//'")
+  return system("tmux list-sessions -F '#S'")
 endfunction
 
 " Window completion
 function! Tmux_Window_Names(A,L,P)
-  return system("tmux list-windows -t" . b:tmux_sessionname . ' | grep -e "^\w:" | sed -e "s/ \[[0-9x]*\]$//"')
+  return system("tmux list-windows -F '#W' -t " . b:tmux_sessionname)
 endfunction
 
 " Pane completion
@@ -56,13 +56,13 @@ function! s:Tmux_Vars()
 endfunction
 
 function! s:Send_to_Tmux_Cmd(startline, endline)
-  let content = join(getline(a:startline, a:endline), "\n")
+  let content = join(getline(a:startline, a:endline), "\n") . "\n"
   call Send_to_Tmux(content)
 endfunction
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 command! -range ToTmux call s:Send_to_Tmux_Cmd(<line1>, <line2>)
-" vmap <silent> <C-c><C-c> :ToTmux<CR>
-" nmap <C-c><C-c> vip<C-c><C-c>
+xmap <silent> \t :ToTmux<CR>
+nmap <silent> \t :ToTmux<CR>
 
 nmap <silent> <C-c>v :call <SID>Tmux_Vars()<CR>

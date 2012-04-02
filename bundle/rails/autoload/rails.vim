@@ -305,10 +305,6 @@ function! s:readable_last_format(start) dict abort
   return ""
 endfunction
 
-function! s:lastformat(start)
-  return rails#buffer().last_format(a:start)
-endfunction
-
 function! s:format(...)
   let format = rails#buffer().last_format(a:0 > 1 ? a:2 : line("."))
   return format ==# '' && a:0 ? a:1 : format
@@ -352,10 +348,6 @@ function! s:readable_controller_name(...) dict abort
     return s:sub(f,'.*<spec/helpers/(.{-})_helper_spec\.rb$','\1')
   elseif f =~ '\<spec/views/.*/\w\+_view_spec\.rb$'
     return s:sub(f,'.*<spec/views/(.{-})/\w+_view_spec\.rb$','\1')
-  elseif f =~ '\<components/.*_controller\.rb$'
-    return s:sub(f,'.*<components/(.{-})_controller\.rb$','\1')
-  elseif f =~ '\<components/.*\.'.s:viewspattern().'$'
-    return s:sub(f,'.*<components/(.{-})/\k+\.\k+$','\1')
   elseif f =~ '\<app/models/.*\.rb$' && self.type_name('mailer')
     return s:sub(f,'.*<app/models/(.{-})\.rb$','\1')
   elseif f =~ '\<\%(public\|app/assets\)/stylesheets/.*\.css\%(\.\w\+\)\=$'
@@ -694,11 +686,11 @@ function! s:readable_calculate_file_type() dict abort
     else
       let r = "model"
     endif
+  elseif f =~ '\<app/views/.*/_\k\+\.\k\+\%(\.\k\+\)\=$'
+    let r = "view-partial-" . e
   elseif f =~ '\<app/views/layouts\>.*\.'
     let r = "view-layout-" . e
-  elseif f =~ '\<\%(app/views\|components\)/.*/_\k\+\.\k\+\%(\.\k\+\)\=$'
-    let r = "view-partial-" . e
-  elseif f =~ '\<app/views\>.*\.' || f =~ '\<components/.*/.*\.'.s:viewspattern().'$'
+  elseif f =~ '\<app/views\>.*\.'
     let r = "view-" . e
   elseif f =~ '\<test/unit/.*_test\.rb$'
     let r = "test-unit"
@@ -1945,7 +1937,7 @@ function! s:RailsFind()
   if res != ""|return res|endif
 
   let res = s:sub(s:findfromview('render','\1'),'^/','')
-  if buffer.type_name('view') | let res = s:sub(res,'[^/]+$','_&') | endif
+  if !buffer.type_name('controller') | let res = s:sub(res,'[^/]+$','_&') | endif
   if res != ""|return res."\n".s:findview(res)|endif
 
   let res = s:findamethod('redirect_to\s*(\=\s*\%\(:action\s\+=>\|\<action:\)\s*','\1')
@@ -2861,6 +2853,7 @@ function! s:libEdit(cmd,...)
     call s:EditSimpleRb(a:cmd,"lib",a:0? a:1 : "",extra."lib/",".rb")
   else
     call s:EditSimpleRb(a:cmd,"lib","seeds","db/",".rb")
+    call s:warn("Rlib for db/seeds.rb has been deprecated in favor of :Rmigration 0")
   endif
 endfunction
 
@@ -4493,6 +4486,9 @@ function! s:BufSettings()
       call self.setvar('surround_5',   "\r\nend")
       call self.setvar('surround_69',  "\1expr: \1\rend")
       call self.setvar('surround_101', "\r\nend")
+    endif
+    if exists(':UltiSnipsAddFiletypes')
+      UltiSnipsAddFiletypes rails
     endif
   elseif ft == 'yaml' || fnamemodify(self.name(),':e') == 'yml'
     call self.setvar('&define',self.define_pattern())

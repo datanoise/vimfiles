@@ -11,6 +11,7 @@
 'g:ctrlp_clear_cache_on_exit'	ctrlp.txt	/*'g:ctrlp_clear_cache_on_exit'*
 'g:ctrlp_cmd'	ctrlp.txt	/*'g:ctrlp_cmd'*
 'g:ctrlp_custom_ignore'	ctrlp.txt	/*'g:ctrlp_custom_ignore'*
+'g:ctrlp_default_input'	ctrlp.txt	/*'g:ctrlp_default_input'*
 'g:ctrlp_dotfiles'	ctrlp.txt	/*'g:ctrlp_dotfiles'*
 'g:ctrlp_follow_symlinks'	ctrlp.txt	/*'g:ctrlp_follow_symlinks'*
 'g:ctrlp_lazy_update'	ctrlp.txt	/*'g:ctrlp_lazy_update'*

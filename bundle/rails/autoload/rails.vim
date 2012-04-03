@@ -710,6 +710,8 @@ function! s:readable_calculate_file_type() dict abort
     let r = 'cucumber-steps'
   elseif f =~ '\<features/.*\.rb$'
     let r = 'cucumber'
+  elseif f =~ '\<spec/.*\.feature$'
+    let r = 'turnip-feature'
   elseif f =~ '\<\%(test\|spec\)/fixtures\>'
     if e == "yml"
       let r = "fixtures-yaml"
@@ -787,6 +789,7 @@ function! s:app_has(feature) dict
         \'test': 'test/',
         \'spec': 'spec/',
         \'cucumber': 'features/',
+        \'turnip': 'spec/acceptance/',
         \'sass': 'public/stylesheets/sass/',
         \'lesscss': 'app/stylesheets/',
         \'coffee': 'app/scripts/'}
@@ -1136,7 +1139,7 @@ function! s:Rake(bang,lnum,arg)
     endif
     let &l:errorformat = s:efm_backtrace
     let arg = a:arg
-    if &filetype == "ruby" && arg == '' && g:rails_modelines
+    if &filetype =~# '^ruby\>' && arg == '' && g:rails_modelines
       let mnum = s:lastmethodline(lnum)
       let str = getline(mnum)."\n".getline(mnum+1)."\n".getline(mnum+2)."\n"
       let pat = '\s\+\zs.\{-\}\ze\%(\n\|\s\s\|#{\@!\|$\)'
@@ -1334,6 +1337,10 @@ function! s:initOpenURL()
       command -bar -nargs=1 OpenURL :!start cmd /cstart /b <args>
     elseif executable("sensible-browser")
       command -bar -nargs=1 OpenURL :!sensible-browser <args>
+    elseif executable('launchy')
+      command -bar -nargs=1 OpenURL :!launchy <args>
+    elseif executable('git')
+      command -bar -nargs=1 OpenURL :!git web--browse <args>
     endif
   endif
 endfunction
@@ -1417,7 +1424,7 @@ function! s:Preview(bang,lnum,arg)
     let url = uri.(uri =~ '/$' ? '?' : '')
     silent exe 'pedit '.url
     wincmd w
-    if &filetype == ''
+    if &filetype ==# ''
       if uri =~ '\.css$'
         setlocal filetype=css
       elseif uri =~ '\.js$'
@@ -2328,6 +2335,9 @@ function! s:integrationtestList(A,L,P)
   if rails#app().has('cucumber')
     let found += rails#app().relglob("features/","**/*",".feature")
   endif
+  if rails#app().has('turnip')
+    let found += rails#app().relglob("spec/acceptance/","**/*",".feature")
+  endif
   return s:completion_filter(found,a:A)
 endfunction
 
@@ -2782,7 +2792,7 @@ function! s:integrationtestEdit(cmd,...)
   else
     let cmd = s:findcmdfor(a:cmd)
   endif
-  let tests = [['test/integration/','_test.rb'], [ 'spec/requests/','_spec.rb'], [ 'spec/integration/','_spec.rb'], [ 'features/','.feature']]
+  let tests = [['test/integration/','_test.rb'], ['spec/requests/','_spec.rb'], ['spec/integration/','_spec.rb'], ['features/','.feature'], ['spec/acceptance/','.feature']]
   call filter(tests, 'isdirectory(rails#app().path(v:val[0]))')
   if empty(tests)
     let tests = [['test/integration/','_test.rb']]
@@ -4192,7 +4202,7 @@ function! s:getopt(opt,...)
     let scope = 'abgl'
   endif
   let lnum = a:0 > 1 ? a:2 : line('.')
-  if scope =~ 'l' && &filetype != 'ruby'
+  if scope =~ 'l' && &filetype !~# '^ruby\>'
     let scope = s:sub(scope,'l','b')
   endif
   if scope =~ 'l'
@@ -4228,7 +4238,7 @@ function! s:setopt(opt,val)
   if scope == ''
     let scope = defscope
   endif
-  if &filetype != 'ruby' && (scope ==# 'B' || scope ==# 'l')
+  if &filetype !~# '^ruby\>' && (scope ==# 'B' || scope ==# 'l')
     let scope = 'b'
   endif
   let var = s:sname().'_'.opt
@@ -4394,12 +4404,6 @@ function! RailsBufInit(path)
   call s:BufSettings()
   call s:BufCommands()
   call s:BufAbbreviations()
-  " snippetsEmu.vim
-  if exists('g:loaded_snippet')
-    silent! runtime! ftplugin/rails_snippets.vim
-    " filetype snippets need to come last for higher priority
-    exe "silent! runtime! ftplugin/".&filetype."_snippets.vim"
-  endif
   let t = rails#buffer().type_name()
   let t = "-".t
   let f = '/'.RailsFilePath()
@@ -4455,23 +4459,10 @@ function! s:BufSettings()
   if stridx(&tags,rp.'/tmp/tags') == -1
     let &l:tags = rp . '/tmp/tags,' . &tags . ',' . rp . '/tags'
   endif
-  if has("gui_win32") || has("gui_running")
-    let code      = '*.rb;*.rake;Rakefile'
-    let templates = '*.'.join(s:view_types,';*.')
-    let fixtures  = '*.yml;*.csv'
-    let statics   = '*.html;*.css;*.js;*.xml;*.xsd;*.sql;.htaccess;README;README_FOR_APP'
-    let b:browsefilter = ""
-          \."All Rails Files\t".code.';'.templates.';'.fixtures.';'.statics."\n"
-          \."Source Code (*.rb, *.rake)\t".code."\n"
-          \."Templates (*.rhtml, *.rxml, *.rjs)\t".templates."\n"
-          \."Fixtures (*.yml, *.csv)\t".fixtures."\n"
-          \."Static Files (*.html, *.css, *.js)\t".statics."\n"
-          \."All Files (*.*)\t*.*\n"
-  endif
   call self.setvar('&includeexpr','RailsIncludeexpr()')
-  call self.setvar('&suffixesadd', ".rb,.".join(s:view_types,',.'))
+  call self.setvar('&suffixesadd', s:sub(self.getvar('&suffixesadd'),'^$','.rb'))
   let ft = self.getvar('&filetype')
-  if ft =~ '^\%(e\=ruby\|[yh]aml\|coffee\|css\|s[ac]ss\|lesscss\)$'
+  if ft =~# '^\%(e\=ruby\|[yh]aml\|coffee\|css\|s[ac]ss\|lesscss\)\>'
     call self.setvar('&shiftwidth',2)
     call self.setvar('&softtabstop',2)
     call self.setvar('&expandtab',1)
@@ -4479,7 +4470,7 @@ function! s:BufSettings()
       call self.setvar('&completefunc','syntaxcomplete#Complete')
     endif
   endif
-  if ft == 'ruby'
+  if ft =~# '^ruby\>'
     call self.setvar('&define',self.define_pattern())
     " This really belongs in after/ftplugin/ruby.vim but we'll be nice
     if exists('g:loaded_surround') && self.getvar('surround_101') == ''
@@ -4490,7 +4481,7 @@ function! s:BufSettings()
     if exists(':UltiSnipsAddFiletypes')
       UltiSnipsAddFiletypes rails
     endif
-  elseif ft == 'yaml' || fnamemodify(self.name(),':e') == 'yml'
+  elseif ft =~# 'yaml\>' || fnamemodify(self.name(),':e') ==# 'yml'
     call self.setvar('&define',self.define_pattern())
   elseif ft =~# '^eruby\>'
     if exists("g:loaded_allml")
@@ -4503,7 +4494,7 @@ function! s:BufSettings()
       call self.setvar('ragtag_javascript_include_tag', "<%= javascript_include_tag '\r' %>")
       call self.setvar('ragtag_doctype_index', 10)
     endif
-  elseif ft == 'haml'
+  elseif ft =~# '^haml\>'
     if exists("g:loaded_allml")
       call self.setvar('allml_stylesheet_link_tag', "= stylesheet_link_tag '\r'")
       call self.setvar('allml_javascript_include_tag', "= javascript_include_tag '\r'")
@@ -4515,7 +4506,7 @@ function! s:BufSettings()
       call self.setvar('ragtag_doctype_index', 10)
     endif
   endif
-  if ft =~# '^eruby\>' || ft ==# 'yaml'
+  if ft =~# '^eruby\>' || ft =~# '^yaml\>'
     " surround.vim
     if exists("g:loaded_surround")
       " The idea behind the || part here is that one can normally define the

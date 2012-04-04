@@ -1,4 +1,4 @@
-if exists("g:loaded_url")
+if exists("g:loaded_url") || !has('mac')
   finish
 endif
 let g:loaded_url = 1

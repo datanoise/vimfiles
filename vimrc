@@ -424,5 +424,6 @@ let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
 let g:blockle_mapping = '<leader>bb'
 let g:Powerline_symbols = 'fancy'
 let g:no_turbux_mappings = 1
+let g:Powerline_cache_file = '/tmp/Powerline_cache'
 
 " }}}

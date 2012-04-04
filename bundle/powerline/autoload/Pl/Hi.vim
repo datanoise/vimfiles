@@ -1,5 +1,5 @@
 " cterm -> gui color dict {{{
-let s:cterm2gui = {
+let s:cterm2gui_dict = {
 	\ 16:  0x000000, 17:  0x00005f, 18:  0x000087, 19:  0x0000af, 20:  0x0000d7, 21:  0x0000ff,
 	\ 22:  0x005f00, 23:  0x005f5f, 24:  0x005f87, 25:  0x005faf, 26:  0x005fd7, 27:  0x005fff,
 	\ 28:  0x008700, 29:  0x00875f, 30:  0x008787, 31:  0x0087af, 32:  0x0087d7, 33:  0x0087ff,
@@ -42,14 +42,99 @@ let s:cterm2gui = {
 	\ 250: 0xbcbcbc, 251: 0xc6c6c6, 252: 0xd0d0d0, 253: 0xdadada, 254: 0xe4e4e4, 255: 0xeeeeee
 \ }
 " }}}
-function! Pl#Colors#cterm2gui(cterm) " {{{
+" Allocated color dict {{{
+let s:allocated_colors = {
+	\ 'NONE': 'NONE',
+	\ }
+" }}}
+function! s:Cterm2GUI(cterm) " {{{
 	if toupper(a:cterm) == 'NONE'
 		return 'NONE'
 	endif
 
-	if ! has_key(s:cterm2gui, a:cterm)
+	if ! has_key(s:cterm2gui_dict, a:cterm)
 		return 0xff0000
 	endif
 
-	return s:cterm2gui[a:cterm]
+	return s:cterm2gui_dict[a:cterm]
+endfunction " }}}
+function! Pl#Hi#Segments(segments, mode_colors) " {{{
+	let mode_translate = {
+		\ 'normal':     'n',
+		\ 'noncurrent': 'N',
+		\ 'insert':     'i',
+		\ 'visual':     'v',
+		\ 'replace':    'r',
+		\ 'select':     's',
+		\ }
+
+	let attributes = ['bold', 'italic', 'underline']
+
+	let segments = a:segments
+	let mode_hi_dict = {}
+
+	" Mode dict
+	for [mode, colors] in items(a:mode_colors)
+		if has_key(mode_translate, mode)
+			let mode = mode_translate[mode]
+		endif
+
+		unlet! fg
+		let fg = s:allocated_colors[colors[0]]
+
+		let hi = {
+			\ 'cterm': [fg['cterm'], ''],
+			\ 'gui'  : [fg['gui'], ''],
+			\ 'attr' : []
+			\ }
+
+		if exists('colors[1]')
+			if type(colors[1]) == type([])
+				" We don't have a BG color, but we have attributes
+				let hi.attr = colors[1]
+			else
+				" The second parameter is the background color
+				unlet! bg
+				let bg = s:allocated_colors[colors[1]]
+
+				let hi.cterm[1] = bg['cterm']
+				let hi.gui[1] = bg['gui']
+			endif
+		endif
+
+		if exists('colors[2]') && type(colors[2]) == type([])
+			" The third parameter is always an attribute list
+			let hi.attr = colors[2]
+		endif
+
+		let mode_hi_dict[mode] = {
+			\ 'ctermfg': (empty(hi['cterm'][0]) ? '' : (string(hi['cterm'][0]) == 'NONE' ? 'NONE' : hi['cterm'][0])),
+			\ 'ctermbg': (empty(hi['cterm'][1]) ? '' : (string(hi['cterm'][1]) == 'NONE' ? 'NONE' : hi['cterm'][1])),
+			\ 'guifg'  : (empty(hi['gui'][0]) ? '' : (string(hi['gui'][0]) == 'NONE' ? 'NONE' : hi['gui'][0])),
+			\ 'guibg'  : (empty(hi['gui'][1]) ? '' : (string(hi['gui'][1]) == 'NONE' ? 'NONE' : hi['gui'][1])),
+			\ 'attr'   : (! len(hi['attr']) ? 'NONE' : join(hi['attr'], ','))
+			\ }
+	endfor
+
+	return [segments, mode_hi_dict]
+endfunction " }}}
+function! Pl#Hi#Allocate(colors) " {{{
+	for [key, color] in items(a:colors)
+		if type(color) == type(0)
+			" Only terminal color
+			let cterm = color
+			let gui = s:Cterm2GUI(color)
+		elseif type(color) == type([]) && len(color) == 2
+			" Terminal and GUI colors
+			let cterm = color[0]
+			let gui = color[1]
+		endif
+
+		let s:allocated_colors[key] = {
+			\ 'cterm': cterm,
+			\ 'gui': gui,
+			\ }
+
+		unlet! color
+	endfor
 endfunction " }}}

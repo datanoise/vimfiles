@@ -425,5 +425,6 @@ let g:blockle_mapping = '<leader>bb'
 let g:Powerline_symbols = 'fancy'
 let g:no_turbux_mappings = 1
 let g:Powerline_cache_file = '/tmp/Powerline_cache'
+let $RUBYOPT = '' " I don't want any surprises like 'noexec' gem
 
 " }}}

@@ -12,7 +12,7 @@ call textobj#user#plugin('quoted', {
 \    })
 
 " Misc.  "{{{1
-let s:pair_chars = "['\"{([]"
+let s:pair_chars = "['\"{([<]"
 
 function! s:select_a_quote()
   return s:select_quote(0)
@@ -62,6 +62,8 @@ function! s:pair_char(char)
         return "'"
     elseif a:char == "("
         return ")"
+    elseif a:char == "<"
+        return ">"
     endif
 endfunction
 

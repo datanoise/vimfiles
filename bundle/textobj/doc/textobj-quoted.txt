@@ -1,0 +1,50 @@
+*textobj-quoted.txt*	Text objects for ruby blocks
+
+Version 0.0.1
+
+CONTENTS					*textobj-quoted-contents*
+
+Introduction		|textobj-quoted-introduction|
+Examples		|textobj-quoted-examples|
+Copyright		|textobj-quoted-copyright|
+
+
+==============================================================================
+INTRODUCTION					*textobj-quoted-introduction*
+
+The *textobj-quoted* plugin provides two new |text-objects| which are
+triggered by `aq` and `iq` respectively. These follow Vim convention, so that
+`aq` selects _all_ of a quoted text, and `iq` selects the _inner_ portion of a
+quoted text. So, the two text-objects defined will work with the following quoting chars:
+
+- { }
+- " "
+- ' '
+- ( )
+
+Please note that the defined text-objects are single-line.
+I find them very useful in situations like the following (* indicates cursor position):
+
+- "some awes*ome text"
+- (some awes*ome text)
+- {some awes*ome text}
+- 'some awes*ome text'
+
+In each case you could use commands like viq or ciq and select/cancel all the quoted text. 
+Obviously, you can achive the same results using commands like *vi"* or "vi{". 
+Indeed, the real benefit you'll get using this plugin is that you will have to remember the q char.
+
+Latest version:
+http://github.com/lucapette/vim-textobj-quoted
+
+------------------------------------------------------------------------------
+EXAMPLES					*textobj-quoted-examples*
+
+==============================================================================
+COPYRIGHT					*textobj-quoted-copyright*
+
+This program is free software. It comes without any warranty,
+to the extent permitted by applicable law. You can redistribute
+it and/or modify it under the terms of the Do What The Fuck You
+Want To Public License, Version 2, as published by Sam Hocevar.
+See http://sam.zoy.org/wtfpl/COPYING for more details.

@@ -170,6 +170,12 @@ textobj-line-introduction	textobj-line.txt	/*textobj-line-introduction*
 textobj-line-key-mappings	textobj-line.txt	/*textobj-line-key-mappings*
 textobj-line-named-key-mappings	textobj-line.txt	/*textobj-line-named-key-mappings*
 textobj-line.txt	textobj-line.txt	/*textobj-line.txt*
+textobj-quoted	textobj-quoted.txt	/*textobj-quoted*
+textobj-quoted-contents	textobj-quoted.txt	/*textobj-quoted-contents*
+textobj-quoted-copyright	textobj-quoted.txt	/*textobj-quoted-copyright*
+textobj-quoted-examples	textobj-quoted.txt	/*textobj-quoted-examples*
+textobj-quoted-introduction	textobj-quoted.txt	/*textobj-quoted-introduction*
+textobj-quoted.txt	textobj-quoted.txt	/*textobj-quoted.txt*
 textobj-rubyblock	textobj-rubyblock.txt	/*textobj-rubyblock*
 textobj-rubyblock-bugs	textobj-rubyblock.txt	/*textobj-rubyblock-bugs*
 textobj-rubyblock-changelog	textobj-rubyblock.txt	/*textobj-rubyblock-changelog*
@@ -221,3 +227,4 @@ textobj-user-introduction	textobj-user.txt	/*textobj-user-introduction*
 textobj-user.txt	textobj-user.txt	/*textobj-user.txt*
 v_ay	textobj-syntax.txt	/*v_ay*
 v_iy	textobj-syntax.txt	/*v_iy*
+vi"	textobj-quoted.txt	/*vi"*

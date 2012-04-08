@@ -415,6 +415,15 @@ nnoremap <silent> <leader>ku :CtrlPUndo<CR>
 nnoremap <silent> <leader>kl :CtrlPLine<CR>
 nnoremap <silent> <leader>kc :CtrlPChange<CR>
 
+" smartinput settings {{{2
+call smartinput#map_to_trigger('i', '<Bar>', '<Bar>', '<Bar>')
+call smartinput#define_rule({
+\   'at': '\({\|\<do\>\)\s*\%#',
+\   'char': '<Bar>',
+\   'input': '<Bar><Bar><Left>',
+\   'filetype': ['ruby'],
+\ })
+
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"
 let g:CSApprox_verbose_level = 0 " to shut it up

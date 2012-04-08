@@ -12,8 +12,14 @@ smartinput-changelog-0.0.0	smartinput.txt	/*smartinput-changelog-0.0.0*
 smartinput-changelog-0.0.1	smartinput.txt	/*smartinput-changelog-0.0.1*
 smartinput-changelog-0.0.2	smartinput.txt	/*smartinput-changelog-0.0.2*
 smartinput-changelog-0.0.3	smartinput.txt	/*smartinput-changelog-0.0.3*
+smartinput-changelog-0.0.4	smartinput.txt	/*smartinput-changelog-0.0.4*
+smartinput-check-syntax-highlighting	smartinput.txt	/*smartinput-check-syntax-highlighting*
 smartinput-contents	smartinput.txt	/*smartinput-contents*
 smartinput-customization	smartinput.txt	/*smartinput-customization*
+smartinput-customization-a	smartinput.txt	/*smartinput-customization-a*
+smartinput-customization-b	smartinput.txt	/*smartinput-customization-b*
+smartinput-customization-c	smartinput.txt	/*smartinput-customization-c*
+smartinput-customization-d	smartinput.txt	/*smartinput-customization-d*
 smartinput-default-rules	smartinput.txt	/*smartinput-default-rules*
 smartinput-disable-completion-temporarily	smartinput.txt	/*smartinput-disable-completion-temporarily*
 smartinput-functions	smartinput.txt	/*smartinput-functions*
@@ -25,4 +31,5 @@ smartinput-rule-definition	smartinput.txt	/*smartinput-rule-definition*
 smartinput-rule-priorities	smartinput.txt	/*smartinput-rule-priorities*
 smartinput-rule-selection-algorithm	smartinput.txt	/*smartinput-rule-selection-algorithm*
 smartinput-rules	smartinput.txt	/*smartinput-rules*
+smartinput-special-keys	smartinput.txt	/*smartinput-special-keys*
 smartinput.txt	smartinput.txt	/*smartinput.txt*

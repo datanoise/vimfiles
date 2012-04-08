@@ -1,74 +1,67 @@
-"if exists('g:loaded_textobj_quoted')  "{{{1
-"  finish
-"endif
+if exists('g:loaded_textobj_quoted')  "{{{1
+  finish
+endif
 
-"q{lslslsllsllslslsl         lsl}
-"  t("alalallalalalalal")
 " Interface  "{{{1
 call textobj#user#plugin('quoted', {
 \      '-': {
 \        '*sfile*': expand('<sfile>:p'),
-\        'select-a': 'aq',  '*select-a-function*': 's:select_a',
-\        'select-i': 'iq',  '*select-i-function*': 's:select_i'
+\        'select-a': 'aq',  '*select-a-function*': 's:select_a_quote',
+\        'select-i': 'iq',  '*select-i-function*': 's:select_i_quote'
 \      }
 \    })
 
 " Misc.  "{{{1
-let s:pair_chars = "['\"})]"
+let s:pair_chars = "['\"{([]"
 
-function! s:select_a()
-  let s:flags = 'b'
-
-  let line=line(".")
-
-  call search(s:pair_chars,'',line)
-
-  let char = getline('.')[col('.')-1]
-
-  let end_pos = getpos('.')
-
-  let pair_char = s:pair_char(char)
-
-  call search(pair_char, s:flags, line)
-
-  let start_pos = getpos('.')
-
-  return ['v', start_pos, end_pos]
+function! s:select_a_quote()
+  return s:select_quote(0)
 endfunction
 
-function! s:select_i()
-  let s:flags = 'b'
+function! s:select_i_quote()
+  return s:select_quote(1)
+endfunction
 
-  let line=line(".")
+function! s:select_quote(inside)
 
-  call search(s:pair_chars,'', line)
+  let line=line('.')
+
+  if !search(s:pair_chars, 'b', line)
+    call search(s:pair_chars, '', line)
+  endif
 
   let char = getline('.')[col('.')-1]
-
-  normal h
-
-  let end_pos = getpos('.')
+  let pos1 = getpos('.')
 
   let pair_char = s:pair_char(char)
+  call search(pair_char, '', line)
+  let pos2 = getpos('.')
 
-  call search(pair_char, s:flags, line)
+  if pos1[2] > pos2[2]
+    let [start_pos, end_pos] = [pos2, pos1]
+  else
+    let [start_pos, end_pos] = [pos1, pos2]
+  endif
 
-  normal l
+  if a:inside
+    let start_pos[2] += 1
+    let end_pos[2] -= 1
+  endif
 
-  let start_pos = getpos('.')
-
-  return ['v', start_pos, end_pos]
+  return ['v', end_pos, start_pos]
 endfunction
 
 function! s:pair_char(char)
-    if a:char == "}"
-        return "{"
+    if a:char == "{"
+        return "}"
+    elseif a:char == "["
+        return "]"
     elseif a:char == "\""
         return "\""
     elseif a:char == "'"
         return "'"
-    elseif a:char == ")"
-        return "("
+    elseif a:char == "("
+        return ")"
     endif
 endfunction
 

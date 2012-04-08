@@ -1,6 +1,6 @@
 *textobj-quoted.txt*	Text objects for ruby blocks
 
-Version 0.0.1
+Version 1.0.0
 
 CONTENTS					*textobj-quoted-contents*
 
@@ -21,12 +21,14 @@ quoted text. So, the two text-objects defined will work with the following quoti
 - " "
 - ' '
 - ( )
+- [ ]
 
 Please note that the defined text-objects are single-line.
 I find them very useful in situations like the following (* indicates cursor position):
 
 - "some awes*ome text"
 - (some awes*ome text)
+- [some awes*ome text]
 - {some awes*ome text}
 - 'some awes*ome text'
 
@@ -34,7 +36,7 @@ In each case you could use commands like viq or ciq and select/cancel all the qu
 Obviously, you can achive the same results using commands like *vi"* or "vi{". 
 Indeed, the real benefit you'll get using this plugin is that you will have to remember the q char.
 
-Latest version:
+Based on version:
 http://github.com/lucapette/vim-textobj-quoted
 
 ------------------------------------------------------------------------------

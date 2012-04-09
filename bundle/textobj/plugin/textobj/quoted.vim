@@ -34,7 +34,11 @@ function! s:select_quote(inside)
   let pos1 = getpos('.')
 
   let pair_char = s:pair_char(char)
-  call search(pair_char, '', line)
+  if len(pair_char) == 1
+    call search(pair_char, '', line)
+  else
+    normal %
+  endif
   let pos2 = getpos('.')
 
   if pos1[2] > pos2[2]
@@ -52,19 +56,15 @@ function! s:select_quote(inside)
 endfunction
 
 function! s:pair_char(char)
-    if a:char == "{"
-        return "}"
-    elseif a:char == "["
-        return "]"
-    elseif a:char == "\""
-        return "\""
-    elseif a:char == "'"
-        return "'"
-    elseif a:char == "("
-        return ")"
-    elseif a:char == "<"
-        return ">"
-    endif
+  if a:char == "\""
+    return "\""
+  elseif a:char == "'"
+    return "'"
+  elseif a:char == "<"
+    return ">"
+  else
+    return ""
+  endif
 endfunction
 
 " Fin.  "{{{1

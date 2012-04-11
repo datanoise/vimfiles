@@ -1,5 +1,5 @@
 " smartinput - Provide smart input assistant
-" Version: 0.0.4
+" Version: 0.0.5
 " Copyright (C) 2012 Kana Natsuno <http://whileimautomaton.net/>
 " License: So-called MIT/X license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
@@ -77,7 +77,7 @@ function! smartinput#define_default_rules()  "{{{2
   \   {'at': '(\%#)', 'char': '<BS>', 'input': '<BS><Del>'},
   \   {'at': '()\%#', 'char': '<BS>', 'input': '<BS><BS>'},
   \   {'at': '\\\%#', 'char': '(', 'input': '('},
-  \   {'at': '(\%#)', 'char': '<Enter>', 'input': '<Enter><Enter><Up><C-o>S'},
+  \   {'at': '(\%#)', 'char': '<Enter>', 'input': '<Enter><Enter><Up><Esc>S'},
   \ ])
   call urules.add('[]', [
   \   {'at': '\%#', 'char': '[', 'input': '[]<Left>'},
@@ -92,7 +92,7 @@ function! smartinput#define_default_rules()  "{{{2
   \   {'at': '{\%#}', 'char': '<BS>', 'input': '<BS><Del>'},
   \   {'at': '{}\%#', 'char': '<BS>', 'input': '<BS><BS>'},
   \   {'at': '\\\%#', 'char': '{', 'input': '{'},
-  \   {'at': '{\%#}', 'char': '<Enter>', 'input': '<Enter><Enter><Up><C-o>S'},
+  \   {'at': '{\%#}', 'char': '<Enter>', 'input': '<Enter><Enter><Up><Esc>S'},
   \ ])
   call urules.add('''''', [
   \   {'at': '\%#', 'char': '''', 'input': '''''<Left>'},

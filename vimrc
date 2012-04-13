@@ -169,6 +169,7 @@ set scrolloff=5      " keep at least 5 lines above/below
 set sidescrolloff=5  " keep at least 5 lines left/right
 set autoread         " disable annoying confirmations
 set hidden
+set lazyredraw
 set title
 " set number
 if exists("&macmeta")
@@ -183,7 +184,7 @@ set path+=*/** " allow :find to search subdirectories
 set tags+=../tags,../../tags,../../../tags,../../../../tags,./tmp/tags
 set cpoptions+=d
 set timeoutlen=1000 " A little bit more time for macros
-set ttimeoutlen=100  " Make Esc work faster
+set ttimeoutlen=10  " Make Esc work faster
 " do not search included files and tags, it's a way too slow
 set complete-=i
 set complete-=t
@@ -197,6 +198,16 @@ endif
 set completeopt=
 set clipboard+=unnamed
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
+if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app' && has('cursorshape')
+  " change the cursor shape based on the current mode
+  if exists('$TMUX')
+    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
+    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+  else
+    let &t_SI = "\<Esc>]50;CursorShape=2\x7"
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+  endif
+endif
 if has('gui_running')
   au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs\ --no-gems
 else

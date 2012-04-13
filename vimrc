@@ -429,6 +429,10 @@ call smartinput#define_rule({
 \   'filetype': ['ruby'],
 \ })
 
+" vimux settings {{{2
+let g:VimuxHeight = 30
+nnoremap <silent> \p :PromptVimTmuxCommand<CR>
+
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"
 let g:CSApprox_verbose_level = 0 " to shut it up

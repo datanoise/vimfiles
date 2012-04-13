@@ -61,8 +61,8 @@ function! s:Send_to_Tmux_Cmd(startline, endline)
 endfunction
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-command! -range ToTmux call s:Send_to_Tmux_Cmd(<line1>, <line2>)
-xmap <silent> \t :ToTmux<CR>
-nmap <silent> \t :ToTmux<CR>
-
-nmap <silent> <C-c>v :call <SID>Tmux_Vars()<CR>
+command! -nargs=+ ToTmux call Send_to_Tmux('<args>'."\n")
+command! -range ToTmuxRange call s:Send_to_Tmux_Cmd(<line1>, <line2>)
+xmap <silent> \t :ToTmuxRange<CR>
+nmap <silent> \t :ToTmuxRange<CR>
+nmap <silent> \v :call <SID>Tmux_Vars()<CR>

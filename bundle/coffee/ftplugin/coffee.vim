@@ -46,7 +46,7 @@ endfunction
 
 " Clean things up in the source buffer.
 function! s:CoffeeCompileClose()
-  exec bufwinnr(b:coffee_compile_src_buf) 'wincmd w'
+  " exec bufwinnr(b:coffee_compile_src_buf) 'wincmd w'
   silent! autocmd! CoffeeCompileAuWatch * <buffer>
   call s:CoffeeCompileResetVars()
 endfunction

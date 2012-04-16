@@ -4,8 +4,9 @@
 " ------------------------------------------------------------------------------
 runtime! macros/matchit.vim
 set nocompatible      " We're running Vim, not Vi!
+let g:pathogen_disabled = []
 if $TERM != "" && $TERM != 'xterm-256color' && $TERM != 'screen-256color'
-  let g:pathogen_disabled = ['powerline']
+  call add(g:pathogen_disabled, 'powerline')
 endif
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
@@ -157,11 +158,7 @@ set imsearch=0
 " uncategorized options {{{2
 au ColorScheme * hi! link ColorColumn StatusLine
 set bg=dark
-" if has('gui_running')
-"   colo candycode_mod
-" else
-  colo dante_mod
-" endif
+colo dante_mod
 if exists('&mc')
   au BufNew,BufRead * set mc=81
 endif

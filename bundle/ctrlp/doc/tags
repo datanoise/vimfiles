@@ -43,6 +43,8 @@
 'g:ctrlp_working_path_mode'	ctrlp.txt	/*'g:ctrlp_working_path_mode'*
 'g:loaded_ctrlp'	ctrlp.txt	/*'g:loaded_ctrlp'*
 :CtrlP	ctrlp.txt	/*:CtrlP*
+:CtrlPBookmarkDir	ctrlp.txt	/*:CtrlPBookmarkDir*
+:CtrlPBookmarkDirAdd	ctrlp.txt	/*:CtrlPBookmarkDirAdd*
 :CtrlPBufTag	ctrlp.txt	/*:CtrlPBufTag*
 :CtrlPBufTagAll	ctrlp.txt	/*:CtrlPBufTagAll*
 :CtrlPBuffer	ctrlp.txt	/*:CtrlPBuffer*
@@ -50,8 +52,6 @@
 :CtrlPChangeAll	ctrlp.txt	/*:CtrlPChangeAll*
 :CtrlPClearAllCaches	ctrlp.txt	/*:CtrlPClearAllCaches*
 :CtrlPClearCache	ctrlp.txt	/*:CtrlPClearCache*
-:CtrlPCurFile	ctrlp.txt	/*:CtrlPCurFile*
-:CtrlPCurWD	ctrlp.txt	/*:CtrlPCurWD*
 :CtrlPDir	ctrlp.txt	/*:CtrlPDir*
 :CtrlPLastMode	ctrlp.txt	/*:CtrlPLastMode*
 :CtrlPLine	ctrlp.txt	/*:CtrlPLine*

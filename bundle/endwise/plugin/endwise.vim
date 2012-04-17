@@ -87,9 +87,11 @@ function! s:crend(always)
         if c == ']'
             let b = '['
         elseif c == '}'
-            let b = '}'
+            let b = '{'
+        elseif c == ')'
+            let b = '('
         endif
-        if c =~ '[}\]]' && getline(line('.')-1) =~ b.'$'
+        if c =~ '[}\]\)]' && getline(line('.')-1) =~ b.'$'
             return "\<C-O>O"
         endif
     endif

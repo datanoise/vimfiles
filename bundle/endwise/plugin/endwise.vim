@@ -81,6 +81,19 @@ function! s:mysearchpair(beginpat,endpat,synpat)
 endfunction
 
 function! s:crend(always)
+    " play nicely with smartinput plugin
+    if exists('g:loaded_smartinput') && g:loaded_smartinput
+        let c = getline('.')[col('.')-1]
+        if c == ']'
+            let b = '['
+        elseif c == '}'
+            let b = '}'
+        endif
+        if c =~ '[}\]]' && getline(line('.')-1) =~ b.'$'
+            return "\<C-O>O"
+        endif
+    endif
+
     let n = ""
     if !exists("b:endwise_addition") || !exists("b:endwise_words") || !exists("b:endwise_syngroups")
         return n

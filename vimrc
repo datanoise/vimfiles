@@ -36,11 +36,11 @@ function! SynNameStatus()
   endif
 endfunction
 
-function! CloseQuickFix()
+function! s:close_quick_fix()
   ccl | lcl
 endfunction
 
-function! SwitchPrevBuf()
+function! s:switch_prev_buf()
   let prev = bufname("#")
   if prev != '__InputList__' && bufloaded(prev) != 0
     b#
@@ -53,6 +53,25 @@ endfunction
 function! Eatchar(pat)
    let c = nr2char(getchar(0))
    return (c =~ a:pat) ? '' : c
+endfunction
+
+function! s:alt_char(c)
+  if a:c == '{'
+    return '}'
+  elseif a:c == '['
+    return ']'
+  elseif a:c == '('
+    return ')'
+  endif
+endfunction
+
+function! s:space_inside_curly()
+  let l = getline('.')
+  let c = col('.')
+  if l[c-2] =~ '[{(\[]' && l[c-1] == s:alt_char(l[c-2])
+    return "\<Space>\<Space>\<C-O>h"
+  endif
+  return "\<Space>"
 endfunction
 
 " Section: Options {{{1
@@ -213,7 +232,7 @@ end
 au FileType ruby setlocal completefunc=syntaxcomplete#Complete
 au FileType ruby setlocal balloonexpr&
 au FileType scala,ruby exe 'compiler '. expand('<amatch>')
-au BufReadPost quickfix nmap <silent> <buffer> q :call CloseQuickFix()<CR>
+au BufReadPost quickfix nmap <silent> <buffer> q :call <SID>close_quick_fix()<CR>
 au FileType xml setlocal foldmethod=syntax
 au BufReadPre,BufNewFile *.{iphone,ipad}.erb let b:eruby_subtype = 'html'
 autocmd BufReadPost fugitive://* set bufhidden=delete
@@ -255,10 +274,11 @@ nnoremap <silent> <leader>q :Bclose<CR>
 nnoremap <silent> <leader>Q :bd<CR>
 nnoremap [s [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
 nnoremap <leader>a :let align = input("Align to: ")<Bar>exe ":Tab /" . align<CR>
-inoremap {<CR> {<CR>}<Esc>O
-inoremap [<CR> [<CR>]<Esc>O
-inoremap {<Space> {}<Esc>i<Space><Space><Esc>i
-inoremap [<Space> []<Esc>i<Space><Space><Esc>i
+" inoremap {<CR> {<CR>}<Esc>O
+" inoremap [<CR> [<CR>]<Esc>O
+" inoremap {<Space> {}<Esc>i<Space><Space><Esc>i
+" inoremap [<Space> []<Esc>i<Space><Space><Esc>i
+inoremap <silent> <Space> <C-R>=<SID>space_inside_curly()<CR>
 inoremap <C-\> <C-p>
 inoremap <silent> <C-j> <C-\><C-O>:call search('[{("\[\]'')}]', 'Wc', line('.'))<CR><Right>
 inoremap jj <Esc>
@@ -267,9 +287,9 @@ inoremap <F2> <Esc><C-w><C-w>
 nnoremap <F4> :sil make %<CR><c-l>:cc<CR>
 nnoremap [f :exe ':Ack ' . expand('<cword>')<CR><CR>
 nnoremap ]f :exe ':Ack ' . matchstr(getline('.'), '\%'.virtcol('.').'v\w*')<CR><CR>
-nnoremap <silent> <C-tab> :call SwitchPrevBuf()<CR>
-nnoremap <silent> <C-^> :call SwitchPrevBuf()<CR>
-nnoremap <silent> <C-6> :call SwitchPrevBuf()<CR>
+nnoremap <silent> <C-tab> :call <SID>switch_prev_buf()<CR>
+nnoremap <silent> <C-^> :call <SID>switch_prev_buf()<CR>
+nnoremap <silent> <C-6> :call <SID>switch_prev_buf()<CR>
 if has('mac')
   nnoremap <silent> <D-[> :bprev<CR>
   nnoremap <silent> <D-]> :bnext<CR>
@@ -389,7 +409,8 @@ nnoremap <silent> g= :Tabularize assignment<CR>
 vnoremap <silent> g= :Tabularize assignment<CR>
 
 " ctrlp settings {{{2
-let g:ctrlp_extensions = ['buffertag', 'quickfix', 'dir', 'rtscript', 'undo', 'line', 'changes', 'mixed']
+let g:ctrlp_extensions = ['buffertag', 'quickfix', 'dir', 'rtscript',
+      \ 'undo', 'line', 'changes', 'mixed', 'bookmarkdir']
 let g:ctrlp_match_window_reversed = 0
 let g:ctrlp_dotfiles = 0
 let g:ctrlp_mruf_relative = 0
@@ -402,6 +423,7 @@ nnoremap <silent> <leader>r :CtrlPRoot<CR>
 nnoremap <silent> <leader>l :CtrlPBuffer<CR>
 nnoremap <silent> <leader>t :CtrlPBufTag<CR>
 nnoremap <silent> <leader>e :CtrlPMRUFiles<CR>
+nnoremap <silent> <leader>x :CtrlPMixed<CR>
 nnoremap <silent> <leader>cc :ClearCtrlPCache<CR>
 nnoremap <silent> <leader>ca :ClearAllCtrlPCaches<CR>
 nnoremap <silent> <leader>kf :CtrlPCurFile<CR>
@@ -414,6 +436,8 @@ nnoremap <silent> <leader>kr :CtrlPRTS<CR>
 nnoremap <silent> <leader>ku :CtrlPUndo<CR>
 nnoremap <silent> <leader>kl :CtrlPLine<CR>
 nnoremap <silent> <leader>kc :CtrlPChange<CR>
+nnoremap <silent> <leader>kx :CtrlPBookmarkDir<CR>
+nnoremap <silent> <leader>kg :CtrlPTag<CR>
 
 " smartinput settings {{{2
 call smartinput#map_to_trigger('i', '<Bar>', '<Bar>', '<Bar>')

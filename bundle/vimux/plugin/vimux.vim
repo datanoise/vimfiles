@@ -137,7 +137,7 @@ class TmuxSession
         _run("split-window -p #{height} #{orientation}")
       end
       @runner_pane = active_pane_id
-      _send_command("cd #{`pwd`}", target(:pane => runner_pane))
+      _send_command("cd #{Dir.pwd}", target(:pane => runner_pane))
       Vim.command("let g:_VimTmuxRunnerPane = '#{@runner_pane}'")
     end
 
@@ -212,7 +212,7 @@ class CurrentTmuxSession < TmuxSession
   end
 
   def tmux?
-    `echo $TMUX` =~ /.+/ ? true : false
+    ENV['TMUX'] =~ /.+/ ? true : false
   end
 end
 EOF

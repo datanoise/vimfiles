@@ -25,6 +25,7 @@
 'g:ctrlp_max_height'	ctrlp.txt	/*'g:ctrlp_max_height'*
 'g:ctrlp_max_history'	ctrlp.txt	/*'g:ctrlp_max_history'*
 'g:ctrlp_mruf_case_sensitive'	ctrlp.txt	/*'g:ctrlp_mruf_case_sensitive'*
+'g:ctrlp_mruf_default_order'	ctrlp.txt	/*'g:ctrlp_mruf_default_order'*
 'g:ctrlp_mruf_exclude'	ctrlp.txt	/*'g:ctrlp_mruf_exclude'*
 'g:ctrlp_mruf_include'	ctrlp.txt	/*'g:ctrlp_mruf_include'*
 'g:ctrlp_mruf_max'	ctrlp.txt	/*'g:ctrlp_mruf_max'*

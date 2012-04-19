@@ -344,18 +344,26 @@ iabbr THen Then
 iabbr WHen When
 " borrowed from tpope's plugin
 augroup shebang_chmod
-  autocmd!
-  autocmd BufWritePre *
+  au!
+  au BufWritePre *
         \   if getline(1) =~ '^#!' && match(getfperm(expand('<afile>')), 'x') == -1 |
         \     let b:chmod_post = '+x' |
         \   endif |
-  autocmd BufWritePost,FileWritePost *
+  au BufWritePost,FileWritePost *
         \ if exists('b:chmod_post') && executable('chmod') |
         \   silent! execute '!chmod '.b:chmod_post.' "<afile>"' |
         \   unlet b:chmod_post |
         \ endif
-augroup END
-
+augroup end
+augroup auto_create_directory
+  au!
+  au BufWritePre *
+        \  let d=expand("<afile>:h") |
+        \  if !isdirectory(d) |
+        \    call mkdir(d, 'p') |
+        \  endif |
+        \  unlet d
+augroup end
 
 " Section: Plugin settings {{{1
 " ------------------------------------------------------------------------------

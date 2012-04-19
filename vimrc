@@ -235,7 +235,8 @@ au FileType scala,ruby exe 'compiler '. expand('<amatch>')
 au BufReadPost quickfix nmap <silent> <buffer> q :call <SID>close_quick_fix()<CR>
 au FileType xml setlocal foldmethod=syntax
 au BufReadPre,BufNewFile *.{iphone,ipad}.erb let b:eruby_subtype = 'html'
-autocmd BufReadPost fugitive://* set bufhidden=delete
+au BufReadPost fugitive://* set bufhidden=delete
+au VimResized * wincmd =
 "}}}
 
 " Section: Keybindings {{{1

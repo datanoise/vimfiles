@@ -219,6 +219,7 @@ if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app' && has('cursorshape')
   if exists('$TMUX')
     let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
     let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+    au VimEnter * call feedkeys("i\<Esc>") " this hack fixes the initial redraw problem
   else
     let &t_SI = "\<Esc>]50;CursorShape=2\x7"
     let &t_EI = "\<Esc>]50;CursorShape=0\x7"

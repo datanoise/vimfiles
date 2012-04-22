@@ -60,7 +60,6 @@
 :CtrlPMixed	ctrlp.txt	/*:CtrlPMixed*
 :CtrlPQuickfix	ctrlp.txt	/*:CtrlPQuickfix*
 :CtrlPRTS	ctrlp.txt	/*:CtrlPRTS*
-:CtrlPReload	ctrlp.txt	/*:CtrlPReload*
 :CtrlPRoot	ctrlp.txt	/*:CtrlPRoot*
 :CtrlPTag	ctrlp.txt	/*:CtrlPTag*
 :CtrlPUndo	ctrlp.txt	/*:CtrlPUndo*

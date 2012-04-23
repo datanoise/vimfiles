@@ -284,6 +284,7 @@ inoremap <silent> <Space> <C-R>=<SID>space_inside_curly()<CR>
 inoremap <C-\> <C-p>
 inoremap <silent> <C-j> <C-\><C-O>:call search('[{("\[\]'')}]', 'Wc', line('.'))<CR><Right>
 inoremap jj <Esc>
+inoremap kk <C-O>A<Enter>
 nnoremap <F2> <C-w><C-w>
 inoremap <F2> <Esc><C-w><C-w>
 nnoremap <F4> :sil make %<CR><c-l>:cc<CR>

@@ -75,10 +75,13 @@ syn keyword tmuxOptsSetw window-status-format window-status-current-format
 syn keyword tmuxOptsSetw word-separators window-status-alert-alert
 syn keyword tmuxOptsSetw window-status-alert-bg window-status-alert-fg
 syn keyword tmuxOptsSetw window-status-activity-fg window-status-activity-bg
+syn keyword tmuxOptsSetw window-status-bell-bg window-status-bell-fg
+syn keyword tmuxOptsSetw window-status-bell-attr
 
 syn keyword tmuxTodo FIXME NOTE TODO XXX contained
 
 syn match tmuxKey		/\(C-\|M-\|\^\)\p/	display
+syn match tmuxColour		/colour\d\+/		display
 syn match tmuxNumber 		/\d\+/			display
 syn match tmuxOptions		/\s-\a\+/		display
 syn match tmuxVariable		/\w\+=/			display
@@ -101,5 +104,6 @@ hi def link tmuxString			String
 hi def link tmuxTodo			Todo
 hi def link tmuxVariable		Constant
 hi def link tmuxVariableExpansion	Constant
+hi def link tmuxColour			PreProc
 
 let b:current_syntax = "tmux"

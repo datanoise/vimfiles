@@ -463,6 +463,12 @@ call smartinput#define_rule({
 let g:VimuxHeight = 30
 nnoremap <silent> \p :PromptVimTmuxCommand<CR>
 
+" powerline settings {{{2
+let g:Powerline_cache_file = '/tmp/Powerline_cache'
+let s:Powerline_theme = 'datanoise'
+let g:Powerline_theme = s:Powerline_theme
+let g:Powerline_colorscheme = s:Powerline_theme
+
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"
 let g:CSApprox_verbose_level = 0 " to shut it up
@@ -472,7 +478,6 @@ let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
 let g:blockle_mapping = '<leader>bb'
 let g:Powerline_symbols = 'fancy'
 let g:no_turbux_mappings = 1
-let g:Powerline_cache_file = '/tmp/Powerline_cache'
 let $RUBYOPT = '' " I don't want any surprises like 'noexec' gem
 
 " }}}

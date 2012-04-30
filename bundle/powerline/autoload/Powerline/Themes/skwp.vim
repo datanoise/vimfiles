@@ -1,22 +1,21 @@
-let g:Powerline#Themes#default#theme = Pl#Theme#Create(
+" Disabled:
+" Add the following line into the first theme group to see the highlight
+" group
+" \ , 'currhigroup'
+"
+" Line info taken out - I know which line number I'm on from the gutter
+"\ , 'lineinfo'
+let g:Powerline#Themes#skwp#theme = Pl#Theme#Create(
 	\ Pl#Theme#Buffer(''
-		\ , 'paste_indicator'
-		\ , 'mode_indicator'
 		\ , 'fugitive:branch'
-		\ , 'hgrev:branch'
 		\ , 'fileinfo'
-		\ , 'aurum:status'
+		\ , 'flags.mod'
 		\ , 'syntastic:errors'
 		\ , Pl#Segment#Truncate()
-		\ , 'cfi:current_function'
 		\ , Pl#Segment#Split()
+		\ , 'sass:status'
 		\ , 'rvm:string'
-		\ , 'virtualenv:statusline'
-		\ , 'fileformat'
-		\ , 'fileencoding'
-		\ , 'filetype'
-		\ , 'scrollpercent'
-		\ , 'lineinfo'
+		\ , 'paste_indicator'
 	\ ),
 	\
 	\ Pl#Theme#Buffer('command_t'

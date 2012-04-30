@@ -26,11 +26,11 @@ call Pl#Hi#Allocate({
 	\ 'brightorange'   : 208,
 	\ 'brightestorange': 214,
 	\
-	\ 'gray0'          : 233,
+	\ 'gray0'          : 234,
 	\ 'gray1'          : 235,
 	\ 'gray2'          : 236,
-	\ 'gray3'          : 239,
-	\ 'gray4'          : 240,
+	\ 'gray3'          : 238,
+	\ 'gray4'          : 239,
 	\ 'gray5'          : 241,
 	\ 'gray6'          : 244,
 	\ 'gray7'          : 245,
@@ -39,7 +39,7 @@ call Pl#Hi#Allocate({
 	\ 'gray10'         : 252,
 	\ })
 
-let g:Powerline#Colorschemes#default#colorscheme = Pl#Colorscheme#Init([
+let g:Powerline#Colorschemes#datanoise#colorscheme = Pl#Colorscheme#Init([
 	\ Pl#Hi#Segments(['SPLIT'], {
 		\ 'n': ['white', 'gray2'],
 		\ 'N': ['white', 'gray0'],
@@ -55,25 +55,25 @@ let g:Powerline#Colorschemes#default#colorscheme = Pl#Colorscheme#Init([
 		\ }),
 	\
 	\ Pl#Hi#Segments(['branch', 'scrollpercent', 'raw', 'filesize'], {
-		\ 'n': ['gray9', 'gray4'],
+		\ 'n': ['gray9', 'gray5'],
 		\ 'N': ['gray4', 'gray1'],
 		\ 'i': ['mediumcyan', 'darkblue'],
 		\ }),
 	\
 	\ Pl#Hi#Segments(['fileinfo', 'filename'], {
-		\ 'n': ['white', 'gray4', ['bold']],
+		\ 'n': ['white', 'gray3', ['bold']],
 		\ 'N': ['gray7', 'gray0', ['bold']],
 		\ 'i': ['white', 'darkblue', ['bold']],
 		\ }),
 	\
-	\ Pl#Hi#Segments(['fileinfo.filepath', 'status'], {
+	\ Pl#Hi#Segments(['fileinfo.filepath'], {
 		\ 'n': ['gray10'],
 		\ 'N': ['gray5'],
 		\ 'i': ['mediumcyan'],
 		\ }),
 	\
 	\ Pl#Hi#Segments(['static_str'], {
-		\ 'n': ['white', 'gray4'],
+		\ 'n': ['white', 'gray6'],
 		\ 'N': ['gray7', 'gray1'],
 		\ 'i': ['white', 'darkblue'],
 		\ }),
@@ -85,13 +85,18 @@ let g:Powerline#Colorschemes#default#colorscheme = Pl#Colorscheme#Init([
 		\ }),
 	\
 	\ Pl#Hi#Segments(['current_function', 'fileformat', 'fileencoding', 'pwd', 'filetype', 'rvm:string', 'rvm:statusline', 'virtualenv:statusline', 'charcode', 'currhigroup'], {
-		\ 'n': ['gray8', 'gray2'],
+		\ 'n': ['gray8', 'gray3'],
+		\ 'i': ['mediumcyan', 'darkestblue'],
+		\ }),
+	\
+	\ Pl#Hi#Segments(['currhigroup'], {
+		\ 'n': ['gray7', 'gray2'],
 		\ 'i': ['mediumcyan', 'darkestblue'],
 		\ }),
 	\
 	\ Pl#Hi#Segments(['lineinfo'], {
 		\ 'n': ['gray2', 'gray10', ['bold']],
-		\ 'N': ['gray7', 'gray1', ['bold']],
+		\ 'N': ['gray7', 'gray2', ['bold']],
 		\ 'i': ['darkestcyan', 'mediumcyan', ['bold']],
 		\ }),
 	\

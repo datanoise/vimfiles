@@ -1,9 +1,7 @@
-let g:Powerline#Themes#default#theme = Pl#Theme#Create(
+let g:Powerline#Themes#datanoise#theme = Pl#Theme#Create(
 	\ Pl#Theme#Buffer(''
 		\ , 'paste_indicator'
 		\ , 'mode_indicator'
-		\ , 'fugitive:branch'
-		\ , 'hgrev:branch'
 		\ , 'fileinfo'
 		\ , 'aurum:status'
 		\ , 'syntastic:errors'
@@ -12,8 +10,7 @@ let g:Powerline#Themes#default#theme = Pl#Theme#Create(
 		\ , Pl#Segment#Split()
 		\ , 'rvm:string'
 		\ , 'virtualenv:statusline'
-		\ , 'fileformat'
-		\ , 'fileencoding'
+		\ , 'currhigroup'
 		\ , 'filetype'
 		\ , 'scrollpercent'
 		\ , 'lineinfo'

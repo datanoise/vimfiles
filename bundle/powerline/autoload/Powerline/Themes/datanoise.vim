@@ -1,3 +1,4 @@
+"		\ , 'currhigroup'
 let g:Powerline#Themes#datanoise#theme = Pl#Theme#Create(
 	\ Pl#Theme#Buffer(''
 		\ , 'paste_indicator'
@@ -10,7 +11,6 @@ let g:Powerline#Themes#datanoise#theme = Pl#Theme#Create(
 		\ , Pl#Segment#Split()
 		\ , 'rvm:string'
 		\ , 'virtualenv:statusline'
-		\ , 'currhigroup'
 		\ , 'filetype'
 		\ , 'scrollpercent'
 		\ , 'lineinfo'

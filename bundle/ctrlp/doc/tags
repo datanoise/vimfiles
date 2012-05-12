@@ -1,7 +1,9 @@
 'ctrl-p'	ctrlp.txt	/*'ctrl-p'*
 'ctrlp'	ctrlp.txt	/*'ctrlp'*
 'ctrlp-<c-p>'	ctrlp.txt	/*'ctrlp-<c-p>'*
+'ctrlp-autocompletion'	ctrlp.txt	/*'ctrlp-autocompletion'*
 'ctrlp-fullregexp'	ctrlp.txt	/*'ctrlp-fullregexp'*
+'ctrlp-pasting'	ctrlp.txt	/*'ctrlp-pasting'*
 'g:ctrlp_arg_map'	ctrlp.txt	/*'g:ctrlp_arg_map'*
 'g:ctrlp_buffer_func'	ctrlp.txt	/*'g:ctrlp_buffer_func'*
 'g:ctrlp_buftag_ctags_bin'	ctrlp.txt	/*'g:ctrlp_buftag_ctags_bin'*

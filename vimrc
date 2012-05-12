@@ -407,6 +407,9 @@ function! MyGetSnips(scopes, word)
     call add(a:scopes, 'ruby')
   endif
   return snipMate#GetSnippets(a:scopes, a:word)
+  if &ft == 'ruby'
+    call add(a:scopes, 'ruby_motion')
+  endif
 endfunction
 let g:snipMate = {'get_snippets': function('MyGetSnips')}
 

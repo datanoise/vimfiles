@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-09-17.
-" @Last Change: 2012-05-11.
-" @Revision:    0.0.441
+" @Last Change: 2012-06-01.
+" @Revision:    0.0.455
 
 " call tlog#Log('Load: '. expand('<sfile>')) " vimtlib-sfile
 
@@ -13,9 +13,16 @@ if !exists("g:tcommentBlankLines")
     let g:tcommentBlankLines = 1    "{{{2
 endif
 
+if !exists("g:tcommentModeExtra")
+    " Modifies how commenting works.
+    "   >  ... Move the cursor to the end of the comment
+    "   >> ... Like above but move the cursor to the next line
+    let g:tcommentModeExtra = ''   "{{{2
+endif
+
 if !exists("g:tcommentOpModeExtra")
     " Modifies how the operator works.
-    "   > ... Move the cursor to the end of the comment
+    " See |g:tcommentOpModeExtra| for a list of possible values.
     let g:tcommentOpModeExtra = ''   "{{{2
 endif
 
@@ -414,7 +421,7 @@ let s:nullCommentString    = '%s'
 " By default, each line in range will be commented by adding the comment 
 " prefix and postfix.
 function! tcomment#Comment(beg, end, ...)
-    let commentMode   = a:0 >= 1 ? a:1 : 'G'
+    let commentMode   = (a:0 >= 1 ? a:1 : 'G') . g:tcommentModeExtra
     let commentAnyway = a:0 >= 2 ? (a:2 == '!') : 0
     " TLogVAR a:beg, a:end, a:1, commentMode, commentAnyway
     " save the cursor position
@@ -502,6 +509,9 @@ function! tcomment#Comment(beg, end, ...)
     " TLogVAR commentMode
     if commentMode =~ '>'
         call setpos('.', s:pos_end)
+        if commentMode !~ 'i' && commentMode =~ '>>'
+            norm! l^
+        endif
     else
         " TLogVAR pos
         call setpos('.', pos)

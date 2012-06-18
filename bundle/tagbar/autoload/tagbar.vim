@@ -4,7 +4,7 @@
 " Author:      Jan Larres <jan@majutsushi.net>
 " Licence:     Vim licence
 " Website:     http://majutsushi.github.com/tagbar/
-" Version:     2.3
+" Version:     2.4
 " Note:        This plugin was heavily inspired by the 'Taglist' plugin by
 "              Yegappan Lakshmanan and uses a small amount of code from it.
 "
@@ -3396,6 +3396,43 @@ function! tagbar#currenttag(fmt, default, ...)
     else
         return a:default
     endif
+endfunction
+
+" tagbar#gettypeconfig() {{{2
+function! tagbar#gettypeconfig(type)
+    if !s:Init()
+        return ''
+    endif
+
+    let typeinfo = get(s:known_types, a:type, {})
+
+    if empty(typeinfo)
+        echoerr 'Unknown type ' . a:type . '!'
+        return
+    endif
+
+    let output = "let g:tagbar_type_" . a:type . " = {\n"
+
+    let output .= "    \\ 'kinds' : [\n"
+    for kind in typeinfo.kinds
+        let output .= "        \\ '" . kind.short . ":" . kind.long
+        if kind.fold || !kind.stl
+            if kind.fold
+                let output .= ":1"
+            else
+                let output .= ":0"
+            endif
+        endif
+        if !kind.stl
+            let output .= ":0"
+        endif
+        let output .= "',\n"
+    endfor
+    let output .= "    \\ ],\n"
+
+    let output .= "\\ }"
+
+    silent put =output
 endfunction
 
 " Modeline {{{1

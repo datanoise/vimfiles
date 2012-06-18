@@ -113,6 +113,10 @@ snippet cla-
 			${5}
 		end
 	end
+snippet class
+	class ${1:`substitute(Filename(), '\(^\|_\)\(.\)', '\u\2', 'g')`}
+		${2}
+	end
 snippet mod module .. end
 	module ${1:`substitute(Filename(), '\(^\|_\)\(.\)', '\u\2', 'g')`}
 		${2}

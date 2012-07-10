@@ -303,6 +303,11 @@ cnoremap <M-q> qa!
 cnoremap q  qa!
 " insert modeline
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
+" fugitive commands
+nnoremap <silent> <leader>gc :Gcommit<CR>
+nnoremap <silent> <leader>gs :Gstatus<CR>
+nnoremap <silent> <leader>gh :Git push<CR>
+nnoremap <silent> <leader>gl :Git pull<CR>
 
 
 " file type bindings {{{2

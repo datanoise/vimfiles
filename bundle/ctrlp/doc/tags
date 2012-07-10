@@ -40,6 +40,7 @@
 'g:ctrlp_root_markers'	ctrlp.txt	/*'g:ctrlp_root_markers'*
 'g:ctrlp_status_func'	ctrlp.txt	/*'g:ctrlp_status_func'*
 'g:ctrlp_switch_buffer'	ctrlp.txt	/*'g:ctrlp_switch_buffer'*
+'g:ctrlp_tabpage_position'	ctrlp.txt	/*'g:ctrlp_tabpage_position'*
 'g:ctrlp_use_caching'	ctrlp.txt	/*'g:ctrlp_use_caching'*
 'g:ctrlp_use_migemo'	ctrlp.txt	/*'g:ctrlp_use_migemo'*
 'g:ctrlp_user_command'	ctrlp.txt	/*'g:ctrlp_user_command'*

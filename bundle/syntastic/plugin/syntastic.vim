@@ -365,6 +365,7 @@ endfunction
 "display the cached errors for this buf in the location list
 function! s:ShowLocList()
     if !empty(s:LocList())
+        call setloclist(0, s:LocList())
         let num = winnr()
         exec "lopen " . g:syntastic_loc_list_height
         if num != winnr()
@@ -639,7 +640,7 @@ function! SyntasticLoadChecker(checkers, ft)
 
     if exists(opt_name)
         let opt_val = {opt_name}
-        if index(a:checkers, opt_val) != -1 && executable(opt_val)
+        if index(a:checkers, opt_val) != -1
             call s:LoadChecker(opt_val, a:ft)
         else
             echoerr &ft . " syntax not supported or not installed."

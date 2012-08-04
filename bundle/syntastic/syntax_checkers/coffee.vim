@@ -19,6 +19,10 @@ if !executable("coffee")
     finish
 endif
 
+if !exists('g:syntastic_coffee_lint_options')
+    let g:syntastic_coffee_lint_options = ""
+endif
+
 
 function! SyntaxCheckers_coffee_GetLocList()
     let makeprg = 'coffee -c -l -o /tmp '.shellescape(expand('%'))
@@ -26,16 +30,20 @@ function! SyntaxCheckers_coffee_GetLocList()
 
     let coffee_results = SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
 
-    let lint_results = []
-    if executable("coffeelint")
-      let lint_options = ''
-      if(exists('g:coffee_lint_options'))
-        let lint_options = g:coffee_lint_options
-      endif
-      let coffeelint = 'coffeelint --csv '.lint_options.' '.shellescape(expand('%'))
-      echo coffeelint
-      let lint_results = SyntasticMake({ 'makeprg': coffeelint, 'errorformat': '%f\,%l\,error\,%m' })
+    if !empty(coffee_results)
+        return coffee_results
     endif
 
-    return coffee_results + lint_results
+    if executable("coffeelint")
+        return s:GetCoffeeLintErrors()
+    endif
+
+    return []
+endfunction
+
+function s:GetCoffeeLintErrors()
+    let coffeelint = 'coffeelint --csv '.g:syntastic_coffee_lint_options.' '.shellescape(expand('%'))
+    let lint_results = SyntasticMake({ 'makeprg': coffeelint, 'errorformat': '%f\,%l\,%trror\,%m', 'subtype': 'Style' })
+
+    return lint_results
 endfunction

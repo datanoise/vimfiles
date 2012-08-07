@@ -149,6 +149,10 @@ let g:Powerline#Colorschemes#datanoise#colorscheme = Pl#Colorscheme#Init([
 		\ 'n': ['brightpurple', 'darkestpurple'],
 		\ }),
 	\
+	\ Pl#Hi#Segments(['ctrlp:byfname'], {
+		\ 'n': ['darkestpurple', 'white'],
+		\ }),
+	\
 	\ Pl#Hi#Segments(['ctrlp:prev', 'ctrlp:next', 'ctrlp:pwd'], {
 		\ 'n': ['white', 'mediumpurple'],
 		\ }),

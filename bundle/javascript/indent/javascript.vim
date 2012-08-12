@@ -159,7 +159,7 @@ function s:IndentWithContinuation(lnum, ind, width)
   " Set up variables to use and search for MSL to the previous line.
   let p_lnum = a:lnum
   let lnum = s:GetMSL(a:lnum, 1)
-  let line = getline(line)
+  let line = getline(lnum)
 
   " If the previous line wasn't a MSL and is continuation return its indent.
   " TODO: the || s:IsInString() thing worries me a bit.
@@ -237,7 +237,7 @@ function GetJavascriptIndent()
       if line[col-1]==')' && col('.') != col('$') - 1
         let ind = virtcol('.')-1
       else
-        let ind = indent(line('.'))
+        let ind = indent(s:GetMSL(line('.'), 0))
       endif
     endif
     return ind
@@ -278,7 +278,7 @@ function GetJavascriptIndent()
 
   " If the previous line ended with a block opening, add a level of indent.
   if s:Match(lnum, s:block_regex)
-    return indent(lnum) + &sw
+    return indent(s:GetMSL(lnum, 0)) + &sw
   endif
 
   " If the previous line contained an opening bracket, and we are still in it,

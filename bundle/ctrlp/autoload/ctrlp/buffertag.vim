@@ -88,6 +88,10 @@ if executable('jsctags')
 	cal extend(s:types, { 'javascript': { 'args': '-f -', 'bin': 'jsctags' } })
 en
 
+if executable('coffeetags')
+	cal extend(s:types, { 'coffee': { 'args': '-f -', 'bin': 'coffeetags' } })
+endif
+
 fu! ctrlp#buffertag#opts()
 	for [ke, va] in items(s:opts)
 		let {va[0]} = exists(s:pref.ke) ? {s:pref.ke} : va[1]
@@ -183,8 +187,8 @@ fu! s:process(fname, ftype)
 endf
 
 fu! s:parseline(line)
-	let eval = '\v^([^\t]+)\t(.+)\t\/\^(.+)\$\/\;\"\t(.+)\tline(no)?\:(\d+)'
-	let vals = matchlist(a:line, eval)
+	let pat = '\v^([^\t]+)\t(.+)\t\/\^?(.+)\$?\/\;\"\t(.+)\tline(no)?\:(\d+)'
+	let vals = matchlist(a:line, pat)
 	if vals == [] | retu '' | en
 	let [bufnr, bufname] = [bufnr('^'.vals[2].'$'), fnamemodify(vals[2], ':p:t')]
 	retu vals[1].'	'.vals[4].'|'.bufnr.':'.bufname.'|'.vals[6].'| '.vals[3]

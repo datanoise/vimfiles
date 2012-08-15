@@ -207,6 +207,8 @@ function! s:CacheErrors()
                 "make errors have type "E" by default
                 call SyntasticAddToErrors(errors, {'type': 'E'})
                 call extend(s:LocList(), errors)
+                unlet! b:syntastic_warnings
+                unlet! b:syntastic_errors
             endif
         endfor
     endif

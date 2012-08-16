@@ -21,13 +21,13 @@ snippet forrexb
 	for ${1:name} in [${2:start}...${3:finish}] by ${4:step}
 		${5:// body...}
 # Function
-snippet fun
+snippet f
 	(${1:args}) ->
 		${2}
 # Function (bound)
-snippet bfun
+snippet bf
 	(${1:args}) =>
-		${2:// body...}
+		${2}
 # Class
 snippet cla class ..
 	class ${1:`substitute(Filename(), '\(_\|^\)\(.\)', '\u\2', 'g')`}

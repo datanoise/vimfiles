@@ -214,16 +214,16 @@ endif
 set completeopt=
 set clipboard+=unnamed
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
+" change the cursor shape based on the current mode
 if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app' && has('cursorshape')
-  " change the cursor shape based on the current mode
-  " if exists('$TMUX')
-  "   let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
-  "   let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-  "   au VimEnter * call feedkeys("i\<Esc>") " this hack fixes the initial redraw problem
-  " else
-  "   let &t_SI = "\<Esc>]50;CursorShape=2\x7"
-  "   let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-  " endif
+  if exists('$TMUX')
+    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
+    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+    au VimEnter * call feedkeys("i\<Esc>") " this hack fixes the initial redraw problem
+  else
+    let &t_SI = "\<Esc>]50;CursorShape=2\x7"
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+  endif
 endif
 if has('gui_running')
   au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs\ --no-gems

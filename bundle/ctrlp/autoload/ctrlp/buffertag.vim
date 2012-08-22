@@ -174,12 +174,14 @@ fu! s:process(fname, ftype)
 	el
 		let data = s:exectagsonfile(a:fname, a:ftype)
 		let [raw, lines] = [split(data, '\n\+'), []]
-		for line in raw | if len(split(line, ';"')) == 2
-			let parsed_line = s:parseline(line)
-			if parsed_line != ''
-				cal add(lines, parsed_line)
+		for line in raw
+			if line !~# '^!_TAG_' && len(split(line, ';"')) == 2
+				let parsed_line = s:parseline(line)
+				if parsed_line != ''
+					cal add(lines, parsed_line)
+				en
 			en
-		en | endfo
+		endfo
 		let cache = { a:fname : { 'time': ftime, 'lines': lines } }
 		cal extend(g:ctrlp_buftags, cache)
 	en
@@ -187,8 +189,8 @@ fu! s:process(fname, ftype)
 endf
 
 fu! s:parseline(line)
-	let pat = '\v^([^\t]+)\t(.+)\t\/\^?(.+)\$?\/\;\"\t(.+)\tline(no)?\:(\d+)'
-	let vals = matchlist(a:line, pat)
+	let eval = '\v^([^\t]+)\t(.+)\t[?/]\^?(.{-1,})\$?[?/]\;\"\t(.+)\tline(no)?\:(\d+)'
+	let vals = matchlist(a:line, eval)
 	if vals == [] | retu '' | en
 	let [bufnr, bufname] = [bufnr('^'.vals[2].'$'), fnamemodify(vals[2], ':p:t')]
 	retu vals[1].'	'.vals[4].'|'.bufnr.':'.bufname.'|'.vals[6].'| '.vals[3]
@@ -212,7 +214,7 @@ fu! ctrlp#buffertag#init(fname)
 	let lines = []
 	for each in bufs
 		let bname = fnamemodify(each, ':p')
-		let tftype = get(split(getbufvar(bname, '&ft'), '\.'), 0, '')
+		let tftype = get(split(getbufvar('^'.bname.'$', '&ft'), '\.'), 0, '')
 		cal extend(lines, s:process(bname, tftype))
 	endfo
 	cal s:syntax()

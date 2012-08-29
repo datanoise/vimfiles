@@ -4,36 +4,11 @@ snipmate.vim
 
 :Author: `Michael Sanders`_
 :Maintainer: `Rok Garbas`_
-:Homepage: http://www.vim.org/scripts/script.php?script_id=2540 
-:Contributors: `MarcWeber`_, `lilydjwg`_, `henrik`_, `steveno`_, `asymmetric`_, `jherdman`_, `ironcamel`_, `honza`_, `jb55`_, `robhudson`_, `kozo2`_, `MicahElliott`_, `darkwise`_, `redpill`_, `thisgeek`_, `sickill`_, `pose`_, `marutanm`_, `r00k`_, `jbernard`_, `holizz`_, `muffinresearch`_, `statik`_, Eustaquio Rangel, `alderz`_, `pielgrzym`_
+:Homepage: http://www.vim.org/scripts/script.php?script_id=2540
+:Contributors: `MarcWeber`_, `lilydjwg`_, `henrik`_, `steveno`_, `asymmetric`_, `jherdman`_, `ironcamel`_, `honza`_, `jb55`_, `robhudson`_, `kozo2`_, `MicahElliott`_, `darkwise`_, `redpill`_, `thisgeek`_, `sickill`_, `pose`_, `marutanm`_, `r00k`_, `jbernard`_, `holizz`_, `muffinresearch`_, `statik`_, `taq`_, `alderz`_, `pielgrzym`_
 
 
 .. contents::
-
-
-Why forking snipMate?
-=====================
-
-::
-
-    After several unsuccessful attempts of contacting Michael Sanders, no
-    commits in last half year and long pull request line on github (none of
-    pull requests were commented/replied/rejected) I decided to take action,
-    step up and bring some love to this widely used plugin.
-
-    But nothing to worry about. We all get busy, accupied with our daily work
-    or just lose interest in doing boring maintainance.
-
-    While reviewing pull requests on github.com/msanders I found lots of great
-    improvements and I decided to **friendly** fork it, review and apply patches
-    that were sent, notify all the patch submitters and decided to maintain
-    snipmate.vim from now on. Of course if somebody wants to
-    help, please do not hesitate to write me, I am open to any suggestions.
-
-    Maybe I will only maintain it for a while until Michael Sanders takes things
-    back into his hand or until some other super-hero shows up.
-
-    Tnx and happy snipmating, Rok Garbas, 2011-02-02
 
 
 Changelog
@@ -42,6 +17,9 @@ Changelog
 
 1.0 [Unreleased]
 ----------------
+
+    * Split snippet files into separate git repository (github/honza/snipmate-snippets). [2011-06-20, `honza`_]
+      See 'Snippets repository' below.
 
     * Adding general snippets to ``css.snippets`` and ``htmldjango.snippets``
       [2011-06-10, `pielgrzym`_]
@@ -69,7 +47,7 @@ Changelog
       [2011-02-09, `ervandew`_]
 
     * Updated README: added contributors, instructions how to install snipMate,
-      some spellchecking of my wonderfull english, added this Changelog
+      some spellchecking of my wonderful English, added this Changelog
       [2011-02-07, `garbas`_]
 
     * Fixed bug: When leaving a placeholder unchanged and trying to jump to the
@@ -79,7 +57,7 @@ Changelog
     * From below mentioned merges I must specially mention `MarcWeber`_'s patch
       which brought quite a few functionalities/improvements:
         - snippets are loaded lazily.
-        - snippets are no longer cached. Thus you always get the snippets you 
+        - snippets are no longer cached. Thus you always get the snippets you
           just wrote to a file without reloading anything.
         - When visually selecting a snippet in a .snippets file you can press
           <cr> to replace spaces by tabs automatically in a smart way.
@@ -104,29 +82,36 @@ Changelog
 How to install
 ==============
 
-Unfortunatly there are many ways to how to install vim plugins. If you don't
-see you prefered way of installation plugins please consider adding updating
-this section.
+Unfortunately there are many ways to install vim plugins. If you don't
+see your preferred way of installation, please consider updating
+this section. Basically, installation consists of 2 simple steps:
 
-snipate dependencies
+1. Install vim-snipmate
+2. Install snippets
+
+
+snipmate dependencies
 ==============
-Important to note is that since version 1.0 we depend on this 2 vim plugins:
+Important to note is that since version 1.0 we depend on 2 vim plugins:
     * `vim-addon-mw-utils`_ providing the implementation for caching parsed
       .snippets files.
 
     * `tlib`_ for tlib#input#List which provides the excellent filterable
       list selection view (and more).
 
+    * the default set of snippets (optional but recommended).
+      See 'Snippets repository' below.
 
-Using `VAM`_
+
+Using `VAM`_ (recommended)
 ------------
 
 ::
 
-    Add snipmate to the names to be installed. Or use "github:name/repo" if you
-    want to use a non standard upstream.
-
-    VAM will also fetch the dependencies listed above for you automatically.
+    Add snipmate-snippets to the names to be installed. Or use
+    "github:name/repo" if you want to use a non standard upstream.
+    The default snippets depend on "snipmate" so VAM will fetch the core along
+    with its dependencies automatically
 
 Using `pathogen`_
 --------------------------------------
@@ -141,6 +126,7 @@ Using `pathogen`_
     # Install dependencies:
     % git clone https://github.com/tomtom/tlib_vim.git
     % git clone https://github.com/MarcWeber/vim-addon-mw-utils.git
+    % git clone https://github.com/honza/snipmate-snippets.git
 
 Using `Vundle`_
 ---------------
@@ -148,21 +134,23 @@ Using `Vundle`_
 ::
 
     Install dependencies:
-    Bundle "git://github.com/MarcWeber/vim-addon-mw-utils.git"
-    Bundle "git://github.com/tomtom/tlib_vim.git"
+    Bundle "MarcWeber/vim-addon-mw-utils"
+    Bundle "tomtom/tlib_vim"
+    Bundle "honza/snipmate-snippets"
 
     Install:
-    Bundle "git://github.com/garbas/snipmate.vim.git"
+    Bundle "garbas/vim-snipmate"
 
     And :BundleInstall
 
 
 
-Manually
---------
+Manually (not recommended!)
+---------------------------
 
 ::
 
+    % git clone git://github.com/honza/snipmate-snippets.git
     % git clone git://github.com/garbas/vim-snipmate.git
     % cd snipmate.vim
     % cp -R * ~/.vim
@@ -173,17 +161,53 @@ Then in vim::
 
 Then install any dependencies (see above).
 
-external snippet repositories
-=============================
-See TODO / Future. We'd like to split snippets of the core in the long run.
-Probably there will be one snippet repo containing almost all snippets.
+Snippets repository
+===================
+There is now one snippet repo containing almost all snippets. You are
+encouraged to submit any fixes and new snippets there.
 
-We also encourage people to maintain sets of snippets for particular use cases.
-That all users can benefit from them people can list their snippet repositories here:
+https://github.com/honza/snipmate-snippets
+
+We also encourage people to maintain sets of snippets for particular use cases
+so that all users can benefit from them.  People can list their snippet repositories here:
 
      * https://github.com/rbonvall/snipmate-snippets-bib (snippets for BibTeX files)
 
 Installation using VAM: "github:rbonvall/snipmate-snippets-bib"
+
+Why forking snipMate?
+=====================
+
+::
+
+    After several unsuccessful attempts of contacting Michael Sanders, no
+    commits in last half year and long pull request line on github (none of
+    pull requests were commented/replied/rejected) I decided to take action,
+    step up and bring some love to this widely used plugin.
+
+    But nothing to worry about. We all get busy, accupied with our daily work
+    or just lose interest in doing boring maintainance.
+
+    While reviewing pull requests on github.com/msanders I found lots of great
+    improvements and I decided to **friendly** fork it, review and apply patches
+    that were sent, notify all the patch submitters and decided to maintain
+    snipmate.vim from now on. Of course if somebody wants to
+    help, please do not hesitate to write me, I am open to any suggestions.
+
+    Maybe I will only maintain it for a while until Michael Sanders takes things
+    back into his hand or until some other super-hero shows up.
+
+    Tnx and happy snipmating, Rok Garbas, 2011-02-02
+
+
+
+Known Bugs
+=============
+
+
+    * Set one value default as input of another value.
+      https://github.com/garbas/vim-snipmate/issues/59
+      [2011-10-18, `bogdan`_]
 
 TODO / Future
 =============
@@ -198,16 +222,7 @@ TODO / Future
       snipmate works reasonable well for me.
       [2011-02-02, `MarcWeber`_]
 
-
-    * Split core from snippets. Then reviewing patches and updates will be easier?
-      Snippets should be distributed in additional repositories. Eg
-      snipmate-snippets-ruby
-      snipmate-snippets-vim
-      snipmate-snippets-....
-      One repo containing snippets is:
-      git://github.com/scrooloose/snipmate-snippets.git
-
-      comment without verifying it:
+    * comment without verifying it:
       < Silex> MarcWeber: btw, check out ultisnips. Much better than snipmate imho
 
       And before this discussion xptemplate vs snipmate vs ultisnips .. continues
@@ -255,3 +270,4 @@ TODO / Future
 .. _`tisho`: https://github.com/tisho
 .. _`pielgrzym`: https://github.com/pielgrzym
 .. _`jgosmann`: https://github.com/jgosmann
+.. _`taq': https://github.com/taq

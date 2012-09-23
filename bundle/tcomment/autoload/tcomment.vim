@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-09-17.
-" @Last Change: 2012-07-08.
-" @Revision:    0.0.461
+" @Last Change: 2012-09-22.
+" @Revision:    0.0.501
 
 " call tlog#Log('Load: '. expand('<sfile>')) " vimtlib-sfile
 
@@ -177,6 +177,12 @@ let s:definitions = {}
 " to have a blank after the comment marker. Block comments work only if 
 " we explicitly define the markup.
 "
+" NAME usually is a 'filetype'. You can use special suffixes to define 
+" special comment types. E.g. the name "FILETYPE_block" is used for 
+" block comments for 'filetype'. The name "FILETYPE_inline" is used for 
+" inline comments. If no specialized comment definition exists, the 
+" normal one with name "FILETYPE" is used.
+"
 " The comment definition can be either a string or a dictionary.
 "
 " If it is a string:
@@ -185,8 +191,14 @@ let s:definitions = {}
 " that defines how "middle lines" (see :h format-comments) should be 
 " displayed.
 "
+" Example: If the string is "--%s--\n-- ", lines will be commented as 
+" "--%s--" but the middle lines in block comments will be commented as 
+" "--%s".
+"
 " If it is a dictionary:
-" See the help on the args argument of |tcomment#Comment|.
+" See the help on the args argument of |tcomment#Comment| (see item 1, 
+" args is a list of key=value pairs) to find out which fields can be 
+" used.
 function! tcomment#DefineType(name, commentdef)
     if !has_key(s:definitions, a:name)
         if type(a:commentdef) == 4
@@ -284,6 +296,7 @@ call tcomment#DefineType('html_block',       g:tcommentBlockXML )
 call tcomment#DefineType('htmldjango',           '{# %s #}'     )
 call tcomment#DefineType('htmldjango_block',     "{%% comment %%}%s{%% endcomment %%}\n ")
 call tcomment#DefineType('io',               '// %s'            )
+call tcomment#DefineType('jasmine',          '# %s'             )
 call tcomment#DefineType('javaScript',       '// %s'            )
 call tcomment#DefineType('javaScript_inline', g:tcommentInlineC )
 call tcomment#DefineType('javaScript_block', g:tcommentBlockC   )
@@ -425,7 +438,7 @@ let s:nullCommentString    = '%s'
 function! tcomment#Comment(beg, end, ...)
     let commentMode   = (a:0 >= 1 ? a:1 : 'G') . g:tcommentModeExtra
     let commentAnyway = a:0 >= 2 ? (a:2 == '!') : 0
-    " TLogVAR a:beg, a:end, a:1, commentMode, commentAnyway
+    " TLogVAR a:beg, a:end, commentMode, commentAnyway
     " save the cursor position
     let pos = getpos('.')
     let s:pos_end = getpos("'>")
@@ -522,6 +535,7 @@ endf
 
 
 function! s:GetStartEnd(beg, end, commentMode) "{{{3
+    " TLogVAR a:beg, a:end, a:commentMode
     if type(a:beg) == 3
         let [lbeg, cbeg] = a:beg
         let [lend, cend]   = a:end
@@ -539,15 +553,17 @@ function! s:GetStartEnd(beg, end, commentMode) "{{{3
                 let cend = 0
             else
                 let cend = col("'>")
-                if commentMode =~# 'o'
+                if cend < col('$') && (commentMode =~# 'o' || &selection == 'inclusive')
                     let cend += 1
+                    " TLogVAR cend, col('$')
                 endif
             endif
         else
             let cbeg = 0
-            let cend   = 0
+            let cend = 0
         endif
     endif
+    " TLogVAR lbeg, cbeg, lend, cend
     return [lbeg, cbeg, lend, cend]
 endf
 
@@ -594,6 +610,7 @@ endf
 function! tcomment#Operator(type, ...) "{{{3
     let commentMode = a:0 >= 1 ? a:1 : ''
     let bang = a:0 >= 2 ? a:2 : ''
+    " TLogVAR a:type, commentMode, bang
     if !exists('w:tcommentPos')
         let w:tcommentPos = getpos(".")
     endif
@@ -601,7 +618,6 @@ function! tcomment#Operator(type, ...) "{{{3
     set selection=inclusive
     let reg_save = @@
     " let pos = getpos('.')
-    " TLogVAR a:type
     try
         if a:type == 'line'
             silent exe "normal! '[V']"
@@ -623,6 +639,7 @@ function! tcomment#Operator(type, ...) "{{{3
         let lend = line("']")
         let cbeg = col("'[")
         let cend = col("']")
+        " TLogVAR lbeg, lend, cbeg, cend
         " echom "DBG tcomment#Operator" lbeg col("'[") col("'<") lend col("']") col("'>")
         norm! 
         let commentMode .= g:tcommentOpModeExtra
@@ -798,6 +815,7 @@ function! s:GetCommentDefinition(beg, end, commentMode, ...)
 endf
 
 function! s:StartPosRx(mode, line, col)
+    " TLogVAR a:mode, a:line, a:col
     if a:mode =~# 'I'
         return s:StartLineRx(a:line) . s:StartColRx(a:col)
     else
@@ -954,7 +972,10 @@ endf
 " endf
 
 function! s:CommentBlock(beg, end, uncomment, checkRx, cdef, indentStr)
+    " TLogVAR a:beg, a:end, a:uncomment, a:checkRx, a:cdef, a:indentStr
     let t = @t
+    let sel_save = &selection
+    set selection=exclusive
     try
         silent exec 'norm! '. a:beg.'G1|v'.a:end.'G$"td'
         let ms = s:BlockGetMiddleString(a:cdef)
@@ -979,6 +1000,7 @@ function! s:CommentBlock(beg, end, uncomment, checkRx, cdef, indentStr)
         endif
         silent norm! "tP
     finally
+        let &selection = sel_save
         let @t = t
     endtry
 endf

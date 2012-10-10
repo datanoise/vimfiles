@@ -3,7 +3,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     27-Dez-2004.
 " @Last Change: 2012-09-22.
-" @Revision:    725
+" @Revision:    747
 " GetLatestVimScripts: 1173 1 tcomment.vim
 
 if &cp || exists('loaded_tcomment')
@@ -108,7 +108,6 @@ if (g:tcommentMapLeader1 != '')
     exec 'inoremap <silent> '. g:tcommentMapLeader1 .'r <c-o>:TCommentRight<cr>'
     exec 'noremap <silent> '. g:tcommentMapLeader1 .'r :TCommentRight<cr>'
     exec 'vnoremap <silent> '. g:tcommentMapLeader1 .'i :TCommentInline<cr>'
-    exec 'vnoremap <silent> '. g:tcommentMapLeader1 .'r :TCommentRight<cr>'
     exec 'noremap '. g:tcommentMapLeader1 .'b :TCommentBlock<cr>'
     exec 'inoremap '. g:tcommentMapLeader1 .'b <c-o>:TCommentBlock<cr>'
     exec 'noremap '. g:tcommentMapLeader1 .'a :TCommentAs '
@@ -117,6 +116,13 @@ if (g:tcommentMapLeader1 != '')
     exec 'inoremap '. g:tcommentMapLeader1 .'n <c-o>:TCommentAs <c-r>=&ft<cr> '
     exec 'noremap '. g:tcommentMapLeader1 .'s :TCommentAs <c-r>=&ft<cr>_'
     exec 'inoremap '. g:tcommentMapLeader1 .'s <c-o>:TCommentAs <c-r>=&ft<cr>_'
+    exec 'noremap <silent> '. g:tcommentMapLeader1 .'cc :<c-u>call tcomment#SetOption("count", v:count1)<cr>'
+    exec 'noremap '. g:tcommentMapLeader1 .'ca :<c-u>call tcomment#SetOption("as", input("Comment as: ", &filetype, "customlist,tcomment#Complete"))<cr>'
+    for s:i in range(1, 9)
+        exec 'noremap <silent> '. g:tcommentMapLeader1 . s:i .' :TComment count='. s:i .'<cr>'
+        exec 'vnoremap <silent> '. g:tcommentMapLeader1 . s:i .' :TCommentMaybeInline count='. s:i .'<cr>'
+    endfor
+    unlet s:i
 endif
 if (g:tcommentMapLeader2 != '')
     exec 'noremap <silent> '. g:tcommentMapLeader2 .'_ :TComment<cr>'
@@ -125,7 +131,6 @@ if (g:tcommentMapLeader2 != '')
     exec 'noremap '. g:tcommentMapLeader2 .'<space> :TComment '
     exec 'xnoremap <silent> '. g:tcommentMapLeader2 .'i :TCommentInline<cr>'
     exec 'noremap <silent> '. g:tcommentMapLeader2 .'r :TCommentRight<cr>'
-    exec 'xnoremap <silent> '. g:tcommentMapLeader2 .'r :TCommentRight<cr>'
     exec 'noremap '. g:tcommentMapLeader2 .'b :TCommentBlock<cr>'
     exec 'noremap '. g:tcommentMapLeader2 .'a :TCommentAs '
     exec 'noremap '. g:tcommentMapLeader2 .'n :TCommentAs <c-r>=&ft<cr> '

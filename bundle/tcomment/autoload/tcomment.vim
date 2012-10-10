@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-09-17.
 " @Last Change: 2012-09-22.
-" @Revision:    0.0.501
+" @Revision:    0.0.541
 
 " call tlog#Log('Load: '. expand('<sfile>')) " vimtlib-sfile
 
@@ -254,6 +254,10 @@ call tcomment#DefineType('c',                g:tcommentLineC    )
 call tcomment#DefineType('c_inline',         g:tcommentInlineC  )
 call tcomment#DefineType('c_block',          g:tcommentBlockC   )
 call tcomment#DefineType('cfg',              '# %s'             )
+call tcomment#DefineType('clojure',          {'commentstring': '; %s', 'count': 2})
+call tcomment#DefineType('clojure_inline',   '; %s'             )
+call tcomment#DefineType('clojurescript',    ';; %s'            )
+call tcomment#DefineType('clojurescript_inline', '; %s'         )
 call tcomment#DefineType('coffee',           '# %s'             )
 call tcomment#DefineType('conf',             '# %s'             )
 call tcomment#DefineType('conkyrc',          '# %s'             )
@@ -406,6 +410,7 @@ let s:nullCommentString    = '%s'
 "   1. a list of key=value pairs where known keys are (see also 
 "      |g:tcommentOptions|):
 "         as=STRING        ... Use a specific comment definition
+"         count=N          ... Repeat the comment string N times
 "         col=N            ... Start the comment at column N (in block 
 "                              mode; must be smaller than |indent()|)
 "         mode=STRING      ... See the notes below on the "commentMode" argument
@@ -449,6 +454,9 @@ function! tcomment#Comment(beg, end, ...)
     " TLogVAR commentMode, lbeg, cbeg, lend, cend
     " get the correct commentstring
     let cdef = copy(g:tcommentOptions)
+    if exists('b:tcommentOptions')
+        let cdef = extend(cdef, copy(b:tcommentOptions))
+    endif
     if a:0 >= 3 && type(a:3) == 4
         call extend(cdef, a:3)
     else
@@ -462,8 +470,10 @@ function! tcomment#Comment(beg, end, ...)
                 let cdef.end = a:4
             endif
         endif
+        " TLogVAR ax, a:0, a:000
         if a:0 >= ax
-            call extend(cdef, s:ParseArgs(lbeg, lend, commentMode, a:000[ax - 1 : -1]))
+            let cdef = extend(cdef, s:ParseArgs(lbeg, lend, commentMode, a:000[ax - 1 : -1]))
+            " TLogVAR cdef
         endif
         if !empty(get(cdef, 'begin', '')) || !empty(get(cdef, 'end', ''))
             let cdef.commentstring = s:EncodeCommentPart(get(cdef, 'begin', ''))
@@ -471,6 +481,12 @@ function! tcomment#Comment(beg, end, ...)
                         \ . s:EncodeCommentPart(get(cdef, 'end', ''))
         endif
         let commentMode = cdef.mode
+    endif
+    if exists('s:temp_options')
+        let cdef = s:ExtendCDef(lbeg, lend, commentMode, cdef, s:temp_options)
+        " TLogVAR cdef
+        " echom "DBG s:temp_options" string(s:temp_options)
+        unlet s:temp_options
     endif
     if !empty(filter(['count', 'cbeg', 'cend', 'cmid'], 'has_key(cdef, v:val)'))
         call s:RepeatCommentstring(cdef)
@@ -534,6 +550,23 @@ function! tcomment#Comment(beg, end, ...)
 endf
 
 
+function! tcomment#SetOption(name, arg) "{{{3
+    " TLogVAR a:name, a:arg
+    if !exists('s:temp_options')
+        let s:temp_options = {}
+    endif
+    " if index(['count', 'as'], a:name) != -1
+        if empty(a:arg)
+            if has_key(s:temp_options, a:name)
+                call remove(s:temp_options, a:name)
+            endif
+        else
+            let s:temp_options[a:name] = a:arg
+        endif
+    " endif
+endf
+
+
 function! s:GetStartEnd(beg, end, commentMode) "{{{3
     " TLogVAR a:beg, a:end, a:commentMode
     if type(a:beg) == 3
@@ -543,20 +576,20 @@ function! s:GetStartEnd(beg, end, commentMode) "{{{3
         let lbeg = a:beg
         let lend = a:end
         let commentMode = a:commentMode
-        if commentMode =~# 'R' || commentMode =~# 'I'
+        " TLogVAR commentMode
+        if commentMode =~# 'R'
+            let cbeg = col('.')
+            let cend = 0
+            let commentMode = substitute(commentMode, '\CR', 'G', 'g')
+        elseif commentMode =~# 'I'
             let cbeg = col("'<")
             if cbeg == 0
                 let cbeg = col('.')
             endif
-            if commentMode =~# 'R'
-                let commentMode = substitute(commentMode, '\CR', 'G', 'g')
-                let cend = 0
-            else
-                let cend = col("'>")
-                if cend < col('$') && (commentMode =~# 'o' || &selection == 'inclusive')
-                    let cend += 1
-                    " TLogVAR cend, col('$')
-                endif
+            let cend = col("'>")
+            if cend < col('$') && (commentMode =~# 'o' || &selection == 'inclusive')
+                let cend += 1
+                " TLogVAR cend, col('$')
             endif
         else
             let cbeg = 0
@@ -597,13 +630,27 @@ function! s:ParseArgs(beg, end, commentMode, arglist) "{{{3
     for arg in a:arglist
         let key = matchstr(arg, '^[^=]\+')
         let value = matchstr(arg, '=\zs.*$')
-        if key == 'as'
-            call extend(args, s:GetCommentDefinitionForType(a:beg, a:end, a:commentMode, value))
-        else
+        if !empty(key)
             let args[key] = value
         endif
     endfor
-    return args
+    return s:ExtendCDef(a:beg, a:end, a:commentMode, {}, args)
+endf
+
+
+function! s:ExtendCDef(beg, end, commentMode, cdef, args)
+    for [key, value] in items(a:args)
+        if key == 'as'
+            call extend(a:cdef, s:GetCommentDefinitionForType(a:beg, a:end, a:commentMode, value))
+        elseif key == 'mode'
+            let a:cdef[key] = a:commentMode . value
+        elseif key == 'count'
+            let a:cdef[key] = str2nr(value)
+        else
+            let a:cdef[key] = value
+        endif
+    endfor
+    return a:cdef
 endf
 
 
@@ -747,7 +794,7 @@ endf
 
 " :nodoc:
 function! tcomment#CompleteArgs(ArgLead, CmdLine, CursorPos) "{{{3
-    let completions = ['as=', 'col=', 'count=', 'mode=', 'begin=', 'end=']
+    let completions = ['as=', 'col=', 'count=', 'mode=', 'begin=', 'end=', 'rxbeg=', 'rxend=', 'rxmid=']
     if !empty(a:ArgLead)
         if a:ArgLead =~ '^as='
             call tcomment#CollectFileTypes()

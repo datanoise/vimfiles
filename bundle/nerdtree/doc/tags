@@ -1,6 +1,7 @@
 'NERDChristmasTree'	NERD_tree.txt	/*'NERDChristmasTree'*
 'NERDTreeAutoCenter'	NERD_tree.txt	/*'NERDTreeAutoCenter'*
 'NERDTreeAutoCenterThreshold'	NERD_tree.txt	/*'NERDTreeAutoCenterThreshold'*
+'NERDTreeAutoDeleteBuffer'	NERD_tree.txt	/*'NERDTreeAutoDeleteBuffer'*
 'NERDTreeBookmarksFile'	NERD_tree.txt	/*'NERDTreeBookmarksFile'*
 'NERDTreeCasadeOpenSingleChildDir'	NERD_tree.txt	/*'NERDTreeCasadeOpenSingleChildDir'*
 'NERDTreeCaseSensitiveSort'	NERD_tree.txt	/*'NERDTreeCaseSensitiveSort'*

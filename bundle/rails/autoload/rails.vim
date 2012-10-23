@@ -686,8 +686,6 @@ function! s:readable_calculate_file_type() dict abort
     let r = "view-layout-" . e
   elseif f =~ '\<app/views\>.*\.'
     let r = "view-" . e
-  elseif f =~ '\<lib/.*\.rb$'
-    let r = 'lib'
   elseif f =~ '\<test/\%(unit\|models\|helpers\)/.*_test\.rb$'
     let r = "test-unit"
   elseif f =~ '\<test/\%(functional\|controllers\)/.*_test\.rb$'
@@ -698,6 +696,8 @@ function! s:readable_calculate_file_type() dict abort
     let r = s:sub(f,'.*<test/(\w*)s/.*','test-\1')
   elseif f =~ '\<spec/lib/.*_spec\.rb$'
     let r = 'spec-lib'
+  elseif f =~ '\<lib/.*\.rb$'
+    let r = 'lib'
   elseif f =~ '\<spec/\w*s/.*_spec\.rb$'
     let r = s:sub(f,'.*<spec/(\w*)s/.*','spec-\1')
   elseif f =~ '\<features/.*\.feature$'
@@ -848,7 +848,7 @@ function! s:app_background_script_command(cmd) dict abort
   elseif exists("$STY") && !has("gui_running") && screen && executable("screen")
     silent exe "!screen -ln -fn -t ".s:sub(s:sub(a:cmd,'\s.*',''),'^%(script|-rcommand)/','rails-').' '.cmd
   elseif exists("$TMUX") && !has("gui_running") && screen && executable("tmux")
-    silent exe '!tmux new-window -d -n "'.s:sub(s:sub(a:cmd,'\s.*',''),'^%(script|-rcommand)/','rails-').'" "'.cmd.'"'
+    silent exe '!tmux new-window -n "'.s:sub(s:sub(a:cmd,'\s.*',''),'^%(script|-rcommand)/','rails-').'" "'.cmd.'"'
   else
     exe "!".cmd
   endif

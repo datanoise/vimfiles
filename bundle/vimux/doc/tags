@@ -19,6 +19,7 @@ VimuxInspectRunner	vimux.txt	/*VimuxInspectRunner*
 VimuxInterruptRunner	vimux.txt	/*VimuxInterruptRunner*
 VimuxMisc	vimux.txt	/*VimuxMisc*
 VimuxPromptCommand	vimux.txt	/*VimuxPromptCommand*
+VimuxPromptString	vimux.txt	/*VimuxPromptString*
 VimuxRunCommand	vimux.txt	/*VimuxRunCommand*
 VimuxRunLastCommand	vimux.txt	/*VimuxRunLastCommand*
 VimuxTslimeReplacement	vimux.txt	/*VimuxTslimeReplacement*

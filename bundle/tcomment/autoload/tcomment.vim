@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-09-17.
 " @Last Change: 2012-09-22.
-" @Revision:    0.0.577
+" @Revision:    0.0.604
 
 " call tlog#Log('Load: '. expand('<sfile>')) " vimtlib-sfile
 
@@ -116,6 +116,16 @@ if !exists('g:tcommentSyntaxMap')
             \ 'vimPythonRegion':   'python',
             \ 'vimRubyRegion':     'ruby',
             \ 'vimTclRegion':      'tcl',
+            \ 'phpRegionDelimiter': {
+            \     'prevnonblank': [
+            \         {'match': '<?php', 'filetype': 'php'},
+            \         {'match': '?>', 'filetype': 'html'},
+            \     ],
+            \     'nextnonblank': [
+            \         {'match': '?>', 'filetype': 'php'},
+            \         {'match': '<?php', 'filetype': 'html'},
+            \     ],
+            \ },
             \ }
 endif
 
@@ -380,6 +390,7 @@ call tcomment#DefineType('tcl',              '# %s'             )
 call tcomment#DefineType('tex',              '%% %s'            )
 call tcomment#DefineType('tpl',              '<!-- %s -->'      )
 call tcomment#DefineType('typoscript',       '# %s'             )
+call tcomment#DefineType('vhdl',             '-- %s'            )
 call tcomment#DefineType('viki',             '%% %s'            )
 call tcomment#DefineType('viki_3',           '%%%%%% %s'        )
 call tcomment#DefineType('viki_inline',      '{cmt: %s}'        )
@@ -546,6 +557,7 @@ function! tcomment#Comment(beg, end, ...)
         " TLogVAR cmd
         exec cmd
         call histdel('search', -1)
+		unlet s:cdef
     endif
     " reposition cursor
     " TLogVAR commentMode
@@ -562,7 +574,7 @@ function! tcomment#Comment(beg, end, ...)
     else
         call setpos('.', s:current_pos)
     endif
-    unlet s:cdef s:cursor_pos s:current_pos
+    unlet s:cursor_pos s:current_pos
 endf
 
 
@@ -1080,6 +1092,33 @@ function! s:Filetype(...) "{{{3
 endf
 
 
+" A function that makes the s:GuessFileType() function usable for other 
+" library developers.
+"
+" The argument is a dictionary with the following keys:
+"
+"   beg ................ (default = line("."))
+"   end ................ (default = line("."))
+"   commentMode ........ (default = "G")
+"   filetype ........... (default = &filetype)
+"   fallbackFiletype ... (default = "")
+"
+" This function return a dictionary that contains information about how 
+" to make comments. The information about the filetype of the text 
+" between lines "beg" and "end" is in the "filetype" key of the return 
+" value. It returns the first discernible filetype it encounters.
+" :display: tcomment#GuessFileType(?options={})
+function! tcomment#GuessCommentType(...) "{{{3
+    let options = a:0 >= 1 ? a:1 : {}
+    let beg = get(options, 'beg', line('.'))
+    let end = get(options, 'end', line('.'))
+    let commentMode = get(options, 'commentMode', '')
+    let filetype = get(options, 'filetype', &filetype)
+    let fallbackFiletype = get(options, 'filetype', '')
+    return s:GuessFileType(beg, end, commentMode, filetype, fallbackFiletype)
+endf
+
+
 " inspired by Meikel Brandmeyer's EnhancedCommentify.vim
 " this requires that a syntax names are prefixed by the filetype name 
 " s:GuessFileType(beg, end, commentMode, filetype, ?fallbackFiletype)
@@ -1096,17 +1135,54 @@ function! s:GuessFileType(beg, end, commentMode, filetype, ...)
             let cdef = {'commentstring': s:GuessCurrentCommentString(0), 'mode': s:CommentMode(a:commentMode, 'G')}
         endif
     endif
-    let n  = a:beg
-    " TLogVAR n, a:beg, a:end
-    while n <= a:end
+    let beg = a:beg
+    let end = nextnonblank(a:end)
+    if end == 0
+        let end = a:end
+        let beg = prevnonblank(a:beg)
+        if beg == 0
+            let beg = a:beg
+        endif
+    endif
+    let n  = beg
+    " TLogVAR n, beg, end
+    while n <= end
         let m  = indent(n) + 1
-        let le = len(getline(n))
+        let text = getline(n)
+        let le = len(text)
         " TLogVAR m, le
-        while m < le
+        while m <= le
             let syntaxName = s:GetSyntaxName(n, m)
             " TLogVAR syntaxName, n, m
             let ftypeMap = get(g:tcommentSyntaxMap, syntaxName, '')
             " TLogVAR ftypeMap
+            if !empty(ftypeMap) && type(ftypeMap) == 4
+                if n < a:beg
+                    let key = 'prevnonblank'
+                elseif n > a:end
+                    let key = 'nextnonblank'
+                else
+                    let key = ''
+                endif
+                if empty(key)
+                    unlet! ftypeMap
+                    let ftypeMap = ''
+                else
+                    let mapft = ''
+                    for mapdef in ftypeMap[key]
+                        if strpart(text, m - 1) =~ '^'. mapdef.match
+                            let mapft = mapdef.filetype
+                            break
+                        endif
+                    endfor
+                    unlet! ftypeMap
+                    if empty(mapft)
+                        let ftypeMap = ''
+                    else
+                        let ftypeMap = mapft
+                    endif
+                endif
+            endif
             if !empty(ftypeMap)
                 " TLogVAR ftypeMap
                 return s:GetCustomCommentString(ftypeMap, a:commentMode, cdef.commentstring)
@@ -1230,6 +1306,7 @@ function! s:GetCustomCommentString(ft, commentMode, ...)
     endif
     let cdef = copy(def)
     let cdef.mode = commentMode
+    let cdef.filetype = a:ft
     " TLogVAR cdef
     return cdef
 endf

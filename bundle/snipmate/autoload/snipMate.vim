@@ -24,7 +24,6 @@ let s:c.scope_aliases = get(s:c, 'scope_aliases', {})
 let s:c.scope_aliases.objc = get(s:c.scope_aliases, 'objc', 'c')
 let s:c.scope_aliases.cpp = get(s:c.scope_aliases, 'cpp', 'c')
 let s:c.scope_aliases.cu = get(s:c.scope_aliases, 'cu', 'c')
-let s:c.scope_aliases.cs = get(s:c.scope_aliases, 'cs','c')
 let s:c.scope_aliases.xhtml = get(s:c.scope_aliases, 'xhtml', 'html')
 let s:c.scope_aliases.html = get(s:c.scope_aliases, 'html', 'javascript')
 let s:c.scope_aliases.php = get(s:c.scope_aliases, 'php', 'php,html,javascript')
@@ -506,7 +505,7 @@ endf
 fun! snipMate#ReadSnippetsFile(file)
 	let result = []
 	if !filereadable(a:file) | return result | endif
-	let r_guard = 'guard\s\+\zs.*'
+	let r_guard = '^guard\s\+\zs.*'
 	let inSnip = 0
 	let guard = 1
 	for line in readfile(a:file) + ["\n"]

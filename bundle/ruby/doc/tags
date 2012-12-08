@@ -19,4 +19,9 @@ ruby-v_am	vim-ruby.txt	/*ruby-v_am*
 ruby-v_iM	vim-ruby.txt	/*ruby-v_iM*
 ruby-v_im	vim-ruby.txt	/*ruby-v_im*
 ruby.vim	ft-ruby-syntax.txt	/*ruby.vim*
+ruby_fold	ft-ruby-syntax.txt	/*ruby_fold*
+ruby_minlines	ft-ruby-syntax.txt	/*ruby_minlines*
+ruby_no_expensive	ft-ruby-syntax.txt	/*ruby_no_expensive*
+ruby_operators	ft-ruby-syntax.txt	/*ruby_operators*
+ruby_space_errors	ft-ruby-syntax.txt	/*ruby_space_errors*
 vim-ruby.txt	vim-ruby.txt	/*vim-ruby.txt*

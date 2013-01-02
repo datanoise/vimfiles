@@ -4,7 +4,7 @@
 " ------------------------------------------------------------------------------
 runtime! macros/matchit.vim
 set nocompatible      " We're running Vim, not Vi!
-let g:pathogen_disabled = []
+let g:pathogen_disabled = ['bundler']
 if $TERM != "" && $TERM != 'xterm-256color' && $TERM != 'screen-256color'
   call add(g:pathogen_disabled, 'powerline')
 endif
@@ -14,7 +14,7 @@ syntax on             " Enable syntax highlighting
 filetype on           " Enable filetype detection
 filetype indent on    " Enable filetype-specific indenting
 filetype plugin on    " Enable filetype-specific plugins
-
+"
 " Section: Functions {{{1
 " ------------------------------------------------------------------------------
 function! GetCurDir()
@@ -110,7 +110,7 @@ set laststatus=2
 set statusline=%m%<%.99f\ (%{GetCurDir()})\ %h%w%r%y
 " set statusline+=%{fugitive#statusline()}
 set statusline+=%{SynNameStatus()}
-set statusline+=\ %#errormsg#%{SyntasticStatuslineFlag()}%*
+" set statusline+=\ %#errormsg#%{SyntasticStatuslineFlag()}%*
 set statusline+=%=
 set statusline+=\ %-16(\ %l,%c-%v\ %)%P
 " }}}
@@ -299,6 +299,7 @@ if has('mac')
 endif
 nnoremap <silent> <leader>ct :!ctags --extra=+f -R *<CR><CR>
 cnoremap <M-q> qa!
+cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h'). '/' : '%%'
 " this one for xterm
 cnoremap q  qa!
 " insert modeline

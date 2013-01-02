@@ -71,6 +71,7 @@ syn match   puppetNotVariable   "\\${\w\+}" contained
 syn keyword puppetKeyword       import inherits include
 syn keyword puppetControl       case default if else elsif
 syn keyword puppetSpecial       true false undef
+syn keyword puppetCondition     and or
 
 " comments last overriding everything else
 syn match   puppetComment       "\s*#.*$" contains=puppetTodo
@@ -100,6 +101,7 @@ if version >= 508 || !exists("did_puppet_syn_inits")
   HiLink puppetSpecial              Special
   HiLink puppetTodo                 Todo
   HiLink puppetControl              Statement
+  HiLink puppetCondition            Statement
   HiLink puppetDefType              Define
   HiLink puppetDefName              Type
   HiLink puppetNodeRe               Type

@@ -1,3 +1,5 @@
+[<C-L>	unimpaired.txt	/*[<C-L>*
+[<C-Q>	unimpaired.txt	/*[<C-Q>*
 [<Space>	unimpaired.txt	/*[<Space>*
 [A	unimpaired.txt	/*[A*
 [B	unimpaired.txt	/*[B*
@@ -9,9 +11,9 @@
 [a	unimpaired.txt	/*[a*
 [b	unimpaired.txt	/*[b*
 [e	unimpaired.txt	/*[e*
+[f	unimpaired.txt	/*[f*
 [l	unimpaired.txt	/*[l*
 [n	unimpaired.txt	/*[n*
-[o	unimpaired.txt	/*[o*
 [q	unimpaired.txt	/*[q*
 [t	unimpaired.txt	/*[t*
 [u	unimpaired.txt	/*[u*
@@ -20,6 +22,8 @@
 [xx	unimpaired.txt	/*[xx*
 [y	unimpaired.txt	/*[y*
 [yy	unimpaired.txt	/*[yy*
+]<C-L>	unimpaired.txt	/*]<C-L>*
+]<C-Q>	unimpaired.txt	/*]<C-Q>*
 ]<Space>	unimpaired.txt	/*]<Space>*
 ]A	unimpaired.txt	/*]A*
 ]B	unimpaired.txt	/*]B*
@@ -31,9 +35,9 @@
 ]a	unimpaired.txt	/*]a*
 ]b	unimpaired.txt	/*]b*
 ]e	unimpaired.txt	/*]e*
+]f	unimpaired.txt	/*]f*
 ]l	unimpaired.txt	/*]l*
 ]n	unimpaired.txt	/*]n*
-]o	unimpaired.txt	/*]o*
 ]q	unimpaired.txt	/*]q*
 ]t	unimpaired.txt	/*]t*
 ]u	unimpaired.txt	/*]u*

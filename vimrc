@@ -74,6 +74,13 @@ function! s:space_inside_curly()
   return "\<Space>"
 endfunction
 
+function! s:VSetSearch()
+  let tmp = @s
+  norm! gv"sy
+  let @/ = '\V' . substitute(escape(@s, '/\'), '\n', '\\n', 'g')
+  let @s = tmp
+endfunction
+
 " Section: Options {{{1
 " ------------------------------------------------------------------------------
 " tab options {{{2
@@ -309,6 +316,8 @@ nnoremap <silent> <leader>gc :Gcommit<CR>
 nnoremap <silent> <leader>gs :Gstatus<CR>
 nnoremap <silent> <leader>gh :Git push<CR>
 nnoremap <silent> <leader>gl :Git pull<CR>
+xnoremap <silent> * :<C-u>call <SID>VSetSearch()<CR>/<C-R>=@/<CR><CR>
+xnoremap <silent> # :<C-u>call <SID>VSetSearch()<CR>?<C-R>=@/<CR><CR>
 
 
 " file type bindings {{{2

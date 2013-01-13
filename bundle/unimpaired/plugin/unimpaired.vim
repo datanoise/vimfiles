@@ -13,14 +13,20 @@ let g:loaded_unimpaired = 1
 function! s:MapNextFamily(map,cmd)
   let map = '<Plug>unimpaired'.toupper(a:map)
   let end = ' ".(v:count ? v:count : "")<CR>'
-  execute 'nmap <silent> '.map.'Previous :<C-U>exe "'.a:cmd.'previous'.end
-  execute 'nmap <silent> '.map.'Next     :<C-U>exe "'.a:cmd.'next'.end
-  execute 'nmap <silent> '.map.'First    :<C-U>exe "'.a:cmd.'first'.end
-  execute 'nmap <silent> '.map.'Last     :<C-U>exe "'.a:cmd.'last'.end
+  execute 'nnoremap <silent> '.map.'Previous :<C-U>exe "'.a:cmd.'previous'.end
+  execute 'nnoremap <silent> '.map.'Next     :<C-U>exe "'.a:cmd.'next'.end
+  execute 'nnoremap <silent> '.map.'First    :<C-U>exe "'.a:cmd.'first'.end
+  execute 'nnoremap <silent> '.map.'Last     :<C-U>exe "'.a:cmd.'last'.end
   execute 'nmap <silent> ['.        a:map .' '.map.'Previous'
   execute 'nmap <silent> ]'.        a:map .' '.map.'Next'
   execute 'nmap <silent> ['.toupper(a:map).' '.map.'First'
   execute 'nmap <silent> ]'.toupper(a:map).' '.map.'Last'
+  if exists(':'.a:cmd.'nfile')
+    execute 'nnoremap <silent> '.map.'PFile :<C-U>exe "'.a:cmd.'pfile'.end
+    execute 'nnoremap <silent> '.map.'NFile :<C-U>exe "'.a:cmd.'nfile'.end
+    execute 'nmap <silent> [<C-'.a:map.'> '.map.'PFile'
+    execute 'nmap <silent> ]<C-'.a:map.'> '.map.'NFile'
+  endif
 endfunction
 
 call s:MapNextFamily('a','')
@@ -80,11 +86,15 @@ function! s:fnameescape(file) abort
   endif
 endfunction
 
-nnoremap <silent> <Plug>unimpairedONext     :<C-U>edit <C-R>=<SID>fnameescape(<SID>FileByOffset(v:count1))<CR><CR>
-nnoremap <silent> <Plug>unimpairedOPrevious :<C-U>edit <C-R>=<SID>fnameescape(<SID>FileByOffset(-v:count1))<CR><CR>
+nnoremap <silent> <Plug>unimpairedDirectoryNext     :<C-U>edit <C-R>=<SID>fnameescape(<SID>FileByOffset(v:count1))<CR><CR>
+nnoremap <silent> <Plug>unimpairedDirectoryPrevious :<C-U>edit <C-R>=<SID>fnameescape(<SID>FileByOffset(-v:count1))<CR><CR>
 
-nmap ]o <Plug>unimpairedONext
-nmap [o <Plug>unimpairedOPrevious
+nmap <Plug>unimpairedONext     <Plug>unimpairedDirectoryNext
+nmap <Plug>unimpairedOPrevious <Plug>unimpairedDirectoryPrevious
+nmap ]f <Plug>unimpairedDirectoryNext
+nmap [f <Plug>unimpairedDirectoryPrevious
+nmap ]o <Plug>unimpairedDirectoryNext
+nmap [o <Plug>unimpairedDirectoryPrevious
 
 " }}}1
 " Diff {{{1

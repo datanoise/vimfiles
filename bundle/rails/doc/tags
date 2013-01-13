@@ -44,7 +44,6 @@ rails-:Rails	rails.txt	/*rails-:Rails*
 rails-:Rake	rails.txt	/*rails-:Rake*
 rails-:Rake!	rails.txt	/*rails-:Rake!*
 rails-:Rcd	rails.txt	/*rails-:Rcd*
-rails-:Rcommand	rails.txt	/*rails-:Rcommand*
 rails-:Rconsole	rails.txt	/*rails-:Rconsole*
 rails-:Rcontroller	rails.txt	/*rails-:Rcontroller*
 rails-:Rdbext	rails.txt	/*rails-:Rdbext*
@@ -106,6 +105,7 @@ rails-autocommands	rails.txt	/*rails-autocommands*
 rails-commands	rails.txt	/*rails-commands*
 rails-configuration	rails.txt	/*rails-configuration*
 rails-cream	rails.txt	/*rails-cream*
+rails-custom-file-types	rails.txt	/*rails-custom-file-types*
 rails-custom-navigation	rails.txt	/*rails-custom-navigation*
 rails-dbext	rails.txt	/*rails-dbext*
 rails-gf	rails.txt	/*rails-gf*

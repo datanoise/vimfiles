@@ -211,19 +211,19 @@ function! s:opfunc(type) abort
 endfunction
 
 function! s:filterop(type) abort
-  let reg_save = @@
+  let reg_save = @s
   try
     let expr = s:opfunc(a:type)
-    let @@ = matchstr(expr, '^\_s\+').scriptease#dump(eval(s:gsub(expr,'\n%(\s*\\)=',''))).matchstr(expr, '\_s\+$')
-    if @@ !~# '^\n*$'
-      normal! gvp
+    let @s = matchstr(expr, '^\_s\+').scriptease#dump(eval(s:gsub(expr,'\n%(\s*\\)=',''))).matchstr(expr, '\_s\+$')
+    if @s !~# '^\n*$'
+      normal! gv"sp
     endif
   catch /^.*/
     echohl ErrorMSG
     echo v:errmsg
     echohl NONE
   finally
-    let @@ = reg_save
+    let @s = reg_save
   endtry
 endfunction
 

@@ -8,7 +8,7 @@ let g:pathogen_disabled = ['bundler']
 if $TERM != "" && $TERM != 'xterm-256color' && $TERM != 'screen-256color'
   call add(g:pathogen_disabled, 'powerline')
 endif
-call pathogen#runtime_append_all_bundles()
+call pathogen#incubate()
 call pathogen#helptags()
 syntax on             " Enable syntax highlighting
 filetype on           " Enable filetype detection

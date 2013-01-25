@@ -103,6 +103,8 @@ endif
 set undodir=~/tmp/undofile
 set undofile
 set history=1000
+" to avoid error with crontab -e
+set backupskip=/tmp/*,/private/tmp/*
 " }}}
 " search options {{{2
 " always use incremental search
@@ -512,5 +514,6 @@ let g:blockle_mapping = '<leader>bb'
 let g:Powerline_symbols = 'fancy'
 let g:no_turbux_mappings = 1
 let $RUBYOPT = '' " I don't want any surprises like 'noexec' gem
+let g:syntastic_coffee_lint_options = '-f ~/.coffeelint.json'
 
 " }}}

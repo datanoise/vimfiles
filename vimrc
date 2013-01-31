@@ -226,12 +226,11 @@ let g:filetype_m = 'objc' " always open *.m files with objc filetype
 " change the cursor shape based on the current mode
 if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app' && has('cursorshape')
   if exists('$TMUX')
-    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
-    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-    au VimEnter * call feedkeys("i\<Esc>") " this hack fixes the initial redraw problem
+    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>[3 q\<Esc>\\"
+    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>[1 q\<Esc>\\"
   else
-    let &t_SI = "\<Esc>]50;CursorShape=2\x7"
-    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+    let &t_SI = "\<Esc>[3 q"
+    let &t_EI = "\<Esc>[1 q"
   endif
 endif
 if has('gui_running')
@@ -452,7 +451,7 @@ let g:alternateExtensions_mm = "h"
 
 " tabular settings {{{2
 nnoremap <silent> g= :Tabularize assignment<CR>
-vnoremap <silent> g= :Tabularize assignment<CR>
+xnoremap <silent> g= :Tabularize assignment<CR>
 
 " ctrlp settings {{{2
 let g:ctrlp_extensions = ['buffertag', 'quickfix', 'dir', 'rtscript',
@@ -494,15 +493,12 @@ call smartinput#define_rule({
 \   'filetype': ['ruby'],
 \ })
 
-" vimux settings {{{2
-let g:VimuxHeight = 30
-nnoremap <silent> \p :PromptVimTmuxCommand<CR>
-
 " powerline settings {{{2
 let g:Powerline_cache_file = '/tmp/Powerline_cache'
 let s:Powerline_theme = 'datanoise'
 let g:Powerline_theme = s:Powerline_theme
 let g:Powerline_colorscheme = s:Powerline_theme
+let g:Powerline_symbols = 'fancy'
 
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"
@@ -511,7 +507,6 @@ let c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:xml_syntax_folding = 1 " enable folding in xml files
 let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
 let g:blockle_mapping = '<leader>bb'
-let g:Powerline_symbols = 'fancy'
 let g:no_turbux_mappings = 1
 let $RUBYOPT = '' " I don't want any surprises like 'noexec' gem
 let g:syntastic_coffee_lint_options = '-f ~/.coffeelint.json'

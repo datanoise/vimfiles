@@ -222,9 +222,9 @@ textobj-user-changelog-0.3.7	textobj-user.txt	/*textobj-user-changelog-0.3.7*
 textobj-user-changelog-0.3.8	textobj-user.txt	/*textobj-user-changelog-0.3.8*
 textobj-user-changelog-0.3.9	textobj-user.txt	/*textobj-user-changelog-0.3.9*
 textobj-user-contents	textobj-user.txt	/*textobj-user-contents*
-textobj-user-function	textobj-user.txt	/*textobj-user-function*
-textobj-user-interface	textobj-user.txt	/*textobj-user-interface*
 textobj-user-introduction	textobj-user.txt	/*textobj-user-introduction*
+textobj-user-obsolete-api	textobj-user.txt	/*textobj-user-obsolete-api*
+textobj-user-reference	textobj-user.txt	/*textobj-user-reference*
 textobj-user.txt	textobj-user.txt	/*textobj-user.txt*
 v_ay	textobj-syntax.txt	/*v_ay*
 v_iy	textobj-syntax.txt	/*v_iy*

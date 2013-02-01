@@ -6,8 +6,9 @@ let g:loaded_syntastic_registry=1
 let s:defaultCheckers = {
         \ 'c': ['gcc'],
         \ 'cpp': ['gcc'],
-        \ 'objc': ['gcc'],
         \ 'java': ['javac'],
+        \ 'objc': ['gcc'],
+        \ 'php': ['php', 'phpcs', 'phpmd'],
         \ 'ruby': ['mri']
     \ }
 
@@ -30,12 +31,14 @@ function! g:SyntasticRegistry.CreateAndRegisterChecker(args)
     call registry.registerChecker(checker)
 endfunction
 
-function! g:SyntasticRegistry.registerChecker(checker)
+function! g:SyntasticRegistry.registerChecker(checker) abort
     let ft = a:checker.filetype()
 
     if !has_key(self._checkerMap, ft)
         let self._checkerMap[ft] = []
     endif
+
+    call self._validateUniqueName(a:checker)
 
     call add(self._checkerMap[ft], a:checker)
 endfunction
@@ -68,12 +71,22 @@ function! g:SyntasticRegistry.getActiveCheckers(filetype)
     return []
 endfunction
 
-" Private methods {{{1
+function! g:SyntasticRegistry.getChecker(filetype, name)
+    for checker in self.availableCheckersFor(a:filetype)
+        if checker.name() == a:name
+            return checker
+        endif
+    endfor
+
+    return {}
+endfunction
 
 function! g:SyntasticRegistry.availableCheckersFor(filetype)
     let checkers = copy(self._allCheckersFor(a:filetype))
     return self._filterCheckersByAvailability(checkers)
 endfunction
+
+" Private methods {{{1
 
 function! g:SyntasticRegistry._allCheckersFor(filetype)
     call self._loadCheckers(a:filetype)
@@ -120,6 +133,14 @@ endfunction
 
 function! g:SyntasticRegistry._userHasFiletypeSettings(filetype)
     return exists("g:syntastic_" . a:filetype . "_checkers")
+endfunction
+
+function! g:SyntasticRegistry._validateUniqueName(checker) abort
+    for checker in self._allCheckersFor(a:checker.filetype())
+        if checker.name() == a:checker.name()
+            throw "Syntastic: Duplicate syntax checker name for: " . a:checker.name()
+        endif
+    endfor
 endfunction
 
 " vim: set sw=4 sts=4 et fdm=marker:

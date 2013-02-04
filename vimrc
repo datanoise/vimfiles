@@ -225,13 +225,13 @@ set clipboard+=unnamed
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
 " change the cursor shape based on the current mode
 if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app' && has('cursorshape')
-  if exists('$TMUX')
-    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>[3 q\<Esc>\\"
-    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>[1 q\<Esc>\\"
-  else
-    let &t_SI = "\<Esc>[3 q"
-    let &t_EI = "\<Esc>[1 q"
-  endif
+  " if exists('$TMUX')
+  "   let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>[3 q\<Esc>\\"
+  "   let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>[1 q\<Esc>\\"
+  " else
+  "   let &t_SI = "\<Esc>[3 q"
+  "   let &t_EI = "\<Esc>[1 q"
+  " endif
 endif
 if has('gui_running')
   au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs\ --no-gems

@@ -809,6 +809,7 @@ function! s:app_has(feature) dict
   let map = {
         \'test': 'test/',
         \'spec': 'spec/',
+        \'bundler': '.bundle/',
         \'cucumber': 'features/',
         \'turnip': 'spec/acceptance/',
         \'sass': 'public/stylesheets/sass/',
@@ -1014,12 +1015,7 @@ endfunction
 
 function! rails#new_app_command(bang,...)
   if a:0 == 0
-    let msg = "rails.vim ".g:autoloaded_rails
-    if a:bang && exists('b:rails_root') && rails#buffer().type_name() == ''
-      echo msg." (Rails)"
-    elseif a:bang && exists('b:rails_root')
-      echo msg." (Rails-".rails#buffer().type_name().")"
-    elseif a:bang
+    if a:bang
       echo msg
     else
       !rails
@@ -1478,7 +1474,8 @@ endfunction
 " Script Wrappers {{{1
 
 function! s:BufScriptWrappers()
-  command! -buffer -bar -nargs=*       -complete=customlist,s:Complete_script   Rscript       :execute rails#app().script_command(<bang>0,<f-args>)
+  command! -buffer -bang -bar -nargs=* -complete=customlist,s:Complete_script   Rscript       :execute rails#app().script_command(<bang>0,<f-args>)
+  command! -buffer -bang -bar -nargs=* -complete=customlist,s:Complete_script   Rails         :execute rails#app().script_command(<bang>0,<f-args>)
   command! -buffer -bar -nargs=*       -complete=customlist,s:Complete_generate Rgenerate     :execute rails#app().generate_command(<bang>0,<f-args>)
   command! -buffer -bar -nargs=*       -complete=customlist,s:Complete_destroy  Rdestroy      :execute rails#app().destroy_command(<bang>0,<f-args>)
   command! -buffer -bar -nargs=? -bang -complete=customlist,s:Complete_server   Rserver       :execute rails#app().server_command(<bang>0,<q-args>)
@@ -1488,20 +1485,35 @@ function! s:BufScriptWrappers()
   command! -buffer       -nargs=1 -range=0 -complete=customlist,s:Complete_ruby Ry            :execute rails#app().runner_command(<count>==<line2>?<count>:-1,'y begin '.<f-args>.' end')
 endfunction
 
-function! s:app_generators() dict
+function! s:app_generators() dict abort
   if self.cache.needs('generators')
-    let generators = self.relglob("vendor/plugins/","*/generators/*")
-    let generators += self.relglob("","lib/generators/*")
-    call filter(generators,'v:val =~ "/$"')
-    let generators += split(glob(expand("~/.rails/generators")."/*"),"\n")
-    call map(generators,'s:sub(v:val,"^.*[\\\\/]generators[\\\\/]\\ze.","")')
-    call map(generators,'s:sub(v:val,"[\\\\/]$","")')
-    call self.cache.set('generators',generators)
+    let paths = [self.path('vendor/plugins/*'), self.path('lib'), expand("~/.rails")]
+    if self.has('bundler') && exists('*bundler#project')
+      let gems = values(bundler#project(self.path()).gems())
+      let paths += map(copy(gems), 'v:val . "/lib/rails"')
+      let paths += map(copy(gems), 'v:val . "/lib"')
+      let builtin = []
+    else
+      let builtin = ['assets', 'controller', 'generator', 'helper', 'integration_test', 'mailer', 'migration', 'model', 'observer', 'performance_test', 'resource', 'scaffold', 'scaffold_controller', 'session_migration', 'task']
+    endif
+    let generators = s:split(globpath(s:pathjoin(paths), 'generators/**/*_generator.rb'))
+    call map(generators, 's:sub(v:val,"^.*[\\\\/]generators[\\\\/]\\ze.","")')
+    call map(generators, 's:sub(v:val,"[\\\\/][^\\\\/]*_generator\.rb$","")')
+    call map(generators, 'tr(v:val, "/", ":")')
+    let builtin += map(filter(copy(generators), 'v:val =~# "^rails:"'), 'v:val[6:-1]')
+    call filter(generators,'v:val !~# "^rails:"')
+    call self.cache.set('generators',s:uniq(builtin + generators))
   endif
-  return sort(split(g:rails_generators,"\n") + self.cache.get('generators'))
+  return self.cache.get('generators')
 endfunction
 
 function! s:app_script_command(bang,...) dict
+  let msg = "rails.vim ".g:autoloaded_rails
+  if a:0 == 0 && a:bang && rails#buffer().type_name() == ''
+    echo msg." (Rails)"
+  elseif a:0 == 0 && a:bang
+    echo msg." (Rails-".rails#buffer().type_name().")"
+  endif
   let str = ""
   let cmd = a:0 ? a:1 : "console"
   let c = 2
@@ -2872,8 +2884,8 @@ function! s:integrationtestEdit(cmd,...)
   return s:EditSimpleRb(a:cmd,"integrationtest",f.jump,tests[0][0],tests[0][1],1)
 endfunction
 
-function! s:specEdit(cmd,...)
-  let describe = s:sub(s:sub(rails#camelize(a:1), '^[^:]*::', ''), '!.*', '')
+function! s:specEdit(cmd,...) abort
+  let describe = s:sub(s:sub(rails#camelize(a:0 ? a:1 : ''), '^[^:]*::', ''), '!.*', '')
   return rails#buffer().open_command(a:cmd, a:0 ? a:1 : '', 'spec', {
         \ 'prefix': 'spec/',
         \ 'suffix': '_spec.rb',
@@ -4100,19 +4112,6 @@ function! s:selectiveexpand(pat,good,default,...)
   endif
 endfunction
 
-function! s:TheCWord()
-  let l = s:linepeak()
-  if l =~ '\<\%(find\|first\|last\|all\|paginate\)\>'
-    return s:selectiveexpand('..',':conditions => ',':c')
-  elseif l =~ '\<render\s*(\=\s*:partial\s*=>\s*'
-    return s:selectiveexpand('..',':collection => ',':c')
-  elseif l =~ '\<\%(url_for\|link_to\|form_tag\)\>' || l =~ ':url\s*=>\s*{\s*'
-    return s:selectiveexpand('..',':controller => ',':c')
-  else
-    return s:selectiveexpand('..',':conditions => ',':c')
-  endif
-endfunction
-
 function! s:AddSelectiveExpand(abbr,pat,expn,...)
   let expn  = s:gsub(s:gsub(a:expn        ,'[\"|]','\\&'),'\<','\\<Lt>')
   let expn2 = s:gsub(s:gsub(a:0 ? a:1 : '','[\"|]','\\&'),'\<','\\<Lt>')
@@ -4213,13 +4212,6 @@ function! s:BufAbbreviations()
       Rabbrev asre( assert_response
       Rabbrev art(  assert_redirected_to
     endif
-    Rabbrev :a    :action\ =>\ 
-    " hax
-    Rabbrev :c    :co________\ =>\ 
-    inoreabbrev <buffer> <silent> :c <C-R>=<SID>TheCWord()<CR>
-    Rabbrev :i    :id\ =>\ 
-    Rabbrev :o    :object\ =>\ 
-    Rabbrev :p    :partial\ =>\ 
     Rabbrev logd( logger.debug
     Rabbrev logi( logger.info
     Rabbrev logw( logger.warn
@@ -4370,9 +4362,6 @@ function! s:getopt(opt,...)
   if scope =~ 'l' && &filetype !~# '^ruby\>'
     let scope = s:sub(scope,'l','b')
   endif
-  if scope =~ 'l'
-    call s:LocalModelines(lnum)
-  endif
   let var = s:sname().'_'.opt
   let lastmethod = s:lastmethod(lnum)
   if lastmethod == '' | let lastmethod = ' ' | endif
@@ -4442,58 +4431,6 @@ function! s:Complete_set(A,L,P)
     return filter(sort(map(keys(s:opts()),'extra.v:val')),'s:startswith(v:val,a:A)')
   endif
   return []
-endfunction
-
-function! s:BufModelines()
-  if !g:rails_modelines && !&modelines
-    return
-  endif
-  let lines = getline("$")."\n".getline(line("$")-1)."\n".getline(1)."\n".getline(2)."\n".getline(3)."\n"
-  let pat = '\s\+\zs.\{-\}\ze\%(\n\|\s\s\|#{\@!\|%>\|-->\|$\)'
-  let cnt = 1
-  let mat    = matchstr(lines,'\C\<Rset'.pat)
-  let matend = matchend(lines,'\C\<Rset'.pat)
-  while mat != "" && cnt < 10
-    let mat = s:sub(mat,'\s+$','')
-    let mat = s:gsub(mat,'\|','\\|')
-    if mat != ''
-      silent! exe "Rset <B> ".mat
-    endif
-    let mat    = matchstr(lines,'\C\<Rset'.pat,matend)
-    let matend = matchend(lines,'\C\<Rset'.pat,matend)
-    let cnt += 1
-  endwhile
-endfunction
-
-function! s:LocalModelines(lnum)
-  if !g:rails_modelines
-    return
-  endif
-  let lbeg = s:lastmethodline(a:lnum)
-  let lend = s:endof(lbeg)
-  if lbeg == 0 || lend == 0
-    return
-  endif
-  let lines = "\n"
-  let lnum = lbeg
-  while lnum < lend && lnum < lbeg + 5
-    let lines .= getline(lnum) . "\n"
-    let lnum += 1
-  endwhile
-  let pat = '\s\+\zs.\{-\}\ze\%(\n\|\s\s\|#{\@!\|%>\|-->\|$\)'
-  let cnt = 1
-  let mat    = matchstr(lines,'\C\<rset'.pat)
-  let matend = matchend(lines,'\C\<rset'.pat)
-  while mat != "" && cnt < 10
-    let mat = s:sub(mat,'\s+$','')
-    let mat = s:gsub(mat,'\|','\\|')
-    if mat != ''
-      silent! exe "Rset <l> ".mat
-    endif
-    let mat    = matchstr(lines,'\C\<rset'.pat,matend)
-    let matend = matchend(lines,'\C\<rset'.pat,matend)
-    let cnt += 1
-  endwhile
 endfunction
 
 " }}}1
@@ -4572,7 +4509,6 @@ function! RailsBufInit(path)
   if f != ''
     exe "silent doautocmd User Rails".f
   endif
-  call s:BufModelines()
   call s:BufMappings()
   return b:rails_root
 endfunction

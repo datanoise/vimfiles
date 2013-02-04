@@ -47,7 +47,9 @@ actually edit a file from a Rails application.
 
 						*rails-:Rails*
 :Rails new {directory}	The only global command.  Creates a new Rails
-			application in {directory}, and loads the README.
+			application in {directory}, and loads the README.  If
+			rails.vim is active for the current buffer, :Rails is
+			an alias for |:Rscript|.
 
 :Rails!			Show the version of rails.vim installed.  If rails.vim
 			is active for the current buffer, also show the type
@@ -712,7 +714,6 @@ Rabbrev pa[ params		pa[:id]			params[:id]
 Rabbrev pa[ params		pa<C-]>			params
 Rabbrev pa[ params		pa.inspect		params.inspect
 Rabbrev AR:: ActionRecord	AR::Base		ActiveRecord::Base
-Rabbrev :a :action\ =>\		render :a<Tab>		render :action => 
 
 In short, ( expands on (, :: expands on . and :, and [ expands on . and [.
 These trailing punctuation marks are NOT part of the final abbreviation, and
@@ -725,9 +726,7 @@ space).
 
 Many abbreviations are provided by default: use :Rabbrev to list them.  They
 vary depending on the type of file (models have different abbreviations than
-controllers).  There is one "smart" abbreviation, :c, which expands to
-":controller => ", ":collection => ", or ":conditions => " depending on
-context.
+controllers).
 
 SYNTAX HIGHLIGHTING				*rails-syntax*
 
@@ -909,19 +908,6 @@ Examples: >
 	:Rset root_url=http://localhost:12345
 	:Rset related=app/views/blog/edit.html.erb
 <
-						*rails-modelines*
-If |g:rails_modelines| is enabled, these options can also be set from
-modelines near the beginning or end of the file.  These modelines will always
-set buffer-local options; scope should never be specified.  Examples: >
-	# Rset task=db:schema:load
-	<%# Rset alternate=app/views/layouts/application.html.erb %>
-Modelines can also be local to a method.  Example: >
-	def test_comment
-	  # rset alternate=app/models/comment.rb
-These two forms differ only in case.
-
-Modelines are deprecated.
-
 GLOBAL SETTINGS					*rails-global-settings*
 
 A few global variables control the behavior of this plugin.  In general, they

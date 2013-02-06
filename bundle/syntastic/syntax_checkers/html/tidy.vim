@@ -21,6 +21,7 @@ function! s:TidyEncOptByFenc()
                 \'utf-16le'    : '-utf16le',
                 \'utf-16'      : '-utf16',
                 \'big5'        : '-big5',
+                \'cp932'       : '-shiftjis',
                 \'sjis'        : '-shiftjis',
                 \'cp850'       : '-ibm858',
                 \}
@@ -35,6 +36,11 @@ let s:ignore_html_errors = [
                 \ "<meta> lacks \"content\" attribute",
                 \ "inserting \"type\" attribute",
                 \ "proprietary attribute \"data-",
+                \ "missing <!DOCTYPE> declaration",
+                \ "inserting implicit <body>",
+                \ "inserting missing 'title' element",
+                \ "attribute \"[+",
+                \ "unescaped & or unknown entity",
                 \ "<input> attribute \"type\" has invalid value \"search\""
                 \]
 

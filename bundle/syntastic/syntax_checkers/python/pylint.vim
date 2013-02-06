@@ -12,16 +12,22 @@ function! SyntaxCheckers_python_pylint_GetLocList()
     let makeprg = syntastic#makeprg#build({
                 \ 'exe': 'pylint',
                 \ 'args': ' -f parseable -r n -i y',
-                \ 'tail': s:MakeprgTail(),
                 \ 'subchecker': 'pylint' })
-    let errorformat = '%f:%l: [%t] %m,%Z,%-GNo config %m'
+    let errorformat = '%f:%l:%m,%Z,%-GNo config %m'
 
-    return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
+    let loclist=SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
+
+    let n = len(loclist) - 1
+    while n >= 0
+        let loclist[n]['type'] = match(['R', 'C', 'W'], loclist[n]['text'][2]) >= 0 ? 'W' : 'E'
+        let n -= 1
+    endwhile
+
+    return sort(loclist, 's:CmpLoclist')
 endfunction
 
-function! s:MakeprgTail()
-    return ' 2>&1 \| sed ''s_: \[\([RCW]\)_: \[W] \[\1_''' .
-         \ ' \| sed ''s_: \[\([FE]\)_:\ \[E] \[\1_'''
+function! s:CmpLoclist(a, b)
+    return a:a['lnum'] - a:b['lnum']
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({

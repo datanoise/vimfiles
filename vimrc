@@ -296,8 +296,8 @@ imap kk <C-O>A<Enter>
 nnoremap <F2> <C-w><C-w>
 inoremap <F2> <Esc><C-w><C-w>
 nnoremap <F4> :sil make %<CR><c-l>:cc<CR>
-nnoremap [f :exe ':Ack ' . expand('<cword>')<CR><CR>
-nnoremap ]f :exe ':Ack ' . matchstr(getline('.'), '\%'.virtcol('.').'v\w*')<CR><CR>
+nnoremap [F :exe ':Ack ' . expand('<cword>')<CR><CR>
+nnoremap ]F :exe ':Ack ' . matchstr(getline('.'), '\%'.virtcol('.').'v\w*')<CR><CR>
 nnoremap <silent> <C-tab> :call <SID>switch_prev_buf()<CR>
 nnoremap <silent> <C-^> :call <SID>switch_prev_buf()<CR>
 nnoremap <silent> <C-6> :call <SID>switch_prev_buf()<CR>

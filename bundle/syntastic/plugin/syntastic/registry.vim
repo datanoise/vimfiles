@@ -5,7 +5,9 @@ let g:loaded_syntastic_registry=1
 
 let s:defaultCheckers = {
         \ 'c': ['gcc'],
+        \ 'coffee': ['coffee', 'coffeelint'],
         \ 'cpp': ['gcc'],
+        \ 'html': ['tidy'],
         \ 'java': ['javac'],
         \ 'objc': ['gcc'],
         \ 'php': ['php', 'phpcs', 'phpmd'],

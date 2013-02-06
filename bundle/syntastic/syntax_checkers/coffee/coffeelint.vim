@@ -1,32 +1,30 @@
 "============================================================================
-"File:        yaml.vim
+"File:        coffeelint.vim
 "Description: Syntax checking plugin for syntastic.vim
-"Maintainer:  Martin Grenfell <martin.grenfell at gmail dot com>
+"Maintainer:  Lincoln Stoll <l@lds.li>
 "License:     This program is free software. It comes without any warranty,
 "             to the extent permitted by applicable law. You can redistribute
 "             it and/or modify it under the terms of the Do What The Fuck You
 "             Want To Public License, Version 2, as published by Sam Hocevar.
 "             See http://sam.zoy.org/wtfpl/COPYING for more details.
 "
-"
-"Installation: $ npm install -g js-yaml
-"
 "============================================================================
+if !exists('g:syntastic_coffee_lint_options')
+    let g:syntastic_coffee_lint_options = ""
+endif
 
-function! SyntaxCheckers_yaml_jsyaml_IsAvailable()
-    return executable("js-yaml")
+function! SyntaxCheckers_coffee_coffeelint_IsAvailable()
+    return executable('coffeelint')
 endfunction
 
-function! SyntaxCheckers_yaml_jsyaml_GetLocList()
+function! SyntaxCheckers_coffee_coffeelint_GetLocList()
     let makeprg = syntastic#makeprg#build({
-                \ 'exe': 'js-yaml',
-                \ 'args': '--compact' })
-    let errorformat='Error on line %l\, col %c:%m,%-G%.%#'
-    return SyntasticMake({ 'makeprg': makeprg,
-                         \ 'errorformat': errorformat,
-                         \ 'defaults': {'bufnr': bufnr("")} })
+                \ 'exe': 'coffeelint',
+                \ 'args': '--csv' })
+    let efm = '%f\,%l\,%trror\,%m'
+    return SyntasticMake({ 'makeprg': makeprg, 'errorformat': efm, 'subtype': 'Style' })
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
-    \ 'filetype': 'yaml',
-    \ 'name': 'jsyaml'})
+    \ 'filetype': 'coffee',
+    \ 'name': 'coffeelint'})

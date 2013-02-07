@@ -4,7 +4,6 @@ g:loaded_rails	rails.txt	/*g:loaded_rails*
 g:rails_abbreviations	rails.txt	/*g:rails_abbreviations*
 g:rails_ctags_arguments	rails.txt	/*g:rails_ctags_arguments*
 g:rails_default_file	rails.txt	/*g:rails_default_file*
-g:rails_gnu_screen	rails.txt	/*g:rails_gnu_screen*
 g:rails_tabstop	rails.txt	/*g:rails_tabstop*
 g:rails_url	rails.txt	/*g:rails_url*
 macros/rails.vim	rails.txt	/*macros\/rails.vim*
@@ -118,7 +117,6 @@ rails-rake-defaults	rails.txt	/*rails-rake-defaults*
 rails-refactoring	rails.txt	/*rails-refactoring*
 rails-related	rails.txt	/*rails-related*
 rails-rspec	rails.txt	/*rails-rspec*
-rails-screen	rails.txt	/*rails-screen*
 rails-scripts	rails.txt	/*rails-scripts*
 rails-snippets	rails.txt	/*rails-snippets*
 rails-surround	rails.txt	/*rails-surround*

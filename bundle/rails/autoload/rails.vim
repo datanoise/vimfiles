@@ -858,20 +858,15 @@ endfunction
 
 function! s:app_background_script_command(cmd) dict abort
   let cmd = s:esccmd(self.script_shell_command(a:cmd))
-  if has_key(self,'options') && has_key(self.options,'gnu_screen')
-    let screen = self.options.gnu_screen
-  else
-    let screen = g:rails_gnu_screen
-  endif
   if has("gui_win32")
     if &shellcmdflag == "-c" && ($PATH . &shell) =~? 'cygwin'
       silent exe "!cygstart -d ".s:rquote(self.path())." ruby ".a:cmd
     else
       exe "!start ".cmd
     endif
-  elseif exists("$STY") && !has("gui_running") && screen && executable("screen")
+  elseif exists("$STY") && !has("gui_running") && executable("screen")
     silent exe "!screen -ln -fn -t ".s:sub(s:sub(a:cmd,'\s.*',''),'^%(script|-rcommand)/','rails-').' '.cmd
-  elseif exists("$TMUX") && !has("gui_running") && screen && executable("tmux")
+  elseif exists("$TMUX") && !has("gui_running") && executable("tmux")
     silent exe '!tmux new-window -n "'.s:sub(s:sub(a:cmd,'\s.*',''),'^%(script|-rcommand)/','rails-').'" "'.cmd.'"'
   else
     exe "!".cmd
@@ -1538,12 +1533,7 @@ function! s:app_server_command(bang,arg) dict
       return
     endif
   endif
-  if has_key(self,'options') && has_key(self.options,'gnu_screen')
-    let screen = self.options.gnu_screen
-  else
-    let screen = g:rails_gnu_screen
-  endif
-  if has("win32") || has("win64") || (exists("$STY") && !has("gui_running") && screen && executable("screen")) || (exists("$TMUX") && !has("gui_running") && screen && executable("tmux"))
+  if has("win32") || has("win64") || (exists("$STY") && !has("gui_running") && executable("screen")) || (exists("$TMUX") && !has("gui_running") && executable("tmux"))
     call self.background_script_command('server '.a:arg)
   else
     " --daemon would be more descriptive but lighttpd does not support it
@@ -2158,7 +2148,7 @@ function! s:BufFinderCommands()
         \ 'rails#app().has(v:val[0])')
   if !empty(tests)
     call s:define_navcommand('unittest', {
-          \ 'pattern': map(copy(tests), 'v:val[1]'),
+          \ 'format': map(copy(tests), 'v:val[1]'),
           \ 'template': {
           \   'test/unit/': "require 'test_helper'\n\nclass %STest < ActiveSupport::TestCase\nend",
           \   'test/models/': "require 'test_helper'\n\nclass %STest < ActiveSupport::TestCase\nend",
@@ -2167,7 +2157,7 @@ function! s:BufFinderCommands()
           \   'spec/helpers/': "require 'spec_helper'\n\ndescribe %S do\nend"},
           \ 'affinity': 'model'})
     call s:define_navcommand('functionaltest', {
-          \ 'pattern': map(copy(tests), 'v:val[2]'),
+          \ 'format': map(copy(tests), 'v:val[2]'),
           \ 'template': {
           \   'test/functional/': "require 'test_helper'\n\nclass %STest < ActionController::TestCase\nend",
           \   'test/controllers/': "require 'test_helper'\n\nclass %STest < ActionController::TestCase\nend",
@@ -2185,7 +2175,7 @@ function! s:BufFinderCommands()
         \ 'rails#app().has(v:val[0])'), 'v:val[1]')
   if !empty(integration_tests)
     call s:define_navcommand('integrationtest', {
-          \ 'pattern': integration_tests,
+          \ 'format': integration_tests,
           \ 'template': {
           \   'test/integration/': "require 'test_helper'\n\nclass %STest < ActionDispatch::IntegrationTest\nend",
           \   'spec/requests/': "require 'spec_helper'\n\ndescribe \"%h\" do\nend",
@@ -2867,7 +2857,7 @@ endfunction
 
 function! s:classification_pairs(options)
   let pairs = []
-  if has_key(a:options, 'pattern')
+  if has_key(a:options, 'format')
     for pattern in s:split(a:options.pattern)
       let pairs += [s:split(pattern, '%s')]
     endfor
@@ -4291,7 +4281,7 @@ function! s:setopt(opt,val)
 endfunction
 
 function! s:opts()
-  return {'alternate': 'b', 'controller': 'b', 'gnu_screen': 'a', 'model': 'b', 'preview': 'l', 'task': 'b', 'related': 'l', 'root_url': 'a'}
+  return {'alternate': 'b', 'controller': 'b', 'model': 'b', 'preview': 'l', 'task': 'b', 'related': 'l', 'root_url': 'a'}
 endfunction
 
 function! s:Complete_set(A,L,P)

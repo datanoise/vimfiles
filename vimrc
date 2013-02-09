@@ -251,7 +251,6 @@ au VimResized * wincmd =
 " Section: Keybindings {{{1
 " ------------------------------------------------------------------------------
 let mapleader = ','
-nnoremap <leader>ss :w<CR>
 nnoremap <leader>sv :source ~/.vimrc
 nnoremap <leader>sg :source ~/.gvimrc
 nnoremap \vv :e ~/.vimrc
@@ -317,8 +316,12 @@ nnoremap <silent> <leader>gc :Gcommit<CR>
 nnoremap <silent> <leader>gs :Gstatus<CR>
 nnoremap <silent> <leader>gh :Git push<CR>
 nnoremap <silent> <leader>gl :Git pull<CR>
+" quick search in visual mode
 xnoremap <silent> * :<C-u>call <SID>VSetSearch()<CR>/<C-R>=@/<CR><CR>
 xnoremap <silent> # :<C-u>call <SID>VSetSearch()<CR>?<C-R>=@/<CR><CR>
+" split join mappings
+nnoremap <silent> <leader>ss :SplitjoinSplit<CR>
+nnoremap <silent> <leader>sj :SplitjoinJoin<CR>
 
 
 " file type bindings {{{2
@@ -506,7 +509,6 @@ let g:CSApprox_verbose_level = 0 " to shut it up
 let c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:xml_syntax_folding = 1 " enable folding in xml files
 let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
-let g:blockle_mapping = '<leader>bb'
 let g:no_turbux_mappings = 1
 let $RUBYOPT = '' " I don't want any surprises like 'noexec' gem
 let g:syntastic_coffee_lint_options = '-f ~/.coffeelint.json'

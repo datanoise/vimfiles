@@ -930,24 +930,16 @@ g:rails_no_abbreviations if you want to do that.
 Additional arguments to pass to ctags from |:Rtags|.  Defaults to ignoring
 JavaScript files, since ctags has a tendency to choke on those.
 
-						*g:rails_default_file*  >
-	let g:rails_default_file='config/database.yml'
-File to load when a new Rails application is created.  Defaults to the README.
+						*g:rails_default_config*  >
+	let g:rails_default_config = {
+	      \ "path_additions": ["extras"]}
+If |config/editor.json| is missing, this variable is used instead.  Useful, in
+particular, for a default set of classifications.
 
-						*g:rails_url*  >
-	let g:rails_url='http://localhost:3000/'
+						*g:rails_root_url*  >
+	let g:rails_root_url='http://localhost:3000/'
 Used for the |:Rpreview| command.  Default is as shown above.  Overridden by
 b:rails_url.
-
-					*rails-tabs* *g:rails_tabstop*  >
-	let g:rails_tabstop=4
-This option now requires the plugin railstab.vim from vim.org:
-	http://www.vim.org/scripts/script.php?script_id=2253
-
-If your goal is simply just override this plugin's settings and use your own
-custom 'shiftwidth', adjust things manually in an autocommand: >
-	autocmd User Rails set sw=4 sts=4 noet
-This is highly discouraged: don't fight Rails.
 
 ABOUT					*rails-about* *rails-plugin-author*
 

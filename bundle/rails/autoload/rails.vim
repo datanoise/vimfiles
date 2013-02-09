@@ -980,8 +980,8 @@ function! rails#new_app_command(bang,...)
   endif
   exe '!rails '.join(map(copy(args),'s:rquote(v:val)'),' ')
   for dir in args
-    if dir !~# '^-' && filereadable(dir.'/'.g:rails_default_file)
-      edit `=dir.'/'.g:rails_default_file`
+    if dir !~# '^-' && filereadable(dir.'/README')
+      edit `=dir.'/README'`
       return
     endif
   endfor
@@ -2147,7 +2147,7 @@ function! s:BufFinderCommands()
         \ ['spec', 'spec/helpers/%s_spec.rb', 'spec/mailers/%s_spec.rb']],
         \ 'rails#app().has(v:val[0])')
   if !empty(tests)
-    call s:define_navcommand('unittest', {
+    call s:define_navcommand('unit test', {
           \ 'format': map(copy(tests), 'v:val[1]'),
           \ 'template': {
           \   'test/unit/': "require 'test_helper'\n\nclass %STest < ActiveSupport::TestCase\nend",
@@ -2156,7 +2156,7 @@ function! s:BufFinderCommands()
           \   'spec/models/': "require 'spec_helper'\n\ndescribe %S do\nend",
           \   'spec/helpers/': "require 'spec_helper'\n\ndescribe %S do\nend"},
           \ 'affinity': 'model'})
-    call s:define_navcommand('functionaltest', {
+    call s:define_navcommand('functional test', {
           \ 'format': map(copy(tests), 'v:val[2]'),
           \ 'template': {
           \   'test/functional/': "require 'test_helper'\n\nclass %STest < ActionController::TestCase\nend",
@@ -2174,7 +2174,7 @@ function! s:BufFinderCommands()
         \ ['turnip', 'spec/acceptance/%s.feature']],
         \ 'rails#app().has(v:val[0])'), 'v:val[1]')
   if !empty(integration_tests)
-    call s:define_navcommand('integrationtest', {
+    call s:define_navcommand('integration test', {
           \ 'format': integration_tests,
           \ 'template': {
           \   'test/integration/': "require 'test_helper'\n\nclass %STest < ActionDispatch::IntegrationTest\nend",
@@ -2406,13 +2406,14 @@ function! s:define_navcommand(name, command) abort
   if has_key(command, 'affinity') && command.default ==# ''
     let command.default = command.affinity . '()'
   endif
-  if a:name !~# '^[a-z]\+$'
-    return s:error("E182: Invalid command name")
+  let name = s:gsub(a:name, ' ', '')
+  if name !~# '^[a-z]\+$'
+    return s:error("E182: Invalid command name ".name)
   endif
   for type in ['E', 'S', 'V', 'T', 'D', '']
     exe 'command! -buffer -bar -bang -nargs=* '
           \ '-complete=customlist,'.s:sid.'CommandList ' .
-          \ 'R' . type . a:name . ' :execute s:CommandEdit(' .
+          \ 'R' . type . name . ' :execute s:CommandEdit(' .
           \ string(type . "<bang>") . ',' .
           \ string(a:name) . ',' . string(command) . ',<f-args>)'
   endfor
@@ -2858,8 +2859,8 @@ endfunction
 function! s:classification_pairs(options)
   let pairs = []
   if has_key(a:options, 'format')
-    for pattern in s:split(a:options.pattern)
-      let pairs += [s:split(pattern, '%s')]
+    for format in s:split(a:options.format)
+      let pairs += [s:split(format, '%s')]
     endfor
   else
     for prefix in s:split(get(a:options, 'prefix', []))
@@ -3583,13 +3584,13 @@ function! s:BufSyntax()
         syn keyword rubyRailsAPIMethod api_method inflect_names
       endif
       if buffer.type_name() ==# 'model' || buffer.type_name('model-arb')
-        syn keyword rubyRailsARMethod default_scope named_scope scope serialize
+        syn keyword rubyRailsARMethod default_scope named_scope scope serialize store
         syn keyword rubyRailsARAssociationMethod belongs_to has_one has_many has_and_belongs_to_many composed_of accepts_nested_attributes_for
         syn keyword rubyRailsARCallbackMethod before_create before_destroy before_save before_update before_validation before_validation_on_create before_validation_on_update
         syn keyword rubyRailsARCallbackMethod after_create after_destroy after_save after_update after_validation after_validation_on_create after_validation_on_update
         syn keyword rubyRailsARCallbackMethod around_create around_destroy around_save around_update
         syn keyword rubyRailsARCallbackMethod after_commit after_find after_initialize after_rollback after_touch
-        syn keyword rubyRailsARClassMethod attr_accessible attr_protected attr_readonly has_secure_password
+        syn keyword rubyRailsARClassMethod attr_accessible attr_protected attr_readonly has_secure_password store_accessor
         syn keyword rubyRailsARValidationMethod validate validates validate_on_create validate_on_update validates_acceptance_of validates_associated validates_confirmation_of validates_each validates_exclusion_of validates_format_of validates_inclusion_of validates_length_of validates_numericality_of validates_presence_of validates_size_of validates_uniqueness_of validates_with
         syn keyword rubyRailsMethod logger
       endif
@@ -4164,7 +4165,7 @@ endfunction
 
 function! s:app_config(...) dict abort
   if self.cache.needs('config')
-    call self.cache.set('config', {})
+    call self.cache.set('config', 0)
     if self.has_file('config/editor.json')
       try
         call self.cache.set('config', rails#json_parse(join(readfile(self.path('config/editor.json')), ' ')))
@@ -4173,10 +4174,17 @@ function! s:app_config(...) dict abort
       endtry
     endif
   endif
-  if a:0
-    return get(self.cache.get('config'), a:1, a:0 > 1 ? a:2 : {})
+  if type(self.cache.get('config')) == type({})
+    let config = self.cache.get('config')
+  elseif exists('g:rails_default_config')
+    let config = g:rails_default_config
   else
-    return self.cache.get('config')
+    let config = {}
+  endif
+  if a:0
+    return get(config, a:1, a:0 > 1 ? a:2 : {})
+  else
+    return config
   endif
 endfunction
 

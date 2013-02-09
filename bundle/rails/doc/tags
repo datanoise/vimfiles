@@ -3,9 +3,8 @@ config/rails.vim	rails.txt	/*config\/rails.vim*
 g:loaded_rails	rails.txt	/*g:loaded_rails*
 g:rails_abbreviations	rails.txt	/*g:rails_abbreviations*
 g:rails_ctags_arguments	rails.txt	/*g:rails_ctags_arguments*
-g:rails_default_file	rails.txt	/*g:rails_default_file*
-g:rails_tabstop	rails.txt	/*g:rails_tabstop*
-g:rails_url	rails.txt	/*g:rails_url*
+g:rails_default_config	rails.txt	/*g:rails_default_config*
+g:rails_root_url	rails.txt	/*g:rails_root_url*
 macros/rails.vim	rails.txt	/*macros\/rails.vim*
 rails	rails.txt	/*rails*
 rails-'cfu'	rails.txt	/*rails-'cfu'*
@@ -126,7 +125,6 @@ rails-syntax-classes	rails.txt	/*rails-syntax-classes*
 rails-syntax-keywords	rails.txt	/*rails-syntax-keywords*
 rails-syntax-strings	rails.txt	/*rails-syntax-strings*
 rails-syntax-yaml	rails.txt	/*rails-syntax-yaml*
-rails-tabs	rails.txt	/*rails-tabs*
 rails-type-navigation	rails.txt	/*rails-type-navigation*
 rails-vim-integration	rails.txt	/*rails-vim-integration*
 rails.txt	rails.txt	/*rails.txt*

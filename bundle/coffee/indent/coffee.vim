@@ -337,7 +337,7 @@ function! GetCoffeeIndent(curlinenum)
   endif
 
   " Hashes should be aligned accordingly
-  if curline =~ '\_\w*:'
+  if curline =~ '^\s*\w\+:' && prevline !~ '^\s*\w\+:'
     return previndent + &shiftwidth
   endif
 

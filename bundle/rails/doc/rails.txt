@@ -80,7 +80,8 @@ actually edit a file from a Rails application.
 			might like :Rake log:clear.
 
 						*rails-:Rpreview*
-:Rpreview [{path}]	Creates a URL from http://localhost:3000/ and the
+:Rpreview [{path}]	Creates a URL from http://localhost:3000/ (or
+			the last arguments given to |:Rserver|) and the
 			{path} given.  The not too useful default is to then
 			edit this URL using Vim itself, allowing |netrw| to
 			download it.  More useful is to define a :OpenURL
@@ -522,7 +523,12 @@ A limited amount of completion with <Tab> is supported.
 			On win32, this means |!start|.  If running inside
 			screen or tmux, a new window inside the current
 			session is created.  Otherwise, the --daemon option is
-			used.
+			used.  Calling this command also sets the base URL for
+			|:Rpreview| based on the provided --binding and --port
+			options, defaulting to localhost and 300 respectively.
+			This works even if the server failed to start, which
+			one can use to set the URL to an already running
+			server.
 
 						*rails-:Rserver!*
 :Rserver! {options}	Same as |:Rserver|, only first attempts to kill any
@@ -839,14 +845,15 @@ be checked into version control.  Example:
 	  },
 	  "classifications": {
 	    "service": {
-	      "prefix": "app/services/",
-	      "suffix": "_service.rb",
+	      "format": "app/services/%s_service.rb",
 	      "template": "class %SService < AbstractService\nend",
 	      "alternate": "test/functional/%s_service_test.rb"
 	    },
 	    "fabricator": {
-	      "prefix": ["test/fabricators/", "spec/fabricators/"],
-	      "suffix": "_fabricator.rb",
+	      "format": [
+	        "test/fabricators/%s_fabricator.rb",
+	        "spec/fabricators/%s_fabricator.rb"
+	      ],
 	      "affinity": "model",
 	      "template": "Fabricator :%s do\nend"
 	    }
@@ -858,47 +865,32 @@ This "classifications" section is used to provide navigation commands.  The
 above configuration causes :Rservice and :Rfabricator navigation commands to
 be created.  The optional "affinity" option determines whether the current
 model name or controller name is used for the default when no argument is
-given.  The optional "alternate" option controls the destination of :A.
-
+given.  The optional "alternate" and "related" options control the destination
+of :A and :R.
 
 						*config/rails.vim*
 If you have settings particular to a specific project, they can be put in a
 config/rails.vim file in the root directory of the application.  The file is
 sourced in the |sandbox| for security reasons, which makes invoking rails.vim
-commands like |:Rnavcommand| or |:Rset| impossible.  Thus, this file is
+commands like |:Rnavcommand| or |:Rabbrev| impossible.  Thus, this file is
 deprecated in favor of |config/editor.json|.
 
 						*rails-:Rset*
 :Rset {option}[={value}]
-			Query or set a local option.  This command may be
-			called interactively or from an autocommand.
+			Query or set a local option.
 
-Options may be set in one of four scopes, which may be indicated by an
-optional prefix.  These scopes determine how broadly an option will apply.
-Generally, the default scope is sufficient.
+This command is deprecated.  See the below table for the replacement for a
+given option.
 
-Scope	Description ~
-a:	All files in one Rails application
-b:	Buffer (file) specific
-g:	Global to all applications
-l:	Local to method (same as b: in non-Ruby files)
+Option		 Replacement ~
+alternate	 Provide "alternate" on a |config/editor.json| classification
+controller	 Provide "affinity" on a |config/editor.json| classification
+model		 Provide "affinity" on a |config/editor.json| classification
+related		 Provide "related" on a |config/editor.json| classification
+root_url	 |:Rserver| --binding=host --port=12345
 
-Options are shown below with their default scope, which should be omitted.
-While you may override the scope with a prefix, this is rarely necessary and
-oftentimes useless.  (For example, setting g:task is useless because the
-default rake task will apply before considering this option.)
+Open a bug report if your use case is not addressed by the above alternatives.
 
-Option		 Meaning ~
-b:alternate	 Custom alternate file for :A, relative to the Rails root
-b:controller	 Default controller for certain commands (e.g., :Rhelper)
-b:model		 Default model for certain commands (e.g., :Rfixtures)
-l:related	 Custom related file for :R, relative to the Rails root
-a:root_url	 Root URL for commands like :Rpreview
-
-Examples: >
-	:Rset root_url=http://localhost:12345
-	:Rset related=app/views/blog/edit.html.erb
-<
 GLOBAL SETTINGS					*rails-global-settings*
 
 A few global variables control the behavior of this plugin.  In general, they
@@ -938,12 +930,10 @@ particular, for a default set of classifications.
 
 						*g:rails_root_url*  >
 	let g:rails_root_url='http://localhost:3000/'
-Used for the |:Rpreview| command.  Default is as shown above.  Overridden by
-b:rails_url.
+Used for the |:Rpreview| command.  This setting is deprecated in favor of
+using |:Rserver| to customize the URL for a given application.
 
 ABOUT					*rails-about* *rails-plugin-author*
-
-This plugin was written by Tim Pope.  Email all comments, complaints, and compliments to him at vim at tpope. org.
 
 The latest stable version can be found at
     http://www.vim.org/scripts/script.php?script_id=1567

@@ -1,0 +1,14 @@
+:Switch	switch.txt	/*:Switch*
+b:switch_definitions	switch.txt	/*b:switch_definitions*
+g:switch_builtins	switch.txt	/*g:switch_builtins*
+g:switch_definitions	switch.txt	/*g:switch_definitions*
+g:switch_no_builtins	switch.txt	/*g:switch_no_builtins*
+switch	switch.txt	/*switch*
+switch-builtins	switch.txt	/*switch-builtins*
+switch-contents	switch.txt	/*switch-contents*
+switch-customization	switch.txt	/*switch-customization*
+switch-installation	switch.txt	/*switch-installation*
+switch-issues	switch.txt	/*switch-issues*
+switch-settings	switch.txt	/*switch-settings*
+switch-similar-plugins	switch.txt	/*switch-similar-plugins*
+switch-usage	switch.txt	/*switch-usage*

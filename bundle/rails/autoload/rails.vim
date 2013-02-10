@@ -1113,7 +1113,7 @@ function! s:Rake(bang,lnum,arg)
     endif
     let &l:errorformat = s:efm_backtrace
     let arg = a:arg
-    if &filetype =~# '^ruby\>' && arg == '' && &modelines
+    if &filetype =~# '^ruby\>' && arg == ''
       let mnum = s:lastmethodline(lnum)
       let str = getline(mnum)."\n".getline(mnum+1)."\n".getline(mnum+2)."\n"
       let pat = '\s\+\zs.\{-\}\ze\%(\n\|\s\s\|#{\@!\|$\)'
@@ -1124,12 +1124,7 @@ function! s:Rake(bang,lnum,arg)
       endif
     endif
     if arg == ''
-      let opt = s:getopt('task','bl')
-      if opt != ''
-        let arg = opt
-      else
-        let arg = rails#buffer().default_rake_task(lnum)
-      endif
+      let arg = rails#buffer().default_rake_task(lnum)
     endif
     if !has_key(self,'options') | let self.options = {} | endif
     if arg == '-'
@@ -1513,11 +1508,13 @@ endfunction
 
 function! s:app_server_command(bang,arg) dict
   let port = matchstr(a:arg,'\%(-p\|--port=\=\)\s*\zs\d\+')
-  if port == ''
+  if empty(port)
     let port = "3000"
   endif
-  " TODO: Extract bind argument
-  let bind = "0.0.0.0"
+  let bind = matchstr(a:arg,'\%(-b\|--binding=\=\)\s*\zs\S\+')
+  if empty(bind)
+    let bind = "0.0.0.0"
+  endif
   if a:bang && executable("ruby")
     let pid = s:getpidfor(bind,port)
     if pid =~ '^\d\+$'
@@ -3027,8 +3024,18 @@ endfunction
 
 function! s:readable_related(...) dict abort
   let f = self.name()
+  let [root, classification] = s:find_classification(values(self.app().config('classifications')), f)
   if a:0 && a:1
     let lastmethod = self.last_method(a:1)
+    if root !=# '' && has_key(classification, 'related')
+      let related = s:split(classification.related)
+      if empty(lastmethod)
+        call filter(related, 'v:val !~# "%m"')
+      endif
+      if !empty(related)
+        return s:gsub(s:gsub(join(related, "\n"), '\%s', root), '\%m', lastmethod)
+      endif
+    endif
     if self.type_name('controller','mailer') && lastmethod != ""
       let view = self.resolve_view(lastmethod, line('.'))
       if view !=# ''
@@ -3079,9 +3086,8 @@ function! s:readable_related(...) dict abort
       return self.app().migration(1)
     endif
   endif
-  let [root, classification] = s:find_classification(filter(values(self.app().config('classifications')), 'get(v:val, "alternate", "") =~# "%s"'), f)
-  if root !=# ''
-    return printf(classification.alternate, root)
+  if root !=# '' && has_key(classification, 'alternate')
+    return s:gsub(join(s:split(classification.alternate), "\n"), '\%s', root)
   endif
   if f =~ '\<config/environments/'
     return "config/application.rb\nconfig/environment.rb"
@@ -4289,7 +4295,7 @@ function! s:setopt(opt,val)
 endfunction
 
 function! s:opts()
-  return {'alternate': 'b', 'controller': 'b', 'model': 'b', 'preview': 'l', 'task': 'b', 'related': 'l', 'root_url': 'a'}
+  return {'alternate': 'b', 'controller': 'b', 'model': 'b', 'related': 'l', 'root_url': 'a'}
 endfunction
 
 function! s:Complete_set(A,L,P)

@@ -336,6 +336,11 @@ function! GetCoffeeIndent(curlinenum)
     return previndent + &shiftwidth
   endif
 
+  " Hashes should be aligned accordingly
+  if curline =~ '\_\w*:'
+    return previndent + &shiftwidth
+  endif
+
   " Outdent after these keywords if they don't have a postfix condition or are
   " a single-line statement.
   if prevline =~ s:OUTDENT_AFTER

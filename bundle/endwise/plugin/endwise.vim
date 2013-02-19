@@ -92,7 +92,7 @@ function! s:crend(always)
             let b = '('
         endif
         if c =~ '[}\]\)]' && getline(line('.')-1) =~ b.'$'
-            return "\<C-O>O"
+            return "\<C-O>==O"
         endif
     endif
 

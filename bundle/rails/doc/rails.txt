@@ -45,12 +45,12 @@ GENERAL COMMANDS				*rails-commands*
 All commands are buffer local, unless otherwise stated.  This means you must
 actually edit a file from a Rails application.
 
-						*rails-:Rails*
-:Rails new {directory}	The only global command.  Creates a new Rails
-			application in {directory}, and loads the README.  If
-			rails.vim is active for the current buffer, :Rails is
-			an alias for |:Rscript|.
+						*rails-:Rails-new*
+:Rails new {directory}	The only global command.  Invokes "rails new
+			{directory}" and loads the generated files into the
+			quickfix list.
 
+						*rails-:Rails!*
 :Rails!			Show the version of rails.vim installed.  If rails.vim
 			is active for the current buffer, also show the type
 			of Rails file detected.
@@ -248,10 +248,8 @@ to methods or line numbers using the same syntax as |:R|, and file creation
 :Rlib						|rails-:Rlib|
 :Rlocale					|rails-:Rlocale|
 :Rmailer					|rails-:Rmailer|
-:Rmetal						|rails-:Rmetal|
 :Rmigration					|rails-:Rmigration|
 :Rmodel						|rails-:Rmodel|
-:Robserver					|rails-:Robserver|
 :Rplugin					|rails-:Rplugin|
 :Rschema					|rails-:Rschema|
 :Rspec						|rails-:Rspec|
@@ -324,10 +322,6 @@ to methods or line numbers using the same syntax as |:R|, and file creation
 			app/mailers for Rails 3 and app/models for older
 			versions of Rails but only tab completes the former.
 
-						*rails-:Rmetal*
-:Rmetal [{name}]	Edit the app/metal file specified.  With no argument,
-			defaults to editing config/boot.rb.
-
 						*rails-:Rmigration*
 :Rmigration [{pattern}]	If {pattern} is a number, find the migration for that
 			particular set of digits, zero-padding if necessary.
@@ -339,20 +333,12 @@ to methods or line numbers using the same syntax as |:R|, and file creation
 						*rails-:Rmodel*
 :Rmodel [{name}]	Edit the specified or current model.
 
-						*rails-:Robserver*
-:Robserver [{name}]	Find the observer with a name like
-			{model}_observer.rb.  When in an observer, most
-			commands (like :Rmodel) will seek based on the
-			observed model ({model}) and not the actual observer
-			({model}_observer).  However, for the command
-			:Runittest, a file of the form
-			{model}_observer_test.rb will be found.
-
 						*rails-:Rplugin*
 :Rplugin [{plugin}[/{path}]]
 			Edits a file within a plugin.  If the path to the file
 			is omitted, it defaults to init.rb.  If no argument is
 			given, it defaults to editing the application Gemfile.
+			Deprecated.
 
 						*rails-:Rspec*
 :Rspec [{name}]		Edit the given spec.  With no argument, defaults to
@@ -408,7 +394,7 @@ also use |:Rnavcommand|, either from |macros/rails.vim| or a |rails-:autocmd|.
 			a full path).  If it is specified as -default=model()
 			or -default=controller(), the current model or
 			controller is used as a default.  Deprecated in favor
-			of |config/editor.json| classifications.
+			of |config/editor.json| projections.
 
 Examples: >
 	Rnavcommand api      app/apis -glob=**/* -suffix=_api.rb
@@ -486,17 +472,21 @@ The following commands are wrappers around the scripts in the script directory
 of the Rails application.  Most have extra features beyond calling the script.
 A limited amount of completion with <Tab> is supported.
 
-						*rails-:Rscript*
-:Rscript {script} {options}
-			Call ruby script/{script} {options}.  Defaults to
-			calling script/console.
 
-						*rails-:Rconsole*
-:Rconsole {options}	Obsolete. Call |:Rscript| instead.
+						*rails-:Rails*
+:Rails {command} [options]
+			Depending on the Rails version, invoke one of
+			"bin/rails {command}", "script/rails {command}", or
+			"script/{command}".
+
+						*rails-:Rscript*
+:Rscript {command} [options]
+			Deprecated alias for |:Rails| {command}.  Defaults to
+			calling |:Rails| console.
 
 						*rails-:Rrunner*
-:[range]Rrunner {code}	Executes {code} with script/runner.  Differs from
-			:Rscript runner {code} in that the code is passed as
+:[range]Rrunner {code}	Executes {code} with rails runner.  Differs from
+			:Rails runner {code} in that the code is passed as
 			one argument.  Also, |system()| is used instead of
 			|:!|.  This is to help eliminate annoying "Press
 			ENTER" prompts.  If a line number is given in the
@@ -512,14 +502,16 @@ A limited amount of completion with <Tab> is supported.
 :[range]Ry  {code}	output).
 
 						*rails-:Rgenerate*
-:Rgenerate {options}	Calls script/generate {options}, and then edits the
-			first file generated.
+:Rgenerate {options}	Calls rails generate {options} and loads the
+			generated files into the quickfix list.  Use ! to
+			surpress jumping to the first file.
 
 						*rails-:Rdestroy*
-:Rdestroy {options}	Calls script/destroy {options}.
+:Rdestroy {options}	Calls rails destroy {options} and loads the destroyed
+			files into the quickfix list.
 
 						*rails-:Rserver*
-:Rserver {options}	Launches script/server {options} in the background.
+:Rserver {options}	Launches rails server {options} in the background.
 			On win32, this means |!start|.  If running inside
 			screen or tmux, a new window inside the current
 			session is created.  Otherwise, the --daemon option is
@@ -544,16 +536,22 @@ A few features are dedicated to helping you refactor your code.
 Partial Extraction ~
 						*rails-partials*
 
-The :Rextract command can be used to extract a partial to a new file.
+The :Rextract command can be used to extract part of a view to a partial, part
+of a helper to another helper, or part of a model or controller to a concern.
 
 						*rails-:Rextract*
-:[range]Rextract [{controller}/]{name}	
+:[range]Rextract [{controller}/]{name}
 			Create a {name} partial from [range] lines (default:
-			current line).
+			current line).  Only available in views.
 
-						*rails-:Rpartial*
-:[range]Rpartial [{controller}/]{name}	
-			Obsolete alias for :Rextract.
+:[range]Rextract {helper}
+			Create a {name} helper from [range] lines (default:
+			current line).  Only available in helpers.
+
+:[range]Rextract {concern}
+			Create a {name} concern from [range] lines (default:
+			current line).  Only available in models and
+			controllers.
 
 If this is your file, in app/views/blog/show.html.erb: >
 
@@ -569,24 +567,13 @@ And you issue this command: >
 Your file will change to this: >
 
   1	<div>
-  2	  <%= render :partial => 'post' %>
+  2	  <%= render 'post' %>
   3	</div>
 
 And app/views/blog/_post.html.erb will now contain: >
 
-  1	<h2><%= post.title %></h2>
-  2	<p><%= post.body %></p>
-
-As a special case, if the file had looked like this: >
-
-  1     <% for object in @posts -%>
-  2	  <h2><%= object.title %></h2>
-  3	  <p><%= object.body %></p>
-  4	<% end -%>
-<
-The end result would have been this: >
-
-  1     <%= render :partial => 'post', :collection => @posts %>
+  1	<h2><%= @post.title %></h2>
+  2	<p><%= @post.body %></p>
 <
 The easiest way to choose what to extract is to use |linewise-visual| mode.
 Then, a simple >
@@ -600,6 +587,8 @@ Migration Inversion ~
 			reversed.  This chokes on more complicated
 			instructions, but works reasonably well for simple
 			calls to create_table, add_column, and the like.
+			Deprecated now that Rails supports reversible
+			migration definitions.
 
 INTEGRATION					*rails-integration*
 
@@ -660,12 +649,6 @@ change from MixedCase to snake_case.  This plugin adds two additional
 inflections: crl for alternating between the singular and plural, and crt for
 altering between tableize and classify.  The latter is useful in changing
 constructs like BlogPost.all to current_user.blog_posts.all and vice versa.
-
-						*rails-cream*
-This plugin provides a few additional key bindings if it is running under
-Cream, the user friendly editor which uses Vim as a back-end.  Ctrl+Enter
-finds the file under the cursor (as in |rails-gf|), and Alt+[ and Alt+] find
-the alternate (|rails-alternate|) and related (|rails-related|) files.
 
 						*rails-rspec*
 The presence of a spec directory causes several additional behaviors to
@@ -764,13 +747,9 @@ syntax group is used.  The list of assertions can be refreshed with
 |:Rrefresh|.
 
 						*rails-syntax-strings*
-In the following line of code, the "?" in the conditions clause and the "ASC"
-in the order clause will be highlighted: >
-  Post.find(:all, :conditions => ["body like ?","%e%"], :order => "title ASC")
-<
 A string literal using %Q<> or %<> delimiters will have its contents
 highlighted as HTML.  This is sometimes useful when writing helpers. >
-  link = %<<a href="http://www.vim.org">Vim</a>>
+  link = %<<a href="http://www.vim.org">Vim</a>>.html_safe
 <
 						*rails-syntax-yaml*
 YAML syntax highlighting has been extended to highlight eRuby, which can be
@@ -843,7 +822,7 @@ be checked into version control.  Example:
 	  "abbreviations": {
 	    "FB::": "FooBar"
 	  },
-	  "classifications": {
+	  "projections": {
 	    "service": {
 	      "format": "app/services/%s_service.rb",
 	      "template": "class %SService < AbstractService\nend",
@@ -863,13 +842,13 @@ be checked into version control.  Example:
 	  "path_additions": ["app/services"]
 	}
 <
-This "classifications" section is used to provide navigation commands.  The
-above configuration causes :Rservice and :Rfabricator navigation commands to
-be created.  The optional "affinity" option determines whether the current
-model name or controller name is used for the default when no argument is
-given.  The optional "alternate" and "related" options control the destination
-of :A and :R.  In the "related" option, one can also use %m to insert the
-current method.
+This "projections" section is used to provide navigation commands.  The above
+configuration causes :Rservice and :Rfabricator navigation commands to be
+created.  The optional "affinity" option determines whether the current model
+name or controller name is used for the default when no argument is given.
+The optional "alternate" and "related" options control the destination of :A
+and :R.  In the "related" option, one can also use %m to insert the current
+method.
 
 						*config/rails.vim*
 If you have settings particular to a specific project, they can be put in a
@@ -886,10 +865,10 @@ This command is deprecated.  See the below table for the replacement for a
 given option.
 
 Option		 Replacement ~
-alternate	 Provide "alternate" on a |config/editor.json| classification
-controller	 Provide "affinity" on a |config/editor.json| classification
-model		 Provide "affinity" on a |config/editor.json| classification
-related		 Provide "related" on a |config/editor.json| classification
+alternate	 Provide "alternate" on a |config/editor.json| projection
+controller	 Provide "affinity" on a |config/editor.json| projection
+model		 Provide "affinity" on a |config/editor.json| projection
+related		 Provide "related" on a |config/editor.json| projection
 root_url	 |:Rserver| --binding=host --port=12345
 
 Open a bug report if your use case is not addressed by the above alternatives.
@@ -929,7 +908,7 @@ JavaScript files, since ctags has a tendency to choke on those.
 	let g:rails_default_config = {
 	      \ "path_additions": ["extras"]}
 If |config/editor.json| is missing, this variable is used instead.  Useful, in
-particular, for a default set of classifications.
+particular, for a default set of projections.
 
 						*g:rails_root_url*  >
 	let g:rails_root_url='http://localhost:3000/'

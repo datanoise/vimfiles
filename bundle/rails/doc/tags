@@ -37,10 +37,11 @@ rails-:RV	rails.txt	/*rails-:RV*
 rails-:Rabbrev	rails.txt	/*rails-:Rabbrev*
 rails-:Rabbrev!	rails.txt	/*rails-:Rabbrev!*
 rails-:Rails	rails.txt	/*rails-:Rails*
+rails-:Rails!	rails.txt	/*rails-:Rails!*
+rails-:Rails-new	rails.txt	/*rails-:Rails-new*
 rails-:Rake	rails.txt	/*rails-:Rake*
 rails-:Rake!	rails.txt	/*rails-:Rake!*
 rails-:Rcd	rails.txt	/*rails-:Rcd*
-rails-:Rconsole	rails.txt	/*rails-:Rconsole*
 rails-:Rcontroller	rails.txt	/*rails-:Rcontroller*
 rails-:Rdbext	rails.txt	/*rails-:Rdbext*
 rails-:Rdestroy	rails.txt	/*rails-:Rdestroy*
@@ -62,13 +63,10 @@ rails-:Rlib	rails.txt	/*rails-:Rlib*
 rails-:Rlocale	rails.txt	/*rails-:Rlocale*
 rails-:Rlog	rails.txt	/*rails-:Rlog*
 rails-:Rmailer	rails.txt	/*rails-:Rmailer*
-rails-:Rmetal	rails.txt	/*rails-:Rmetal*
 rails-:Rmigration	rails.txt	/*rails-:Rmigration*
 rails-:Rmodel	rails.txt	/*rails-:Rmodel*
 rails-:Rnavcommand	rails.txt	/*rails-:Rnavcommand*
-rails-:Robserver	rails.txt	/*rails-:Robserver*
 rails-:Rp	rails.txt	/*rails-:Rp*
-rails-:Rpartial	rails.txt	/*rails-:Rpartial*
 rails-:Rplugin	rails.txt	/*rails-:Rplugin*
 rails-:Rpp	rails.txt	/*rails-:Rpp*
 rails-:Rpreview	rails.txt	/*rails-:Rpreview*
@@ -98,7 +96,6 @@ rails-alternate-related	rails.txt	/*rails-alternate-related*
 rails-autocommands	rails.txt	/*rails-autocommands*
 rails-commands	rails.txt	/*rails-commands*
 rails-configuration	rails.txt	/*rails-configuration*
-rails-cream	rails.txt	/*rails-cream*
 rails-custom-navigation	rails.txt	/*rails-custom-navigation*
 rails-dbext	rails.txt	/*rails-dbext*
 rails-gf	rails.txt	/*rails-gf*

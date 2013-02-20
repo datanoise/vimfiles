@@ -1492,13 +1492,21 @@ function! s:BufScriptWrappers()
   command! -buffer       -nargs=1 -range=0 -complete=customlist,s:Complete_ruby Ry            :execute rails#app().runner_command(<count>==<line2>?<count>:-1,'y begin '.<f-args>.' end')
 endfunction
 
+function! s:app_gems() dict abort
+  if self.has('bundler') && exists('*bundler#project')
+    return bundler#project(self.path()).gems()
+  else
+    return {}
+  endif
+endfunction
+
 function! s:app_generators() dict abort
   if self.cache.needs('generators')
     let paths = [self.path('vendor/plugins/*'), self.path('lib'), expand("~/.rails")]
-    if self.has('bundler') && exists('*bundler#project')
-      let gems = values(bundler#project(self.path()).gems())
-      let paths += map(copy(gems), 'v:val . "/lib/rails"')
-      let paths += map(copy(gems), 'v:val . "/lib"')
+    if !empty(self.gems())
+      let gems = values(self.gems())
+      let paths += map(values(self.gems()), 'v:val . "/lib/rails"')
+      let paths += map(values(self.gems()), 'v:val . "/lib"')
       let builtin = []
     else
       let builtin = ['assets', 'controller', 'generator', 'helper', 'integration_test', 'jbuilder', 'jbuilder_scaffold_controller', 'mailer', 'migration', 'model', 'resource', 'scaffold', 'scaffold_controller', 'task']
@@ -1640,7 +1648,7 @@ function! s:app_generator_command(bang,...) dict
   return ''
 endfunction
 
-call s:add_methods('app', ['generators','script_command','runner_command','server_command','generator_command'])
+call s:add_methods('app', ['gems','generators','script_command','runner_command','server_command','generator_command'])
 
 function! s:Complete_script(ArgLead,CmdLine,P)
   let cmd = s:sub(a:CmdLine,'^\u\w*\s+','')
@@ -2437,7 +2445,7 @@ function! s:define_navcommand(name, projection) abort
   if type(get(projection, 'command', 1)) ==# type('')
     let name = projection.command
   else
-    let name = s:gsub(a:name, ' ', '')
+    let name = s:gsub(a:name, '[[:space:][:punct:]]', '')
   endif
   if name !~# '^[a-z]\+$'
     return s:error("E182: Invalid command name ".name)
@@ -2913,7 +2921,7 @@ function! s:readable_open_command(cmd, argument, name, options) dict abort
     endif
   endfor
   if djump !~# '^!'
-    return 'echoerr '.string('No such '.a:name.' '.a:argument)
+    return 'echoerr '.string('No such '.tr(a:name, '_', ' ').' '.a:argument)
   endif
   for [prefix, suffix] in pairs
     if isdirectory(self.app().path(prefix))
@@ -4350,6 +4358,7 @@ function! RailsBufInit(path)
     $
   endif
   call s:BufSettings()
+  call s:BufMappings()
   call app.source_callback("config/rails.vim")
   call s:BufCommands()
   let t = rails#buffer().type_name()
@@ -4366,7 +4375,6 @@ function! RailsBufInit(path)
   if f != ''
     exe "silent doautocmd User Rails".f
   endif
-  call s:BufMappings()
   call s:BufProjectionCommands()
   call s:BufAbbreviations()
   return b:rails_root

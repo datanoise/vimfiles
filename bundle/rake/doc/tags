@@ -4,6 +4,15 @@ rake-:AD	rake.txt	/*rake-:AD*
 rake-:AS	rake.txt	/*rake-:AS*
 rake-:AT	rake.txt	/*rake-:AT*
 rake-:AV	rake.txt	/*rake-:AV*
+rake-:Cd	rake.txt	/*rake-:Cd*
+rake-:Ctags	rake.txt	/*rake-:Ctags*
+rake-:D	rake.txt	/*rake-:D*
+rake-:E	rake.txt	/*rake-:E*
+rake-:Elib	rake.txt	/*rake-:Elib*
+rake-:Espec	rake.txt	/*rake-:Espec*
+rake-:Etask	rake.txt	/*rake-:Etask*
+rake-:Etest	rake.txt	/*rake-:Etest*
+rake-:Lcd	rake.txt	/*rake-:Lcd*
 rake-:R	rake.txt	/*rake-:R*
 rake-:RD	rake.txt	/*rake-:RD*
 rake-:RS	rake.txt	/*rake-:RS*
@@ -17,6 +26,9 @@ rake-:Rspec	rake.txt	/*rake-:Rspec*
 rake-:Rtags	rake.txt	/*rake-:Rtags*
 rake-:Rtask	rake.txt	/*rake-:Rtask*
 rake-:Rtest	rake.txt	/*rake-:Rtest*
+rake-:S	rake.txt	/*rake-:S*
+rake-:T	rake.txt	/*rake-:T*
+rake-:V	rake.txt	/*rake-:V*
 rake-about	rake.txt	/*rake-about*
 rake-commands	rake.txt	/*rake-commands*
 rake.txt	rake.txt	/*rake.txt*

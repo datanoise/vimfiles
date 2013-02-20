@@ -514,5 +514,8 @@ let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
 let g:no_turbux_mappings = 1
 let $RUBYOPT = '' " I don't want any surprises like 'noexec' gem
 let g:syntastic_coffee_lint_options = '-f ~/.coffeelint.json'
+if executable('ag')
+  let g:ackprg = 'ag --nogroup --nocolor --column'
+endif
 
 " }}}

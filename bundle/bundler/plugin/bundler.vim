@@ -123,13 +123,23 @@ function! s:syntaxlock()
   hi def link gemfilelockBang     Special
 endfunction
 
+function! s:setuplock()
+  nnoremap <silent><buffer> gf         :Bopen    <C-R><C-F><CR>
+  nnoremap <silent><buffer> <C-W>f     :Bsplit   <C-R><C-F><CR>
+  nnoremap <silent><buffer> <C-W><C-F> :Bsplit   <C-R><C-F><CR>
+  nnoremap <silent><buffer> <C-W>gf    :Btabedit <C-R><C-F><CR>
+endfunction
+
 augroup bundler_syntax
   autocmd!
+  autocmd BufNewFile,BufReadPost */.bundle/config set filetype=yaml
   autocmd BufNewFile,BufReadPost Gemfile set filetype=ruby
   autocmd Syntax ruby if expand('<afile>:t') ==? 'gemfile' | call s:syntaxfile() | endif
   autocmd BufNewFile,BufRead [Gg]emfile.lock setf gemfilelock
   autocmd FileType gemfilelock set suffixesadd=.rb
   autocmd Syntax gemfilelock call s:syntaxlock()
+  autocmd FileType gemfilelock    call s:setuplock()
+  autocmd User Rails/Gemfile.lock call s:setuplock()
 augroup END
 
 " }}}1
@@ -175,7 +185,7 @@ augroup END
 let s:project_prototype = {}
 let s:projects = {}
 
-function! s:project(...) abort
+function! bundler#project(...) abort
   let dir = a:0 ? a:1 : (exists('b:bundler_root') && b:bundler_root !=# '' ? b:bundler_root : s:FindBundlerRoot(expand('%:p')))
   if dir !=# ''
     if has_key(s:projects,dir)
@@ -186,11 +196,16 @@ function! s:project(...) abort
     endif
     return extend(extend(project,s:project_prototype,'keep'),s:abstract_prototype,'keep')
   endif
-  call s:throw('not a Bundler project: '.(a:0 ? a:1 : expand('%')))
+  return {}
 endfunction
 
-function! bundler#project(...) abort
-  return a:0 ? s:project(a:1) : s:project()
+function! s:project(...) abort
+  let project = a:0 ? bundler#project(a:1) : bundler#project()
+  if empty(project)
+    call s:throw('not a Bundler project: '.(a:0 ? a:1 : expand('%')))
+  else
+    return project
+  endif
 endfunction
 
 function! s:project_path(...) dict abort
@@ -297,7 +312,7 @@ function! s:project_gems(...) dict abort
         let failed += [name]
       endif
     endfor
-    if !empty(gems) && empty(failed)
+    if !exists('g:bundler_strict') || !empty(gems) && empty(failed)
       let self._lock_time = time
       call self.alter_buffer_paths()
       return gems
@@ -321,6 +336,7 @@ function! s:project_gems(...) dict abort
         endif
       endfor
     else
+      let self._gems = {}
       for line in split(output,"\n")
         let self._gems[split(line,' ')[0]] = matchstr(line,' \zs.*')
       endfor
@@ -436,7 +452,7 @@ augroup bundler_make
   autocmd QuickFixCmdPost *make*
         \ if &makeprg =~# '^bundle' && exists('b:bundler_root') |
         \   call s:pop_command() |
-        \   execute 'call s:project().gems()' |
+        \   execute 'call s:project().gems(exists("g:bundler_strict") ? "" : "refresh")' |
         \ endif
 augroup END
 
@@ -448,7 +464,14 @@ function! s:Open(cmd,gem,lcd)
     return a:cmd.' `=bundler#buffer().project().path("Gemfile")`'
   elseif a:gem ==# ''
     return a:cmd.' `=bundler#buffer().project().path("Gemfile.lock")`'
-  elseif has_key(s:project().gems(),a:gem)
+  else
+    if !has_key(s:project().gems(), a:gem)
+      call s:project().gems('refresh')
+    endif
+    if !has_key(s:project().gems(), a:gem)
+      let v:errmsg = "Can't find gem \"".a:gem."\" in bundle"
+      return 'echoerr v:errmsg'
+    endif
     let path = fnameescape(bundler#buffer().project().gems()[a:gem])
     let exec = a:cmd.' '.path
     if a:cmd =~# '^pedit' && a:lcd
@@ -457,9 +480,6 @@ function! s:Open(cmd,gem,lcd)
       let exec .= '|lcd '.path
     endif
     return exec
-  else
-    let v:errmsg = "Can't find gem \"".a:gem."\" in bundle"
-    return 'echoerr v:errmsg'
   endif
 endfunction
 

@@ -205,7 +205,9 @@ set vb t_vb= " no visual bell or beep, damn it
 if has("win32")
   au VimEnter * set vb t_vb=
 endif
-set path+=*/** " allow :find to search subdirectories
+if getcwd() != expand('~')
+  set path+=*/** " allow :find to search subdirectories
+end
 set tags+=../tags,../../tags,../../../tags,../../../../tags,./tmp/tags
 set cpoptions+=d
 set timeoutlen=1000 " A little bit more time for macros

@@ -316,12 +316,10 @@ endfunction
 function! s:find_projection(projections, filename) abort
   let f = a:filename
   for c in a:projections
-    for prefix in s:split(get(c, 'prefix', []))
-      for suffix in s:split(get(c, 'suffix', '.rb'))
-        if s:startswith(f, prefix) && f[-strlen(suffix) : - 1] ==# suffix
-          return [f[strlen(prefix) : -strlen(suffix)-1], c]
-        endif
-      endfor
+    for [prefix, suffix] in s:projection_pairs(c)
+      if s:startswith(f, prefix) && f[-strlen(suffix) : - 1] ==# suffix
+        return [f[strlen(prefix) : -strlen(suffix)-1], c]
+      endif
     endfor
   endfor
   return ['', {}]
@@ -1116,7 +1114,8 @@ function! s:app_rake_tasks() dict
   if self.cache.needs('rake_tasks')
     call s:push_chdir()
     try
-      let lines = split(system("rake -T"),"\n")
+      let output = system(self.has_file('bin/rake') ? self.ruby_shell_command('bin/rake -T') : 'rake -T')
+      let lines = split(output, "\n")
     finally
       call s:pop_command()
     endtry
@@ -1164,8 +1163,11 @@ function! s:Rake(bang,lnum,arg)
   let old_makeprg = &l:makeprg
   let old_errorformat = &l:errorformat
   try
+    call s:push_chdir(1)
     if !empty(glob(rails#app().path('.zeus.sock'))) && executable('zeus')
       let &l:makeprg = 'zeus rake'
+    elseif rails#app().has_file('bin/rake')
+      let &l:makeprg = rails#app().ruby_shell_command('bin/rake')
     elseif exists('b:bundler_root') && b:bundler_root ==# rails#app().path()
       let &l:makeprg = 'bundle exec rake'
     else
@@ -1194,10 +1196,7 @@ function! s:Rake(bang,lnum,arg)
     let withrubyargs = '-r ./config/boot -r '.s:rquote(self.path('config/environment')).' -e "puts \%((in \#{Dir.getwd}))" '
     if arg =~# '^notes\>'
       let &l:errorformat = '%-P%f:,\ \ *\ [%*[\ ]%l]\ [%t%*[^]]] %m,\ \ *\ [%*[\ ]%l] %m,%-Q'
-      " %D to chdir is apparently incompatible with %P multiline messages
-      call s:push_chdir(1)
       exe 'make! '.arg
-      call s:pop_command()
       if !a:bang
         cwindow
       endif
@@ -1241,6 +1240,7 @@ function! s:Rake(bang,lnum,arg)
   finally
     let &l:errorformat = old_errorformat
     let &l:makeprg = old_makeprg
+    call s:pop_command()
   endtry
 endfunction
 

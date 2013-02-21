@@ -105,20 +105,31 @@ function! s:syntaxfile()
 endfunction
 
 function! s:syntaxlock()
+  setlocal iskeyword+=-,.
   syn match gemfilelockHeading  '^[[:upper:]]\+$'
   syn match gemfilelockKey      '^\s\+\zs\S\+:'he=e-1 skipwhite nextgroup=gemfilelockUrl,gemfilelockRevision
   syn match gemfilelockRevision '[[:alnum:]._-]\+$' contained
   syn match gemfilelockUrl      '\w\+\%(://\|@\)\S\+' contained
-  syn match gemfilelockGem      '^\s\+\zs[[:alnum:]._-]\+\%([ !]\|$\)\@=' skipwhite nextgroup=gemfilelockVersions,gemfilelockBang
+  syn match gemfilelockGem      '^\s\+\zs[[:alnum:]._-]\+\%([ !]\|$\)\@=' contains=gemfilelockFound,gemfilelockMissing skipwhite nextgroup=gemfilelockVersions,gemfilelockBang
   syn match gemfilelockVersions '([^()]*)' contained contains=gemfilelockVersion
   syn match gemfilelockVersion  '[^,()]*' contained
   syn match gemfilelockBang     '!' contained
+  if !empty(bundler#project())
+    exe 'syn match gemfilelockFound "\<\%(bundler\|' . join(keys(s:project().found()), '\|') . '\)\>" contained'
+    exe 'syn match gemfilelockMissing "\<\%(bundler\|' . join(keys(s:project().missing()), '\|') . '\)\>" contained'
+  else
+    exe 'syn match gemfilelockFound "\<\%(\S*\)\>" contained'
+  endif
+  syn match gemfilelockHeading  '^PLATFORMS$' nextgroup=gemfilelockPlatform skipnl skipwhite
+  syn match gemfileLockPlatform '^  \zs[[:alnum:]._-]\+$' contained nextgroup=gemfilelockPlatform skipnl skipwhite
 
   hi def link gemfilelockHeading  PreProc
+  hi def link gemfilelockPlatform Conditional
   hi def link gemfilelockKey      Identifier
   hi def link gemfilelockRevision Number
   hi def link gemfilelockUrl      String
-  hi def link gemfilelockGem      Statement
+  hi def link gemfilelockFound    Statement
+  hi def link gemfilelockMissing  Error
   hi def link gemfilelockVersion  Type
   hi def link gemfilelockBang     Special
 endfunction
@@ -225,7 +236,9 @@ function! s:project_gems(...) dict abort
       let prefix = ''
     endif
 
-    let self._gems = {}
+    let self._found = {}
+    let self._missing = {}
+    let self._versions = {}
 
     let chdir = exists("*haslocaldir") && haslocaldir() ? "lchdir" : "chdir"
     let cwd = getcwd()
@@ -243,7 +256,9 @@ function! s:project_gems(...) dict abort
       endif
     endif
 
-    let gems = self._gems
+    let gems = self._found
+    let missing = self._missing
+    let versions = self._versions
     let lines = readfile(lock_file)
     let section = ''
     let name = ''
@@ -251,7 +266,6 @@ function! s:project_gems(...) dict abort
     let repo = ''
     let revision = ''
     let local = ''
-    let failed = []
     for line in lines
       if line =~# '^\S'
         let section = line
@@ -275,6 +289,7 @@ function! s:project_gems(...) dict abort
       endif
       let name = split(line, ' ')[0]
       let ver = substitute(line, '.*(\|).*', '', 'g')
+      let versions[name] = ver
 
       if !empty(local)
         let files = split(glob(local . '/*/' . name . '.gemspec'), "\n")
@@ -309,10 +324,10 @@ function! s:project_gems(...) dict abort
       endif
 
       if !has_key(gems, name)
-        let failed += [name]
+        let missing[name] = ''
       endif
     endfor
-    if !exists('g:bundler_strict') || !empty(gems) && empty(failed)
+    if !exists('g:bundler_strict') || !empty(gems) && empty(missing)
       let self._lock_time = time
       call self.alter_buffer_paths()
       return gems
@@ -336,18 +351,46 @@ function! s:project_gems(...) dict abort
         endif
       endfor
     else
-      let self._gems = {}
+      let self._found = {}
       for line in split(output,"\n")
-        let self._gems[split(line,' ')[0]] = matchstr(line,' \zs.*')
+        let name = split(line, ' ')[0]
+        let self._found[name] = matchstr(line,' \zs.*')
+        if has_key(missing, name)
+          call remove(missing, name)
+        endif
       endfor
       let self._lock_time = time
       call self.alter_buffer_paths()
     endif
   endif
-  return get(self,'_gems',{})
+  return copy(get(self,'_found',{}))
 endfunction
 
-call s:add_methods('project',['gems'])
+function! s:project_found() dict abort
+  return self.gems()
+endfunction
+
+function! s:project_missing() dict abort
+  call self.gems()
+  return copy(get(self, '_missing', {}))
+endfunction
+
+function! s:project_all() dict abort
+  call self.gems()
+  return extend(self.gems(), get(self, '_missing', {}))
+endfunction
+
+function! s:project_versions() dict abort
+  call self.gems()
+  return copy(get(self, '_versions', {}))
+endfunction
+
+function! s:project_has(gem) dict abort
+  call self.gems()
+  return has_key(get(self, '_versions', {}), a:gem)
+endfunction
+
+call s:add_methods('project', ['gems', 'found', 'missing', 'all', 'versions', 'has'])
 
 " }}}1
 " Buffer {{{1
@@ -427,7 +470,7 @@ endfunction
 
 function! s:BundleComplete(A,L,P)
   if a:L =~# '^\S\+\s\+\%(show\|update\) '
-    return s:completion_filter(keys(s:project().gems()),a:A)
+    return s:completion_filter(keys(s:project().found()),a:A)
   endif
   return s:completion_filter(['install','update','exec','package','config','check','list','show','outdated','console','viz','benchmark'],a:A)
 endfunction
@@ -465,14 +508,18 @@ function! s:Open(cmd,gem,lcd)
   elseif a:gem ==# ''
     return a:cmd.' `=bundler#buffer().project().path("Gemfile.lock")`'
   else
-    if !has_key(s:project().gems(), a:gem)
+    if !has_key(s:project().found(), a:gem)
       call s:project().gems('refresh')
     endif
-    if !has_key(s:project().gems(), a:gem)
-      let v:errmsg = "Can't find gem \"".a:gem."\" in bundle"
+    if !has_key(s:project().found(), a:gem)
+      if has_key(s:project().missing(), a:gem)
+        let v:errmsg = "Gem \"".a:gem."\" is in bundle but not installed"
+      else
+        let v:errmsg = "Gem \"".a:gem."\" is not in bundle"
+      endif
       return 'echoerr v:errmsg'
     endif
-    let path = fnameescape(bundler#buffer().project().gems()[a:gem])
+    let path = fnameescape(bundler#buffer().project().found()[a:gem])
     let exec = a:cmd.' '.path
     if a:cmd =~# '^pedit' && a:lcd
       let exec .= '|wincmd P|lcd '.path.'|wincmd p'
@@ -484,7 +531,7 @@ function! s:Open(cmd,gem,lcd)
 endfunction
 
 function! s:OpenComplete(A,L,P)
-  return s:completion_filter(keys(s:project().gems()),a:A)
+  return s:completion_filter(keys(s:project().found()),a:A)
 endfunction
 
 call s:command("-bar -bang -nargs=? -complete=customlist,s:OpenComplete Bopen :execute s:Open('edit<bang>',<q-args>,1)")
@@ -503,7 +550,7 @@ endfunction
 
 function! s:buffer_alter_paths() dict abort
   if self.getvar('&suffixesadd') =~# '\.rb\>'
-    let new = sort(values(self.project().gems()))
+    let new = sort(values(self.project().found()))
     let index = index(new, self.project().path())
     if index > 0
       call insert(new,remove(new,index))
@@ -530,6 +577,9 @@ function! s:project_alter_buffer_paths() dict abort
   for bufnr in range(1,bufnr('$'))
     if getbufvar(bufnr,'bundler_root') ==# self.path()
       let vim_parsing_quirk = s:buffer(bufnr).alter_paths()
+    endif
+    if getbufvar(bufnr, '&syntax') ==# 'gemfilelock'
+      call setbufvar(bufnr, '&syntax', 'gemfilelock')
     endif
   endfor
 endfunction

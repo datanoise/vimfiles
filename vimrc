@@ -206,7 +206,7 @@ if has("win32")
   au VimEnter * set vb t_vb=
 endif
 if getcwd() != expand('~')
-  set path+=*/** " allow :find to search subdirectories
+  set path+=*/** " allow :find searching subdirectories
 end
 set tags+=../tags,../../tags,../../../tags,../../../../tags,./tmp/tags
 set cpoptions+=d

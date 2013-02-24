@@ -109,6 +109,10 @@ function! s:app_path(...) dict
   return join([self.root]+a:000,'/')
 endfunction
 
+function! s:app_has_path(path) dict
+  return getftime(a:path) != -1
+endfunction
+
 function! s:app_has_file(file) dict
   return filereadable(self.path(a:file))
 endfunction
@@ -149,7 +153,7 @@ function! s:app_find_file(name, ...) dict abort
   endtry
 endfunction
 
-call s:add_methods('app',['path','has_file','find_file'])
+call s:add_methods('app',['path','has_path','has_file','find_file'])
 
 " Split a path into a list.  From pathogen.vim
 function! s:pathsplit(path) abort
@@ -834,11 +838,7 @@ function! s:app_has(feature) dict
   let features = self.cache.get('features')
   if !has_key(features,a:feature)
     let path = get(map,a:feature,a:feature.'/')
-    if path =~# '/$'
-      let features[a:feature] = isdirectory(rails#app().path(path))
-    else
-      let features[a:feature] = filereadable(rails#app().path(path))
-    endif
+    let features[a:feature] = rails#app().has_path(path)
   endif
   return features[a:feature]
 endfunction
@@ -861,13 +861,13 @@ function! s:app_ruby_shell_command(cmd) dict abort
 endfunction
 
 function! s:app_script_shell_command(cmd) dict abort
-  if !empty(glob(rails#app().path('.zeus.sock'))) && a:cmd =~# '^\%(console\|dbconsole\|destroy\|generate\|server\|runner\)\>'
+  if rails#app().has_path('.zeus.sock') && a:cmd =~# '^\%(console\|dbconsole\|destroy\|generate\|server\|runner\)\>'
     return 'zeus '.a:cmd
-  elseif self.has_file('script/rails')
+  elseif self.has_path('script/rails')
     let cmd = 'script/rails '.a:cmd
-  elseif self.has_file('script/' . matchstr(a:cmd, '\w\+'))
+  elseif self.has_path('script/' . matchstr(a:cmd, '\w\+'))
     let cmd = 'script/'.a:cmd
-  elseif self.has_file('bin/rails')
+  elseif self.has_path('bin/rails')
     let cmd = 'bin/rails '.a:cmd
   elseif self.has('bundler')
     return 'bundle exec rails ' . a:cmd
@@ -1058,7 +1058,7 @@ function! s:app_tags_command() dict
     call s:error("ctags not found")
     return ''
   endif
-  if !isdirectory(self.path('tmp'))
+  if !self.has_path('tmp')
     call mkdir(self.path('tmp'), 'p')
   endif
   exe '!'.cmd.' -f '.s:escarg(self.path("tmp/tags")).' -R --langmap="ruby:+.rake.builder.rjs" '.g:rails_ctags_arguments.' '.s:escarg(self.path())
@@ -1114,7 +1114,7 @@ function! s:app_rake_tasks() dict
   if self.cache.needs('rake_tasks')
     call s:push_chdir()
     try
-      let output = system(self.has_file('bin/rake') ? self.ruby_shell_command('bin/rake -T') : 'rake -T')
+      let output = system(self.has_path('bin/rake') ? self.ruby_shell_command('bin/rake -T') : 'rake -T')
       let lines = split(output, "\n")
     finally
       call s:pop_command()
@@ -1164,11 +1164,11 @@ function! s:Rake(bang,lnum,arg)
   let old_errorformat = &l:errorformat
   try
     call s:push_chdir(1)
-    if !empty(glob(rails#app().path('.zeus.sock'))) && executable('zeus')
+    if rails#app().has_path('.zeus.sock') && executable('zeus')
       let &l:makeprg = 'zeus rake'
-    elseif rails#app().has_file('bin/rake')
+    elseif rails#app().has_path('bin/rake')
       let &l:makeprg = rails#app().ruby_shell_command('bin/rake')
-    elseif exists('b:bundler_root') && b:bundler_root ==# rails#app().path()
+    elseif rails#app().has('bundler')
       let &l:makeprg = 'bundle exec rake'
     else
       let &l:makeprg = 'rake'
@@ -2902,7 +2902,7 @@ function! s:readable_open_command(cmd, argument, name, options) dict abort
     endif
   elseif a:argument ==# '' && type(default) == type([])
     for file in default
-      if self.app().has_file(file)
+      if self.app().has_path(file)
         return cmd . ' ' . s:fnameescape(self.app().path(file))
       endif
     endfor
@@ -2915,6 +2915,9 @@ function! s:readable_open_command(cmd, argument, name, options) dict abort
   endif
   let pairs = s:projection_pairs(a:options)
   for [prefix, suffix] in pairs
+    if root ==# '.' && self.app().has_path(prefix)
+      return cmd . ' ' . s:fnameescape(rails#app().path(prefix))
+    endif
     let file = self.app().path(prefix . (suffix =~# '\.rb$' ? rails#underscore(root) : root) . suffix)
     if filereadable(file)
       return cmd . ' ' . s:fnameescape(simplify(file)) . '|exe ' . s:sid . 'djump('.string(djump) . ')'
@@ -2924,7 +2927,7 @@ function! s:readable_open_command(cmd, argument, name, options) dict abort
     return 'echoerr '.string('No such '.tr(a:name, '_', ' ').' '.a:argument)
   endif
   for [prefix, suffix] in pairs
-    if isdirectory(self.app().path(prefix))
+    if self.app().has_path(prefix)
       let file = self.app().path(prefix . (suffix =~# '\.rb$' ? rails#underscore(root) : root) . suffix)
       if !isdirectory(fnamemodify(file, ':h'))
         call mkdir(fnamemodify(file, ':h'), 'p')
@@ -2968,7 +2971,7 @@ function! s:findedit(cmd,files,...) abort
   endif
   if file == ''
     let testcmd = "edit"
-  elseif isdirectory(rails#app().path(file))
+  elseif rails#app().has_path(file.'/')
     let arg = file == "." ? rails#app().path() : rails#app().path(file)
     let testcmd = s:editcmdfor(cmd).' '.(a:0 ? a:1 . ' ' : '').s:escarg(arg)
     exe testcmd
@@ -3210,7 +3213,12 @@ function! s:readable_alternate(...) dict abort
   endif
 endfunction
 
-call s:add_methods('readable', ['alternate'])
+" For backwards compatibility
+function! s:readable_related(...) dict abort
+  return self.alternate(a:0 ? a:1 : 0)
+endfunction
+
+call s:add_methods('readable', ['alternate', 'related'])
 
 " }}}1
 " Extraction {{{1
@@ -3632,6 +3640,7 @@ function! s:BufSyntax()
         if !empty(rails#app().user_assertions())
           exe "syn keyword rubyRailsUserMethod ".join(rails#app().user_assertions())
         endif
+        syn keyword rubyRailsTestMethod refute refute_empty refute_equal refute_in_delta refute_in_epsilon refute_includes refute_instance_of refute_kind_of refute_match refute_nil refute_operator refute_predicate refute_respond_to refute_same
         syn keyword rubyRailsTestMethod add_assertion assert assert_block assert_equal assert_in_delta assert_instance_of assert_kind_of assert_match assert_nil assert_no_match assert_not_equal assert_not_nil assert_not_same assert_nothing_raised assert_nothing_thrown assert_operator assert_raise assert_respond_to assert_same assert_send assert_throws assert_recognizes assert_generates assert_routing flunk fixtures fixture_path use_transactional_fixtures use_instantiated_fixtures assert_difference assert_no_difference assert_valid
         syn keyword rubyRailsTestMethod test setup teardown
         if !buffer.type_name('test-unit')
@@ -3640,7 +3649,7 @@ function! s:BufSyntax()
           syn keyword rubyRailsTestControllerMethod assert_response assert_redirected_to assert_template assert_recognizes assert_generates assert_routing assert_dom_equal assert_dom_not_equal assert_select assert_select_rjs assert_select_encoded assert_select_email assert_tag assert_no_tag
         endif
       elseif buffer.type_name('spec')
-        syn keyword rubyRailsTestMethod describe context it its specify shared_context shared_examples_for it_should_behave_like before after around subject fixtures controller_name helper_name scenario feature background
+        syn keyword rubyRailsTestMethod describe context it its specify shared_context shared_examples_for it_should_behave_like it_behaves_like before after around subject fixtures controller_name helper_name scenario feature background
         syn match rubyRailsTestMethod '\<let\>!\='
         syn keyword rubyRailsTestMethod violated pending expect double mock mock_model stub_model
         syn match rubyRailsTestMethod '\.\@<!\<stub\>!\@!'
@@ -3878,7 +3887,7 @@ function! s:app_dbext_settings(environment) dict
   let cache = self.cache.get('dbext_settings')
   if !has_key(cache,a:environment)
     let dict = {}
-    if self.has_file("config/database.yml")
+    if self.has_path("config/database.yml")
       let cmdb = 'require %{yaml}; File.open(%q{'.self.path().'/config/database.yml}) {|f| y = YAML::load(f); e = y[%{'
       let cmde = '}]; i=0; e=y[e] while e.respond_to?(:to_str) && (i+=1)<16; e.each{|k,v|puts k.to_s+%{=}+v.to_s}}'
       let out = self.lightweight_ruby_eval(cmdb.a:environment.cmde)
@@ -4158,7 +4167,7 @@ endfunction
 function! s:app_config(...) dict abort
   if self.cache.needs('config')
     call self.cache.set('config', 0)
-    if self.has_file('config/editor.json')
+    if self.has_path('config/editor.json')
       try
         call self.cache.set('config', rails#json_parse(join(readfile(self.path('config/editor.json')), ' ')))
       catch /^invalid JSON:/

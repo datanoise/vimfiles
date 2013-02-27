@@ -1055,10 +1055,8 @@ function! s:app_tags_command() dict
     call s:error("ctags not found")
     return ''
   endif
-  if !self.has_path('tmp')
-    call mkdir(self.path('tmp'), 'p')
-  endif
-  exe '!'.cmd.' -f '.s:escarg(self.path("tags")).' -R --langmap="ruby:+.rake.builder.rjs" '.g:rails_ctags_arguments.' '.s:escarg(self.path())
+  let args = self.app().config('ctags_arguments', s:split(get(g:, 'rails_ctags_arguments', '--languages=-javascript'))
+  exe '!'.cmd.' -f '.s:escarg(self.path("tags")).' -R --langmap="ruby:+.rake.builder.jbuilder.rjs" '.join(args,' ').' '.s:escarg(self.path())
   return ''
 endfunction
 
@@ -2449,7 +2447,7 @@ function! s:define_navcommand(name, projection) abort
   if !get(projection, 'force', 0)
     let keep = 0
     for [prefix, suffix] in s:projection_pairs(projection)
-      if rails#app().has_path(prefix)
+      if rails#app().has_path(s:sub(prefix, '/[^/]*$', '/'))
         let keep = 1
       endif
     endfor
@@ -4019,7 +4017,7 @@ endfunction
 
 function! s:BufAbbreviations()
   " Some of these were cherry picked from the TextMate snippets
-  if (type(g:rails_abbreviations) != type(0) || g:rails_abbreviations) && !exists('g:rails_no_abbreviations')
+  if get(g:, 'rails_abbreviations', {}) isnot 0 && !exists('g:rails_no_abbreviations')
     let buffer = rails#buffer()
     " Limit to the right filetypes.  But error on the liberal side
     if buffer.type_name('controller','view','helper','test-functional','test-integration')
@@ -4091,7 +4089,7 @@ function! s:BufAbbreviations()
     Rabbrev AS::  ActiveSupport
     Rabbrev AM::  ActionMailer
     Rabbrev AO::  ActiveModel
-    for pairs in items(type(g:rails_abbreviations) == type({}) ? g:rails_abbreviations : {}) + items(rails#app().config('abbreviations'))
+    for pairs in items(type(get(g:, 'rails_abbreviations', 0)) == type({}) ? g:rails_abbreviations : {}) + items(rails#app().config('abbreviations'))
       call call(function(s:sid.'Abbrev'), [0, pairs[0]] + s:split(pairs[1]))
     endfor
   endif
@@ -4193,16 +4191,19 @@ function! s:app_config(...) dict abort
 endfunction
 
 function! s:app_projections() dict abort
-  if type(self.config('projections')) == type([])
-    let projections = {}
-    for projection in self.config('projections')
-      if !empty(get(projection, 'name', ''))
-        let projections[projection.name] = projection
-      endif
-    endfor
-    return projections
-  endif
-  return extend(copy(self.config('classifications')), self.config('projections'))
+  let projections = {}
+  for config in [g:, self.config()]
+    if type(get(config, 'projections', '')) == type([])
+      for projection in config.projections
+        if !empty(get(projection, 'name', ''))
+          let projections[projection.name] = projection
+        endif
+      endfor
+    elseif type(get(config, 'projections', '')) == type({})
+      call extend(projections, config)
+    endif
+  endfor
+  return projections
 endfunction
 
 call s:add_methods('app', ['config', 'projections'])
@@ -4413,6 +4414,9 @@ function! s:SetBasePath()
 
   let path = ['lib', 'vendor']
   let path += self.app().config('path_additions', [])
+  let path += self.app().config('path', [])
+  let path += get(g:, 'rails_path_additions', [])
+  let path += get(g:, 'rails_path', [])
   let path += ['app/models/concerns', 'app/controllers/concerns', 'app/controllers', 'app/helpers', 'app/mailers', 'app/models', 'app/*']
   let path += ['app/views']
   if self.controller_name() != ''

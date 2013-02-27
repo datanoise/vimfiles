@@ -508,8 +508,6 @@ let g:Powerline_colorscheme = s:Powerline_theme
 let g:Powerline_symbols = 'fancy'
 
 " indentLine setting {{{2
-let g:indentLine_color_term = 234
-let g:indentLine_color_gui = '#202020'
 let g:indentLine_char = '│'
 let g:indentLine_indentLevel = 8
 nnoremap <silent> \i :IndentLinesToggle<CR>

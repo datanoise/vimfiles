@@ -31,32 +31,6 @@ endif
 set conceallevel=1
 set concealcursor=inc
 
-"{{{1 function! <SID>InitColor()
-function! <SID>InitColor()
-    if !exists("g:indentLine_color_term")
-        if &bg ==? "light"
-            let term_color = 249
-        else
-            let term_color = 239
-        endif
-    else
-        let term_color = g:indentLine_color_term
-    endif
-
-    if !exists("g:indentLine_color_gui")
-        if &bg ==? "light"
-            let gui_color = "Grey70"
-        else
-            let gui_color = "Grey30"
-        endif
-    else
-        let gui_color = g:indentLine_color_gui
-    endif
-
-    exec "hi Conceal ctermfg=" . term_color . " ctermbg=NONE"
-    exec "hi Conceal guifg=" . gui_color .  " guibg=NONE"
-endfunction
-
 "{{{1 function! <SID>SetIndentLine()
 function! <SID>SetIndentLine()
     if !exists("b:indentLine_enabled")
@@ -105,7 +79,6 @@ endfunction
 
 "{{{1 commands
 autocmd BufWinEnter * call <SID>Setup()
-autocmd BufRead,BufNew,ColorScheme * call <SID>InitColor()
 
 command! -nargs=? IndentLinesReset call <SID>ResetWidth(<f-args>)
 command! IndentLinesToggle call <SID>IndentLinesToggle()

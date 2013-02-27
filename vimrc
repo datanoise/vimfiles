@@ -1,4 +1,4 @@
- -*- vim -*- vim:set ft=vim et sw=2 sts=2 fdc=3:
+ 
 
 " Section: Global Setting {{{1
 " ------------------------------------------------------------------------------
@@ -282,6 +282,8 @@ nnoremap Y y$
 nnoremap z- 1z=
 nnoremap L :
 nnoremap <silent> <leader>q :Bclose<CR>
+au CmdwinEnter * nmap <buffer> <leader>q :q<CR>
+au CmdwinEnter * nmap <buffer> q :q<CR>
 nnoremap <silent> <leader>Q :bd<CR>
 nnoremap [s [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
 nnoremap <leader>a :let align = input("Align to: ")<Bar>exe ":Tab /" . align<CR>
@@ -506,6 +508,12 @@ let s:Powerline_theme = 'datanoise'
 let g:Powerline_theme = s:Powerline_theme
 let g:Powerline_colorscheme = s:Powerline_theme
 let g:Powerline_symbols = 'fancy'
+
+" indentLine setting {{{2
+let g:indentLine_color_term = 236
+let g:indentLine_char = '│'
+let g:indentLine_indentLevel = 8
+nnoremap <silent> \i :IndentLinesToggle<CR>
 
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"

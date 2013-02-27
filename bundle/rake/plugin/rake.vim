@@ -119,6 +119,8 @@ function! s:find_root(path) abort
       else
         return root
       endif
+    elseif root =~# '[\/]gems[\/][0-9.]\+[\/]gems[\/][[:alnum:]._-]\+$'
+      return root
     endif
     let previous = root
     let root = fnamemodify(root, ':h')
@@ -277,7 +279,9 @@ function! s:Rake(bang,arg)
   let old_errorformat = &l:errorformat
   call s:push_chdir()
   try
-    if exists('b:bundle_root') && b:bundler_root ==# s:project().path()
+    if filereadable(s:project().path('bin/rake'))
+      let &l:makeprg = 'ruby bin/rake'
+    elseif filereadable(s:project().path('Gemfile'))
       let &l:makeprg = 'bundle exec rake'
     else
       let &l:makeprg = 'rake'

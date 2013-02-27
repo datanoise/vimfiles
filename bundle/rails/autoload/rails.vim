@@ -951,9 +951,6 @@ function! s:BufCommands()
   command! -buffer -bar -nargs=0 Rtags       :execute rails#app().tags_command()
   command! -buffer -bar -nargs=0 Ctags       :execute rails#app().tags_command()
   command! -buffer -bar -nargs=0 -bang Rrefresh :if <bang>0|unlet! g:autoloaded_rails|source `=s:file`|endif|call s:Refresh(<bang>0)
-  if exists(":NERDTree")
-    command! -buffer -bar -nargs=? -complete=customlist,s:Complete_cd Rtree :NERDTree `=rails#app().path(<f-args>)`
-  endif
   if exists("g:loaded_dbext")
     command! -buffer -bar -nargs=? -complete=customlist,s:Complete_environments Rdbext  :call s:BufDatabase(2,<q-args>)|let b:dbext_buffer_defaulted = 1
   endif
@@ -961,7 +958,7 @@ function! s:BufCommands()
   if RailsFilePath() =~ '\<app/views/'
     " TODO: complete controller names with trailing slashes here
     command! -buffer -bar -bang -nargs=? -range -complete=customlist,s:controllerList Rextract :<line1>,<line2>call s:Extract(<bang>0,<f-args>)
-  elseif rails#buffer().name() =~# '^app/helpers/.*.rb$'
+  elseif rails#buffer().name() =~# '^app/helpers/.*\.rb$'
     command! -buffer -bar -bang -nargs=1 -range Rextract :<line1>,<line2>call s:RubyExtract(<bang>0, 'app/helpers', [], s:sub(<f-args>, '_helper$|Helper$|$', '_helper'))
   elseif rails#buffer().name() =~# '^app/\w\+/.*\.rb$'
     command! -buffer -bar -bang -nargs=1 -range Rextract :<line1>,<line2>call s:RubyExtract(<bang>0, matchstr(rails#buffer().name(), '^app/\w\+/').'concerns', ['  extend ActiveSupport::Concern', ''], <f-args>)
@@ -1061,7 +1058,7 @@ function! s:app_tags_command() dict
   if !self.has_path('tmp')
     call mkdir(self.path('tmp'), 'p')
   endif
-  exe '!'.cmd.' -f '.s:escarg(self.path("tmp/tags")).' -R --langmap="ruby:+.rake.builder.rjs" '.g:rails_ctags_arguments.' '.s:escarg(self.path())
+  exe '!'.cmd.' -f '.s:escarg(self.path("tags")).' -R --langmap="ruby:+.rake.builder.rjs" '.g:rails_ctags_arguments.' '.s:escarg(self.path())
   return ''
 endfunction
 
@@ -2169,25 +2166,29 @@ endfunction
 
 function! s:BufProjectionCommands()
   call s:define_navcommand('environment', {
-        \ 'prefix': 'config/environments/',
+        \ 'force': 1,
+        \ 'format': 'config/environments/%s.rb',
         \ 'default': ['config/application.rb', 'config/environment.rb']})
   call s:define_navcommand('helper', {
-        \ 'prefix': 'app/helpers/',
-        \ 'suffix': '_helper.rb',
+        \ 'force': 1,
+        \ 'format': 'app/helpers/%s_helper.rb',
         \ 'template': "module %SHelper\nend",
         \ 'affinity': 'controller'})
   call s:define_navcommand('initializer', {
-        \ 'prefix': 'config/initializers/',
+        \ 'force': 1,
+        \ 'format': 'config/initializers/%s.rb',
         \ 'default': ['config/routes.rb']})
   call s:define_navcommand('lib', {
+        \ 'force': 1,
         \ 'format': 'lib/%s.rb',
         \ 'default': ['Gemfile']})
   call s:define_navcommand('model', {
-        \ 'prefix': 'app/models/',
-        \ 'suffix': '.rb',
+        \ 'force': 1,
+        \ 'format': 'app/models/%s.rb',
         \ 'template': "class %S\nend",
         \ 'affinity': 'model'})
   call s:define_navcommand('task', {
+        \ 'force': 1,
         \ 'format': 'lib/tasks/%s.rake',
         \ 'default': ['Rakefile']})
   let tests = filter([
@@ -2199,6 +2200,7 @@ function! s:BufProjectionCommands()
         \ 'rails#app().has(v:val[0])')
   if !empty(tests)
     call s:define_navcommand('unit test', {
+          \ 'force': 1,
           \ 'format': map(copy(tests), 'v:val[1]'),
           \ 'template': {
           \   'test/unit/': "require 'test_helper'\n\nclass %STest < ActiveSupport::TestCase\nend",
@@ -2208,6 +2210,7 @@ function! s:BufProjectionCommands()
           \   'spec/helpers/': "require 'spec_helper'\n\ndescribe %S do\nend"},
           \ 'affinity': 'model'})
     call s:define_navcommand('functional test', {
+          \ 'force': 1,
           \ 'format': map(copy(tests), 'v:val[2]'),
           \ 'template': {
           \   'test/functional/': "require 'test_helper'\n\nclass %STest < ActionController::TestCase\nend",
@@ -2227,6 +2230,7 @@ function! s:BufProjectionCommands()
         \ 'rails#app().has(v:val[0])'), 'v:val[1]')
   if !empty(integration_tests)
     call s:define_navcommand('integration test', {
+          \ 'force': 1,
           \ 'format': integration_tests,
           \ 'template': {
           \   'test/integration/': "require 'test_helper'\n\nclass %STest < ActionDispatch::IntegrationTest\nend",
@@ -2442,6 +2446,17 @@ function! s:define_navcommand(name, projection) abort
   if get(projection, 'command', 1) =~# '^0\=$'
     return
   endif
+  if !get(projection, 'force', 0)
+    let keep = 0
+    for [prefix, suffix] in s:projection_pairs(projection)
+      if rails#app().has_path(prefix)
+        let keep = 1
+      endif
+    endfor
+    if !keep
+      return
+    endif
+  endif
   if type(get(projection, 'command', 1)) ==# type('')
     let name = projection.command
   else
@@ -2461,7 +2476,8 @@ function! s:define_navcommand(name, projection) abort
 endfunction
 
 function! s:CommandList(A,L,P)
-  let cmd = matchstr(a:L,'\CR[A-Z]\=\w\+')
+  let cmd = matchstr(a:L,'\C[A-Z]\w\+')
+  let g:cmd = cmd
   exe cmd." &"
   let command = s:last_options
   let matches = []
@@ -2924,7 +2940,7 @@ function! s:readable_open_command(cmd, argument, name, options) dict abort
     endif
   endfor
   if djump !~# '^!'
-    return 'echoerr '.string('No such '.tr(a:name, '_', ' ').' '.a:argument)
+    return 'echoerr '.string('No such '.tr(a:name, '_', ' ').' '.root)
   endif
   for [prefix, suffix] in pairs
     if self.app().has_path(prefix)
@@ -3012,8 +3028,8 @@ function! s:Alternate(cmd,line1,line2,count,...)
       return call('s:Edit',[1,a:cmd]+a:000)
     endif
   else
-    let file = [s:getopt(a:count ? 'related' : 'alternate', 'bl')]
-    if empty(file[0])
+    let file = s:getopt(a:count ? 'related' : 'alternate', 'bl')
+    if empty(file)
       let file = rails#buffer().alternate(a:count)
     endif
     if !empty(file)
@@ -3040,7 +3056,7 @@ function! s:Complete_related(A,L,P)
   endif
 endfunction
 
-function! s:readable_alternate(...) dict abort
+function! s:readable_alternate_candidates(...) dict abort
   let f = self.name()
   let [root, projection] = s:find_projection(values(self.app().projections()), f)
   let placeholders = {
@@ -3076,21 +3092,10 @@ function! s:readable_alternate(...) dict abort
     elseif self.type_name('view-layout')
       return [s:sub(s:sub(f,'/views/','/controllers/'),'/layouts/(\k+)\..*$','/\1_controller.rb')]
     elseif self.type_name('view')
-      let controller  = s:sub(s:sub(f,'/views/','/controllers/'),'/(\k+%(\.\k+)=)\..*$','_controller.rb#\1')
-      let controller2 = s:sub(s:sub(f,'/views/','/controllers/'),'/(\k+%(\.\k+)=)\..*$','.rb#\1')
-      let mailer      = s:sub(s:sub(f,'/views/','/mailers/'),'/(\k+%(\.\k+)=)\..*$','.rb#\1')
-      let model       = s:sub(s:sub(f,'/views/','/models/'),'/(\k+)\..*$','.rb#\1')
-      if self.app().has_file(s:sub(controller,'#.{-}$',''))
-        return [controller]
-      elseif self.app().has_file(s:sub(controller2,'#.{-}$',''))
-        return [controller2]
-      elseif self.app().has_file(s:sub(mailer,'#.{-}$',''))
-        return [mailer]
-      elseif self.app().has_file(s:sub(model,'#.{-}$','')) || model =~ '_mailer\.rb#'
-        return [model]
-      else
-        return [controller]
-      endif
+       return [s:sub(s:sub(f,'/views/','/controllers/'),'/(\k+%(\.\k+)=)\..*$','_controller.rb#\1'),
+             \ s:sub(s:sub(f,'/views/','/mailers/'),'/(\k+%(\.\k+)=)\..*$','.rb#\1'),
+             \ s:sub(s:sub(f,'/views/','/models/'),'/(\k+)\..*$','.rb#\1')]
+      return [controller, controller2, mailer, model]
     elseif self.type_name('controller')
       return [s:sub(s:sub(f,'/controllers/','/helpers/'),'%(_controller)=\.rb$','_helper.rb')]
     elseif self.type_name('model-arb')
@@ -3144,25 +3149,11 @@ function! s:readable_alternate(...) dict abort
   elseif f ==# 'db/seeds.rb'
     return ['db/schema.rb', 'db/'.s:environment().'_structure.sql']
   elseif self.type_name('view')
-    let spec1 = fnamemodify(f,':s?\<app/?spec/?')."_spec.rb"
-    let spec2 = fnamemodify(f,':r:s?\<app/?spec/?')."_spec.rb"
-    let spec3 = fnamemodify(f,':r:r:s?\<app/?spec/?')."_spec.rb"
-    if self.app().has_file(spec1)
-      return [spec1]
-    elseif self.app().has_file(spec2)
-      return [spec2]
-    elseif self.app().has_file(spec3)
-      return [spec3]
-    elseif self.app().has('spec')
-      return [spec2]
-    else
-      if self.type_name('view-layout')
-        let dest = fnamemodify(f,':r:s?/layouts\>??').'/layout.'.fnamemodify(f,':e')
-      else
-        let dest = f
-      endif
-      return [s:sub(s:sub(dest,'<app/views/','test/functional/'),'/[^/]*$','_controller_test.rb')]
-    endif
+    return [fnamemodify(f,':s?\<app/?spec/?')."_spec.rb",
+          \ fnamemodify(f,':r:s?\<app/?spec/?')."_spec.rb",
+          \ fnamemodify(f,':r:r:s?\<app/?spec/?')."_spec.rb",
+          \ s:sub(s:sub(dest,'<app/views/','test/functional/'),'/[^/]*$','_controller_test.rb')]
+    return [spec_format, spec_handler, spec_bare, test]
   elseif self.type_name('controller-api')
     return [s:sub(s:sub(f,'/controllers/','/apis/'),'_controller\.rb$','_api.rb')]
   elseif self.type_name('api')
@@ -3206,11 +3197,21 @@ function! s:readable_alternate(...) dict abort
           \ '<test/helpers/', 'test/unit/helpers/'),
           \ '<test/models/', 'test/unit/'),
           \ '<test/mailers/', 'test/functional/'),
-          \ '<test/contollers/', 'test/functional/')
+          \ '<test/controllers/', 'test/functional/')
     return s:uniq([test_file, old_test_file, spec_file])
   else
     return []
   endif
+endfunction
+
+function! s:readable_alternate(...) dict abort
+  let candidates = self.alternate_candidates(a:0 ? a:1 : 0)
+  for file in candidates
+    if self.app().has_path(file)
+      return file
+    endif
+  endfor
+  return get(candidates, 0, '')
 endfunction
 
 " For backwards compatibility
@@ -3218,7 +3219,7 @@ function! s:readable_related(...) dict abort
   return self.alternate(a:0 ? a:1 : 0)
 endfunction
 
-call s:add_methods('readable', ['alternate', 'related'])
+call s:add_methods('readable', ['alternate_candidates', 'alternate', 'related'])
 
 " }}}1
 " Extraction {{{1
@@ -3526,27 +3527,27 @@ endfunction
 
 function! s:helpermethods()
   return ""
-        \."action_name atom_feed audio_path audio_tag auto_discovery_link_tag "
+        \."action_name asset_path asset_url atom_feed audio_path audio_tag audio_url auto_discovery_link_tag "
         \."button_tag button_to button_to_function "
-        \."cache capture cdata_section check_box check_box_tag collection_select concat content_for content_tag content_tag_for controller controller_name controller_path convert_to_model cookies csrf_meta_tag csrf_meta_tags current_cycle cycle "
-        \."date_select datetime_select debug distance_of_time_in_words distance_of_time_in_words_to_now div_for dom_class dom_id "
+        \."cache cache_fragment_name cache_if cache_unless capture cdata_section check_box check_box_tag collection_check_boxes collection_radio_buttons collection_select color_field color_field_tag compute_asset_extname compute_asset_host compute_asset_path concat content_for content_tag content_tag_for controller controller_name controller_path convert_to_model cookies csrf_meta_tag csrf_meta_tags current_cycle cycle "
+        \."date_field date_field_tag date_select datetime_field datetime_field_tag datetime_local_field datetime_local_field_tag datetime_select debug distance_of_time_in_words distance_of_time_in_words_to_now div_for dom_class dom_id "
         \."email_field email_field_tag escape_javascript escape_once excerpt "
-        \."favicon_link_tag field_set_tag fields_for file_field file_field_tag flash form_for form_tag "
+        \."favicon_link_tag field_set_tag fields_for file_field file_field_tag flash font_path font_url form_for form_tag "
         \."grouped_collection_select grouped_options_for_select "
         \."headers hidden_field hidden_field_tag highlight "
-        \."image_alt image_path image_submit_tag image_tag "
-        \."j javascript_cdata_section javascript_include_tag javascript_path javascript_tag "
+        \."image_alt image_path image_submit_tag image_tag image_url "
+        \."j javascript_cdata_section javascript_include_tag javascript_path javascript_tag javascript_url "
         \."l label label_tag link_to link_to_function link_to_if link_to_unless link_to_unless_current localize logger "
-        \."mail_to "
+        \."mail_to month_field month_field_tag "
         \."number_field number_field_tag number_to_currency number_to_human number_to_human_size number_to_percentage number_to_phone number_with_delimiter number_with_precision "
         \."option_groups_from_collection_for_select options_for_select options_from_collection_for_select "
-        \."params password_field password_field_tag path_to_audio path_to_image path_to_javascript path_to_stylesheet path_to_video phone_field phone_field_tag pluralize provide "
+        \."params password_field password_field_tag path_to_asset path_to_audio path_to_font path_to_image path_to_javascript path_to_stylesheet path_to_video phone_field phone_field_tag pluralize provide "
         \."radio_button radio_button_tag range_field range_field_tag raw render request request_forgery_protection_token reset_cycle response "
-        \."safe_concat safe_join sanitize sanitize_css search_field search_field_tag select select_date select_datetime select_day select_hour select_minute select_month select_second select_tag select_time select_year session simple_format strip_links strip_tags stylesheet_link_tag stylesheet_path submit_tag "
-        \."t tag telephone_field telephone_field_tag text_area text_area_tag text_field text_field_tag time_ago_in_words time_select time_tag time_zone_options_for_select time_zone_select translate truncate "
-        \."url_field url_field_tag url_for url_options "
-        \."video_path video_tag "
-        \."word_wrap"
+        \."safe_concat safe_join sanitize sanitize_css search_field search_field_tag select select_date select_datetime select_day select_hour select_minute select_month select_second select_tag select_time select_year session simple_format strip_links strip_tags stylesheet_link_tag stylesheet_path stylesheet_url submit_tag "
+        \."t tag telephone_field telephone_field_tag text_area text_area_tag text_field text_field_tag time_ago_in_words time_field time_field_tag time_select time_tag time_zone_options_for_select time_zone_select translate truncate "
+        \."url_field url_field_tag url_for url_to_asset url_to_audio url_to_font url_to_image url_to_javascript url_to_stylesheet url_to_video utf8_enforcer_tag "
+        \."video_path video_tag video_url "
+        \."week_field week_field_tag word_wrap"
 endfunction
 
 function! s:app_user_classes() dict
@@ -4183,13 +4184,24 @@ function! s:app_config(...) dict abort
     let config = {}
   endif
   if a:0
-    return get(config, a:1, a:0 > 1 ? a:2 : {})
+    let default = a:0 > 1 ? a:2 : {}
+    let value = get(config, a:1, default)
+    return type(value) == type(default) ? value : default
   else
     return config
   endif
 endfunction
 
 function! s:app_projections() dict abort
+  if type(self.config('projections')) == type([])
+    let projections = {}
+    for projection in self.config('projections')
+      if !empty(get(projection, 'name', ''))
+        let projections[projection.name] = projection
+      endif
+    endfor
+    return projections
+  endif
   return extend(copy(self.config('classifications')), self.config('projections'))
 endfunction
 
@@ -4220,6 +4232,7 @@ function! s:Set(bang,...)
       call s:setopt(opt,val)
     endif
   endfor
+  call s:warn('Rset is deprecated.  See :help :Rset')
 endfunction
 
 function! s:getopt(opt,...)
@@ -4423,8 +4436,8 @@ function! s:BufSettings()
   let self = rails#buffer()
   call s:SetBasePath()
   let rp = s:gsub(self.app().path(),'[ ,]','\\&')
-  if stridx(&tags,rp.'/tmp/tags') == -1
-    let &l:tags = rp . '/tmp/tags,' . &tags . ',' . rp . '/tags'
+  if stridx(&tags,rp.'/tags') == -1
+    let &l:tags = rp . '/tags,' . rp . '/tmp/tags,' . &tags
   endif
   call self.setvar('&includeexpr','RailsIncludeexpr()')
   call self.setvar('&suffixesadd', s:sub(self.getvar('&suffixesadd'),'^$','.rb'))

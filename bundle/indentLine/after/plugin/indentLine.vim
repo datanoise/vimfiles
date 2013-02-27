@@ -94,6 +94,9 @@ endfunction
 
 "{{{1 function! <SID>Setup()
 function! <SID>Setup()
+    if &ft == 'help'
+        return
+    endif
     if !exists("b:indentLine_set")
         let b:indentLine_set = 1
         call <SID>SetIndentLine()

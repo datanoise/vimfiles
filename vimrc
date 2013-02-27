@@ -326,8 +326,6 @@ xnoremap <silent> # :<C-u>call <SID>VSetSearch()<CR>?<C-R>=@/<CR><CR>
 " split join mappings
 nnoremap <silent> <leader>ss :SplitjoinSplit<CR>
 nnoremap <silent> <leader>sj :SplitjoinJoin<CR>
-" switch mapping
-nnoremap <silent> <leader>-  :Switch<CR>
 
 
 " file type bindings {{{2

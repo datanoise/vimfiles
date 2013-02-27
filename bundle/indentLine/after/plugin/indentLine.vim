@@ -105,7 +105,7 @@ endfunction
 
 "{{{1 commands
 autocmd BufWinEnter * call <SID>Setup()
-autocmd BufRead,ColorScheme * call <SID>InitColor()
+autocmd BufRead,BufNew,ColorScheme * call <SID>InitColor()
 
 command! -nargs=? IndentLinesReset call <SID>ResetWidth(<f-args>)
 command! IndentLinesToggle call <SID>IndentLinesToggle()

@@ -468,7 +468,7 @@ let g:ctrlp_dotfiles = 0
 let g:ctrlp_mruf_relative = 0
 let g:ctrlp_open_multi = 'tr'
 let g:ctrlp_open_new_file = 'h'
-let g:ctrlp_mruf_exclude = '\.git'
+let g:ctrlp_mruf_exclude = '\.git\|\/var\/folders\|' . substitute($VIMRUNTIME, '/', '\\/', 'g')
 let g:ctrlp_custom_ignore = 'tmp'
 nnoremap <silent> <leader>m :CtrlPCurWD<CR>
 nnoremap <silent> <leader>r :CtrlPRoot<CR>

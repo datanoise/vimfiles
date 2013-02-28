@@ -365,6 +365,7 @@ au FileType ruby iabbrev <buffer> rb! #!<C-R>=substitute(system('which ruby'),'\
 command! SynName :echo SynName()
 cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
 cabbr ack Ack
+cabbr ag Ag
 iabbr THen Then
 iabbr WHen When
 " borrowed from tpope's plugin
@@ -521,8 +522,8 @@ let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
 let g:no_turbux_mappings = 1
 let $RUBYOPT = '' " I don't want any surprises like 'noexec' gem
 let g:syntastic_coffee_lint_options = '-f ~/.coffeelint.json'
-if executable('ag')
-  let g:ackprg = 'ag --nogroup --nocolor --column'
-endif
+" if executable('ag')
+"   let g:ackprg = 'ag --nogroup --nocolor --column'
+" endif
 
 " }}}

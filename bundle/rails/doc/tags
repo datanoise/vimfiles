@@ -1,4 +1,3 @@
-config/editor.json	rails.txt	/*config\/editor.json*
 config/rails.vim	rails.txt	/*config\/rails.vim*
 g:loaded_rails	rails.txt	/*g:loaded_rails*
 g:rails_abbreviations	rails.txt	/*g:rails_abbreviations*
@@ -95,6 +94,7 @@ rails-alternate	rails.txt	/*rails-alternate*
 rails-alternate-related	rails.txt	/*rails-alternate-related*
 rails-autocommands	rails.txt	/*rails-autocommands*
 rails-commands	rails.txt	/*rails-commands*
+rails-config/editor.json	rails.txt	/*rails-config\/editor.json*
 rails-configuration	rails.txt	/*rails-configuration*
 rails-custom-navigation	rails.txt	/*rails-custom-navigation*
 rails-dbext	rails.txt	/*rails-dbext*

@@ -53,7 +53,9 @@ hi StatusLineNC guifg=black         guibg=#202020       gui=NONE
             \   ctermfg=blue        ctermbg=darkgray    cterm=NONE
 hi SignColumn   guifg=#c8bcb9       guibg=#202020       gui=none
             \   ctermfg=lightgray   ctermbg=darkgray    cterm=NONE
-hi VertSplit    term=reverse cterm=reverse gui=bold,reverse guifg=gray40
+" hi VertSplit    term=reverse cterm=reverse gui=bold,reverse guifg=gray40
+hi VertSplit   guifg=#CCCCCC       guibg=#202020       gui=none
+            \   ctermfg=white       ctermbg=darkgray    cterm=NONE
 hi Title    term=bold ctermfg=magenta gui=bold guifg=aquamarine
 hi TabLine      guifg=#000000       guibg=#c2bfa5       gui=NONE
             \   ctermfg=black       ctermbg=white       cterm=NONE

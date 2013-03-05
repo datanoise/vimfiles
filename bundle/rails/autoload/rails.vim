@@ -3101,6 +3101,8 @@ function! s:readable_alternate_candidates(...) dict abort
   endif
   if root !=# '' && has_key(projection, 'alternate')
     return map(s:split(projection.alternate), 'substitute(v:val, "%.", "\\=get(placeholders, submatch(0), submatch(0))", "g")')
+  elseif root !=# '' && has_key(projection, 'test')
+    return map(s:split(projection.test), 'substitute(v:val, "%.", "\\=get(placeholders, submatch(0), submatch(0))", "g")')
   endif
   if f =~# '^config/environments/'
     return ['config/application.rb', 'config/environment.rb']
@@ -4186,23 +4188,46 @@ function! s:app_config(...) dict abort
   endif
 endfunction
 
-function! s:app_projections() dict abort
-  let projections = {}
-  for [config, extra] in [[g:, {'check': 1}], [self.config(), {}]]
-    if type(get(config, 'projections', '')) == type([])
-      for projection in config.projections
-        if !empty(get(projection, 'name', ''))
-          let projections[projection.name] = extend(copy(projection), extra)
-        endif
-      endfor
-    elseif type(get(config, 'projections', '')) == type({})
-      call extend(projections, map(config.projections, 'extend(copy(v:val), extra)'))
+function! s:app_has_gem(gem) dict abort
+  if self.has('bundler') && exists('*bundler#project')
+    let project = bundler#project(self.path())
+    if has_key(project, 'has')
+      return project.has(a:gem)
+    elseif has_key(project, 'gems')
+      return has_key(bundler#project(self.path()).gems(), a:gem)
     endif
-  endfor
-  return projections
+  else
+    return 0
+  endif
 endfunction
 
-call s:add_methods('app', ['config', 'projections'])
+function! s:combine_projections(dest, src, ...) abort
+  let extra = a:0 ? a:1 : {}
+  if type(a:src) == type([])
+    for projection in a:src
+      if !empty(get(projection, 'name', ''))
+        let a:dest[projection.name] = extend(copy(projection), extra)
+      endif
+    endfor
+  elseif type(a:src) == type({})
+    call extend(a:dest, map(a:src, 'extend(copy(v:val), extra)'))
+  endif
+  return a:dest
+endfunction
+
+function! s:app_projections() dict abort
+  let dict = {}
+  call s:combine_projections(dict, get(g:, 'rails_projections', ''), {'check': 1})
+  for gem in keys(get(g:, 'rails_gem_projections', {}))
+    if self.has_gem(gem)
+      call s:combine_projections(dict, g:rails_gem_projections[gem])
+    endif
+  endfor
+  call s:combine_projections(dict, get(self.config(), 'projections', ''))
+  return dict
+endfunction
+
+call s:add_methods('app', ['config', 'has_gem', 'projections'])
 
 function! s:Set(bang,...)
   let c = 1
@@ -4413,8 +4438,31 @@ function! s:SetBasePath()
   let path += self.app().config('path', [])
   let path += get(g:, 'rails_path_additions', [])
   let path += get(g:, 'rails_path', [])
-  let path += ['app/models/concerns', 'app/controllers/concerns', 'app/controllers', 'app/helpers', 'app/mailers', 'app/models', 'app/*']
-  let path += ['app/views']
+  let path += ['app/models/concerns', 'app/controllers/concerns', 'app/controllers', 'app/helpers', 'app/mailers', 'app/models']
+
+  for projection in values(self.app().projections())
+    let type = type(get(projection, 'path', 0))
+    if (type == type([]) || type == type('')) && !empty(projection.path)
+      for [prefix, suffix] in s:projection_pairs(projection)
+        let dir = matchstr(prefix, '.*/')
+        if !get(projection, 'check', 0) || self.app().has_path(dir)
+          let path += s:split(projection.path)
+          break
+        endif
+      endfor
+    elseif get(projection, 'path', 1) isnot 0 && !empty(get(projection, 'path', 1))
+      for [prefix, suffix] in s:projection_pairs(projection)
+        if prefix =~# '^app/' && suffix =~# '\.rb$'
+          let dir = matchstr(prefix, '.*\ze/')
+          if !get(projection, 'check', 0) || self.app().has_path(dir . '/')
+            let path += [dir]
+          endif
+        endif
+      endfor
+    endif
+  endfor
+
+  let path += ['app/*', 'app/views']
   if self.controller_name() != ''
     let path += ['app/views/'.self.controller_name(), 'public']
   endif

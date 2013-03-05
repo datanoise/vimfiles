@@ -3,6 +3,7 @@ g:loaded_rails	rails.txt	/*g:loaded_rails*
 g:rails_abbreviations	rails.txt	/*g:rails_abbreviations*
 g:rails_ctags_arguments	rails.txt	/*g:rails_ctags_arguments*
 g:rails_default_config	rails.txt	/*g:rails_default_config*
+g:rails_gem_projections	rails.txt	/*g:rails_gem_projections*
 g:rails_projections	rails.txt	/*g:rails_projections*
 g:rails_root_url	rails.txt	/*g:rails_root_url*
 macros/rails.vim	rails.txt	/*macros\/rails.vim*
@@ -113,6 +114,7 @@ rails-projection-affinity	rails.txt	/*rails-projection-affinity*
 rails-projection-alternate	rails.txt	/*rails-projection-alternate*
 rails-projection-default	rails.txt	/*rails-projection-default*
 rails-projection-format	rails.txt	/*rails-projection-format*
+rails-projection-path	rails.txt	/*rails-projection-path*
 rails-projection-related	rails.txt	/*rails-projection-related*
 rails-projection-template	rails.txt	/*rails-projection-template*
 rails-projections	rails.txt	/*rails-projections*

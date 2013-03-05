@@ -509,11 +509,6 @@ let g:Powerline_theme = s:Powerline_theme
 let g:Powerline_colorscheme = s:Powerline_theme
 let g:Powerline_symbols = 'fancy'
 
-" indentLine setting {{{2
-let g:indentLine_char = '│'
-let g:indentLine_indentLevel = 8
-nnoremap <silent> \i :IndentLinesToggle<CR>
-
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"
 let g:CSApprox_verbose_level = 0 " to shut it up

@@ -272,27 +272,10 @@ function! s:project_paths(...) dict abort
       let prefix = ''
     endif
 
-    if filereadable(self.path('.ruby-version'))
-      let ruby_version = get(readfile(self.path('.ruby-version'), '', 1), 0, '')
-    else
-      let ruby_version = ''
-    endif
-
     let gem_paths = []
     if exists('$GEM_PATH')
       let gem_paths = split($GEM_PATH, has('win32') ? ';' : ':')
-    elseif has_key(get(g:, 'ruby_version_paths', {}), ruby_version)
-      for path in g:ruby_version_paths[ruby_version]
-        if path =~# '/ruby/[0-9.]\+$'
-          let gem_paths = [
-                \ s:sub(path, '/ruby/\zs[0-9.]+$', 'gems/&'),
-                \ expand('~/.gem/ruby/' . s:sub(path, '.*/\ze[0-9.]+$', ''))]
-          break
-        endif
-      endfor
-    endif
-
-    if empty(gem_paths)
+    else
       try
         exe chdir s:fnameescape(self.path())
         let gem_paths = split(system(prefix.'ruby -rubygems -e "print Gem.path.join(%(;))"'), ';')
@@ -358,7 +341,7 @@ function! s:project_paths(...) dict abort
       let self._path_time = time
       let self._paths = paths
       call self.alter_buffer_paths()
-      return copy(paths)
+      return paths
     endif
 
     if &verbose
@@ -388,7 +371,7 @@ function! s:project_paths(...) dict abort
       call self.alter_buffer_paths()
     endif
   endif
-  return copy(get(self,'_paths',{}))
+  return get(self,'_paths',{})
 endfunction
 
 function! s:project_gems() dict abort
@@ -397,12 +380,12 @@ endfunction
 
 function! s:project_versions() dict abort
   call self.locked()
-  return copy(get(self, '_versions', {}))
+  return get(self, '_versions', {})
 endfunction
 
 function! s:project_has(gem) dict abort
   call self.locked()
-  return has_key(get(self, '_versions', {}), a:gem)
+  return has_key(self.versions(), a:gem)
 endfunction
 
 call s:add_methods('project', ['locked', 'gems', 'paths', 'versions', 'has'])

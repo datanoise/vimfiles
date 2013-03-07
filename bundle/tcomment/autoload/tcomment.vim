@@ -2,8 +2,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-09-17.
-" @Last Change: 2012-12-10.
-" @Revision:    747
+" @Last Change: 2013-03-07.
+" @Revision:    768
 
 " call tlog#Log('Load: '. expand('<sfile>')) " vimtlib-sfile
 
@@ -121,6 +121,7 @@ if !exists('g:tcommentSyntaxMap')
     " mapped onto the corresponding filetype.
     " :read: let g:tcommentSyntaxMap = {...}   "{{{2
     let g:tcommentSyntaxMap = {
+            \ 'erubyExpression':   'ruby',
             \ 'vimMzSchemeRegion': 'scheme',
             \ 'vimPerlRegion':     'perl',
             \ 'vimPythonRegion':   'python',
@@ -541,6 +542,7 @@ function! tcomment#Comment(beg, end, ...)
                         \ . s:EncodeCommentPart(get(cdef, 'end', ''))
         endif
         let commentMode = cdef.mode
+        " TLogVAR commentMode
     endif
     if exists('s:temp_options')
         let cdef = s:ExtendCDef(lbeg, lend, commentMode, cdef, s:temp_options)
@@ -558,7 +560,6 @@ function! tcomment#Comment(beg, end, ...)
     " make whitespace optional; this conflicts with comments that require some 
     " whitespace
     let cmtCheck = substitute(cms0, '\([	 ]\)', '\1\\?', 'g')
-    let cmtCheck = s:FEscapeCommentString(cmtCheck)
     " turn commentstring into a search pattern
     " TLogVAR cmtCheck
     let cmtCheck = printf(cmtCheck, '\(\_.\{-}\)')
@@ -597,7 +598,7 @@ function! tcomment#Comment(beg, end, ...)
             let cbeg = strdisplaywidth(indentStr, cbeg)
             let indentStr = ''
         endif
-        " TLogVAR commentMode, lbeg, cbeg
+        " TLogVAR commentMode, lbeg, cbeg, lend, cend
         let cmd = lbeg .','. lend .'s/\V'. 
                     \ s:StartPosRx(commentMode, lbeg, cbeg) . indentStr .'\zs\(\_.\{-}\)'. s:EndPosRx(commentMode, lend, cend) .'/'.
                     \ '\=s:ProcessedLine('. uncomment .', submatch(0), "'. cmtCheck .'", "'. cmtReplace .'")/ge'
@@ -945,10 +946,11 @@ endf
 
 function! s:StartPosRx(mode, line, col)
     " TLogVAR a:mode, a:line, a:col
+    let col = get(s:cdef, 'mixedindent', 0) ? a:col - 1 : a:col
     if a:mode =~# 'I'
-        return s:StartLineRx(a:line) . s:StartColRx(a:col)
+        return s:StartLineRx(a:line) . s:StartColRx(col)
     else
-        return s:StartColRx(a:col)
+        return s:StartColRx(col)
     endif
 endf
 
@@ -969,7 +971,7 @@ function! s:EndLineRx(pos)
 endf
 
 function! s:StartColRx(pos)
-    if a:pos == 0
+    if a:pos <= 1
         return '\^'
     elseif get(s:cdef, 'mixedindent', 0)
         return '\%>'. a:pos .'v'
@@ -1029,10 +1031,6 @@ function! s:CommentDef(beg, end, checkRx, commentMode, cstart, cend)
     return [indentStr, uncomment]
 endf
 
-function! s:FEscapeCommentString(string) "{{{3
-    return substitute(a:string, '%s\@!', '%%', 'g')
-endf
-
 function! s:ProcessedLine(uncomment, match, checkRx, replace)
     " TLogVAR a:uncomment, a:match, a:checkRx, a:replace
     if !(a:match =~ '\S' || g:tcommentBlankLines)
@@ -1044,7 +1042,7 @@ function! s:ProcessedLine(uncomment, match, checkRx, replace)
         let rv = s:UnreplaceInLine(rv)
     else
         let rv = s:ReplaceInLine(a:match)
-        let rv = printf(s:FEscapeCommentString(a:replace), rv)
+        let rv = printf(a:replace, rv)
     endif
     " TLogVAR rv
     " let md = len(rv) - ml

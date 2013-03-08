@@ -30,7 +30,7 @@ Really, people should probably be using Pathogen, in my opinion.
 
 You can specify a custom ag name and path in your .vimrc like so:
 
-    let g:agprg="<custom-ag-path-goes-here> -H --nocolor --nogroup --column"
+    let g:agprg="<custom-ag-path-goes-here> --column"
 
 ## Usage ##
 

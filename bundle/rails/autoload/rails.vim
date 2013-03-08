@@ -884,9 +884,9 @@ function! s:app_background_script_command(cmd) dict abort
   try
     if has("gui_win32")
       exe "!start ".cmd
-    elseif exists("$STY") && !has("gui_running") && executable("screen")
+    elseif exists("$STY") && executable("screen")
       silent exe "!screen -ln -fn -t ".title.' '.cmd
-    elseif exists("$TMUX") && !has("gui_running") && executable("tmux")
+    elseif exists("$TMUX") && executable("tmux")
       silent exe '!tmux new-window -n "'.title.'" "'.cmd.'"'
     else
       exe "!".cmd
@@ -1476,7 +1476,7 @@ endfunction
 " Script Wrappers {{{1
 
 function! s:BufScriptWrappers()
-  command! -buffer -bang -bar -nargs=* -complete=customlist,s:Complete_script   Rscript       :execute rails#app().script_command(<bang>0,<f-args>)
+  command! -buffer -bang -bar -nargs=* -complete=customlist,s:Complete_script   Rscript       :execute empty(<q-args>) ? rails#app().script_command(<bang>0, 'console') ? rails#app().script_command(<bang>0,<f-args>)
   command! -buffer -bang -bar -nargs=* -complete=customlist,s:Complete_script   Rails         :execute rails#app().script_command(<bang>0,<f-args>)
   command! -buffer -bang -bar -nargs=* -complete=customlist,s:Complete_generate Rgenerate     :execute rails#app().generator_command(<bang>0,'generate',<f-args>)
   command! -buffer -bar -nargs=*       -complete=customlist,s:Complete_destroy  Rdestroy      :execute rails#app().generator_command(1,'destroy',<f-args>)
@@ -1526,17 +1526,11 @@ function! s:app_script_command(bang,...) dict
     echo msg." (Rails-".rails#buffer().type_name().")"
     return
   endif
-  let str = ""
-  let cmd = a:0 ? a:1 : "console"
-  let c = 2
-  while c <= a:0
-    let str .= " " . s:rquote(a:{c})
-    let c += 1
-  endwhile
-  if a:bang || cmd =~# 'console'
-    return self.background_script_command(cmd.str)
+  let str = join(map(copy(a:000), 's:rquote(v:val)'), ' ')
+  if a:bang || str =~# '^\%(c\|console\|db\|dbconsole\|s\|server\)\>'
+    return self.background_script_command(str)
   else
-    return self.execute_script_command(cmd.str)
+    return self.execute_script_command(str)
   endif
 endfunction
 
@@ -1597,7 +1591,7 @@ function! s:app_server_command(bang,arg) dict
       return
     endif
   endif
-  if has("win32") || has("win64") || (exists("$STY") && !has("gui_running") && executable("screen")) || (exists("$TMUX") && !has("gui_running") && executable("tmux"))
+  if has("win32") || has("win64") || (exists("$STY") && executable("screen")) || (exists("$TMUX") && executable("tmux"))
     call self.background_script_command('server '.a:arg)
   else
     " --daemon would be more descriptive but lighttpd does not support it

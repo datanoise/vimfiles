@@ -274,12 +274,6 @@ function! s:ModeMapAllowsAutoChecking()
 endfunction
 
 if g:syntastic_enable_signs
-    "define the signs used to display syntax and style errors/warns
-    exe 'sign define SyntasticError text='.g:syntastic_error_symbol.' texthl=SyntasticErrorSign linehl=SyntasticErrorLine'
-    exe 'sign define SyntasticWarning text='.g:syntastic_warning_symbol.' texthl=SyntasticWarningSign linehl=SyntasticWarningLine'
-    exe 'sign define SyntasticStyleError text='.g:syntastic_style_error_symbol.' texthl=SyntasticStyleErrorSign linehl=SyntasticStyleErrorLine'
-    exe 'sign define SyntasticStyleWarning text='.g:syntastic_style_warning_symbol.' texthl=SyntasticStyleWarningSign linehl=SyntasticStyleWarningLine'
-
     if !hlexists('SyntasticErrorSign')
         highlight link SyntasticErrorSign error
     endif
@@ -298,6 +292,12 @@ if g:syntastic_enable_signs
     if !hlexists('SyntasticStyleWarningLine')
         highlight link SyntasticStyleWarningLine SyntasticWarningLine
     endif
+
+    "define the signs used to display syntax and style errors/warns
+    exe 'sign define SyntasticError text='.g:syntastic_error_symbol.' texthl=SyntasticErrorSign linehl=SyntasticErrorLine'
+    exe 'sign define SyntasticWarning text='.g:syntastic_warning_symbol.' texthl=SyntasticWarningSign linehl=SyntasticWarningLine'
+    exe 'sign define SyntasticStyleError text='.g:syntastic_style_error_symbol.' texthl=SyntasticStyleErrorSign linehl=SyntasticStyleErrorLine'
+    exe 'sign define SyntasticStyleWarning text='.g:syntastic_style_warning_symbol.' texthl=SyntasticStyleWarningSign linehl=SyntasticStyleWarningLine'
 endif
 
 "start counting sign ids at 5000, start here to hopefully avoid conflicting
@@ -507,19 +507,6 @@ function! s:uname()
         let s:uname = system('uname')
     endif
     return s:uname
-endfunction
-
-"the args must be arrays of the form [major, minor, macro]
-function SyntasticIsVersionAtLeast(installed, required)
-    if a:installed[0] != a:required[0]
-        return a:installed[0] > a:required[0]
-    endif
-
-    if a:installed[1] != a:required[1]
-        return a:installed[1] > a:required[1]
-    endif
-
-    return a:installed[2] >= a:required[2]
 endfunction
 
 "return a string representing the state of buffer according to

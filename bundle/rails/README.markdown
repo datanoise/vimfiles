@@ -25,10 +25,10 @@ features:
   `:help rails-rake`
 
 * Interface to the `rails` command.  Generally, use `:Rails console` to
-  call `rails console` or `script/console`.  Most commands have wrappers
-  with additional features: `:Rgenerate controller Blog` generates a
-  blog controller and edits `app/controllers/blog_controller.rb`.
-  `:help rails-scripts`
+  call `rails console`.  Many commands have wrappers with additional features:
+  `:Rgenerate controller Blog` generates a blog controller and loads the
+  generated files into the quickfix list, and `:Rrunner` wraps `rails runner`
+  and doubles as a direct test runner.  `:help rails-scripts`
 
 * Partial and concern extraction.  In a view, `:Rextract {file}`
   replaces the desired range (typically selected in visual line mode)
@@ -37,8 +37,7 @@ features:
   appropriate `include` declaration left behind.
   `:help rails-:Rextract`
 
-* Integration with other plugins.  `:Rtree` spawns
-  [NERDTree.vim](https://github.com/scrooloose/nerdtree).  If
+* Integration with other plugins.  If
   [dbext.vim](http://www.vim.org/scripts/script.php?script_id=356) is
   installed, it will be transparently configured to reflect
   `database.yml`.  Users of

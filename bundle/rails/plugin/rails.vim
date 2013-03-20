@@ -40,17 +40,6 @@ function! s:autoload(...)
 endfunction
 
 " }}}1
-" Configuration {{{
-
-function! s:SetOptDefault(opt,val)
-  if !exists("g:".a:opt)
-    let g:{a:opt} = a:val
-  endif
-endfunction
-
-call s:SetOptDefault("rails_root_url",'http://localhost:3000/')
-
-" }}}1
 " Detection {{{1
 
 function! s:escvar(r)
@@ -92,7 +81,7 @@ function! s:Detect(filename)
       return s:BufInit(fn)
     endif
     let ofn = fn
-    let fn = fnamemodify(ofn,':s?\(.*\)[\/]\(app\|config\|db\|doc\|extras\|features\|lib\|log\|public\|script\|spec\|stories\|test\|tmp\|vendor\)\($\|[\/].*$\)?\1?')
+    let fn = fnamemodify(ofn,':h')
   endwhile
   return 0
 endfunction

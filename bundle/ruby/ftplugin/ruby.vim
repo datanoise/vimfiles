@@ -2,7 +2,6 @@
 " Language:		Ruby
 " Maintainer:		Tim Pope <vimNOSPAM@tpope.org>
 " URL:			https://github.com/vim-ruby/vim-ruby
-" Anon CVS:		See above site
 " Release Coordinator:  Doug Kearns <dougkearns@gmail.com>
 " ----------------------------------------------------------------------------
 
@@ -68,7 +67,7 @@ if !exists('g:ruby_version_paths')
 endif
 
 function! s:query_path(root)
-  let code = "print $:.join(%q{,})"
+  let code = "print $:.join %q{,}"
   if &shell =~# 'sh' && $PATH !~# '\s'
     let prefix = 'env PATH='.$PATH.' '
   else

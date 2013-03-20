@@ -2,7 +2,6 @@
 " Language:		Ruby
 " Maintainer:		Doug Kearns <dougkearns@gmail.com>
 " URL:			https://github.com/vim-ruby/vim-ruby
-" Anon CVS:		See above site
 " Release Coordinator:	Doug Kearns <dougkearns@gmail.com>
 " ----------------------------------------------------------------------------
 "
@@ -140,11 +139,11 @@ syn region rubyString matchgroup=rubyStringDelimiter start="'"	end="'"  skip="\\
 syn region rubyString matchgroup=rubyStringDelimiter start="`"	end="`"  skip="\\\\\|\\`"  contains=@rubyStringSpecial fold
 
 " Generalized Single Quoted String, Symbol and Array of Strings
-syn region rubyString matchgroup=rubyStringDelimiter start="%[qw]\z([~`!@#$%^&*_\-+=|\:;"',.?/]\)" end="\z1" skip="\\\\\|\\\z1" fold
-syn region rubyString matchgroup=rubyStringDelimiter start="%[qw]{"				   end="}"   skip="\\\\\|\\}"	fold contains=rubyNestedCurlyBraces,rubyDelimEscape
-syn region rubyString matchgroup=rubyStringDelimiter start="%[qw]<"				   end=">"   skip="\\\\\|\\>"	fold contains=rubyNestedAngleBrackets,rubyDelimEscape
-syn region rubyString matchgroup=rubyStringDelimiter start="%[qw]\["				   end="\]"  skip="\\\\\|\\\]"	fold contains=rubyNestedSquareBrackets,rubyDelimEscape
-syn region rubyString matchgroup=rubyStringDelimiter start="%[qw]("				   end=")"   skip="\\\\\|\\)"	fold contains=rubyNestedParentheses,rubyDelimEscape
+syn region rubyString matchgroup=rubyStringDelimiter start="%[qwi]\z([~`!@#$%^&*_\-+=|\:;"',.?/]\)" end="\z1" skip="\\\\\|\\\z1" fold
+syn region rubyString matchgroup=rubyStringDelimiter start="%[qwi]{"				   end="}"   skip="\\\\\|\\}"	fold contains=rubyNestedCurlyBraces,rubyDelimEscape
+syn region rubyString matchgroup=rubyStringDelimiter start="%[qwi]<"				   end=">"   skip="\\\\\|\\>"	fold contains=rubyNestedAngleBrackets,rubyDelimEscape
+syn region rubyString matchgroup=rubyStringDelimiter start="%[qwi]\["				   end="\]"  skip="\\\\\|\\\]"	fold contains=rubyNestedSquareBrackets,rubyDelimEscape
+syn region rubyString matchgroup=rubyStringDelimiter start="%[qwi]("				   end=")"   skip="\\\\\|\\)"	fold contains=rubyNestedParentheses,rubyDelimEscape
 syn region rubyString matchgroup=rubyStringDelimiter start="%q "				   end=" "   skip="\\\\\|\\)"	fold
 syn region rubySymbol matchgroup=rubySymbolDelimiter start="%s\z([~`!@#$%^&*_\-+=|\:;"',.? /]\)"   end="\z1" skip="\\\\\|\\\z1" fold
 syn region rubySymbol matchgroup=rubySymbolDelimiter start="%s{"				   end="}"   skip="\\\\\|\\}"	fold contains=rubyNestedCurlyBraces,rubyDelimEscape
@@ -155,11 +154,11 @@ syn region rubySymbol matchgroup=rubySymbolDelimiter start="%s("				   end=")"  
 " Generalized Double Quoted String and Array of Strings and Shell Command Output
 " Note: %= is not matched here as the beginning of a double quoted string
 syn region rubyString matchgroup=rubyStringDelimiter start="%\z([~`!@#$%^&*_\-+|\:;"',.?/]\)"	    end="\z1" skip="\\\\\|\\\z1" contains=@rubyStringSpecial fold
-syn region rubyString matchgroup=rubyStringDelimiter start="%[QWx]\z([~`!@#$%^&*_\-+=|\:;"',.?/]\)" end="\z1" skip="\\\\\|\\\z1" contains=@rubyStringSpecial fold
-syn region rubyString matchgroup=rubyStringDelimiter start="%[QWx]\={"				    end="}"   skip="\\\\\|\\}"	 contains=@rubyStringSpecial,rubyNestedCurlyBraces,rubyDelimEscape    fold
-syn region rubyString matchgroup=rubyStringDelimiter start="%[QWx]\=<"				    end=">"   skip="\\\\\|\\>"	 contains=@rubyStringSpecial,rubyNestedAngleBrackets,rubyDelimEscape  fold
-syn region rubyString matchgroup=rubyStringDelimiter start="%[QWx]\=\["				    end="\]"  skip="\\\\\|\\\]"	 contains=@rubyStringSpecial,rubyNestedSquareBrackets,rubyDelimEscape fold
-syn region rubyString matchgroup=rubyStringDelimiter start="%[QWx]\=("				    end=")"   skip="\\\\\|\\)"	 contains=@rubyStringSpecial,rubyNestedParentheses,rubyDelimEscape    fold
+syn region rubyString matchgroup=rubyStringDelimiter start="%[QWIx]\z([~`!@#$%^&*_\-+=|\:;"',.?/]\)" end="\z1" skip="\\\\\|\\\z1" contains=@rubyStringSpecial fold
+syn region rubyString matchgroup=rubyStringDelimiter start="%[QWIx]\={"				    end="}"   skip="\\\\\|\\}"	 contains=@rubyStringSpecial,rubyNestedCurlyBraces,rubyDelimEscape    fold
+syn region rubyString matchgroup=rubyStringDelimiter start="%[QWIx]\=<"				    end=">"   skip="\\\\\|\\>"	 contains=@rubyStringSpecial,rubyNestedAngleBrackets,rubyDelimEscape  fold
+syn region rubyString matchgroup=rubyStringDelimiter start="%[QWIx]\=\["				    end="\]"  skip="\\\\\|\\\]"	 contains=@rubyStringSpecial,rubyNestedSquareBrackets,rubyDelimEscape fold
+syn region rubyString matchgroup=rubyStringDelimiter start="%[QWIx]\=("				    end=")"   skip="\\\\\|\\)"	 contains=@rubyStringSpecial,rubyNestedParentheses,rubyDelimEscape    fold
 syn region rubyString matchgroup=rubyStringDelimiter start="%[Qx] "				    end=" "   skip="\\\\\|\\)"   contains=@rubyStringSpecial fold
 
 " Here Document
@@ -255,7 +254,7 @@ endif
 
 " Special Methods
 if !exists("ruby_no_special_methods")
-  syn keyword rubyAccess    public protected private public_class_method private_class_method module_function
+  syn keyword rubyAccess    public protected private public_class_method private_class_method public_constant private_constant module_function
   " attr is a common variable name
   syn match   rubyAttribute "\%(\%(^\|;\)\s*\)\@<=attr\>\(\s*[.=]\)\@!"
   syn keyword rubyAttribute attr_accessor attr_reader attr_writer
@@ -264,7 +263,7 @@ if !exists("ruby_no_special_methods")
   syn keyword rubyException raise fail catch throw
   " false positive with 'include?'
   syn match   rubyInclude   "\<include\>[?!]\@!"
-  syn keyword rubyInclude   autoload extend load require require_relative
+  syn keyword rubyInclude   autoload extend load prepend require require_relative
   syn keyword rubyKeyword   callcc caller lambda proc
 endif
 
@@ -292,7 +291,7 @@ syn match rubyKeywordAsMethod "\%(\%(\.\@<!\.\)\|::\)\_s*\%(abort\|at_exit\|attr
 syn match rubyKeywordAsMethod "\%(\%(\.\@<!\.\)\|::\)\_s*\%(attr_writer\|autoload\|callcc\|catch\|caller\)\>"		transparent contains=NONE
 syn match rubyKeywordAsMethod "\%(\%(\.\@<!\.\)\|::\)\_s*\%(eval\|class_eval\|instance_eval\|module_eval\|exit\)\>"	transparent contains=NONE
 syn match rubyKeywordAsMethod "\%(\%(\.\@<!\.\)\|::\)\_s*\%(extend\|fail\|fork\|include\|lambda\)\>"			transparent contains=NONE
-syn match rubyKeywordAsMethod "\%(\%(\.\@<!\.\)\|::\)\_s*\%(load\|loop\|private\|proc\|protected\)\>"			transparent contains=NONE
+syn match rubyKeywordAsMethod "\%(\%(\.\@<!\.\)\|::\)\_s*\%(load\|loop\|prepend\|private\|proc\|protected\)\>"		transparent contains=NONE
 syn match rubyKeywordAsMethod "\%(\%(\.\@<!\.\)\|::\)\_s*\%(public\|require\|require_relative\|raise\|throw\|trap\)\>"	transparent contains=NONE
 
 " __END__ Directive

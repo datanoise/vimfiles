@@ -1,11 +1,9 @@
 config/rails.vim	rails.txt	/*config\/rails.vim*
-g:loaded_rails	rails.txt	/*g:loaded_rails*
 g:rails_abbreviations	rails.txt	/*g:rails_abbreviations*
 g:rails_ctags_arguments	rails.txt	/*g:rails_ctags_arguments*
 g:rails_default_config	rails.txt	/*g:rails_default_config*
 g:rails_gem_projections	rails.txt	/*g:rails_gem_projections*
 g:rails_projections	rails.txt	/*g:rails_projections*
-g:rails_root_url	rails.txt	/*g:rails_root_url*
 macros/rails.vim	rails.txt	/*macros\/rails.vim*
 rails	rails.txt	/*rails*
 rails-'cfu'	rails.txt	/*rails-'cfu'*
@@ -28,7 +26,6 @@ rails-:AE	rails.txt	/*rails-:AE*
 rails-:AS	rails.txt	/*rails-:AS*
 rails-:AT	rails.txt	/*rails-:AT*
 rails-:AV	rails.txt	/*rails-:AV*
-rails-:OpenURL	rails.txt	/*rails-:OpenURL*
 rails-:R	rails.txt	/*rails-:R*
 rails-:RD	rails.txt	/*rails-:RD*
 rails-:RE	rails.txt	/*rails-:RE*
@@ -68,7 +65,6 @@ rails-:Rmigration	rails.txt	/*rails-:Rmigration*
 rails-:Rmodel	rails.txt	/*rails-:Rmodel*
 rails-:Rnavcommand	rails.txt	/*rails-:Rnavcommand*
 rails-:Rp	rails.txt	/*rails-:Rp*
-rails-:Rplugin	rails.txt	/*rails-:Rplugin*
 rails-:Rpp	rails.txt	/*rails-:Rpp*
 rails-:Rpreview	rails.txt	/*rails-:Rpreview*
 rails-:Rpreview!	rails.txt	/*rails-:Rpreview!*
@@ -95,6 +91,7 @@ rails-alternate-related	rails.txt	/*rails-alternate-related*
 rails-autocommands	rails.txt	/*rails-autocommands*
 rails-commands	rails.txt	/*rails-commands*
 rails-config/editor.json	rails.txt	/*rails-config\/editor.json*
+rails-config/projections.json	rails.txt	/*rails-config\/projections.json*
 rails-configuration	rails.txt	/*rails-configuration*
 rails-custom-navigation	rails.txt	/*rails-custom-navigation*
 rails-dbext	rails.txt	/*rails-dbext*
@@ -108,14 +105,16 @@ rails-navigation	rails.txt	/*rails-navigation*
 rails-options	rails.txt	/*rails-options*
 rails-partials	rails.txt	/*rails-partials*
 rails-plugin-author	rails.txt	/*rails-plugin-author*
-rails-projection	rails.txt	/*rails-projection*
 rails-projection-affinity	rails.txt	/*rails-projection-affinity*
 rails-projection-alternate	rails.txt	/*rails-projection-alternate*
+rails-projection-compiler	rails.txt	/*rails-projection-compiler*
 rails-projection-default	rails.txt	/*rails-projection-default*
 rails-projection-format	rails.txt	/*rails-projection-format*
 rails-projection-path	rails.txt	/*rails-projection-path*
 rails-projection-related	rails.txt	/*rails-projection-related*
+rails-projection-task	rails.txt	/*rails-projection-task*
 rails-projection-template	rails.txt	/*rails-projection-template*
+rails-projection-test	rails.txt	/*rails-projection-test*
 rails-projections	rails.txt	/*rails-projections*
 rails-rake	rails.txt	/*rails-rake*
 rails-rake-defaults	rails.txt	/*rails-rake-defaults*

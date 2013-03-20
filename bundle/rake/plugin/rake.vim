@@ -274,6 +274,16 @@ function! s:pop_command()
   endif
 endfunction
 
+let g:rake#errorformat = '%D(in\ %f),'
+      \.'%\\s%#from\ %f:%l:%m,'
+      \.'%\\s%#from\ %f:%l:,'
+      \.'%\\s%##\ %f:%l:%m,'
+      \.'%\\s%##\ %f:%l,'
+      \.'%\\s%#[%f:%l:\ %#%m,'
+      \.'%\\s%#%f:%l:\ %#%m,'
+      \.'%\\s%#%f:%l:,'
+      \.'%m\ [%f:%l]:'
+
 function! s:Rake(bang,arg)
   let old_makeprg = &l:makeprg
   let old_errorformat = &l:errorformat
@@ -286,21 +296,14 @@ function! s:Rake(bang,arg)
     else
       let &l:makeprg = 'rake'
     endif
-    let &l:errorformat = '%D(in\ %f),'
-          \.'%\\s%#from\ %f:%l:%m,'
-          \.'%\\s%#from\ %f:%l:,'
-          \.'%\\s#{RAILS_ROOT}/%f:%l:\ %#%m,'
-          \.'%\\s%#[%f:%l:\ %#%m,'
-          \.'%W%m\ (Cucumber::Undefined),'
-          \.'%E%m\ (%.%#),'
-          \.'%Z%f:%l,'
-          \.'%Z%f:%l:%.%#,'
-          \.'%\\s%#%f:%l:\ %#%m,'
-          \.'%\\s%#%f:%l:,'
-          \.'%m\ [%f:%l]:'
-    execute 'make! '.a:arg
-    if a:bang !=# '!'
-      return 'cwindow'
+    let &l:errorformat = g:rake#errorformat
+    if exists(':Make')
+      execute 'Make'.a:bang.' '.a:arg
+    else
+      execute 'make! '.a:arg
+      if a:bang !=# '!'
+        return 'cwindow'
+      endif
     endif
     return ''
   finally

@@ -1,6 +1,6 @@
 " bundler.vim - Support for Ruby's Bundler
 " Maintainer:   Tim Pope <http://tpo.pe/>
-" Version:      1.1
+" Version:      2.0
 
 if exists('g:loaded_bundler') || &cp || v:version < 700
   finish
@@ -337,41 +337,22 @@ function! s:project_paths(...) dict abort
       endfor
     endfor
 
-    if !exists('g:bundler_strict') || len(versions) == len(gems)
-      let self._path_time = time
-      let self._paths = paths
-      call self.alter_buffer_paths()
-      return paths
+    let self._path_time = time
+    let self._paths = paths
+    let self._sorted = sort(values(paths))
+    let index = index(self._sorted, self.path())
+    if index > 0
+      call insert(self._sorted, remove(self._sorted,index))
     endif
-
-    if &verbose
-      let label = empty(gems) ? 'any gems' : len(failed) == 1 ? 'gem ' : 'gems '
-      unsilent echomsg "Couldn't find ".label.string(failed)[1:-2].". Falling back to Ruby."
-    endif
-
-    try
-      exe chdir s:fnameescape(self.path())
-      let output = system(prefix.'ruby -rubygems -e "require %{bundler}; Bundler.load.specs.map {|s| puts %[#{s.name} #{s.full_gem_path}]}"')
-    finally
-      exe chdir s:fnameescape(cwd)
-    endtry
-    if v:shell_error
-      for line in split(output,"\n")
-        if line !~ '^\t'
-          call s:warn(line)
-        endif
-      endfor
-    else
-      let self._paths = {}
-      for line in split(output,"\n")
-        let name = split(line, ' ')[0]
-        let self._paths[name] = matchstr(line,' \zs.*')
-      endfor
-      let self._path_time = time
-      call self.alter_buffer_paths()
-    endif
+    call self.alter_buffer_paths()
+    return paths
   endif
   return get(self,'_paths',{})
+endfunction
+
+function! s:project_sorted() dict abort
+  call self.paths()
+  return get(self, '_sorted', [])
 endfunction
 
 function! s:project_gems() dict abort
@@ -388,7 +369,7 @@ function! s:project_has(gem) dict abort
   return has_key(self.versions(), a:gem)
 endfunction
 
-call s:add_methods('project', ['locked', 'gems', 'paths', 'versions', 'has'])
+call s:add_methods('project', ['locked', 'gems', 'paths', 'sorted', 'versions', 'has'])
 
 " }}}1
 " Buffer {{{1
@@ -486,7 +467,7 @@ augroup bundler_make
   autocmd QuickFixCmdPost *make*
         \ if &makeprg =~# '^bundle' && exists('b:bundler_root') |
         \   call s:pop_command() |
-        \   execute 'call s:project().paths(exists("g:bundler_strict") ? "" : "refresh")' |
+        \   call s:project().paths("refresh") |
         \ endif
 augroup END
 
@@ -541,11 +522,7 @@ endfunction
 
 function! s:buffer_alter_paths() dict abort
   if self.getvar('&suffixesadd') =~# '\.rb\>'
-    let new = sort(values(self.project().paths()))
-    let index = index(new, self.project().path())
-    if index > 0
-      call insert(new,remove(new,index))
-    endif
+    let new = self.project().sorted()
     let old = type(self.getvar('bundler_paths')) == type([]) ? self.getvar('bundler_paths') : []
     for [option, suffix] in [['path', 'lib'], ['tags', 'tags']]
       let value = self.getvar('&'.option)

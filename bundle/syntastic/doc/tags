@@ -1,3 +1,4 @@
+'g:syntastic_always_populate_loc_list'	syntastic.txt	/*'g:syntastic_always_populate_loc_list'*
 'syntastic_auto_jump'	syntastic.txt	/*'syntastic_auto_jump'*
 'syntastic_auto_loc_list'	syntastic.txt	/*'syntastic_auto_loc_list'*
 'syntastic_check_on_open'	syntastic.txt	/*'syntastic_check_on_open'*

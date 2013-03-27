@@ -329,7 +329,7 @@ call s:add_methods('readable',['end_of','last_opening_line','last_method_line','
 function! s:readable_find_affinity() dict abort
   let f = self.name()
   let all = self.app().projections()
-  for pattern in reverse(sort(filter(keys(all), 'v:val =~# "*"'), s:function('rails#lencmp')))
+  for pattern in reverse(sort(filter(keys(all), 'v:val =~# "^[^*]*\\*[^*]*$"'), s:function('rails#lencmp')))
     if !has_key(all[pattern], 'affinity')
       continue
     endif
@@ -1238,27 +1238,31 @@ endfunction
 function! s:readable_test_file_candidates() dict abort
   let f = self.name()
   let projected = self.projected('test')
-  if !empty(projected)
-    return projected
-  endif
   if self.type_name('view')
-    return [fnamemodify(f,':s?\<app/?spec/?')."_spec.rb",
+    let tests = [
+          \ fnamemodify(f,':s?\<app/?spec/?')."_spec.rb",
           \ fnamemodify(f,':r:s?\<app/?spec/?')."_spec.rb",
           \ fnamemodify(f,':r:r:s?\<app/?spec/?')."_spec.rb",
           \ s:sub(s:sub(dest,'<app/views/','test/functional/'),'/[^/]*$','_controller_test.rb')]
     return [spec_format, spec_handler, spec_bare, test]
   elseif self.type_name('controller-api')
-    return [s:sub(s:sub(f,'/controllers/','/apis/'),'_controller\.rb$','_api.rb')]
+    let tests = [
+          \ s:sub(s:sub(f,'/controllers/','/apis/'),'_controller\.rb$','_api.rb')]
   elseif self.type_name('api')
-    return [s:sub(s:sub(f,'/apis/','/controllers/'),'_api\.rb$','_controller.rb')]
+    let tests = [
+          \ s:sub(s:sub(f,'/apis/','/controllers/'),'_api\.rb$','_controller.rb')]
   elseif self.type_name('lib')
-    return [s:sub(f,'<lib/(.*)\.rb$','test/lib/\1_test.rb'),
+    let tests = [
+          \ s:sub(f,'<lib/(.*)\.rb$','test/lib/\1_test.rb'),
           \ s:sub(f,'<lib/(.*)\.rb$','test/unit/\1_test.rb'),
           \ s:sub(f,'<lib/(.*)\.rb$','spec/lib/\1_spec.rb')]
   elseif self.type_name('fixtures') && f =~# '\<spec/'
-    return ['spec/models/' . self.model_name() . '_spec.rb']
+    let tests = [
+          \ 'spec/models/' . self.model_name() . '_spec.rb']
   elseif self.type_name('fixtures')
-    return ['test/models/' . self.model_name() . '_test.rb', 'test/unit/' . self.model_name() . '_test.rb']
+    let tests = [
+          \ 'test/models/' . self.model_name() . '_test.rb',
+          \ 'test/unit/' . self.model_name() . '_test.rb']
   elseif f =~# '\<app/.*\.rb'
     let file = fnamemodify(f,":r")
     let test_file = s:sub(file,'<app/','test/') . '_test.rb'
@@ -1268,13 +1272,24 @@ function! s:readable_test_file_candidates() dict abort
           \ '<test/models/', 'test/unit/'),
           \ '<test/mailers/', 'test/functional/'),
           \ '<test/controllers/', 'test/functional/')
-    return s:uniq([test_file, old_test_file, spec_file])
+    let tests = s:uniq([test_file, old_test_file, spec_file])
   elseif f =~# '\<\(test\|spec\)/\%(\1_helper\.rb$\|support\>\)' || f =~# '\<features/.*\.rb$'
-    return matchstr(f, '.*\<\%(test\|spec\|features\)\>')
+    let tests = [matchstr(f, '.*\<\%(test\|spec\|features\)\>')]
   elseif self.type_name('test', 'spec', 'cucumber')
-    return [f]
+    let tests = [f]
+  else
+    let tests = []
   endif
-  return []
+  if !self.app().has('test')
+    call filter(tests, 'v:val !~# "^test/"')
+  endif
+  if !self.app().has('spec')
+    call filter(tests, 'v:val !~# "^spec/"')
+  endif
+  if !self.app().has('cucumber')
+    call filter(tests, 'v:val !~# "^cucumber/"')
+  endif
+  return projected + tests
 endfunction
 
 function! s:readable_test_file() dict abort
@@ -1309,6 +1324,7 @@ function! s:readable_default_rake_task(...) dict abort
     let last = self.last_method(lnum)
     if !empty(last)
       let placeholders.m = last
+      let placeholders.d = last
     endif
   endif
   let tasks = self.projected('task', placeholders)
@@ -1386,7 +1402,7 @@ function! s:readable_default_rake_task(...) dict abort
       endif
     elseif test =~# '^spec\>'
       return 'spec SPEC='.s:rquote(with_line)
-    elseif test =~# '^feature\>'
+    elseif test =~# '^features\>'
       return 'cucumber FEATURE='.s:rquote(with_line)
     else
       let task = matchstr(test, '^\w*')
@@ -1642,7 +1658,7 @@ function! s:readable_runner_command(bang, count, arg) dict abort
       endif
     elseif arg =~# '^spec/.*\%(_spec\.rb\|\.feature\)$'
       let compiler = 'rspec'
-    elseif arg =~# '^features/.*\.features$'
+    elseif arg =~# '^features/.*\.feature$'
       let compiler = 'cucumber'
     else
       let compiler = 'ruby'
@@ -1883,11 +1899,7 @@ function! s:BufNavCommands()
   command! -buffer -bar -nargs=* -range=0 -complete=customlist,s:Complete_related AV    :call s:Alternate('V<bang>',<line1>,<line2>,<count>,<f-args>)
   command! -buffer -bar -nargs=* -range=0 -complete=customlist,s:Complete_related AT    :call s:Alternate('T<bang>',<line1>,<line2>,<count>,<f-args>)
   command! -buffer -bar -nargs=* -range=0 -complete=customlist,s:Complete_related AD    :call s:Alternate('D<bang>',<line1>,<line2>,<count>,<f-args>)
-  command! -buffer -bar -nargs=* -range=0 -complete=customlist,s:Complete_related E     :call s:Related('E<bang>',<line1>,<line2>,<count>,<f-args>)
-  command! -buffer -bar -nargs=* -range=0 -complete=customlist,s:Complete_related S     :call s:Related('S<bang>',<line1>,<line2>,<count>,<f-args>)
-  command! -buffer -bar -nargs=* -range=0 -complete=customlist,s:Complete_related V     :call s:Related('V<bang>',<line1>,<line2>,<count>,<f-args>)
-  command! -buffer -bar -nargs=* -range=0 -complete=customlist,s:Complete_related T     :call s:Related('T<bang>',<line1>,<line2>,<count>,<f-args>)
-  command! -buffer -bar -nargs=* -range=0 -complete=customlist,s:Complete_related D     :call s:Related('D<bang>',<line1>,<line2>,<count>,<f-args>)
+  command! -buffer -bar -nargs=* -range=0 -complete=customlist,s:Complete_related AR    :call s:Alternate('D<bang>',<line1>,<line2>,<count>,<f-args>)
   command! -buffer -bar -nargs=* -range=0 -complete=customlist,s:Complete_related R     :call s:Related('<bang>' ,<line1>,<line2>,<count>,<f-args>)
   command! -buffer -bar -nargs=* -range=0 -complete=customlist,s:Complete_related RE    :call s:Related('E<bang>',<line1>,<line2>,<count>,<f-args>)
   command! -buffer -bar -nargs=* -range=0 -complete=customlist,s:Complete_related RS    :call s:Related('S<bang>',<line1>,<line2>,<count>,<f-args>)
@@ -2332,7 +2344,7 @@ function! s:app_commands() dict abort
         \ {'pattern': 'lib/tasks/*.rake'},
         \ {'pattern': 'Rakefile'}]
 
-  let commands['unittest'] = map(filter([
+  let commands['unit test'] = map(filter([
         \ ['test', 'test/unit/*_test.rb', "require 'test_helper'\n\nclass %STest < ActiveSupport::TestCase\nend", 'model', 1],
         \ ['test', 'test/models/*_test.rb', "require 'test_helper'\n\nclass %STest < ActiveSupport::TestCase\nend", 'model', 1],
         \ ['test', 'test/helpers/*_test.rb', "require 'test_helper'\n\nclass %STest < ActionView::TestCase\nend", '', 1],
@@ -2342,7 +2354,7 @@ function! s:app_commands() dict abort
         \ ['spec', 'spec/helpers/*_helper_spec.rb', "require 'spec_helper'\n\ndescribe %SHelper do\nend", 'controller', 0]],
         \ 'rails#app().has(v:val[0])'),
         \ '{"pattern": v:val[1], "template": v:val[2], "affinity": v:val[3], "complete": v:val[4]}')
-  let commands['functionaltest'] = map(filter([
+  let commands['functional test'] = map(filter([
         \ ['test', 'test/functional/*_test.rb', "require 'test_helper'\n\nclass %STest < ActionController::TestCase\nend", '', 1],
         \ ['test', 'test/functional/*_controller_test.rb', "require 'test_helper'\n\nclass %SControllerTest < ActionController::TestCase\nend", 'controller', 0],
         \ ['test', 'test/controllers/*_test.rb', "require 'test_helper'\n\nclass %STest < ActionController::TestCase\nend", '', 1],
@@ -2353,24 +2365,26 @@ function! s:app_commands() dict abort
         \ ['spec', 'spec/mailers/*_spec.rb', "require 'spec_helper'\n\ndescribe %S do\nend", 'controller', 0]],
         \ 'rails#app().has(v:val[0])'),
         \ '{"pattern": v:val[1], "template": v:val[2], "affinity": v:val[3], "complete": v:val[4]}')
-  let commands['integrationtest'] = map(filter([
+  let commands['integration test'] = map(filter([
         \ ['test', 'test/integration/*_test.rb', "require 'test_helper'\n\nclass %STest < ActionDispatch::IntegrationTest\nend"],
         \ ['spec', 'spec/features/*_spec.rb', "require 'spec_helper'\n\ndescribe \"%h\" do\nend"],
         \ ['spec', 'spec/requests/*_spec.rb', "require 'spec_helper'\n\ndescribe \"%h\" do\nend"],
         \ ['spec', 'spec/integration/*_spec.rb', "require 'spec_helper'\n\ndescribe \"%h\" do\nend"],
         \ ['cucumber', 'features/*.feature', "Feature: %h"],
-        \ ['turnip', 'spec/acceptance/*.feature', "Feature: %h"]],
+        \ ['turnip', 'spec/acceptance/*.feature', "Feature: %h"],
+        \ ['test', 'test/test_helper.rb', ""],
+        \ ['cucumber', 'features/support/env.rb', ""],
+        \ ['spec', 'spec/spec_helper.rb', ""]],
         \ 'rails#app().has(v:val[0])'),
         \ '{"pattern": v:val[1], "template": v:val[2]}')
 
   let all = self.projections()
   for pattern in reverse(sort(keys(all), function('rails#lencmp')))
     let projection = all[pattern]
-    for name in map(s:split(get(projection, 'command', '')), 's:sub(v:val, "[[:punct:][:space:]]", "")')
+    for name in s:split(get(projection, 'command', ''))
       let command = {
             \ 'pattern': pattern,
-            \ 'affinity': get(projection, 'affinity', ''),
-            \ 'template': get(projection, 'template', '')}
+            \ 'affinity': get(projection, 'affinity', '')}
       if !has_key(commands, name)
         let commands[name] = []
       endif
@@ -2539,46 +2553,56 @@ function! s:specList(A,L,P)
 endfunction
 
 function! s:Navcommand(bang,...)
-  let command = {'prefix': [], 'deprecation': ':Rnavcommand is deprecated.  See :help config/editor.json for replacement.', 'check': 1}
-  let i = 0
-  while i < a:0
-    let i += 1
-    let arg = a:{i}
+  let prefixes = []
+  let suffix = '.rb'
+  let affinity = ''
+  for arg in a:000
     if arg =~# '^-suffix='
       let suffix = matchstr(arg,'-suffix=\zs.*')
-      let command.suffix = suffix
     elseif arg =~# '^-default='
-      let command.default = matchstr(arg,'-default=\zs.*')
-    elseif arg =~# '^-\%(glob\|filter\)='
-      let command.glob = matchstr(arg,'-\w*=\zs.*')
+      let default = matchstr(arg,'-default=\zs.*')
+      if default =~# '()$'
+        let affinity = default[0:-3]
+        unlet default
+      endif
     elseif arg !~# '^-'
       if !exists('name')
         let name = arg
       else
-        let command.prefix += [s:sub(arg, '/=$', '/')]
+        let prefixes += [s:sub(arg, '/=$', '/')]
       endif
     endif
-  endwhile
+  endfor
   if !exists('name') || name !~# '^[a-z]\+$'
     return s:error("E182: Invalid command name")
   endif
-  return s:define_navcommand(name, command)
+  if empty(prefixes)
+    return ''
+  endif
+  let command = map(prefixes, '{"pattern": v:val . "*" . suffix, "affinity": affinity}')
+  if exists('default')
+    let command += [{"pattern": default}]
+  endif
+  let deprecation = ':Rnavcommand is deprecated.  See :help config/projections.json for replacement.'
+  return s:define_navcommand(name, command, 'call s:warn('.string(deprecation).')')
 endfunction
 
-function! s:define_navcommand(name, projection) abort
+function! s:define_navcommand(name, projection, ...) abort
   if empty(a:projection)
     return
   endif
-  if a:name !~# '^[a-z]\+$'
+  let name = s:gsub(a:name, '[[:punct:][:space:]]', '')
+  if name !~# '^[a-z]\+$'
     return s:error("E182: Invalid command name ".name)
   endif
   for prefix in ['E', 'S', 'V', 'T', 'D', 'R', 'RE', 'RS', 'RV', 'RT', 'RD']
     exe 'command! -buffer -bar -bang -nargs=* ' .
           \ (prefix =~# 'D' ? '-range=0 ' : '') .
           \ '-complete=customlist,'.s:sid.'CommandList ' .
-          \ prefix . a:name . ' :execute s:CommandEdit(' .
+          \ prefix . name . ' :execute s:CommandEdit(' .
           \ string((prefix =~# 'D' ? '<line1>' : '') . s:sub(prefix, '^R', '') . "<bang>") . ',' .
-          \ string(a:name) . ',' . string(a:projection) . ',<f-args>)'
+          \ string(a:name) . ',' . string(a:projection) . ',<f-args>)' .
+          \ (a:0 ? '|' . a:1 : '')
   endfor
 endfunction
 
@@ -2951,14 +2975,7 @@ function! s:projection_pairs(options)
   return pairs
 endfunction
 
-let s:seen_projection_deprecations = {}
-
 function! s:readable_open_command(cmd, argument, name, projections) dict abort
-  let depr = ''
-  if &verbose && has_key(a:options, 'deprecation') && !has_key(s:seen_projection_deprecations, a:options.deprecation)
-    let s:seen_projection_deprecations[a:options.deprecation] = 1
-    let depr = '|echohl WarningMsg|echon '.string(a:options.deprecation).'|echohl NONE'
-  endif
   let cmd = s:editcmdfor(a:cmd)
   let djump = ''
   if a:argument =~ '[#!]\|:\d*\%(:in\)\=$'
@@ -2989,7 +3006,7 @@ function! s:readable_open_command(cmd, argument, name, projections) dict abort
     endif
     if !empty(file) && self.app().has_path(file)
       let file = self.app().path(file)
-      return cmd . ' ' . s:fnameescape(file) . '|exe ' . s:sid . 'djump('.string(djump) . ')' . depr
+      return cmd . ' ' . s:fnameescape(file) . '|exe ' . s:sid . 'djump('.string(djump) . ')'
     endif
   endfor
   if empty(argument)
@@ -2997,7 +3014,7 @@ function! s:readable_open_command(cmd, argument, name, projections) dict abort
     if empty(defaults)
       return 'echoerr "E471: Argument required"'
     else
-      return cmd . ' ' . s:fnameescape(defaults[0]) . depr
+      return cmd . ' ' . s:fnameescape(defaults[0])
     endif
   endif
   if djump !~# '^!'
@@ -3009,23 +3026,23 @@ function! s:readable_open_command(cmd, argument, name, projections) dict abort
     endif
     let [prefix, suffix; _] = split(projection.pattern, '\*', 1)
     if self.app().has_path(prefix)
-      let file = self.app().path(prefix . (suffix =~# '\.rb$' ? rails#underscore(root) : root) . suffix)
+      let relative = prefix . (suffix =~# '\.rb$' ? rails#underscore(root) : root) . suffix
+      let file = self.app().path(relative)
       if !isdirectory(fnamemodify(file, ':h'))
         call mkdir(fnamemodify(file, ':h'), 'p')
       endif
-      let template = s:split(get(projection, 'template', ''))
+      if has_key(projection, 'template')
+      let template = s:split(projection.template)
       let ph = {
-            \ 's': rails#underscore(root),
-            \ 'S': rails#camelize(root),
-            \ 'h': toupper(root[0]) . tr(rails#underscore(root), '_', ' ')[1:-1],
-            \ 'p': rails#pluralize(root),
-            \ '%': '%'}
-      if suffix =~# '\.js\>'
-        let placeholders.S = s:gsub(placeholders.S, '::', '.')
+              \ 'S': rails#camelize(root),
+              \ 'h': toupper(root[0]) . tr(rails#underscore(root), '_', ' ')[1:-1]}
+        call map(template, 's:expand_placeholders(v:val, ph)')
+      else
+        let projected = self.app().file(relative).projected('template')
+        let template = s:split(get(projected, 0, ''))
       endif
-      call map(template, 's:expand_placeholders(v:val, ph)')
       call map(template, 's:gsub(v:val, "\t", "  ")')
-      return cmd . ' ' . s:fnameescape(simplify(file)) . '|call setline(1, '.string(template).')' . '|set nomod' . depr
+      return cmd . ' ' . s:fnameescape(simplify(file)) . '|call setline(1, '.string(template).')' . '|set nomod'
     endif
   endfor
   return 'echoerr '.string("Couldn't find destination directory for ".a:name.' '.a:argument)
@@ -3128,6 +3145,7 @@ function! s:readable_alternate_candidates(...) dict abort
     let lastmethod = self.last_method(a:1)
     if !empty(lastmethod)
       let placeholders.m = lastmethod
+      let placeholders.d = lastmethod
     endif
     let projected = self.projected('related', placeholders)
     if !empty(projected)
@@ -4136,8 +4154,15 @@ function! s:BufAbbreviations()
     Rabbrev AS::  ActiveSupport
     Rabbrev AM::  ActionMailer
     Rabbrev AO::  ActiveModel
-    for pairs in items(type(get(g:, 'rails_abbreviations', 0)) == type({}) ? g:rails_abbreviations : {}) + items(rails#app().config('abbreviations'))
+    for pairs in
+          \ items(type(get(g:, 'rails_abbreviations', 0)) == type({}) ? g:rails_abbreviations : {}) +
+          \ items(rails#app().config('abbreviations'))
       call call(function(s:sid.'Abbrev'), [0, pairs[0]] + s:split(pairs[1]))
+    endfor
+    for hash in reverse(rails#buffer().projected('abbreviations'))
+      for pairs in items(hash)
+        call call(function(s:sid.'Abbrev'), [0, pairs[0]] + s:split(pairs[1]))
+      endfor
     endfor
   endif
 endfunction
@@ -4284,6 +4309,20 @@ function! s:app_engines() dict abort
   endif
 endfunction
 
+function! s:extend_projection(dest, src)
+  let dest = copy(a:dest)
+  for key in keys(a:src)
+    if !has_key(dest, key) || key ==# 'affinity'
+      let dest[key] = a:src[key]
+    elseif type(a:src[key]) == type({}) && type(dest[key]) == type({})
+      let dest[key] = extend(copy(dest[key]), a:src[key])
+    else
+      let dest[key] = s:uniq(s:getlist(a:src, key) + s:getlist(dest, key))
+    endif
+  endfor
+  return dest
+endfunction
+
 function! s:combine_projections(dest, src, ...) abort
   let extra = a:0 ? a:1 : {}
   if type(a:src) == type({})
@@ -4291,8 +4330,7 @@ function! s:combine_projections(dest, src, ...) abort
       let projection = extend(copy(original), extra)
       if has_key(projection, 'prefix') || has_key(projection, 'format')
         let nested = extend({
-              \ 'name': pattern,
-              \ 'command': s:gsub(pattern, '[[:space:][:punct:]]', '')
+              \ 'command': pattern,
               \ }, projection)
         if type(get(nested, 'template', '')) == type([])
           let nested.template = join(nested.template, "\n")
@@ -4317,7 +4355,7 @@ function! s:combine_projections(dest, src, ...) abort
           endfor
         endif
       else
-        let a:dest[pattern] = projection
+        let a:dest[pattern] = s:extend_projection(get(a:dest, pattern, {}), projection)
       endif
     endfor
   endif
@@ -4362,9 +4400,12 @@ endfunction
 call s:add_methods('app', ['config', 'gems', 'has_gem', 'engines', 'projections'])
 
 function! s:expand_placeholders(string, placeholders)
+  if type(a:string) !=# type('')
+    return a:string
+  endif
   let ph = extend({'%': '%'}, a:placeholders)
-  let value = substitute(a:string, '%\([^: ]\)', '\=get(ph, submatch(1), "\n")', 'g')
-  return value =~# '\n' ? '' : value
+  let value = substitute(a:string, '%\([^: ]\)', '\=get(ph, submatch(1), "\001")', 'g')
+  return value =~# "\001" ? '' : value
 endfunction
 
 function! s:readable_projected(key, ...) dict abort
@@ -4374,7 +4415,7 @@ function! s:readable_projected(key, ...) dict abort
   if has_key(all, f)
     let mine += map(s:getlist(all[f], a:key), 's:expand_placeholders(v:val, a:0 ? a:1 : 0)')
   endif
-  for pattern in reverse(sort(filter(keys(all), 'v:val =~# "*"'), s:function('rails#lencmp')))
+  for pattern in reverse(sort(filter(keys(all), 'v:val =~# "^[^*]*\\*[^*]*$"'), s:function('rails#lencmp')))
     let [prefix, suffix; _] = split(pattern, '\*', 1)
     if s:startswith(f, prefix) && s:endswith(f, suffix)
       let root = f[strlen(prefix) : -strlen(suffix)-1]
@@ -4383,9 +4424,11 @@ function! s:readable_projected(key, ...) dict abort
             \ 'S': rails#camelize(root),
             \ 'h': toupper(root[0]) . tr(rails#underscore(root), '_', ' ')[1:-1],
             \ 'p': rails#pluralize(root),
+            \ 'o': rails#singularize(root),
+            \ 'i': rails#singularize(root),
             \ '%': '%'}, a:0 ? a:1 : {})
       if suffix =~# '\.js\>'
-        let placeholders.S = s:gsub(placeholders.S, '::', '.')
+        let ph.S = s:gsub(ph.S, '::', '.')
       endif
       let mine += map(s:getlist(all[pattern], a:key), 's:expand_placeholders(v:val, ph)')
     endif
@@ -4441,20 +4484,10 @@ function! RailsBufInit(path)
   call s:BufSettings()
   call s:BufMappings()
   call s:BufCommands()
-  let t = rails#buffer().type_name()
-  let t = "-".t
-  let f = '/'.RailsFilePath()
-  if f =~ '[ !#$%\,]'
-    let f = ''
+  if !empty(findfile('macros/rails.vim', escape(&runtimepath, ' ')))
+    runtime! macros/rails.vim
   endif
-  runtime! macros/rails.vim
   silent doautocmd User Rails
-  if t != '-'
-    exe "silent doautocmd User Rails".s:gsub(t,'-','.')
-  endif
-  if f != ''
-    exe "silent doautocmd User Rails".f
-  endif
   call s:BufProjectionCommands()
   call s:BufAbbreviations()
   return b:rails_root
@@ -4477,10 +4510,11 @@ function! s:SetBasePath() abort
   let path += ['app/models/concerns', 'app/controllers/concerns', 'app/controllers', 'app/helpers', 'app/mailers', 'app/models']
 
   for [key, projection] in items(self.app().projections())
-    if get(projection, 'path', 0) is 1
+    if get(projection, 'path', 0) is 1 || get(projection, 'autoload', 0) is 1
       let path += split(key, '*')[0]
     endif
   endfor
+  let path += filter(self.projected('path'), 'type(v:val) == type("")')
 
   let path += ['app/*', 'app/views']
   if self.controller_name() != ''
@@ -4491,6 +4525,9 @@ function! s:SetBasePath() abort
   endif
   if self.app().has('spec')
     let path += ['spec', 'spec/controllers', 'spec/helpers', 'spec/mailers', 'spec/models', 'spec/views', 'spec/lib', 'spec/features', 'spec/requests', 'spec/integration']
+  endif
+  if self.app().has('cucumber')
+    let path += ['features']
   endif
   let path += ['vendor/plugins/*/lib', 'vendor/plugins/*/test', 'vendor/rails/*/lib', 'vendor/rails/*/test']
   let engine_paths = map(copy(self.app().engines()), 'v:val . "/app/*"')

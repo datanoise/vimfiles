@@ -1,6 +1,6 @@
 " rake.vim - It's like rails.vim without the rails
 " Maintainer:   Tim Pope <http://tpo.pe/>
-" Version:      1.1
+" Version:      1.2
 " GetLatestVimScripts: 3669 1 :AutoInstall: rake.vim
 
 if exists('g:loaded_rake') || &cp || v:version < 700
@@ -142,8 +142,11 @@ endfunction
 
 augroup rake
   autocmd!
-  autocmd BufNewFile,BufReadPost * call s:Detect(expand('<amatch>:p'))
-  autocmd FileType           netrw call s:Detect(expand('%:p'))
+  autocmd BufNewFile,BufReadPost *
+        \ if empty(&filetype) |
+        \   call s:Detect(expand('<amatch>:p')) |
+        \ endif
+  autocmd FileType * call s:Detect(expand('%:p'))
   autocmd User NERDTreeInit,NERDTreeNewRoot call s:Detect(b:NERDTreeRoot.path.str())
   autocmd VimEnter * if expand('<amatch>')==''|call s:Detect(getcwd())|endif
 augroup END
@@ -154,7 +157,7 @@ augroup END
 let s:project_prototype = {}
 let s:projects = {}
 
-function! s:project(...) abort
+function! rake#project(...) abort
   let dir = a:0 ? a:1 : (exists('b:rake_root') && b:rake_root !=# '' ? b:rake_root : s:find_root(expand('%:p')))
   if dir !=# ''
     if has_key(s:projects, dir)
@@ -164,6 +167,14 @@ function! s:project(...) abort
       let s:projects[dir] = project
     endif
     return extend(extend(project, s:project_prototype, 'keep'), s:abstract_prototype, 'keep')
+  endif
+  return {}
+endfunction
+
+function! s:project(...)
+  let project = call('rake#project', a:000)
+  if !empty(project)
+    return project
   endif
   call s:throw('not a rake project: '.expand('%:p'))
 endfunction
@@ -284,19 +295,29 @@ let g:rake#errorformat = '%D(in\ %f),'
       \.'%\\s%#%f:%l:,'
       \.'%m\ [%f:%l]:'
 
+function! s:project_makeprg()
+  if executable(s:project().path('bin/rake'))
+    return 'bin/rake'
+  elseif filereadable(s:project().path('bin/rake'))
+    return 'ruby bin/rake'
+  elseif filereadable(s:project().path('Gemfile'))
+    return 'bundle exec rake'
+  else
+    return 'rake'
+  endif
+endfunction
+
+call s:add_methods('project', ['makeprg'])
+
 function! s:Rake(bang,arg)
   let old_makeprg = &l:makeprg
   let old_errorformat = &l:errorformat
+  let old_compiler = get(b:, 'current_compiler', '')
   call s:push_chdir()
   try
-    if filereadable(s:project().path('bin/rake'))
-      let &l:makeprg = 'ruby bin/rake'
-    elseif filereadable(s:project().path('Gemfile'))
-      let &l:makeprg = 'bundle exec rake'
-    else
-      let &l:makeprg = 'rake'
-    endif
+    let &l:makeprg = s:project().makeprg()
     let &l:errorformat = g:rake#errorformat
+    let b:current_compiler = 'rake'
     if exists(':Make')
       execute 'Make'.a:bang.' '.a:arg
     else
@@ -309,6 +330,10 @@ function! s:Rake(bang,arg)
   finally
     let &l:errorformat = old_errorformat
     let &l:makeprg = old_makeprg
+    let b:current_compiler = old_compiler
+    if empty(old_compiler)
+      unlet! b:current_compiler
+    endif
     call s:pop_command()
   endtry
 endfunction
@@ -449,18 +474,13 @@ call s:command("-bar -bang -nargs=? -complete=customlist,s:RComplete RV :execute
 call s:command("-bar -bang -nargs=? -complete=customlist,s:RComplete RT :execute s:R('T','<bang>',<f-args>)")
 call s:command("-bar -bang -nargs=? -complete=customlist,s:RComplete RD :execute s:R('D','<bang>',<f-args>)")
 
-call s:command("-bar -bang -nargs=? -complete=customlist,s:RComplete E  :execute s:R('E','<bang>',<f-args>)")
-call s:command("-bar -bang -nargs=? -complete=customlist,s:RComplete S  :execute s:R('S','<bang>',<f-args>)")
-call s:command("-bar -bang -nargs=? -complete=customlist,s:RComplete V  :execute s:R('V','<bang>',<f-args>)")
-call s:command("-bar -bang -nargs=? -complete=customlist,s:RComplete T  :execute s:R('T','<bang>',<f-args>)")
-call s:command("-bar -bang -nargs=? -complete=customlist,s:RComplete D  :execute s:R('D','<bang>',<f-args>)")
-
 call s:command("-bar -bang -nargs=? -complete=customlist,s:RComplete A  :execute s:R('E','<bang>',<f-args>)")
 call s:command("-bar -bang -nargs=? -complete=customlist,s:RComplete AE :execute s:R('E','<bang>',<f-args>)")
 call s:command("-bar -bang -nargs=? -complete=customlist,s:RComplete AS :execute s:R('S','<bang>',<f-args>)")
 call s:command("-bar -bang -nargs=? -complete=customlist,s:RComplete AV :execute s:R('V','<bang>',<f-args>)")
 call s:command("-bar -bang -nargs=? -complete=customlist,s:RComplete AT :execute s:R('T','<bang>',<f-args>)")
 call s:command("-bar -bang -nargs=? -complete=customlist,s:RComplete AD :execute s:R('D','<bang>',<f-args>)")
+call s:command("-bar -bang -nargs=? -complete=customlist,s:RComplete AR :execute s:R('D','<bang>',<f-args>)")
 
 " }}}1
 " Elib, etc. {{{1

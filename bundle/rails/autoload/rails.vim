@@ -1082,7 +1082,7 @@ function! s:app_tags_command() dict
     call s:error("ctags not found")
     return ''
   endif
-  let args = self.config('ctags_arguments', s:split(get(g:, 'rails_ctags_arguments', '--languages=-javascript')))
+  let args = s:split(get(g:, 'rails_ctags_arguments', '--languages=-javascript'))
   exe '!'.cmd.' -f '.s:escarg(self.path("tags")).' -R --langmap="ruby:+.rake.builder.jbuilder.rjs" '.join(args,' ').' '.s:escarg(self.path())
   return ''
 endfunction
@@ -4155,8 +4155,7 @@ function! s:BufAbbreviations()
     Rabbrev AM::  ActionMailer
     Rabbrev AO::  ActiveModel
     for pairs in
-          \ items(type(get(g:, 'rails_abbreviations', 0)) == type({}) ? g:rails_abbreviations : {}) +
-          \ items(rails#app().config('abbreviations'))
+          \ items(type(get(g:, 'rails_abbreviations', 0)) == type({}) ? g:rails_abbreviations : {})
       call call(function(s:sid.'Abbrev'), [0, pairs[0]] + s:split(pairs[1]))
     endfor
     for hash in reverse(rails#buffer().projected('abbreviations'))
@@ -4376,12 +4375,6 @@ function! s:app_projections() dict abort
     if !has_key(s:projections_for_gems, gem_path)
       let gem_projections = {}
       for path in ['lib/', 'lib/rails/']
-        for file in findfile(path.'editor.json', gem_path, -1)
-          try
-            call s:combine_projections(gem_projections, get(rails#json_parse(readfile(self.path(file))), 'projections'))
-          catch
-          endtry
-        endfor
         for file in findfile(path.'projections.json', gem_path, -1)
           try
             call s:combine_projections(gem_projections, rails#json_parse(readfile(self.path(file))))
@@ -4503,8 +4496,6 @@ function! s:SetBasePath() abort
   let old_path = s:pathsplit(s:sub(self.getvar('&path'),'^\.%(,|$)',''))
 
   let path = ['lib', 'vendor']
-  let path += self.app().config('path_additions', [])
-  let path += self.app().config('path', [])
   let path += get(g:, 'rails_path_additions', [])
   let path += get(g:, 'rails_path', [])
   let path += ['app/models/concerns', 'app/controllers/concerns', 'app/controllers', 'app/helpers', 'app/mailers', 'app/models']

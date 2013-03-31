@@ -17,7 +17,7 @@ if exists("g:loaded_syntastic_plugin")
 endif
 let g:loaded_syntastic_plugin = 1
 
-runtime plugin/syntastic/*.vim
+runtime! plugin/syntastic/*.vim
 
 let s:running_windows = has("win16") || has("win32")
 
@@ -262,7 +262,12 @@ function! s:HighlightErrors()
             elseif get(item, 'col')
                 let lastcol = col([item['lnum'], '$'])
                 let lcol = min([lastcol, item['col']])
-                call matchadd(group, '\%'.item['lnum'].'l\%'.lcol.(item['vcol'] ? 'v' : 'c'))
+
+                "a bug in vim can sometimes cause there to be no 'vcol' key,
+                "so check for its existence
+                let coltype = has_key(item, 'vcol') && item['vcol'] ? 'v' : 'c'
+
+                call matchadd(group, '\%' . item['lnum'] . 'l\%' . lcol . coltype)
             endif
         endfor
     endfor

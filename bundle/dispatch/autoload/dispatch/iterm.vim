@@ -20,28 +20,8 @@ function! dispatch#iterm#handle(request) abort
   endif
 endfunction
 
-function! dispatch#iterm#printf_title(request)
-  return 'printf ' . shellescape('\033]1;%s\007\033]2;%s\007') .
-        \  ' ' . shellescape(a:request.title) .
-        \  ' ' . shellescape(a:request.expanded)
-endfunction
-
 function! dispatch#iterm#spawn(command, request, activate) abort
-  let temp = tempname()
-  let command = ['cd ' . shellescape(a:request.directory)]
-  for line in split(system('env'), "\n")
-    let var = matchstr(line, '^\w\+\ze=')
-    if !empty(var) && var !=# '_'
-      if &shell =~# 'csh'
-        let command += ['setenv '.var.' '.shellescape(eval('$'.var))]
-      else
-        let command += ['export '.var.'='.shellescape(eval('$'.var))]
-      endif
-    endif
-  endfor
-  let command += [dispatch#iterm#printf_title(a:request)]
-  let command += [a:command]
-  call writefile(command, temp)
+  let script = dispatch#isolate(dispatch#set_title(a:request), a:command)
   return s:osascript(
       \ 'tell application "iTerm"',
       \   'tell the current terminal',
@@ -49,7 +29,7 @@ function! dispatch#iterm#spawn(command, request, activate) abort
       \     'tell (make new session)',
       \       'set name to '.s:escape(a:request.title),
       \       'set title to '.s:escape(a:request.command),
-      \       'exec command ' . s:escape(&shell . ' -l ' . temp),
+      \       'exec command ' . s:escape(script),
       \       a:request.background ? 'select oldsession' : '',
       \     'end tell',
       \   'end tell',

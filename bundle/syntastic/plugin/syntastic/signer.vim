@@ -43,7 +43,7 @@ function! g:SyntasticSigner.New()
 endfunction
 
 function! g:SyntasticSigner.SetUpSignStyles()
-    if g:syntastic_enable_signs
+    if has('signs')
         if !hlexists('SyntasticErrorSign')
             highlight link SyntasticErrorSign error
         endif
@@ -86,7 +86,11 @@ function! g:SyntasticSigner._signErrors(loclist)
     let loclist = a:loclist
     if loclist.hasErrorsOrWarningsToDisplay()
 
-        let errors = loclist.filter({'bufnr': bufnr('')})
+        let lfilter = {'bufnr': bufnr('')}
+        if g:syntastic_quiet_warnings
+            let lfilter['type'] = 'E'
+        endif
+        let errors = loclist.filter(lfilter)
         for i in errors
             let sign_severity = 'Error'
             let sign_subtype = ''

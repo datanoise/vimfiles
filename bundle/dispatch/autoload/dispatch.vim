@@ -95,7 +95,7 @@ function! dispatch#prepare_make(request, ...) abort
   else
     let exec .= 'sleep 1; '
   endif
-  let exec = a:0 ? a:1 : (a:request.expanded . dispatch#shellpipe(a:request.file))
+  let exec .= a:0 ? a:1 : (a:request.expanded . dispatch#shellpipe(a:request.file))
 
   let after = 'rm -f ' . a:request.file . '.pid; ' .
         \ 'touch ' . a:request.file . '.complete; ' .
@@ -106,6 +106,31 @@ function! dispatch#prepare_make(request, ...) abort
     " csh
     return exec . '; ' . after
   endif
+endfunction
+
+function! dispatch#set_title(request)
+  return dispatch#shellescape('printf',
+        \ '\033]1;%s\007\033]2;%s\007',
+        \ a:request.title,
+        \ a:request.expanded)
+endfunction
+
+function! dispatch#isolate(...)
+  let command = ['cd ' . shellescape(getcwd())]
+  for line in split(system('env'), "\n")
+    let var = matchstr(line, '^\w\+\ze=')
+    if !empty(var) && var !=# '_'
+      if &shell =~# 'csh'
+        let command += ['setenv '.var.' '.shellescape(eval('$'.var))]
+      else
+        let command += ['export '.var.'='.shellescape(eval('$'.var))]
+      endif
+    endif
+  endfor
+  let command += a:000
+  let temp = tempname()
+  call writefile(command, temp)
+  return 'env -i ' . &shell . ' ' . temp
 endfunction
 
 function! s:set_current_compiler(name)
@@ -206,9 +231,8 @@ function! dispatch#command_complete(A, L, P) abort
   if a:L =~# '\S\+\s\S\+\s'
     return join(map(split(glob(a:A.'*'), "\n"), 'isdirectory(v:val) ? v:val . dispatch#slash() : v:val'), "\n")
   else
-    let compilers = split(globpath(escape(&rtp, ' '), 'compiler/'.a:A.'*.vim'), "\n")
     let executables = []
-    for dir in split($PATH, ':')
+    for dir in split($PATH, has('win32') ? ';' : ':')
       let executables += map(split(glob(dir.'/'.a:A.'*'), "\n"), 'v:val[strlen(dir)+1 : -1]')
     endfor
     return join(sort(dispatch#uniq(executables)), "\n")
@@ -374,8 +398,8 @@ function! dispatch#complete(file, ...) abort
       endif
     endif
     if !request.background
-      let all = get(request, 'compiler', '') ==# 'run'
-      call s:cgetfile(request, all, 0)
+      call s:cgetfile(request, 0, 0)
+      redraw
     endif
   endif
   return ''

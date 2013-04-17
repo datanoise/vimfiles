@@ -157,11 +157,13 @@ endfunction
 " :Start {{{1
 
 function! dispatch#start(command, ...) abort
-  let title = matchstr(a:command, '-title=\zs\%(\\.\|\S\)*')
+  let command = a:command
+  if empty(command) && type(get(b:, 'start', [])) == type('')
+    let command = b:start
+  endif
+  let title = matchstr(command, '-title=\zs\%(\\.\|\S\)*')
   if !empty(title)
-    let command = a:command[strlen(title) + 8 : -1]
-  else
-    let command = a:command
+    let command = command[strlen(title) + 8 : -1]
   endif
   if empty(command)
     let command = &shell
@@ -250,7 +252,7 @@ function! dispatch#compile_command(bang, args) abort
   else
     let args = '_'
     for vars in [b:, g:, t:, w:]
-      if has_key(vars, 'dispatch')
+      if has_key(vars, 'dispatch') && type(vars.dispatch) == type('')
         let args = vars.dispatch
       endif
     endfor

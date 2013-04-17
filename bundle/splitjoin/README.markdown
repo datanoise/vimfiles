@@ -40,8 +40,8 @@ This currently works for:
   * Javascript object literals and functions
   * Tags in HTML/XML
   * CSS, SCSS, LESS style declarations.
-  * YAML arrays
-  * Lua functions
+  * YAML arrays and maps
+  * Lua functions and tables
   * Vimscript line continuations
 
 For more information, try `:help splitjoin`, or take a look at the help file

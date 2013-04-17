@@ -244,7 +244,7 @@ function! s:project_locked() dict abort
         endif
       elseif line =~# '^  \w\+: '
         let properties[matchstr(line, '\w\+')] = matchstr(line, ': \zs.*')
-      elseif line =~# '^    [a-zA-Z0-9_-]\+\s\+(\d\+'
+      elseif line =~# '^    [a-zA-Z0-9._-]\+\s\+(\d\+'
         let name = split(line, ' ')[0]
         let ver = substitute(line, '.*(\|).*', '', 'g')
         let properties.versions[name] = ver
@@ -341,6 +341,15 @@ function! s:project_paths(...) dict abort
             break
           endif
         endfor
+        if !has_key(paths, name)
+          for path in gem_paths
+            let dir = glob(path . '/gems/' . name . '-' . ver . '-*')
+            if isdirectory(dir)
+              let paths[name] = dir
+              break
+            endif
+          endfor
+        endif
       endfor
     endfor
 

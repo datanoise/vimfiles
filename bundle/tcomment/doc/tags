@@ -9,7 +9,6 @@ g:tcomment#replacements_c	tcomment.txt	/*g:tcomment#replacements_c*
 g:tcomment#replacements_xml	tcomment.txt	/*g:tcomment#replacements_xml*
 g:tcomment#syntax_substitute	tcomment.txt	/*g:tcomment#syntax_substitute*
 g:tcommentBlankLines	tcomment.txt	/*g:tcommentBlankLines*
-g:tcommentBlockC	tcomment.txt	/*g:tcommentBlockC*
 g:tcommentBlockC2	tcomment.txt	/*g:tcommentBlockC2*
 g:tcommentBlockXML	tcomment.txt	/*g:tcommentBlockXML*
 g:tcommentGuessFileType	tcomment.txt	/*g:tcommentGuessFileType*

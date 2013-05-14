@@ -3,7 +3,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-09-17.
 " @Last Change: 2013-03-07.
-" @Revision:    946
+" @Revision:    956
 
 " call tlog#Log('Load: '. expand('<sfile>')) " vimtlib-sfile
 
@@ -330,9 +330,11 @@ call tcomment#DefineType('dylan',            '// %s'            )
 call tcomment#DefineType('eiffel',           '-- %s'            )
 call tcomment#DefineType('erlang',           '%%%% %s'          )
 call tcomment#DefineType('eruby',            '<%%# %s'          )
+call tcomment#DefineType('esmtprc',          '# %s'             )
 call tcomment#DefineType('fstab',            '# %s'             )
 call tcomment#DefineType('gitcommit',        '# %s'             )
 call tcomment#DefineType('gitignore',        '# %s'             )
+call tcomment#DefineType('gnuplot',          '# %s'             )
 call tcomment#DefineType('gtkrc',            '# %s'             )
 call tcomment#DefineType('go',               '// %s'            )
 call tcomment#DefineType('go_inline',        g:tcommentInlineC  )
@@ -419,6 +421,7 @@ call tcomment#DefineType('sgml',             g:tcommentInlineXML)
 call tcomment#DefineType('sgml_inline',      g:tcommentInlineXML)
 call tcomment#DefineType('sgml_block',       g:tcommentBlockXML )
 call tcomment#DefineType('sh',               '# %s'             )
+call tcomment#DefineType('slim',             '/%s'              )
 call tcomment#DefineType('smarty',           '{* %s *}'         )
 call tcomment#DefineType('spec',             '# %s'             )
 call tcomment#DefineType('sps',              '* %s.'            )
@@ -1035,6 +1038,7 @@ function! s:CommentDef(beg, end, checkRx, commentMode, cstart, cend)
         let line = strpart(line, 0, a:cend - 1)
     endif
     let uncomment = (line =~ mdrx)
+    " TLogVAR 1, uncomment
     let indentStr = s:GetIndentString(beg, a:cstart)
     let il = indent(beg)
     let n  = beg + 1
@@ -1048,6 +1052,7 @@ function! s:CommentDef(beg, end, checkRx, commentMode, cstart, cend)
             if a:commentMode =~# 'G'
                 if !(getline(n) =~ mdrx)
                     let uncomment = 0
+                    " TLogVAR 2, uncomment
                 endif
             endif
         endif
@@ -1057,13 +1062,18 @@ function! s:CommentDef(beg, end, checkRx, commentMode, cstart, cend)
         let t = @t
         try
             silent exec 'norm! '. beg.'G1|v'.end.'G$"ty'
+            if &selection == 'inclusive' && @t =~ '\n$' && len(@t) > 1
+                let @t = @t[0 : -2]
+            endif
             " TLogVAR @t, mdrx
             let uncomment = (@t =~ mdrx)
+            " TLogVAR 3, uncomment
             if !uncomment && a:commentMode =~ 'o'
                 let mdrx1 = substitute(mdrx, '\\$$', '\\n\\$', '')
                 " TLogVAR mdrx1
                 if @t =~ mdrx1
                     let uncomment = 1
+                    " TLogVAR 4, uncomment
                     " let end -= 1
                 endif
             endif
@@ -1071,6 +1081,7 @@ function! s:CommentDef(beg, end, checkRx, commentMode, cstart, cend)
             let @t = t
         endtry
     endif
+    " TLogVAR 5, uncomment
     return [beg, end, indentStr, uncomment]
 endf
 

@@ -113,6 +113,7 @@ set incsearch
 set nohlsearch
 " case-sensitive search when using camel case search criteria
 set smartcase
+set wrapscan
 " }}}
 " status line options {{{2
 set laststatus=2

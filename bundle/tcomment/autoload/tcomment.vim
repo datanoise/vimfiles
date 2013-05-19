@@ -3,7 +3,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-09-17.
 " @Last Change: 2013-03-07.
-" @Revision:    956
+" @Revision:    1006
 
 " call tlog#Log('Load: '. expand('<sfile>')) " vimtlib-sfile
 
@@ -248,8 +248,10 @@ let s:definitions = {}
 " See the help on the args argument of |tcomment#Comment| (see item 1, 
 " args is a list of key=value pairs) to find out which fields can be 
 " used.
-function! tcomment#DefineType(name, commentdef)
-    if !has_key(s:definitions, a:name)
+" :display: tcomment#DefineType(name, commentdef, ?cdef={}, ?anyway=0)
+function! tcomment#DefineType(name, commentdef, ...)
+    let use = a:0 >= 2 ? a:2 : !has_key(s:definitions, a:name)
+    if use
         if type(a:commentdef) == 4
             let cdef = copy(a:commentdef)
         else
@@ -493,6 +495,10 @@ let s:nullCommentString    = '%s'
 "                              to be doubled); "commentstring", "begin" 
 "                              and optionally "end" must be defined or 
 "                              deducible.
+"         whitespace       ... Define whether commented text is 
+"                              surrounded with whitespace; if
+"                              both ... surround with whitespace (default)
+"                              no   ... don't use whitespace
 "         strip_whitespace ... Strip trailing whitespace: if 1, strip 
 "                              from empty lines only, if 2, always strip 
 "                              whitespace
@@ -577,6 +583,9 @@ function! tcomment#Comment(beg, end, ...)
         unlet s:temp_options
     endif
     " TLogVAR 7, cdef
+    if has_key(cdef, 'whitespace')
+        call s:SetWhitespaceMode(cdef)
+    endif
     if !empty(filter(['count', 'cbeg', 'cend', 'cmid'], 'has_key(cdef, v:val)'))
         call s:RepeatCommentstring(cdef)
     endif
@@ -705,6 +714,40 @@ function! s:GetStartEnd(beg, end, commentMode) "{{{3
     endif
     " TLogVAR lbeg, cbeg, lend, cend
     return [lbeg, cbeg, lend, cend]
+endf
+
+
+function! s:SetWhitespaceMode(cdef) "{{{3
+    let mode = a:cdef.whitespace
+    let cms = s:BlockGetCommentString(a:cdef)
+    let mid = s:BlockGetMiddleString(a:cdef)
+    let cms0 = cms
+    let mid0 = mid
+    " TLogVAR mode, cms, mid
+    if mode =~ '^\(n\%[o]\|l\%[eft]\|r\%[ight]\)$'
+        if mode == 'no' || mode == 'right'
+            let cms = substitute(cms, '\s\+\ze%\@<!%s', '', 'g')
+            let mid = substitute(mid, '\s\+\ze%\@<!%s', '', 'g')
+        endif
+        if mode == 'no' || mode == 'left'
+            let cms = substitute(cms, '%\@<!%s\zs\s\+', '', 'g')
+            let mid = substitute(mid, '%\@<!%s\zs\s\+', '', 'g')
+        endif
+    elseif mode =~ '^\(b\%[oth]\)$'
+        let cms = substitute(cms, '\S\zs\ze%\@<!%s', ' ', 'g')
+        let mid = substitute(mid, '\S\zs\ze%\@<!%s', ' ', 'g')
+        let cms = substitute(cms, '%\@<!%s\zs\ze\S', ' ', 'g')
+        let mid = substitute(mid, '%\@<!%s\zs\ze\S', ' ', 'g')
+    endif
+    if cms != cms0
+        " TLogVAR cms
+        let a:cdef.commentstring = cms
+    endif
+    if mid != mid0
+        " TLogVAR mid
+        let a:cdef.middle = mid
+    endif
+    return a:cdef
 endf
 
 
@@ -1603,6 +1646,27 @@ function! s:BlockGetMiddleString(cdef)
         return a:cdef.middle
     else
         return matchstr(a:cdef.commentstring, '\n\zs.*')
+    endif
+endf
+
+
+function! tcomment#TextObjectInlineComment() "{{{3
+    let cdef = tcomment#GuessCommentType({'commentMode': 'I'})
+    let cms  = escape(cdef.commentstring, '\')
+    let pos  = getpos('.')
+    let lnum = pos[1]
+    let col  = pos[2]
+    let cmtf = '\V'. printf(cms, '\.\{-}\%'. lnum .'l\%'. col .'c\.\{-}')
+    " TLogVAR cmtf, search(cmtf,'cwn')
+    if search(cmtf, 'cw') > 0
+        let pos0 = getpos('.')
+        if search(cmtf, 'cwe') > 0
+            let pos1 = getpos('.')
+            exec 'norm!'
+                        \ pos0[1].'gg'.pos0[2].'|v'.
+                        \ pos1[1].'gg'.pos1[2].'|'.
+                        \ (&sel == 'exclusive' ? 'l' : '')
+        endif
     endif
 endf
 

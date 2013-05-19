@@ -8,6 +8,7 @@
 'syntastic_enable_highlighting'	syntastic.txt	/*'syntastic_enable_highlighting'*
 'syntastic_enable_signs'	syntastic.txt	/*'syntastic_enable_signs'*
 'syntastic_error_symbol'	syntastic.txt	/*'syntastic_error_symbol'*
+'syntastic_ignore_files'	syntastic.txt	/*'syntastic_ignore_files'*
 'syntastic_loc_list_height'	syntastic.txt	/*'syntastic_loc_list_height'*
 'syntastic_mode_map'	syntastic.txt	/*'syntastic_mode_map'*
 'syntastic_quiet_warnings'	syntastic.txt	/*'syntastic_quiet_warnings'*

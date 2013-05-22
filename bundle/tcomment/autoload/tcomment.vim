@@ -3,7 +3,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-09-17.
 " @Last Change: 2013-03-07.
-" @Revision:    1006
+" @Revision:    1010
 
 " call tlog#Log('Load: '. expand('<sfile>')) " vimtlib-sfile
 
@@ -400,6 +400,8 @@ call tcomment#DefineType('po',               '# %s'             )
 call tcomment#DefineType('prolog',           '%% %s'            )
 call tcomment#DefineType('puppet',           '# %s'             )
 call tcomment#DefineType('python',           '# %s'             )
+call tcomment#DefineType('racket',           '; %s'             )
+call tcomment#DefineType('racket_block',     '#|%s|#'           )
 call tcomment#DefineType('rc',               '// %s'            )
 call tcomment#DefineType('readline',         '# %s'             )
 call tcomment#DefineType('resolv',           '# %s'             )
@@ -415,6 +417,8 @@ call tcomment#DefineType('scala',            '// %s'            )
 call tcomment#DefineType('scala_inline',     g:tcommentInlineC  )
 call tcomment#DefineType('scala_block',      g:tcommentBlockC   )
 call tcomment#DefineType('scheme',           '; %s'             )
+call tcomment#DefineType('scheme_block',     '#|%s|#'           )
+" call tcomment#DefineType('scheme_s',         '#;%s'             )
 call tcomment#DefineType('scss',             '// %s'            )
 call tcomment#DefineType('scss_inline',      g:tcommentInlineC  )
 call tcomment#DefineType('scss_block',       g:tcommentBlockC   )
@@ -439,6 +443,7 @@ call tcomment#DefineType('tcl',              '# %s'             )
 call tcomment#DefineType('tex',              '%% %s'            )
 call tcomment#DefineType('tpl',              '<!-- %s -->'      )
 call tcomment#DefineType('typoscript',       '# %s'             )
+call tcomment#DefineType('upstart',          '# %s'             )
 call tcomment#DefineType('vhdl',             '-- %s'            )
 call tcomment#DefineType('viki',             '%% %s'            )
 call tcomment#DefineType('viki_3',           '%%%%%% %s'        )

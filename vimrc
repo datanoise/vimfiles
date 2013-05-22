@@ -188,7 +188,8 @@ set imsearch=0
 " uncategorized options {{{2
 au ColorScheme * hi! link ColorColumn StatusLine
 set bg=dark
-colo dante_mod
+colo dante_mod_snap
+" colo solarized
 if exists('&mc')
   au BufNew,BufRead * set mc=81
 endif
@@ -198,6 +199,7 @@ set autoread         " disable annoying confirmations
 set hidden
 set lazyredraw
 set title
+set backspace=indent,eol,start
 " set number
 if exists("&macmeta")
   set macmeta " on Mac use Option key as Meta
@@ -243,7 +245,7 @@ else
   au FileType ruby setlocal keywordprg=ri\ --no-gems
 end
 au FileType ruby setlocal completefunc=syntaxcomplete#Complete
-au FileType ruby setlocal balloonexpr&
+au FileType ruby if has('balloonexpr') | setlocal balloonexpr& | fi
 au FileType scala,ruby exe 'compiler '. expand('<amatch>')
 au BufReadPost quickfix nmap <silent> <buffer> q :call <SID>close_quick_fix()<CR>
 au FileType xml setlocal foldmethod=syntax
@@ -495,13 +497,16 @@ nnoremap <silent> <leader>kx :CtrlPBookmarkDir<CR>
 nnoremap <silent> <leader>kg :CtrlPTag<CR>
 
 " smartinput settings {{{2
-call smartinput#map_to_trigger('i', '<Bar>', '<Bar>', '<Bar>')
-call smartinput#define_rule({
-\   'at': '\({\|\<do\>\)\s*\%#',
-\   'char': '<Bar>',
-\   'input': '<Bar><Bar><Left>',
-\   'filetype': ['ruby'],
-\ })
+if exists('g:loaded_smartinput')
+  call smartinput#map_to_trigger('i', '<Bar>', '<Bar>', '<Bar>')
+  call smartinput#define_rule({
+  \   'at': '\({\|\<do\>\)\s*\%#',
+  \   'char': '<Bar>',
+  \   'input': '<Bar><Bar><Left>',
+  \   'filetype': ['ruby'],
+  \ })
+endif
+
 
 " powerline settings {{{2
 let g:Powerline_cache_file = '/tmp/Powerline_cache'

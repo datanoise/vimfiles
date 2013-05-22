@@ -245,7 +245,7 @@ else
   au FileType ruby setlocal keywordprg=ri\ --no-gems
 end
 au FileType ruby setlocal completefunc=syntaxcomplete#Complete
-au FileType ruby if has('balloonexpr') | setlocal balloonexpr& | fi
+au FileType ruby if has('balloonexpr') | setlocal balloonexpr& | endif
 au FileType scala,ruby exe 'compiler '. expand('<amatch>')
 au BufReadPost quickfix nmap <silent> <buffer> q :call <SID>close_quick_fix()<CR>
 au FileType xml setlocal foldmethod=syntax

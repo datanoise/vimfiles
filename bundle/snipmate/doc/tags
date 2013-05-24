@@ -7,6 +7,7 @@ snipMate-${#:}	snipMate.txt	/*snipMate-${#:}*
 snipMate-${#}	snipMate.txt	/*snipMate-${#}*
 snipMate-author	snipMate.txt	/*snipMate-author*
 snipMate-bugs	snipMate.txt	/*snipMate-bugs*
+snipMate-changelog	snipMate.txt	/*snipMate-changelog*
 snipMate-commands	snipMate.txt	/*snipMate-commands*
 snipMate-contact	snipMate.txt	/*snipMate-contact*
 snipMate-description	snipMate.txt	/*snipMate-description*

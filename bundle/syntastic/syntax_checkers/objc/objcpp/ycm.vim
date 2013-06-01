@@ -1,7 +1,7 @@
 "============================================================================
-"File:        tex.vim
+"File:        ycm.vim
 "Description: Syntax checking plugin for syntastic.vim
-"Maintainer:  Martin Grenfell <martin.grenfell at gmail dot com>
+"Maintainer:  Val Markovic <val at markovic dot io>
 "License:     This program is free software. It comes without any warranty,
 "             to the extent permitted by applicable law. You can redistribute
 "             it and/or modify it under the terms of the Do What The Fuck You
@@ -10,28 +10,25 @@
 "
 "============================================================================
 
-if exists("g:loaded_syntastic_tex_lacheck_checker")
+if exists("g:loaded_syntastic_objcpp_ycm_checker")
     finish
 endif
-let g:loaded_syntastic_tex_lacheck_checker=1
+let g:loaded_syntastic_objcpp_ycm_checker = 1
 
-function! SyntaxCheckers_tex_lacheck_IsAvailable()
-    return executable("lacheck")
+runtime syntax_checkers/c/ycm.vim
+
+function! SyntaxCheckers_objcpp_ycm_IsAvailable()
+    return SyntaxCheckers_c_ycm_IsAvailable()
 endfunction
 
-function! SyntaxCheckers_tex_lacheck_GetLocList()
-    let makeprg = syntastic#makeprg#build({
-        \ 'exe': 'lacheck',
-        \ 'filetype': 'tex',
-        \ 'subchecker': 'lacheck' })
+if !exists('g:loaded_youcompleteme')
+    finish
+endif
 
-    let errorformat =  '%-G** %f:,%E"%f"\, line %l: %m'
-
-    return SyntasticMake({
-        \ 'makeprg': makeprg,
-        \ 'errorformat': errorformat })
+function! SyntaxCheckers_objcpp_ycm_GetLocList()
+    return SyntaxCheckers_c_ycm_GetLocList()
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
-    \ 'filetype': 'tex',
-    \ 'name': 'lacheck'})
+    \ 'filetype': 'objcpp',
+    \ 'name': 'ycm'})

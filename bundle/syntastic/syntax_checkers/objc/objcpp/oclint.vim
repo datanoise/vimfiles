@@ -16,43 +16,21 @@
 "
 "   let g:syntastic_oclint_config_file = '.config'
 
-if exists("g:loaded_syntastic_c_oclint_checker")
+if exists("g:loaded_syntastic_objcpp_oclint_checker")
     finish
 endif
-let g:loaded_syntastic_c_oclint_checker = 1
+let g:loaded_syntastic_objcpp_oclint_checker = 1
 
-function! SyntaxCheckers_c_oclint_IsAvailable()
-    return executable("oclint")
+runtime syntax_checkers/c/oclint.vim
+
+function! SyntaxCheckers_objcpp_oclint_IsAvailable()
+    return SyntaxCheckers_c_oclint_IsAvailable()
 endfunction
 
-if !exists('g:syntastic_oclint_config_file')
-    let g:syntastic_oclint_config_file = '.syntastic_oclint_config'
-endif
-
-function! SyntaxCheckers_c_oclint_GetLocList()
-    let makeprg = syntastic#makeprg#build({
-        \ 'exe': 'oclint',
-        \ 'args': '-text',
-        \ 'post_args': '-- -c ' . syntastic#c#ReadConfig(g:syntastic_oclint_config_file),
-        \ 'filetype': 'c',
-        \ 'subchecker': 'oclint' })
-
-    let errorformat =
-        \ '%E%f:%l:%c: %m P1 ,' .
-        \ '%E%f:%l:%c: %m P2 ,' .
-        \ '%W%f:%l:%c: %m P3 ,' .
-        \ '%E%f:%l:%c: fatal error: %m,' .
-        \ '%E%f:%l:%c: error: %m,' .
-        \ '%W%f:%l:%c: warning: %m,' .
-        \ '%-G%.%#'
-
-    return SyntasticMake({
-        \ 'makeprg': makeprg,
-        \ 'errorformat': errorformat,
-        \ 'subtype': 'Style',
-        \ 'postprocess': ['compressWhitespace', 'sort'] })
+function! SyntaxCheckers_objcpp_oclint_GetLocList()
+    return SyntaxCheckers_c_oclint_GetLocList()
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
-    \ 'filetype': 'c',
+    \ 'filetype': 'objcpp',
     \ 'name': 'oclint'})

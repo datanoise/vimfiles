@@ -21,7 +21,7 @@ endfunction
 function! SyntaxCheckers_coffee_coffeelint_GetLocList()
     let makeprg = syntastic#makeprg#build({
         \ 'exe': 'coffeelint',
-        \ 'args': '--csv',
+        \ 'args': '--csv -f ~/.coffeelint.json',
         \ 'filetype': 'coffee',
         \ 'subchecker': 'coffeelint' })
 

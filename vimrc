@@ -1,5 +1,10 @@
 -*- vim -*- vim:set ft=vim et sw=2 sts=2 fdc=3:
 
+" use old regexp engine until performace of the new one is improved
+if exists('&regexpengine')
+  set regexpengine=1
+endif
+
 " Section: Global Setting {{{1
 " ------------------------------------------------------------------------------
 runtime! macros/matchit.vim

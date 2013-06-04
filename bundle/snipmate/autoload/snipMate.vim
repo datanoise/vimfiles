@@ -452,7 +452,7 @@ function! s:Glob(path, expr)
 	for p in split(a:path, ',')
 		let h = fnamemodify(a:expr, ':h')
 		if isdirectory(p . '/' . h)
-			call extend(res, glob(p . '/' . a:expr, 0, 1))
+			call extend(res, split(glob(p . '/' . a:expr), "\n"))
 		endif
 	endfor
 	return filter(res, 'filereadable(v:val)')
@@ -497,7 +497,7 @@ function! snipMate#GetSnippetFiles(mustExist, scopes, trigger)
 
 		if !a:mustExist
 			for p in split(paths, ',')
-				let p .= '/' . scope . '.snippets'
+				let p .= '/snippets/' . scope . '.snippets'
 				let result[p] = get(result, p, {'exists': 0, 'type': 'snippets'})
 			endfor
 		endif

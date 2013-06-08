@@ -9,23 +9,23 @@
 "             See http://sam.zoy.org/wtfpl/COPYING for more details.
 "
 "============================================================================
+"
+" Note: this script requires CoffeeScript version 1.6.2 or newer.
+"
 if exists("g:loaded_syntastic_coffee_coffee_checker")
     finish
 endif
 let g:loaded_syntastic_coffee_coffee_checker=1
 
 function! SyntaxCheckers_coffee_coffee_IsAvailable()
-    return executable("coffee")
+    return executable("coffee") &&
+        \ syntastic#util#versionIsAtLeast(syntastic#util#parseVersion('coffee --version 2>' . syntastic#util#DevNull()), [1,6,2])
 endfunction
 
 function! SyntaxCheckers_coffee_coffee_GetLocList()
-    " TODO: This creates a .js file in the same directory as the source.
-    " Adding an option '-o /tmp' is not acceptable, since it would make
-    " impossible for other users to check a file with the same name.
-    " Sadly, Vim doesn't have a function to create temporary directories.
     let makeprg = syntastic#makeprg#build({
         \ 'exe': 'coffee',
-        \ 'args': '-c',
+        \ 'args': '-cp',
         \ 'filetype': 'coffee',
         \ 'subchecker': 'coffee' })
 

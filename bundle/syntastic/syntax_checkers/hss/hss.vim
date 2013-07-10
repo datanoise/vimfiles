@@ -1,7 +1,7 @@
 "============================================================================
-"File:        nasm.vim
+"File:        hss.vim
 "Description: Syntax checking plugin for syntastic.vim
-"Maintainer:  Håvard Pettersson <haavard.pettersson at gmail dot com>
+"Maintainer:  Justin Donaldson (jdonaldson@gmail.com)
 "License:     This program is free software. It comes without any warranty,
 "             to the extent permitted by applicable law. You can redistribute
 "             it and/or modify it under the terms of the Do What The Fuck You
@@ -9,30 +9,30 @@
 "             See http://sam.zoy.org/wtfpl/COPYING for more details.
 "
 "============================================================================
-if exists("g:loaded_syntastic_nasm_nasm_checker")
+
+if exists("g:loaded_syntastic_hss_hss_checker")
     finish
 endif
-let g:loaded_syntastic_nasm_nasm_checker=1
+let g:loaded_syntastic_hss_hss_checker=1
 
-function! SyntaxCheckers_nasm_nasm_IsAvailable()
-    return executable("nasm")
+function! SyntaxCheckers_hss_hss_IsAvailable()
+    return executable('hss')
 endfunction
 
-function! SyntaxCheckers_nasm_nasm_GetLocList()
-    let wd = syntastic#util#shescape(expand("%:p:h") . "/")
+function! SyntaxCheckers_hss_hss_GetLocList()
     let makeprg = syntastic#makeprg#build({
-        \ 'exe': 'nasm',
-        \ 'args': '-X gnu -f elf -I ' . wd . ' ' . syntastic#c#GetNullDevice()
-        \ 'filetype': 'nasm',
-        \ 'subchecker': 'nasm' })
+	\ 'exe': 'hss',
+	\ 'args' : '-output ' . syntastic#util#DevNull(),
+	\ 'filetype': 'hss',
+	\ 'subchecker': 'hss' })
 
-    let errorformat = '%f:%l: %t%*[^:]: %m'
+    let errorformat = '%E%f:%l: %m'
 
     return SyntasticMake({
-        \ 'makeprg': makeprg,
-        \ 'errorformat': errorformat })
+	\ 'makeprg': makeprg,
+	\ 'errorformat': errorformat })
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
-    \ 'filetype': 'nasm',
-    \ 'name': 'nasm'})
+    \ 'filetype': 'hss',
+    \ 'name': 'hss'})

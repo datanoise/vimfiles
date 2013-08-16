@@ -21,16 +21,21 @@ endfunction
 function! SyntaxCheckers_coffee_coffeelint_GetLocList()
     let makeprg = syntastic#makeprg#build({
         \ 'exe': 'coffeelint',
-        \ 'args': '--csv -f ~/.coffeelint.json',
+        \ 'args': '--csv',
         \ 'filetype': 'coffee',
         \ 'subchecker': 'coffeelint' })
 
-    let errorformat = '%f\,%l\,%trror\,%m'
+    let errorformat =
+        \ '%f\,%l\,%\d%#\,%trror\,%m,' .
+        \ '%f\,%l\,%trror\,%m,' .
+        \ '%f\,%l\,%\d%#\,%tarn\,%m,' .
+        \ '%f\,%l\,%tarn\,%m'
 
     return SyntasticMake({
         \ 'makeprg': makeprg,
         \ 'errorformat': errorformat,
-        \ 'subtype': 'Style' })
+        \ 'subtype': 'Style',
+        \ 'returns': [0, 1] })
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({

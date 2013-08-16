@@ -1,3 +1,4 @@
+'syntastic_aggregate_errors'	syntastic.txt	/*'syntastic_aggregate_errors'*
 'syntastic_always_populate_loc_list'	syntastic.txt	/*'syntastic_always_populate_loc_list'*
 'syntastic_auto_jump'	syntastic.txt	/*'syntastic_auto_jump'*
 'syntastic_auto_loc_list'	syntastic.txt	/*'syntastic_auto_loc_list'*

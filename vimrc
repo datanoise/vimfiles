@@ -1,9 +1,9 @@
 -*- vim -*- vim:set ft=vim et sw=2 sts=2 fdc=3:
 
 " use old regexp engine until performace of the new one is improved
-if exists('&regexpengine')
-  set regexpengine=1
-endif
+" if exists('&regexpengine')
+"   set regexpengine=1
+" endif
 
 " Section: Global Setting {{{1
 " ------------------------------------------------------------------------------
@@ -308,8 +308,8 @@ imap kk <C-O>A<Enter>
 nnoremap <F2> <C-w><C-w>
 inoremap <F2> <Esc><C-w><C-w>
 nnoremap <F4> :sil make %<CR><c-l>:cc<CR>
-nnoremap [F :exe ':Ack ' . expand('<cword>')<CR><CR>
-nnoremap ]F :exe ':Ack ' . matchstr(getline('.'), '\%'.virtcol('.').'v\w*')<CR><CR>
+nnoremap [F :exe ':Ag ' . expand('<cword>')<CR><CR>
+nnoremap ]F :exe ':Ag ' . matchstr(getline('.'), '\%'.virtcol('.').'v\w*')<CR><CR>
 nnoremap <silent> <C-tab> :call <SID>switch_prev_buf()<CR>
 nnoremap <silent> <C-^> :call <SID>switch_prev_buf()<CR>
 nnoremap <silent> <C-6> :call <SID>switch_prev_buf()<CR>

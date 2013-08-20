@@ -43,9 +43,10 @@ unlet s:ftype_out
 let s:icon_closed = g:tagbar_iconchars[0]
 let s:icon_open   = g:tagbar_iconchars[1]
 
-let s:type_init_done      = 0
-let s:autocommands_done   = 0
-let s:autocommands_enabled = 0
+let s:type_init_done    = 0
+let s:autocommands_done = 0
+let s:statusline_in_use = 0
+
 " 0: not checked yet; 1: checked and found; 2: checked and not found
 let s:checked_ctags       = 0
 let s:checked_ctags_types = 0
@@ -969,15 +970,14 @@ function! s:CreateAutocommands() abort
     augroup END
 
     let s:autocommands_done = 1
-    let s:autocommands_enabled = 1
 endfunction
 
 " s:PauseAutocommands() {{{2
 " Toggle autocommands
 function! s:PauseAutocommands() abort
-    if s:autocommands_enabled == 1
+    if s:autocommands_done
         autocmd! TagbarAutoCmds
-        let s:autocommands_enabled = 0
+        let s:autocommands_done = 0
     else
         call s:CreateAutocommands()
         call s:AutoUpdate(fnamemodify(expand('%'), ':p'), 0)
@@ -1579,13 +1579,7 @@ endfunction
 
 " s:FileInfo.sortTags() {{{3
 function! s:FileInfo.sortTags() abort dict
-    if has_key(s:compare_typeinfo, 'sort')
-        if s:compare_typeinfo.sort
-            call s:SortTags(self.tags, 's:CompareByKind')
-        else
-            call s:SortTags(self.tags, 's:CompareByLine')
-        endif
-    elseif g:tagbar_sort
+    if get(s:compare_typeinfo, 'sort', g:tagbar_sort)
         call s:SortTags(self.tags, 's:CompareByKind')
     else
         call s:SortTags(self.tags, 's:CompareByLine')
@@ -1859,6 +1853,11 @@ function! s:CloseWindow() abort
                            \ ' ' . s:window_pos.pre.y
            endif
         endif
+    endif
+
+    if s:autocommands_done && !s:statusline_in_use
+        autocmd! TagbarAutoCmds
+        let s:autocommands_done = 0
     endif
 
     call s:LogDebugMessage('CloseWindow finished')
@@ -3356,7 +3355,13 @@ function! s:ExecuteCtags(ctags_cmd) abort
         set shellcmdflag=/s\ /c
     endif
 
-    let ctags_output = system(a:ctags_cmd)
+    if s:debug
+        silent 5verbose let ctags_output = system(a:ctags_cmd)
+        call s:LogDebugMessage(v:statusmsg)
+        redraw!
+    else
+        let ctags_output = system(a:ctags_cmd)
+    endif
 
     if &shell =~ 'cmd\.exe'
         let &shellxquote  = shellxquote_save
@@ -3581,7 +3586,7 @@ endfunction
 
 " TagbarGenerateStatusline() {{{2
 function! TagbarGenerateStatusline() abort
-    if g:tagbar_sort
+    if get(s:compare_typeinfo, 'sort', g:tagbar_sort)
         let text = '[Name]'
     else
         let text = '[Order]'
@@ -3724,6 +3729,10 @@ endfunction
 
 " tagbar#currenttag() {{{2
 function! tagbar#currenttag(fmt, default, ...) abort
+    " Indicate that the statusline functionality is being used. This prevents
+    " the CloseWindow() function from removing the autocommands.
+    let s:statusline_in_use = 1
+
     if a:0 > 0
         " also test for non-zero value for backwards compatibility
         let longsig   = a:1 =~# 's' || (type(a:1) == type(0) && a:1 != 0)

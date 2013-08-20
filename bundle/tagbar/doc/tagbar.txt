@@ -299,6 +299,8 @@ COMMANDS                                                     *tagbar-commands*
     Start debug mode. This will write debug messages to file [logfile] while
     using Tagbar. If no argument is given "tagbardebug.log" in the current
     directory is used. Note: an existing file will be overwritten!
+    Note also that it is usually necessary to call this command before loading
+    a file that creates problems in order to get all of the needed data.
 
 :TagbarDebugEnd                                              *:TagbarDebugEnd*
     End debug mode, debug messages will no longer be written to the logfile.
@@ -493,7 +495,7 @@ Examples (don't worry if some of the characters aren't displayed correctly,
 just choose other characters in that case):
 >
         let g:tagbar_iconchars = ['▶', '▼']  (default on Linux and Mac OS X)
-        let g:tagbar_iconchars = ['▾', '▸']
+        let g:tagbar_iconchars = ['▸', '▾']
         let g:tagbar_iconchars = ['▷', '◢']
         let g:tagbar_iconchars = ['+', '-']  (default on Windows)
 <

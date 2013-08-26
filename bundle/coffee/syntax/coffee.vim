@@ -10,9 +10,10 @@ endif
 
 " Include JavaScript for coffeeEmbed.
 syn include @coffeeJS syntax/javascript.vim
+silent! unlet b:current_syntax
 
 " Highlight long strings.
-syn sync minlines=100
+syntax sync fromstart
 
 " CoffeeScript identifiers can have dollar signs.
 setlocal isident+=$
@@ -45,7 +46,7 @@ syn match coffeeOperator /\<\%(instanceof\|typeof\|delete\)\>/ display
 hi def link coffeeOperator Operator
 
 " The first case matches symbol operators only if they have an operand before.
-syn match coffeeExtendedOp /\%(\S\s*\)\@<=[+\-*/%&|\^=!<>?.]\+\|[-=]>\|--\|++\|:/
+syn match coffeeExtendedOp /\%(\S\s*\)\@<=[+\-*/%&|\^=!<>?.]\{-1,}\|[-=]>\|--\|++\|:/
 \                          display
 syn match coffeeExtendedOp /\<\%(and\|or\)=/ display
 hi def link coffeeExtendedOp coffeeOperator
@@ -63,9 +64,11 @@ hi def link coffeeGlobal Type
 
 " A special variable
 syn match coffeeSpecialVar /\<\%(this\|prototype\|arguments\)\>/ display
-" An @-variable
-syn match coffeeSpecialVar /@\%(\I\i*\)\?/ display
 hi def link coffeeSpecialVar Special
+
+" An @-variable
+syn match coffeeSpecialIdent /@\%(\I\i*\)\?/ display
+hi def link coffeeSpecialIdent Identifier
 
 " A class-like name that starts with a capital letter
 syn match coffeeObject /\<\u\w*\>/ display
@@ -76,8 +79,8 @@ syn match coffeeConstant /\<\u[A-Z0-9_]\+\>/ display
 hi def link coffeeConstant Constant
 
 " A variable name
-syn cluster coffeeIdentifier contains=coffeeSpecialVar,coffeeObject,
-\                                     coffeeConstant
+syn cluster coffeeIdentifier contains=coffeeSpecialVar,coffeeSpecialIdent,
+\                                     coffeeObject,coffeeConstant
 
 " A non-interpolated string
 syn cluster coffeeBasicString contains=@Spell,coffeeEscape
@@ -106,7 +109,7 @@ hi def link coffeeFloat Float
 
 " An error for reserved keywords
 if !exists("coffee_no_reserved_words_error")
-  syn match coffeeReservedError /\<\%(case\|default\|function\|var\|void\|with\|const\|let\|enum\|export\|import\|native\|__hasProp\|__extends\|__slice\|__bind\|__indexOf\)\>/
+  syn match coffeeReservedError /\<\%(case\|default\|function\|var\|void\|with\|const\|let\|enum\|export\|import\|native\|__hasProp\|__extends\|__slice\|__bind\|__indexOf\|implements\|interface\|package\|private\|protected\|public\|static\|yield\)\>/
   \                             display
   hi def link coffeeReservedError Error
 endif
@@ -204,14 +207,15 @@ hi def link coffeeParen coffeeBlock
 syn cluster coffeeAll contains=coffeeStatement,coffeeRepeat,coffeeConditional,
 \                              coffeeException,coffeeKeyword,coffeeOperator,
 \                              coffeeExtendedOp,coffeeSpecialOp,coffeeBoolean,
-\                              coffeeGlobal,coffeeSpecialVar,coffeeObject,
-\                              coffeeConstant,coffeeString,coffeeNumber,
-\                              coffeeFloat,coffeeReservedError,coffeeObjAssign,
-\                              coffeeComment,coffeeBlockComment,coffeeEmbed,
-\                              coffeeRegex,coffeeHeregex,coffeeHeredoc,
-\                              coffeeSpaceError,coffeeSemicolonError,
-\                              coffeeDotAccess,coffeeProtoAccess,
-\                              coffeeCurlies,coffeeBrackets,coffeeParens
+\                              coffeeGlobal,coffeeSpecialVar,coffeeSpecialIdent,
+\                              coffeeObject,coffeeConstant,coffeeString,
+\                              coffeeNumber,coffeeFloat,coffeeReservedError,
+\                              coffeeObjAssign,coffeeComment,coffeeBlockComment,
+\                              coffeeEmbed,coffeeRegex,coffeeHeregex,
+\                              coffeeHeredoc,coffeeSpaceError,
+\                              coffeeSemicolonError,coffeeDotAccess,
+\                              coffeeProtoAccess,coffeeCurlies,coffeeBrackets,
+\                              coffeeParens
 
 if !exists('b:current_syntax')
   let b:current_syntax = 'coffee'

@@ -8,6 +8,7 @@ if exists("b:did_ftplugin")
 endif
 
 let b:did_ftplugin = 1
+call coffee#CoffeeSetUpVariables()
 
 setlocal formatoptions-=t formatoptions+=croql
 setlocal comments=:#
@@ -17,21 +18,6 @@ setlocal omnifunc=javascriptcomplete#CompleteJS
 " Enable CoffeeMake if it won't overwrite any settings.
 if !len(&l:makeprg)
   compiler coffee
-endif
-
-" Check here too in case the compiler above isn't loaded.
-if !exists('coffee_compiler')
-  let coffee_compiler = 'coffee'
-endif
-
-" Path to coffeelint executable
-if !exists('coffee_linter')
-  let coffee_linter = 'coffeelint'
-endif
-
-" Options passed to CoffeeLint
-if !exists('coffee_lint_options')
-  let coffee_lint_options = ''
 endif
 
 " Reset the CoffeeCompile variables for the current buffer.
@@ -55,16 +41,19 @@ endfunction
 function! s:CoffeeCompileUpdate(startline, endline)
   let input = join(getline(a:startline, a:endline), "\n")
 
-  " Move to the CoffeeCompile buffer.
-  exec bufwinnr(b:coffee_compile_buf) 'wincmd w'
-
   " Coffee doesn't like empty input.
   if !len(input)
     return
   endif
 
   " Compile input.
-  let output = system(g:coffee_compiler . ' -scb 2>&1', input)
+  let output = system(g:coffee_compiler .
+  \                   ' -scb' .
+  \                   ' ' . b:coffee_litcoffee .
+  \                   ' 2>&1', input)
+
+  " Move to the CoffeeCompile buffer.
+  exec bufwinnr(b:coffee_compile_buf) 'wincmd w'
 
   " Be sure we're in the CoffeeCompile buffer before overwriting.
   if exists('b:coffee_compile_buf')
@@ -208,19 +197,26 @@ function! s:CoffeeLint(startline, endline, bang, args)
     return
   endif
 
-  let filename = expand('%')
+  let filename = fnameescape(expand('%'))
 
   if !len(filename)
     echoerr 'CoffeeLint must be ran on a saved file'
     return
   endif
 
-  let lines = split(system(g:coffee_linter . ' --csv ' . g:coffee_lint_options .
-  \                        ' ' . a:args . ' ' . filename . ' 2>&1'), '\n')
+  let lines = split(system(g:coffee_linter .
+  \                        ' --csv' .
+  \                        ' ' . b:coffee_litcoffee .
+  \                        ' ' . g:coffee_lint_options .
+  \                        ' ' . a:args .
+  \                        ' ' . filename .
+  \                        ' 2>&1'), '\n')
+  " Strip off the csv header
+  let lines = lines[1:]
   let qflist = []
 
   for line in lines
-    let match = matchlist(line, '\f\+,\(\d\+\),error,\(.\+\)')
+    let match = matchlist(line, '\f\+,\(\d\+\),\d*,error,\(.\+\)')
 
     " Ignore invalid lines.
     if !len(match)

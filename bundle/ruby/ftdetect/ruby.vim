@@ -59,4 +59,7 @@ au BufNewFile,BufRead [Bb]uildfile		set filetype=ruby
 " Appraisal
 au BufNewFile,BufRead Appraisals		set filetype=ruby
 
+" Prawn
+au BufNewFile,BufRead *.prawn			set filetype=ruby
+
 " vim: nowrap sw=2 sts=2 ts=8 noet:

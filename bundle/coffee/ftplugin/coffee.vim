@@ -14,6 +14,10 @@ setlocal formatoptions-=t formatoptions+=croql
 setlocal comments=:# commentstring=#\ %s
 setlocal omnifunc=javascriptcomplete#CompleteJS
 
+" Create custom augroups.
+augroup CoffeeBufUpdate | augroup END
+augroup CoffeeBufNew | augroup END
+
 " Enable coffee compiler if a compiler isn't set already.
 if !len(&l:makeprg)
   compiler coffee
@@ -88,7 +92,7 @@ function! s:CoffeeCompileResetVars()
   " Variables defined in source buffer:
   "   b:coffee_compile_buf: bufnr of output buffer
   " Variables defined in output buffer:
-  "   b:coffee_compile_src: bufnr of source buffer
+  "   b:coffee_src_buf: bufnr of source buffer
   "   b:coffee_compile_pos: previous cursor position in output buffer
 
   let b:coffee_compile_buf = -1
@@ -98,7 +102,7 @@ function! s:CoffeeWatchResetVars()
   " Variables defined in source buffer:
   "   b:coffee_watch_buf: bufnr of output buffer
   " Variables defined in output buffer:
-  "   b:coffee_watch_src: bufnr of source buffer
+  "   b:coffee_src_buf: bufnr of source buffer
   "   b:coffee_watch_pos: previous cursor position in output buffer
 
   let b:coffee_watch_buf = -1
@@ -108,7 +112,7 @@ function! s:CoffeeRunResetVars()
   " Variables defined in CoffeeRun source buffer:
   "   b:coffee_run_buf: bufnr of output buffer
   " Variables defined in CoffeeRun output buffer:
-  "   b:coffee_run_src: bufnr of source buffer
+  "   b:coffee_src_buf: bufnr of source buffer
   "   b:coffee_run_pos: previous cursor position in output buffer
 
   let b:coffee_run_buf = -1
@@ -117,18 +121,18 @@ endfunction
 " Clean things up in the source buffers.
 function! s:CoffeeCompileClose()
   " Switch to the source buffer if not already in it.
-  silent! call s:SwitchWindow(b:coffee_compile_src)
+  silent! call s:SwitchWindow(b:coffee_src_buf)
   call s:CoffeeCompileResetVars()
 endfunction
 
 function! s:CoffeeWatchClose()
-  silent! call s:SwitchWindow(b:coffee_watch_src)
+  silent! call s:SwitchWindow(b:coffee_src_buf)
   silent! autocmd! CoffeeAuWatch * <buffer>
   call s:CoffeeWatchResetVars()
 endfunction
 
 function! s:CoffeeRunClose()
-  silent! call s:SwitchWindow(b:coffee_run_src)
+  silent! call s:SwitchWindow(b:coffee_src_buf)
   call s:CoffeeRunResetVars()
 endfunction
 
@@ -170,12 +174,13 @@ endfunction
 function! s:CoffeeCompile(startline, endline, args)
   if a:args =~ '\<watch\>'
     echoerr 'CoffeeCompile watch is deprecated! Please use CoffeeWatch instead'
+    sleep 5
     call s:CoffeeWatch(a:args)
     return
   endif
 
   " Switch to the source buffer if not already in it.
-  silent! call s:SwitchWindow(b:coffee_compile_src)
+  silent! call s:SwitchWindow(b:coffee_src_buf)
 
   " Bail if not in source buffer.
   if !exists('b:coffee_compile_buf')
@@ -191,15 +196,18 @@ function! s:CoffeeCompile(startline, endline, args)
 
     " Build the output buffer and save the source bufnr.
     let buf = s:ScratchBufBuild(src, vert, size)
-    let b:coffee_compile_src = src
+    let b:coffee_src_buf = src
 
     " Set the buffer name.
-    exec "silent! file [CoffeeCompile " . src . "]"
+    exec 'silent! file [CoffeeCompile ' . src . ']'
 
     " Clean up the source buffer when the output buffer is closed.
     autocmd BufWipeout <buffer> call s:CoffeeCompileClose()
     " Save the cursor when leaving the output buffer.
     autocmd BufLeave <buffer> let b:coffee_compile_pos = getpos('.')
+
+    " Run user-defined commands on new buffer.
+    silent doautocmd CoffeeBufNew User CoffeeCompile
 
     " Switch back to the source buffer and save the output bufnr. This also
     " triggers BufLeave above.
@@ -211,18 +219,22 @@ function! s:CoffeeCompile(startline, endline, args)
   call s:CoffeeCompileToBuf(b:coffee_compile_buf, a:startline, a:endline)
   " Reset cursor to previous position.
   call setpos('.', b:coffee_compile_pos)
+
+  " Run any user-defined commands on the scratch buffer.
+  silent doautocmd CoffeeBufUpdate User CoffeeCompile
 endfunction
 
 " Update the scratch buffer and switch back to the source buffer.
 function! s:CoffeeWatchUpdate()
   call s:CoffeeCompileToBuf(b:coffee_watch_buf, 1, '$')
   call setpos('.', b:coffee_watch_pos)
-  call s:SwitchWindow(b:coffee_watch_src)
+  silent doautocmd CoffeeBufUpdate User CoffeeWatch
+  call s:SwitchWindow(b:coffee_src_buf)
 endfunction
 
 " Continually compile a source buffer.
 function! s:CoffeeWatch(args)
-  silent! call s:SwitchWindow(b:coffee_watch_src)
+  silent! call s:SwitchWindow(b:coffee_src_buf)
 
   if !exists('b:coffee_watch_buf')
     return
@@ -235,12 +247,14 @@ function! s:CoffeeWatch(args)
     let size = str2nr(matchstr(a:args, '\<\d\+\>'))
 
     let buf = s:ScratchBufBuild(src, vert, size)
-    let b:coffee_watch_src = src
+    let b:coffee_src_buf = src
 
-    exec "silent! file [CoffeeWatch " . src . "]"
+    exec 'silent! file [CoffeeWatch ' . src . ']'
 
     autocmd BufWipeout <buffer> call s:CoffeeWatchClose()
     autocmd BufLeave <buffer> let b:coffee_watch_pos = getpos('.')
+
+    silent doautocmd CoffeeBufNew User CoffeeWatch
 
     call s:SwitchWindow(src)
     let b:coffee_watch_buf = buf
@@ -259,7 +273,7 @@ endfunction
 
 " Run a snippet of CoffeeScript between startline and endline.
 function! s:CoffeeRun(startline, endline, args)
-  silent! call s:SwitchWindow(b:coffee_run_src)
+  silent! call s:SwitchWindow(b:coffee_src_buf)
 
   if !exists('b:coffee_run_buf')
     return
@@ -269,12 +283,14 @@ function! s:CoffeeRun(startline, endline, args)
     let src = bufnr('%')
 
     let buf = s:ScratchBufBuild(src, exists('g:coffee_run_vert'), 0)
-    let b:coffee_run_src = src
+    let b:coffee_src_buf = src
 
-    exec "silent! file [CoffeeRun " . src . "]"
+    exec 'silent! file [CoffeeRun ' . src . ']'
 
     autocmd BufWipeout <buffer> call s:CoffeeRunClose()
     autocmd BufLeave <buffer> let b:coffee_run_pos = getpos('.')
+
+    silent doautocmd CoffeeBufNew User CoffeeRun
 
     call s:SwitchWindow(src)
     let b:coffee_run_buf = buf
@@ -300,6 +316,8 @@ function! s:CoffeeRun(startline, endline, args)
 
   call s:ScratchBufUpdate(b:coffee_run_buf, output)
   call setpos('.', b:coffee_run_pos)
+
+  silent doautocmd CoffeeBufUpdate User CoffeeRun
 endfunction
 
 " Run coffeelint on a file, and add any errors between startline and endline
@@ -378,12 +396,9 @@ endif
 
 command! -range=% -bar -nargs=* -complete=customlist,s:CoffeeComplete
 \        CoffeeCompile call s:CoffeeCompile(<line1>, <line2>, <q-args>)
-
 command! -bar -nargs=* -complete=customlist,s:CoffeeComplete
 \        CoffeeWatch call s:CoffeeWatch(<q-args>)
-
 command! -range=% -bar -nargs=* CoffeeRun
 \        call s:CoffeeRun(<line1>, <line2>, <q-args>)
-
 command! -range=% -bang -bar -nargs=* CoffeeLint
-\        call s:CoffeeLint(<line1>, <line2>, '<bang>', <q-args>)
+\        call s:CoffeeLint(<line1>, <line2>, <q-bang>, <q-args>)

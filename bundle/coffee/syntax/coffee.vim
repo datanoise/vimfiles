@@ -134,7 +134,7 @@ hi def link coffeeHeregexComment coffeeComment
 
 " Embedded JavaScript
 syn region coffeeEmbed matchgroup=coffeeEmbedDelim
-\                      start=/`/ skip=/\\\\\|\\`/ end=/`/
+\                      start=/`/ skip=/\\\\\|\\`/ end=/`/ keepend
 \                      contains=@coffeeJS
 hi def link coffeeEmbedDelim Delimiter
 
@@ -148,17 +148,23 @@ hi def link coffeeEscape SpecialChar
 
 " A regex -- must not follow a parenthesis, number, or identifier, and must not
 " be followed by a number
-syn region coffeeRegex start=/\%(\%()\|\i\@<!\d\)\s*\|\i\)\@<!\/=\@!\s\@!/
-\                      skip=/\[[^\]]\{-}\/[^\]]\{-}\]/
-\                      end=/\/[gimy]\{,4}\d\@!/
-\                      oneline contains=@coffeeBasicString
+syn region coffeeRegex start=#\%(\%()\|\i\@<!\d\)\s*\|\i\)\@<!/=\@!\s\@!#
+\                      end=#/[gimy]\{,4}\d\@!#
+\                      oneline contains=@coffeeBasicString,coffeeRegexCharSet
+syn region coffeeRegexCharSet start=/\[/ end=/]/ contained
+\                             contains=@coffeeBasicString
 hi def link coffeeRegex String
+hi def link coffeeRegexCharSet coffeeRegex
 
 " A heregex
-syn region coffeeHeregex start=/\/\/\// end=/\/\/\/[gimy]\{,4}/
-\                        contains=@coffeeInterpString,coffeeHeregexComment
+syn region coffeeHeregex start=#///# end=#///[gimy]\{,4}#
+\                        contains=@coffeeInterpString,coffeeHeregexComment,
+\                                  coffeeHeregexCharSet
 \                        fold
+syn region coffeeHeregexCharSet start=/\[/ end=/]/ contained
+\                               contains=@coffeeInterpString
 hi def link coffeeHeregex coffeeRegex
+hi def link coffeeHeregexCharSet coffeeHeregex
 
 " Heredoc strings
 syn region coffeeHeredoc start=/"""/ end=/"""/ contains=@coffeeInterpString

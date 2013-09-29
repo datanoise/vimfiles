@@ -4,7 +4,7 @@
 " ------------------------------------------------------------------------------
 runtime! macros/matchit.vim
 set nocompatible      " We're running Vim, not Vi!
-let g:pathogen_disabled = ['bundler']
+let g:pathogen_disabled = ['bundler', 'smartinput', 'snipmate']
 if $TERM != "" && $TERM != 'xterm-256color' && $TERM != 'screen-256color'
   call add(g:pathogen_disabled, 'powerline')
 endif
@@ -296,7 +296,7 @@ nnoremap <leader>a :let align = input("Align to: ")<Bar>exe ":Tab /" . align<CR>
 " inoremap {<Space> {}<Esc>i<Space><Space><Esc>i
 " inoremap [<Space> []<Esc>i<Space><Space><Esc>i
 inoremap <silent> <Space> <C-R>=<SID>space_inside_curly()<CR>
-inoremap <C-\> <C-p>
+inoremap <Tab> <C-p>
 inoremap <silent> <C-j> <C-\><C-O>:call search('[{("\[\]'')}]', 'Wc', line('.'))<CR><Right>
 inoremap jj <Esc>
 imap kk <C-O>A<Enter>
@@ -442,6 +442,7 @@ let g:syntastic_enable_signs        = 1
 let g:syntastic_stl_format          = '[ERR:%F(%t)]'
 let g:syntastic_javascript_jsl_conf = "~/.jsl.conf"
 let g:syntastic_echo_current_error  = 1
+let g:syntastic_always_populate_loc_list = 1
 
 " snipmate settings {{{2
 function! MyGetSnips(scopes, word)
@@ -487,15 +488,18 @@ nnoremap <silent> <leader>ca :ClearAllCtrlPCaches<CR>
 nnoremap <silent> <leader>kf :CtrlPCurFile<CR>
 nnoremap <silent> <leader>kb :CtrlPBuffer<CR>
 nnoremap <silent> <leader>km :CtrlPMRUFiles<CR>
-nnoremap <silent> <leader>kt :CtrlPBufTag<CR>
+nnoremap <silent> <leader>kt :CtrlPTabbed<CR>
 nnoremap <silent> <leader>kq :CtrlPQuickfix<CR>
 nnoremap <silent> <leader>kd :CtrlPDir<CR>
-nnoremap <silent> <leader>kr :CtrlPRTS<CR>
+nnoremap <silent> <leader>kR :CtrlPRTS<CR>
 nnoremap <silent> <leader>ku :CtrlPUndo<CR>
 nnoremap <silent> <leader>kl :CtrlPLine<CR>
 nnoremap <silent> <leader>kc :CtrlPChange<CR>
 nnoremap <silent> <leader>kx :CtrlPBookmarkDir<CR>
 nnoremap <silent> <leader>kg :CtrlPTag<CR>
+nnoremap <silent> <leader>kh :CtrlPCmdHistory<CR>
+nnoremap <silent> <leader>ks :CtrlPSearchHistory<CR>
+nnoremap <silent> <leader>kr :CtrlPRegister<CR>
 
 " smartinput settings {{{2
 if exists('g:loaded_smartinput')

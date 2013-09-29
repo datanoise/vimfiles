@@ -94,6 +94,20 @@ function! s:crend(always)
         if c =~ '[}\]\)]' && getline(line('.')-1) =~ b.'$'
             return "\<C-O>==O"
         endif
+    else
+        let line = getline(line('.')-1)
+        let c = line[strlen(line)-1]
+        if c =~ '[{\[\(]'
+            if c == '['
+                let b = ']'
+            elseif c == '('
+                let b = ')'
+            elseif c == '{'
+                let b = '}'
+            endif
+            echomsg 'here'
+            return b."\<C-O>O"
+        endif
     endif
 
     let n = ""

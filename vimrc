@@ -118,11 +118,12 @@ set wrapscan
 " status line options {{{2
 set laststatus=2
 set statusline=%m%<%.99f\ (%{GetCurDir()})\ %h%w%r%y
-" set statusline+=%{fugitive#statusline()}
+set statusline+=%{fugitive#statusline()}
 set statusline+=%{SynNameStatus()}
 " set statusline+=\ %#errormsg#%{SyntasticStatuslineFlag()}%*
 set statusline+=%=
 set statusline+=\ %-16(\ %l,%c-%v\ %)%P
+set statusline^=%{exists('*CapsLockStatusline')?CapsLockStatusline():''}
 " }}}
 " cscope settings {{{2
 if has('cscope')

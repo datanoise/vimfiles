@@ -457,7 +457,7 @@ function! MyGetSnips(scopes, word)
 endfunction
 let g:snipMate = {'get_snippets': function('MyGetSnips')}
 
-" a settings {{{2
+" A settings {{{2
 let g:alternateExtensions_h = "c,cpp,cxx,cc,CC,m,mm"
 let g:alternateExtensions_m = "h"
 let g:alternateExtensions_mm = "h"
@@ -487,7 +487,6 @@ nnoremap <silent> <leader>cc :ClearCtrlPCache<CR>
 nnoremap <silent> <leader>ca :ClearAllCtrlPCaches<CR>
 nnoremap <silent> <leader>kf :CtrlPCurFile<CR>
 nnoremap <silent> <leader>kb :CtrlPBuffer<CR>
-nnoremap <silent> <leader>km :CtrlPMRUFiles<CR>
 nnoremap <silent> <leader>kt :CtrlPTabbed<CR>
 nnoremap <silent> <leader>kq :CtrlPQuickfix<CR>
 nnoremap <silent> <leader>kd :CtrlPDir<CR>
@@ -500,6 +499,7 @@ nnoremap <silent> <leader>kg :CtrlPTag<CR>
 nnoremap <silent> <leader>kh :CtrlPCmdHistory<CR>
 nnoremap <silent> <leader>ks :CtrlPSearchHistory<CR>
 nnoremap <silent> <leader>kr :CtrlPRegister<CR>
+nnoremap <silent> <leader>km :CtrlPMark<CR>
 
 " smartinput settings {{{2
 if exists('g:loaded_smartinput')

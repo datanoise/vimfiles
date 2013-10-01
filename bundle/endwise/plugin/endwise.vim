@@ -82,7 +82,9 @@ endfunction
 
 function! s:crend(always)
     " play nicely with smartinput plugin
-    if exists('g:loaded_smartinput') && g:loaded_smartinput || exists("g:loaded_AutoClose") && g:loaded_AutoClose
+    if exists('g:loaded_smartinput') && g:loaded_smartinput
+                \ || exists("g:loaded_AutoClose") && g:loaded_AutoClose
+                \  || exists('g:autoclose_loaded') && g:autoclose_loaded
         let c = getline('.')[col('.')-1]
         if c == ']'
             let b = '['
@@ -104,8 +106,9 @@ function! s:crend(always)
                 let b = ')'
             elseif c == '{'
                 let b = '}'
+            else
+                return ""
             endif
-            echomsg 'here'
             return b."\<C-O>O"
         endif
     endif

@@ -227,7 +227,7 @@ if executable('ack') && !exists('g:ackprg')
   " always use ack for faster searching
   set grepprg=ack\ -a\ --ignore-dir=log\ --ignore-dir=tmp\ $*\\\|grep\ -v\ '^tags'
 endif
-set completeopt=
+set completeopt=menu,longest
 set clipboard+=unnamed
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
 " change the cursor shape based on the current mode

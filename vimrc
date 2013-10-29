@@ -248,8 +248,11 @@ end
 au FileType ruby setlocal completefunc=syntaxcomplete#Complete
 au FileType ruby if has('balloonexpr') | setlocal balloonexpr& | endif
 au FileType scala,ruby exe 'compiler '. expand('<amatch>')
-au BufReadPost quickfix nmap <silent> <buffer> q :call <SID>close_quick_fix()<CR>
 au FileType xml setlocal foldmethod=syntax
+au FileType go setlocal tabstop=4
+au FileType go setlocal shiftwidth=4
+
+au BufReadPost quickfix nmap <silent> <buffer> q :call <SID>close_quick_fix()<CR>
 au BufReadPre,BufNewFile *.{iphone,ipad}.erb let b:eruby_subtype = 'html'
 au BufReadPost fugitive://* set bufhidden=delete
 au VimResized * wincmd =

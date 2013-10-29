@@ -30,13 +30,17 @@ syntastic	syntastic.txt	/*syntastic*
 syntastic-about	syntastic.txt	/*syntastic-about*
 syntastic-checker-options	syntastic.txt	/*syntastic-checker-options*
 syntastic-commands	syntastic.txt	/*syntastic-commands*
+syntastic-composite	syntastic.txt	/*syntastic-composite*
 syntastic-config-makeprg	syntastic.txt	/*syntastic-config-makeprg*
 syntastic-contents	syntastic.txt	/*syntastic-contents*
 syntastic-error-signs	syntastic.txt	/*syntastic-error-signs*
 syntastic-error-window	syntastic.txt	/*syntastic-error-window*
+syntastic-fish	syntastic.txt	/*syntastic-fish*
 syntastic-functionality	syntastic.txt	/*syntastic-functionality*
 syntastic-global-options	syntastic.txt	/*syntastic-global-options*
 syntastic-intro	syntastic.txt	/*syntastic-intro*
 syntastic-license	syntastic.txt	/*syntastic-license*
+syntastic-notes	syntastic.txt	/*syntastic-notes*
+syntastic-pymode	syntastic.txt	/*syntastic-pymode*
 syntastic-statusline-flag	syntastic.txt	/*syntastic-statusline-flag*
 syntastic.txt	syntastic.txt	/*syntastic.txt*

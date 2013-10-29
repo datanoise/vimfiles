@@ -1,8 +1,7 @@
 "============================================================================
 "File:        syntastic.vim
 "Description: Vim plugin for on the fly syntax checking.
-"Version:     3.0.0
-"Released On: 13 April, 2013
+"Version:     3.2.0-pre
 "License:     This program is free software. It comes without any warranty,
 "             to the extent permitted by applicable law. You can redistribute
 "             it and/or modify it under the terms of the Do What The Fuck You
@@ -19,6 +18,13 @@ let g:loaded_syntastic_plugin = 1
 runtime! plugin/syntastic/*.vim
 
 let s:running_windows = has("win16") || has("win32")
+
+for feature in ['autocmd', 'eval', 'modify_fname', 'quickfix', 'user_commands']
+    if !has(feature)
+        call syntastic#util#error("need Vim compiled with feature " . feature)
+        finish
+    endif
+endfor
 
 if !s:running_windows && executable('uname')
     try
@@ -96,7 +102,7 @@ endfunction
 command! SyntasticToggleMode call s:ToggleMode()
 command! -nargs=? -complete=custom,s:CompleteCheckerName SyntasticCheck call s:UpdateErrors(0, <f-args>) <bar> call s:Redraw()
 command! Errors call s:ShowLocList()
-command! SyntasticInfo call s:registry.echoInfoFor(s:CurrentFiletypes())
+command! SyntasticInfo call s:modemap.echoMode() | call s:registry.echoInfoFor(s:CurrentFiletypes())
 command! SyntasticReset call s:ClearCache() | call s:notifiers.refresh(g:SyntasticLoclist.New([]))
 
 highlight link SyntasticError SpellBad
@@ -149,6 +155,7 @@ function! s:UpdateErrors(auto_invoked, ...)
         return
     endif
 
+    call s:modemap.synch()
     let run_checks = !a:auto_invoked || s:modemap.allowsAutoChecking(&filetype)
     if run_checks
         if a:0 >= 1
@@ -179,7 +186,7 @@ function! s:ClearCache()
 endfunction
 
 function! s:CurrentFiletypes()
-    return split(&filetype, '\m\.')
+    return split( get(g:syntastic_filetype_map, &filetype, &filetype), '\m\.' )
 endfunction
 
 "detect and cache all syntax errors in this buffer

@@ -53,7 +53,7 @@ syn keyword     goDeclType          struct interface
 
 hi def link     goDirective         Statement
 hi def link     goDeclaration       Keyword
-hi def link     goDeclType          Keyword
+hi def link     goDeclType          Define
 
 " Keywords within functions
 syn keyword     goStatement         defer go goto return break continue fallthrough

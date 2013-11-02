@@ -1,7 +1,7 @@
-" <CR> must cancel pum when pressed
-" imap <Plug>NoPumCR <Plug>delimitMateCR<Plug>DiscretionaryEnd
-" imap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<Plug>NoPumCR"
-
 " keyword completion on <Tab>
-exe "imap <Plug>NoPumTab " . maparg('<Tab>', 'i')
+if maparg('<Tab>','i') != ''
+  exe "imap <Plug>NoPumTab " . maparg('<Tab>', 'i')
+else
+  inoremap <Plug>NoPumTab <Tab>
+end
 imap <expr> <Tab> pumvisible() ? "\<C-N>" : "\<Plug>NoPumTab"

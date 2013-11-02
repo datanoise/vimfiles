@@ -67,8 +67,8 @@ if !exists('g:endwise_no_mappings')
     exe "imap <CR> ".maparg('<CR>', 'i')."<Plug>DiscretionaryEnd"
   else
     imap <C-X><CR> <CR><Plug>AlwaysEnd
-    imap <CR>      <CR><Plug>DiscretionaryEnd
-    imap <CR> <C-R>=pumvisible() ? "\<lt>c-y>" : "\<lt>CR>"<CR><Plug>DiscretionaryEnd
+    " imap <CR>      <CR><Plug>DiscretionaryEnd
+    imap <CR> <C-R>=pumvisible() ? "\<lt>c-y>" : <SID>preproc()<CR><Plug>DiscretionaryEnd
   endif
 endif
 
@@ -84,7 +84,7 @@ function! s:mysearchpair(beginpat,endpat,synpat)
   return line
 endfunction
 
-function! s:crend(always)
+function! s:preproc()
   " play nicely with plugins
   if exists('g:loaded_smartinput') && g:loaded_smartinput
         \ || exists("g:loaded_AutoClose") && g:loaded_AutoClose
@@ -101,7 +101,7 @@ function! s:crend(always)
       return "\<C-O>==O"
     endif
   else
-    let line = getline(line('.')-1)
+    let line = getline('.')
     let c = line[strlen(line)-1]
     if c =~ '[{\[\(]'
       if c == '['
@@ -111,12 +111,31 @@ function! s:crend(always)
       elseif c == '{'
         let b = '}'
       else
-        return ""
+        return "\<CR>"
       endif
-      return b."\<C-O>O"
+      return "\<CR>".b."\<C-O>O"
+    else
+      return "\<CR>"
     endif
+    " let line = getline(line('.')-1)
+    " let c = line[strlen(line)-1]
+    " if c =~ '[{\[\(]'
+    "   if c == '['
+    "     let b = ']'
+    "   elseif c == '('
+    "     let b = ')'
+    "   elseif c == '{'
+    "     let b = '}'
+    "   else
+    "     return ""
+    "   endif
+    "   return b."\<C-O>O"
+    " endif
   endif
 
+endfunction
+
+function! s:crend(always)
   let n = ""
   if !exists("b:endwise_addition") || !exists("b:endwise_words") || !exists("b:endwise_syngroups")
     return n

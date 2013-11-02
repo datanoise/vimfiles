@@ -249,8 +249,11 @@ au FileType ruby setlocal completefunc=syntaxcomplete#Complete
 au FileType ruby if has('balloonexpr') | setlocal balloonexpr& | endif
 au FileType scala,ruby exe 'compiler '. expand('<amatch>')
 au FileType xml setlocal foldmethod=syntax
+" go settings
 au FileType go setlocal tabstop=4
 au FileType go setlocal shiftwidth=4
+au FileType go setlocal nolist
+au FileType go setlocal noexpandtab
 
 au BufReadPost quickfix nmap <silent> <buffer> q :call <SID>close_quick_fix()<CR>
 au BufReadPre,BufNewFile *.{iphone,ipad}.erb let b:eruby_subtype = 'html'
@@ -300,7 +303,7 @@ nnoremap <leader>a :let align = input("Align to: ")<Bar>exe ":Tab /" . align<CR>
 " inoremap {<Space> {}<Esc>i<Space><Space><Esc>i
 " inoremap [<Space> []<Esc>i<Space><Space><Esc>i
 inoremap <silent> <Space> <C-R>=<SID>space_inside_curly()<CR>
-inoremap <Tab> <C-p>
+" inoremap <Tab> <C-p>
 inoremap <silent> <C-j> <C-\><C-O>:call search('[{("\[\]'')}]', 'Wc', line('.'))<CR><Right>
 inoremap jj <Esc>
 imap kk <C-O>A<Enter>
@@ -439,8 +442,10 @@ let g:rubycomplete_classes_in_global = 1
 
 " syntastic settings {{{2
 " puppet is too slow, html/tidy doesn't support HTML5
-let g:syntastic_mode_map = { 'mode': 'active', 'active_filetypes': [],
-      \ 'passive_filetypes': ['cpp', 'c', 'scss', 'puppet', 'html', 'cucumber', 'java'] }
+let g:syntastic_mode_map = { 'mode': 'active',
+      \  'active_filetypes':  [],
+      \  'passive_filetypes': ['cpp', 'c', 'scss', 'puppet', 'html', 'cucumber', 'java', 'go']
+      \  }
 let g:syntastic_auto_loc_list       = 2
 let g:syntastic_enable_signs        = 1
 let g:syntastic_stl_format          = '[ERR:%F(%t)]'

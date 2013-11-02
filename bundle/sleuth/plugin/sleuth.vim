@@ -14,6 +14,10 @@ function! s:guess(lines) abort
   let ccomment = 0
   let podcomment = 0
 
+  if &ft == 'go'
+    return options
+  endif
+
   for line in a:lines
 
     if line =~# '^\s*$'

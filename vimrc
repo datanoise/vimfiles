@@ -4,7 +4,7 @@
 " ------------------------------------------------------------------------------
 runtime! macros/matchit.vim
 set nocompatible      " We're running Vim, not Vi!
-let g:pathogen_disabled = ['bundler']
+let g:pathogen_disabled = ['bundler', 'supertab']
 if $TERM != "" && $TERM != 'xterm-256color' && $TERM != 'screen-256color'
   call add(g:pathogen_disabled, 'powerline')
 endif
@@ -337,6 +337,7 @@ xnoremap <silent> # :<C-u>call <SID>VSetSearch()<CR>?<C-R>=@/<CR><CR>
 " split join mappings
 nnoremap <silent> <leader>ss :SplitjoinSplit<CR>
 nnoremap <silent> <leader>sj :SplitjoinJoin<CR>
+nnoremap <silent> <leader>sc :SyntasticCheck<CR>
 
 
 " file type bindings {{{2
@@ -416,15 +417,44 @@ if executable('coffeetags')
         \ 'ctagsbin' : 'coffeetags',
         \ 'ctagsargs' : '',
         \ 'kinds' : [
-        \ 'f:functions',
-        \ 'o:object',
+          \ 'f:functions',
+          \ 'o:object',
         \ ],
         \ 'sro' : ".",
         \ 'kind2scope' : {
-        \ 'f' : 'object',
-        \ 'o' : 'object',
+          \ 'f' : 'object',
+          \ 'o' : 'object',
         \ }
-        \ }
+  \ }
+endif
+if executable('gotags')
+  let g:tagbar_type_go = {
+      \ 'ctagstype' : 'go',
+      \ 'kinds'     : [
+          \ 'p:package',
+          \ 'i:imports:1',
+          \ 'c:constants',
+          \ 'v:variables',
+          \ 't:types',
+          \ 'n:interfaces',
+          \ 'w:fields',
+          \ 'e:embedded',
+          \ 'm:methods',
+          \ 'r:constructor',
+          \ 'f:functions'
+      \ ],
+      \ 'sro' : '.',
+      \ 'kind2scope' : {
+          \ 't' : 'ctype',
+          \ 'n' : 'ntype'
+      \ },
+      \ 'scope2kind' : {
+          \ 'ctype' : 't',
+          \ 'ntype' : 'n'
+      \ },
+      \ 'ctagsbin'  : 'gotags',
+      \ 'ctagsargs' : '-sort -silent'
+  \ }
 endif
 
 " NERD_tree settings {{{2
@@ -452,6 +482,7 @@ let g:syntastic_stl_format          = '[ERR:%F(%t)]'
 let g:syntastic_javascript_jsl_conf = "~/.jsl.conf"
 let g:syntastic_echo_current_error  = 1
 let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_coffee_lint_options = '-f ~/.coffeelint.json'
 
 " snipmate settings {{{2
 function! MyGetSnips(scopes, word)
@@ -535,8 +566,8 @@ let g:CSApprox_verbose_level = 0 " to shut it up
 let c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:xml_syntax_folding = 1 " enable folding in xml files
 let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
-let g:no_turbux_mappings = 1
 let $RUBYOPT = '' " I don't want any surprises like 'noexec' gem
-let g:syntastic_coffee_lint_options = '-f ~/.coffeelint.json'
+let go_highlight_space_tab_error = 0
+let go_highlight_trailing_whitespace_error = 0
 
 " }}}

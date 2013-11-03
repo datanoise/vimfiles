@@ -63,6 +63,10 @@ if !exists("g:syntastic_aggregate_errors")
     let g:syntastic_aggregate_errors = 0
 endif
 
+if !exists("g:syntastic_id_checkers")
+    let g:syntastic_id_checkers = 1
+endif
+
 if !exists("g:syntastic_loc_list_height")
     let g:syntastic_loc_list_height = 10
 endif
@@ -76,7 +80,7 @@ if !exists("g:syntastic_filetype_map")
 endif
 
 if !exists("g:syntastic_full_redraws")
-    let g:syntastic_full_redraws = !( has('gui_running') || has('gui_macvim'))
+    let g:syntastic_full_redraws = !(has('gui_running') || has('gui_macvim'))
 endif
 
 " TODO: not documented
@@ -100,10 +104,16 @@ function! s:CompleteCheckerName(argLead, cmdLine, cursorPos)
 endfunction
 
 command! SyntasticToggleMode call s:ToggleMode()
-command! -nargs=? -complete=custom,s:CompleteCheckerName SyntasticCheck call s:UpdateErrors(0, <f-args>) <bar> call s:Redraw()
+command! -nargs=? -complete=custom,s:CompleteCheckerName SyntasticCheck
+            \ call s:UpdateErrors(0, <f-args>) <bar>
+            \ call syntastic#util#redraw(g:syntastic_full_redraws)
 command! Errors call s:ShowLocList()
-command! SyntasticInfo call s:modemap.echoMode() | call s:registry.echoInfoFor(s:CurrentFiletypes())
-command! SyntasticReset call s:ClearCache() | call s:notifiers.refresh(g:SyntasticLoclist.New([]))
+command! SyntasticInfo
+            \ call s:modemap.echoMode() |
+            \ call s:registry.echoInfoFor(s:CurrentFiletypes())
+command! SyntasticReset
+            \ call s:ClearCache() |
+            \ call s:notifiers.refresh(g:SyntasticLoclist.New([]))
 
 highlight link SyntasticError SpellBad
 highlight link SyntasticWarning SpellCap
@@ -142,7 +152,6 @@ function! s:BufEnterHook()
         call g:SyntasticLoclistHide()
     endif
 endfunction
-
 
 function! s:QuitPreHook()
     let b:syntastic_skip_checks = !g:syntastic_check_on_wq
@@ -203,6 +212,11 @@ function! s:CacheErrors(...)
             call syntastic#util#debug("CacheErrors: b:syntastic_aggregate_errors = " . b:syntastic_aggregate_errors)
         endif
 
+        let aggregate_errors =
+            \ exists('b:syntastic_aggregate_errors') ? b:syntastic_aggregate_errors : g:syntastic_aggregate_errors
+        let decorate_errors = (aggregate_errors || len(s:CurrentFiletypes()) > 1) &&
+            \ (exists('b:syntastic_id_checkers') ? b:syntastic_id_checkers : g:syntastic_id_checkers)
+
         for ft in s:CurrentFiletypes()
             if a:0
                 let checker = s:registry.getChecker(ft, a:1)
@@ -218,10 +232,15 @@ function! s:CacheErrors(...)
                 let loclist = checker.getLocList()
 
                 if !loclist.isEmpty()
+                    if decorate_errors
+                        call loclist.decorate(checker.getName(), checker.getFiletype())
+                    endif
+
                     let newLoclist = newLoclist.extend(loclist)
+
                     call add(names, [checker.getName(), checker.getFiletype()])
 
-                    if !(exists('b:syntastic_aggregate_errors') ? b:syntastic_aggregate_errors : g:syntastic_aggregate_errors)
+                    if !aggregate_errors
                         break
                     endif
                 endif
@@ -272,21 +291,6 @@ endfunction
 
 function! s:IsRedrawRequiredAfterMake()
     return !s:running_windows && (s:uname() =~ "FreeBSD" || s:uname() =~ "OpenBSD")
-endfunction
-
-"Redraw in a way that doesnt make the screen flicker or leave anomalies behind.
-"
-"Some terminal versions of vim require `redraw!` - otherwise there can be
-"random anomalies left behind.
-"
-"However, on some versions of gvim using `redraw!` causes the screen to
-"flicker - so use redraw.
-function! s:Redraw()
-    if g:syntastic_full_redraws
-        redraw!
-    else
-        redraw
-    endif
 endfunction
 
 function! s:IgnoreFile(filename)
@@ -400,7 +404,7 @@ function! SyntasticMake(options)
     endif
 
     if has_key(a:options, 'cwd')
-        exec 'lcd ' . fnameescape(a:options['cwd'])
+        execute 'lcd ' . fnameescape(a:options['cwd'])
     endif
 
     let $LC_MESSAGES = 'C'
@@ -417,7 +421,7 @@ function! SyntasticMake(options)
     let errors = copy(getloclist(0))
 
     if has_key(a:options, 'cwd')
-        exec 'lcd ' . fnameescape(old_cwd)
+        execute 'lcd ' . fnameescape(old_cwd)
     endif
 
     silent! lolder
@@ -427,7 +431,7 @@ function! SyntasticMake(options)
     let &shell=old_shell
 
     if s:IsRedrawRequiredAfterMake()
-        call s:Redraw()
+        call syntastic#util#redraw(g:syntastic_full_redraws)
     endif
 
     if has_key(a:options, 'returns') && index(a:options['returns'], v:shell_error) == -1

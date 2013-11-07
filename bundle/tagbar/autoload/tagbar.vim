@@ -57,8 +57,10 @@ let s:is_maximized    = 0
 let s:winrestcmd      = ''
 let s:short_help      = 1
 let s:nearby_disabled = 0
+let s:paused = 0
 
 let s:window_expanded   = 0
+let s:expand_bufnr = -1
 let s:window_pos = {
     \ 'pre'  : { 'x' : 0, 'y' : 0 },
     \ 'post' : { 'x' : 0, 'y' : 0 }
@@ -964,29 +966,28 @@ function! s:CreateAutocommands() abort
         autocmd WinEnter   __Tagbar__ call s:SetStatusLine('current')
         autocmd WinLeave   __Tagbar__ call s:SetStatusLine('noncurrent')
 
+        autocmd WinEnter * if bufwinnr('__Tagbar__') == -1 |
+                         \     call s:ShrinkIfExpanded() |
+                         \ endif
+
         autocmd BufWritePost * call
                     \ s:AutoUpdate(fnamemodify(expand('<afile>'), ':p'), 1)
+        " BufReadPost is needed for reloading the current buffer if the file
+        " was changed by an external command; see commit 17d199f
         autocmd BufReadPost,BufEnter,CursorHold,FileType * call
                     \ s:AutoUpdate(fnamemodify(expand('<afile>'), ':p'), 0)
         autocmd BufDelete,BufUnload,BufWipeout * call
                     \ s:known_files.rm(fnamemodify(expand('<afile>'), ':p'))
 
+        autocmd QuickFixCmdPre  * let s:tagbar_qf_active = 1
+        autocmd QuickFixCmdPost * if exists('s:tagbar_qf_active') |
+                                \     unlet s:tagbar_qf_active |
+                                \ endif
+
         autocmd VimEnter * call s:CorrectFocusOnStartup()
     augroup END
 
     let s:autocommands_done = 1
-endfunction
-
-" s:PauseAutocommands() {{{2
-" Toggle autocommands
-function! s:PauseAutocommands() abort
-    if s:autocommands_done
-        autocmd! TagbarAutoCmds
-        let s:autocommands_done = 0
-    else
-        call s:CreateAutocommands()
-        call s:AutoUpdate(fnamemodify(expand('%'), ':p'), 0)
-    endif
 endfunction
 
 " s:CheckForExCtags() {{{2
@@ -1622,17 +1623,27 @@ endfunction
 " Known files {{{2
 let s:known_files = {
     \ '_current' : {},
+    \ '_paused'  : {},
     \ '_files'   : {}
 \ }
 
 " s:known_files.getCurrent() {{{3
-function! s:known_files.getCurrent() abort dict
-    return self._current
+function! s:known_files.getCurrent(forcecurrent) abort dict
+    if !s:paused || a:forcecurrent
+        return self._current
+    else
+        return self._paused
+    endif
 endfunction
 
 " s:known_files.setCurrent() {{{3
 function! s:known_files.setCurrent(fileinfo) abort dict
     let self._current = a:fileinfo
+endfunction
+
+" s:known_files.setPaused() {{{3
+function! s:known_files.setPaused() abort dict
+    let self._paused = self._current
 endfunction
 
 " s:known_files.get() {{{3
@@ -1721,8 +1732,10 @@ function! s:OpenWindow(flags) abort
         let s:window_expanded = 1
     endif
 
+    let s:window_opening = 1
     let openpos = g:tagbar_left ? 'topleft vertical ' : 'botright vertical '
     exe 'silent keepalt ' . openpos . g:tagbar_width . 'split ' . '__Tagbar__'
+    unlet s:window_opening
 
     call s:InitWindow(autoclose)
 
@@ -1806,6 +1819,10 @@ function! s:InitWindow(autoclose) abort
 
     let &cpoptions = cpoptions_save
 
+    if g:tagbar_expand
+        let s:expand_bufnr = bufnr('%')
+    endif
+
     call s:LogDebugMessage('InitWindow finished')
 endfunction
 
@@ -1824,7 +1841,7 @@ function! s:CloseWindow() abort
         if winbufnr(2) != -1
             " Other windows are open, only close the tagbar one
 
-            let curfile = s:known_files.getCurrent()
+            let curfile = s:known_files.getCurrent(0)
 
             call s:winexec('close')
 
@@ -1859,27 +1876,7 @@ function! s:CloseWindow() abort
         endfor
     endif
 
-    " If the Vim window has been expanded, and Tagbar is not open in any other
-    " tabpages, shrink the window again
-    if s:window_expanded
-        let tablist = []
-        for i in range(tabpagenr('$'))
-            call extend(tablist, tabpagebuflist(i + 1))
-        endfor
-
-        if index(tablist, tagbarbufnr) == -1
-            let &columns -= g:tagbar_width + 1
-            let s:window_expanded = 0
-            " Only restore window position if it is available and if the
-            " window hasn't been moved manually after the expanding
-            if getwinposx() != -1 &&
-             \ getwinposx() == s:window_pos.post.x &&
-             \ getwinposy() == s:window_pos.post.y
-               execute 'winpos ' . s:window_pos.pre.x .
-                           \ ' ' . s:window_pos.pre.y
-            endif
-        endif
-    endif
+    call s:ShrinkIfExpanded()
 
     if s:autocommands_done && !s:statusline_in_use
         autocmd! TagbarAutoCmds
@@ -1887,6 +1884,34 @@ function! s:CloseWindow() abort
     endif
 
     call s:LogDebugMessage('CloseWindow finished')
+endfunction
+
+" s:ShrinkIfExpanded() {{{2
+" If the Vim window has been expanded, and Tagbar is not open in any other
+" tabpages, shrink the window again
+function! s:ShrinkIfExpanded() abort
+    if !s:window_expanded || &filetype == 'tagbar' || s:expand_bufnr == -1
+        return
+    endif
+
+    let tablist = []
+    for i in range(tabpagenr('$'))
+        call extend(tablist, tabpagebuflist(i + 1))
+    endfor
+
+    if index(tablist, s:expand_bufnr) == -1
+        let &columns -= g:tagbar_width + 1
+        let s:window_expanded = 0
+        let s:expand_bufnr = -1
+        " Only restore window position if it is available and if the
+        " window hasn't been moved manually after the expanding
+        if getwinposx() != -1 &&
+         \ getwinposx() == s:window_pos.post.x &&
+         \ getwinposy() == s:window_pos.post.y
+           execute 'winpos ' . s:window_pos.pre.x .
+                       \ ' ' . s:window_pos.pre.y
+        endif
+    endif
 endfunction
 
 " s:ZoomWindow() {{{2
@@ -1909,7 +1934,7 @@ endfunction
 " the current file after startup.
 function! s:CorrectFocusOnStartup() abort
     if bufwinnr('__Tagbar__') != -1 && !g:tagbar_autofocus && !s:last_autofocus
-        let curfile = s:known_files.getCurrent()
+        let curfile = s:known_files.getCurrent(1)
         if !empty(curfile) && curfile.fpath != fnamemodify(bufname('%'), ':p')
             let winnr = bufwinnr(curfile.fpath)
             if winnr != -1
@@ -2475,7 +2500,7 @@ endfunction
 
 " s:ToggleSort() {{{2
 function! s:ToggleSort() abort
-    let fileinfo = s:known_files.getCurrent()
+    let fileinfo = s:known_files.getCurrent(0)
     if empty(fileinfo)
         return
     endif
@@ -2509,7 +2534,7 @@ function! s:RenderContent(...) abort
     if a:0 == 1
         let fileinfo = a:1
     else
-        let fileinfo = s:known_files.getCurrent()
+        let fileinfo = s:known_files.getCurrent(0)
     endif
 
     if empty(fileinfo)
@@ -2534,8 +2559,8 @@ function! s:RenderContent(...) abort
         call s:winexec(tagbarwinnr . 'wincmd w')
     endif
 
-    if !empty(s:known_files.getCurrent()) &&
-     \ fileinfo.fpath ==# s:known_files.getCurrent().fpath
+    if !empty(s:known_files.getCurrent(0)) &&
+     \ fileinfo.fpath ==# s:known_files.getCurrent(0).fpath
         " We're redisplaying the same file, so save the view
         call s:LogDebugMessage('Redisplaying file [' . fileinfo.fpath . ']')
         let saveline = line('.')
@@ -2579,8 +2604,8 @@ function! s:RenderContent(...) abort
 
     setlocal nomodifiable
 
-    if !empty(s:known_files.getCurrent()) &&
-     \ fileinfo.fpath ==# s:known_files.getCurrent().fpath
+    if !empty(s:known_files.getCurrent(0)) &&
+     \ fileinfo.fpath ==# s:known_files.getCurrent(0).fpath
         let scrolloff_save = &scrolloff
         set scrolloff=0
 
@@ -2834,9 +2859,9 @@ function! s:HighlightTag(openfolds, ...) abort
     let force = a:0 > 0 ? a:1 : 0
 
     if a:0 > 1
-        let tag = s:GetNearbyTag(1, a:2)
+        let tag = s:GetNearbyTag(1, 0, a:2)
     else
-        let tag = s:GetNearbyTag(1)
+        let tag = s:GetNearbyTag(1, 0)
     endif
     if !empty(tag)
         let tagline = tag.tline
@@ -2891,7 +2916,7 @@ function! s:HighlightTag(openfolds, ...) abort
     let foldpat = '[' . s:icon_open . s:icon_closed . ' ]'
     let pattern = '/^\%' . tagline . 'l\s*' . foldpat . '[-+# ]\zs[^( ]\+\ze/'
     call s:LogDebugMessage("Highlight pattern: '" . pattern . "'")
-    if exists('g:syntax_on') " Safeguard in case syntax highlighting is disabled
+    if hlexists('TagbarHighlight') " Safeguard in case syntax highlighting is disabled
         execute 'match TagbarHighlight ' . pattern
     else
         execute 'match Search ' . pattern
@@ -3028,7 +3053,7 @@ endfunction
 " Folding {{{1
 " s:OpenFold() {{{2
 function! s:OpenFold() abort
-    let fileinfo = s:known_files.getCurrent()
+    let fileinfo = s:known_files.getCurrent(0)
     if empty(fileinfo)
         return
     endif
@@ -3047,7 +3072,7 @@ endfunction
 
 " s:CloseFold() {{{2
 function! s:CloseFold() abort
-    let fileinfo = s:known_files.getCurrent()
+    let fileinfo = s:known_files.getCurrent(0)
     if empty(fileinfo)
         return
     endif
@@ -3068,7 +3093,7 @@ endfunction
 
 " s:ToggleFold() {{{2
 function! s:ToggleFold() abort
-    let fileinfo = s:known_files.getCurrent()
+    let fileinfo = s:known_files.getCurrent(0)
     if empty(fileinfo)
         return
     endif
@@ -3104,7 +3129,7 @@ function! s:SetFoldLevel(level, force) abort
         return
     endif
 
-    let fileinfo = s:known_files.getCurrent()
+    let fileinfo = s:known_files.getCurrent(0)
     if empty(fileinfo)
         return
     endif
@@ -3154,7 +3179,7 @@ function! s:OpenParents(...) abort
     if a:0 == 1
         let tag = a:1
     else
-        let tag = s:GetNearbyTag(1)
+        let tag = s:GetNearbyTag(1, 0)
     endif
 
     if !empty(tag)
@@ -3167,6 +3192,21 @@ endfunction
 " s:AutoUpdate() {{{2
 function! s:AutoUpdate(fname, force) abort
     call s:LogDebugMessage('AutoUpdate called [' . a:fname . ']')
+
+    " This file is being loaded due to a quickfix command like vimgrep, so
+    " don't process it
+    if exists('s:tagbar_qf_active')
+        return
+    elseif exists('s:window_opening')
+        " This can happen if another plugin causes the active window to change
+        " with an autocmd during the initial Tagbar window creation. In that
+        " case InitWindow() hasn't had a chance to run yet and things can
+        " break. MiniBufExplorer does this, for example. Completely disabling
+        " autocmds at that point is also not ideal since for example
+        " statusline plugins won't be able to update.
+        call s:LogDebugMessage('Still opening window, stopping processing')
+        return
+    endif
 
     " Get the filetype of the file we're about to process
     let bufnr = bufnr(a:fname)
@@ -3227,10 +3267,10 @@ function! s:AutoUpdate(fname, force) abort
 
     " Display the tagbar content if the tags have been updated or a different
     " file is being displayed
-    if bufwinnr('__Tagbar__') != -1 &&
+    if bufwinnr('__Tagbar__') != -1 && !s:paused &&
      \ (s:new_window || updated ||
-      \ (!empty(s:known_files.getCurrent()) &&
-       \ a:fname != s:known_files.getCurrent().fpath))
+      \ (!empty(s:known_files.getCurrent(0)) &&
+       \ a:fname != s:known_files.getCurrent(0).fpath))
         call s:RenderContent(fileinfo)
     endif
 
@@ -3436,12 +3476,12 @@ endfunction
 
 " s:GetNearbyTag() {{{2
 " Get the tag info for a file near the cursor in the current file
-function! s:GetNearbyTag(all, ...) abort
+function! s:GetNearbyTag(all, forcecurrent, ...) abort
     if s:nearby_disabled
         return {}
     endif
 
-    let fileinfo = s:known_files.getCurrent()
+    let fileinfo = s:known_files.getCurrent(a:forcecurrent)
     if empty(fileinfo)
         return {}
     endif
@@ -3477,7 +3517,7 @@ endfunction
 " does not contain a valid tag (for example because it is empty or only
 " contains a pseudo-tag) return an empty dictionary.
 function! s:GetTagInfo(linenr, ignorepseudo) abort
-    let fileinfo = s:known_files.getCurrent()
+    let fileinfo = s:known_files.getCurrent(0)
 
     if empty(fileinfo)
         return {}
@@ -3586,8 +3626,8 @@ function! s:SetStatusLine(current)
 
     let sort = g:tagbar_sort ? 'Name' : 'Order'
 
-    if !empty(s:known_files.getCurrent())
-        let fname = fnamemodify(s:known_files.getCurrent().fpath, ':t')
+    if !empty(s:known_files.getCurrent(0))
+        let fname = fnamemodify(s:known_files.getCurrent(0).fpath, ':t')
     else
         let fname = ''
     endif
@@ -3764,11 +3804,18 @@ function! tagbar#RestoreSession() abort
     call s:RestoreSession()
 endfunction
 
-function! tagbar#PauseAutocommands() abort
-    call s:PauseAutocommands()
-endfunction
-
 " }}}2
+
+" tagbar#toggle_pause() {{{2
+function! tagbar#toggle_pause() abort
+    let s:paused = !s:paused
+
+    if s:paused
+        call s:known_files.setPaused()
+    else
+        call s:AutoUpdate(fnamemodify(expand('%'), ':p'), 1)
+    endif
+endfunction
 
 " tagbar#getusertypes() {{{2
 function! tagbar#getusertypes() abort
@@ -3830,7 +3877,7 @@ function! tagbar#currenttag(fmt, default, ...) abort
         return a:default
     endif
 
-    let tag = s:GetNearbyTag(0)
+    let tag = s:GetNearbyTag(0, 1)
 
     if !empty(tag)
         if prototype
@@ -3847,8 +3894,8 @@ endfunction
 function! tagbar#currentfile() abort
     let filename = ''
 
-    if !empty(s:known_files.getCurrent())
-        let filename = fnamemodify(s:known_files.getCurrent().fpath, ':t')
+    if !empty(s:known_files.getCurrent(1))
+        let filename = fnamemodify(s:known_files.getCurrent(1).fpath, ':t')
     endif
 
     return filename

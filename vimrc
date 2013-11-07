@@ -4,7 +4,7 @@
 " ------------------------------------------------------------------------------
 runtime! macros/matchit.vim
 set nocompatible      " We're running Vim, not Vi!
-let g:pathogen_disabled = ['bundler', 'supertab']
+let g:pathogen_disabled = ['bundler']
 if $TERM != "" && $TERM != 'xterm-256color' && $TERM != 'screen-256color'
   call add(g:pathogen_disabled, 'powerline')
 endif
@@ -167,7 +167,7 @@ au FileType gitcommit setlocal nolist
 " wild options {{{2
 set wildmenu
 set wildmode=full
-set wildignore=*.o,*.bundle,*.png,*.jpg,*.gif,*.class,*.log,*.beam
+set wildignore=*.o,*.bundle,*.png,*.jpg,*.gif,*.class,*.log,*.beam,*.a
 set showcmd
 " the above doesn't always work. the following enforces it
 au VimEnter * set showcmd
@@ -247,7 +247,7 @@ else
 end
 au FileType ruby setlocal completefunc=syntaxcomplete#Complete
 au FileType ruby if has('balloonexpr') | setlocal balloonexpr& | endif
-au FileType scala,ruby exe 'compiler '. expand('<amatch>')
+au FileType scala,ruby,go exe 'compiler '. expand('<amatch>')
 au FileType xml setlocal foldmethod=syntax
 " go settings
 au FileType go setlocal tabstop=4
@@ -309,7 +309,7 @@ inoremap jj <Esc>
 imap kk <C-O>A<Enter>
 nnoremap <F2> <C-w><C-w>
 inoremap <F2> <Esc><C-w><C-w>
-nnoremap <F4> :sil make %<CR><c-l>:cc<CR>
+nnoremap <F4> :sil make %<CR><C-l>:cr<CR>
 nnoremap [F :exe ':Ag ' . expand('<cword>')<CR><CR>
 nnoremap ]F :exe ':Ag ' . matchstr(getline('.'), '\%'.virtcol('.').'v\w*')<CR><CR>
 nnoremap <silent> <C-tab> :call <SID>switch_prev_buf()<CR>
@@ -483,6 +483,8 @@ let g:syntastic_javascript_jsl_conf = "~/.jsl.conf"
 let g:syntastic_echo_current_error  = 1
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_coffee_lint_options = '-f ~/.coffeelint.json'
+let g:syntastic_error_symbol='✗'
+let g:syntastic_warning_symbol='⚠'
 
 " snipmate settings {{{2
 function! MyGetSnips(scopes, word)
@@ -569,5 +571,6 @@ let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
 let $RUBYOPT = '' " I don't want any surprises like 'noexec' gem
 let go_highlight_space_tab_error = 0
 let go_highlight_trailing_whitespace_error = 0
+let g:SuperTabCrMapping = 0
 
 " }}}

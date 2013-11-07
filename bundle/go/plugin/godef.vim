@@ -41,6 +41,9 @@ function! Godef(arg)
 
     let out=system(g:godef_command . " -f=" . shellescape(filename) . " " . shellescape(a:arg))
 
+    let old_errorformat = &errorformat
+    let &errorformat = "%f:%l:%v"
+
     if out =~ 'godef: '
         let out=substitute(out, '\n$', '', '')
         echom out
@@ -54,6 +57,8 @@ function! Godef(arg)
         endif
         lexpr out
     end
+
+    let &errorformat = old_errorformat
 endfunction
 
 autocmd FileType go nnoremap <buffer> gd :call GodefUnderCursor()<cr>

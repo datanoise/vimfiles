@@ -37,6 +37,7 @@ tagbar-extend	tagbar.txt	/*tagbar-extend*
 tagbar-features	tagbar.txt	/*tagbar-features*
 tagbar-highlight	tagbar.txt	/*tagbar-highlight*
 tagbar-history	tagbar.txt	/*tagbar-history*
+tagbar-ignore	tagbar.txt	/*tagbar-ignore*
 tagbar-installation	tagbar.txt	/*tagbar-installation*
 tagbar-intro	tagbar.txt	/*tagbar-intro*
 tagbar-issues	tagbar.txt	/*tagbar-issues*

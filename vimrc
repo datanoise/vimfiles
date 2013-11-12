@@ -348,7 +348,7 @@ au FileType coffee nnoremap <buffer> <F5> :CoffeeMake<CR><CR>
 au FileType cucumber nnoremap <buffer> <F4> :!cucumber %<CR>
 au FileType cucumber nnoremap <buffer> <F5> ^:exe '!cucumber ' . expand('%') . ':' . search('^\s*Scenario:','bnW')<CR>
 au FileType cucumber inoremap <buffer> \| \|<Esc>:Tab /\|<CR>A
-au FileType help nnoremap <silent> <buffer> q :bd<CR>
+au FileType help,godoc nnoremap <silent> <buffer> q :bd<CR>
 au FileType netrw nnoremap <silent> <buffer> qq :bw<CR>
 au FileType vim  nnoremap <silent> <buffer> K :h <c-r>=expand('<cword>')<CR><CR>
 au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F4> :!rspec --format doc -c %<CR>|endif
@@ -572,5 +572,6 @@ let $RUBYOPT = '' " I don't want any surprises like 'noexec' gem
 let go_highlight_space_tab_error = 0
 let go_highlight_trailing_whitespace_error = 0
 let g:SuperTabCrMapping = 0
+let g:UltiSnipsJumpForwardTrigger="<tab>"
 
 " }}}

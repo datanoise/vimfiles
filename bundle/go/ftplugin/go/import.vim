@@ -74,6 +74,9 @@ function! s:SwitchImport(enabled, localname, path)
         call s:Error('Import path not provided')
         return
     endif
+    if path[len(path)-1] == '/'
+        let path = strpart(path, 0, len(path) - 1)
+    endif
 
     " Extract any site prefix (e.g. github.com/).
     " If other imports with the same prefix are grouped separately,

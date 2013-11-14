@@ -20,6 +20,7 @@ g:tagbar_foldlevel	tagbar.txt	/*g:tagbar_foldlevel*
 g:tagbar_iconchars	tagbar.txt	/*g:tagbar_iconchars*
 g:tagbar_indent	tagbar.txt	/*g:tagbar_indent*
 g:tagbar_left	tagbar.txt	/*g:tagbar_left*
+g:tagbar_previewwin_pos	tagbar.txt	/*g:tagbar_previewwin_pos*
 g:tagbar_show_linenumbers	tagbar.txt	/*g:tagbar_show_linenumbers*
 g:tagbar_show_visibility	tagbar.txt	/*g:tagbar_show_visibility*
 g:tagbar_singleclick	tagbar.txt	/*g:tagbar_singleclick*

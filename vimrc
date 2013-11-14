@@ -573,5 +573,6 @@ let go_highlight_space_tab_error = 0
 let go_highlight_trailing_whitespace_error = 0
 let g:SuperTabCrMapping = 0
 let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:netrw_liststyle = 3
 
 " }}}

@@ -4,4 +4,4 @@ if maparg('<Tab>','i') != ''
 else
   inoremap <Plug>NoPumTab <Tab>
 end
-imap <expr> <Tab> pumvisible() ? "\<C-N>" : "\<Plug>NoPumTab"
+imap <expr> <Tab> pumvisible() ? "\<C-P>" : "\<Plug>NoPumTab"

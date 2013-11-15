@@ -101,6 +101,7 @@ let attributes_value = {
     \ 'disabled': ['Bool', ''],
     \ 'draggable': ['true/false', ''],
     \ 'enctype': ['Token', ''],
+    \ 'extends': ['Text', ''],
     \ 'for': ['ID', ''],
     \ 'form': ['ID', ''],
     \ 'formaction': ['URL', ''],
@@ -152,6 +153,7 @@ let attributes_value = {
     \ 'scope': ['Token', ''],
     \ 'scoped': ['Bool', ''],
     \ 'seamless': ['Bool', ''],
+    \ 'select': ['Text', ''],
     \ 'selected': ['Bool', ''],
     \ 'shape': ['Token', ''],
     \ 'size': ['Int', ''],
@@ -322,11 +324,11 @@ endif
 
 " Ref: http://dev.w3.org/html5/markup/
 " Version: Draft 05 April 2011
-let phrasing_elements = ['a', 'em', 'strong', 'small', 'mark', 'abbr', 'dfn', 'i', 'b', 'u', 'code', 'var', 'samp', 'kbd', 'sup', 'sub', 'q', 'cite', 'span', 'bdo', 'bdi', 'br', 'wbr', 'ins', 'del', 'img', 'embed', 'object', 'iframe', 'map', 'area', 'script', 'noscript', 'ruby', 'video', 'audio', 'input', 'textarea', 'select', 'button', 'label', 'output', 'datalist', 'keygen', 'progress', 'command', 'canvas', 'time', 'meter', 'data']
+let phrasing_elements = ['a', 'em', 'strong', 'small', 'mark', 'abbr', 'dfn', 'i', 'b', 'u', 'code', 'var', 'samp', 'kbd', 'sup', 'sub', 'q', 'cite', 'span', 'bdo', 'bdi', 'br', 'wbr', 'ins', 'del', 'img', 'embed', 'object', 'iframe', 'map', 'area', 'script', 'noscript', 'ruby', 'video', 'audio', 'input', 'textarea', 'select', 'button', 'label', 'output', 'datalist', 'keygen', 'progress', 'command', 'canvas', 'time', 'meter', 'data', 'content']
 
 let metadata_elements = ['link', 'style', 'meta', 'script', 'noscript', 'command']
 
-let flow_elements = phrasing_elements + ['p', 'hr', 'pre', 'ul', 'ol', 'dl', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hgroup', 'address', 'blockquote', 'ins', 'del', 'object', 'main', 'map', 'noscript', 'section', 'nav', 'article', 'aside', 'header', 'footer', 'video', 'audio', 'figure', 'table', 'template', 'form', 'fieldset', 'menu', 'canvas', 'details']
+let flow_elements = phrasing_elements + ['p', 'hr', 'pre', 'ul', 'ol', 'dl', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hgroup', 'address', 'blockquote', 'ins', 'del', 'element', 'object', 'main', 'map', 'noscript', 'section', 'nav', 'article', 'aside', 'header', 'footer', 'video', 'audio', 'figure', 'table', 'template', 'form', 'fieldset', 'menu', 'canvas', 'details']
 
 " http://dev.w3.org/html5/spec/Overview.html#linkTypes
 let linktypes = ['alternate', 'author', 'bookmark', 'external', 'help', 'icon', 'license', 'next', 'nofollow', 'noreferrer', 'pingback', 'prefetch', 'prev', 'search', 'stylesheet', 'sidebar', 'tag']
@@ -425,6 +427,10 @@ let g:xmldata_html5 = {
     \ [],
     \ extend(copy(global_attributes), {'span': []})
 \ ],
+\ 'content': [
+    \ [],
+    \ extend(copy(global_attributes), {'select': []})
+\ ],
 \ 'command': [
     \ ['col'],
     \ extend(copy(global_attributes), {'type': ['command', 'radio', 'checkbox'], 'radiogroup': [], 'checked': ['checked', ''], 'label': [], 'icon': [], 'disabled': ['disabled', '']})
@@ -460,6 +466,10 @@ let g:xmldata_html5 = {
 \ 'dt': [
     \ phrasing_elements,
     \ global_attributes
+\ ],
+\ 'element': [
+    \ flow_elements + ['style'],
+    \ extend(copy(global_attributes), {'name': [], 'extends': []})
 \ ],
 \ 'em': [
     \ phrasing_elements,

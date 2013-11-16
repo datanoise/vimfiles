@@ -166,7 +166,7 @@ au FileType gitcommit setlocal nolist
 " }}}
 " wild options {{{2
 set wildmenu
-set wildmode=full
+set wildmode=longest:full
 set wildignore=*.o,*.bundle,*.png,*.jpg,*.gif,*.class,*.log,*.beam,*.a
 set showcmd
 " the above doesn't always work. the following enforces it
@@ -554,6 +554,10 @@ if exists('g:loaded_smartinput')
   \ })
 endif
 
+" supertab settings {{{2
+let g:SuperTabCrMapping = 0
+let g:SuperTabDefaultCompletionType = "context"
+
 
 " powerline settings {{{2
 let g:Powerline_cache_file = '/tmp/Powerline_cache'
@@ -571,7 +575,6 @@ let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
 let $RUBYOPT = '' " I don't want any surprises like 'noexec' gem
 let go_highlight_space_tab_error = 0
 let go_highlight_trailing_whitespace_error = 0
-let g:SuperTabCrMapping = 0
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:netrw_liststyle = 3
 

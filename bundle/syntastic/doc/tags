@@ -5,6 +5,7 @@
 'syntastic_check_on_open'	syntastic.txt	/*'syntastic_check_on_open'*
 'syntastic_check_on_wq'	syntastic.txt	/*'syntastic_check_on_wq'*
 'syntastic_debug'	syntastic.txt	/*'syntastic_debug'*
+'syntastic_debug_file'	syntastic.txt	/*'syntastic_debug_file'*
 'syntastic_delayed_redraws'	syntastic.txt	/*'syntastic_delayed_redraws'*
 'syntastic_echo_current_error'	syntastic.txt	/*'syntastic_echo_current_error'*
 'syntastic_enable_balloons'	syntastic.txt	/*'syntastic_enable_balloons'*
@@ -27,6 +28,7 @@
 :SyntasticErrors	syntastic.txt	/*:SyntasticErrors*
 :SyntasticInfo	syntastic.txt	/*:SyntasticInfo*
 :SyntasticReset	syntastic.txt	/*:SyntasticReset*
+:SyntasticSetLoclist	syntastic.txt	/*:SyntasticSetLoclist*
 :SyntasticToggleMode	syntastic.txt	/*:SyntasticToggleMode*
 syntastic	syntastic.txt	/*syntastic*
 syntastic-about	syntastic.txt	/*syntastic-about*

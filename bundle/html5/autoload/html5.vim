@@ -467,6 +467,10 @@ let g:xmldata_html5 = {
     \ phrasing_elements,
     \ global_attributes
 \ ],
+\ 'element': [
+    \ flow_elements + ['style'],
+    \ extend(copy(global_attributes), {'name': [], 'extends': []})
+\ ],
 \ 'em': [
     \ phrasing_elements,
     \ global_attributes

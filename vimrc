@@ -166,7 +166,7 @@ au FileType gitcommit setlocal nolist
 " }}}
 " wild options {{{2
 set wildmenu
-set wildmode=longest:full
+set wildmode=full
 set wildignore=*.o,*.bundle,*.png,*.jpg,*.gif,*.class,*.log,*.beam,*.a
 set showcmd
 " the above doesn't always work. the following enforces it
@@ -351,6 +351,7 @@ au FileType cucumber inoremap <buffer> \| \|<Esc>:Tab /\|<CR>A
 au FileType help,godoc nnoremap <silent> <buffer> q :bd<CR>
 au FileType netrw nnoremap <silent> <buffer> qq :bw<CR>
 au FileType vim  nnoremap <silent> <buffer> K :h <c-r>=expand('<cword>')<CR><CR>
+au FileType go  nnoremap <silent> <buffer> K :Godoc<CR>
 au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F4> :!rspec --format doc -c %<CR>|endif
 au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F5> :exe '!rspec --format doc -c ' . expand('%') . ':' . line('.')<CR>|else|nnoremap <buffer> <F5> :!ruby %<CR>|endif
 au FileType ruby,puppet inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "

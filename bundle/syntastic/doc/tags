@@ -42,6 +42,7 @@ syntastic-error-window	syntastic.txt	/*syntastic-error-window*
 syntastic-fish	syntastic.txt	/*syntastic-fish*
 syntastic-functionality	syntastic.txt	/*syntastic-functionality*
 syntastic-global-options	syntastic.txt	/*syntastic-global-options*
+syntastic-highlighting	syntastic.txt	/*syntastic-highlighting*
 syntastic-intro	syntastic.txt	/*syntastic-intro*
 syntastic-license	syntastic.txt	/*syntastic-license*
 syntastic-notes	syntastic.txt	/*syntastic-notes*

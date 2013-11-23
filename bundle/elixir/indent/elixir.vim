@@ -11,7 +11,7 @@ let b:did_indent = 1
 setlocal nosmartindent
 
 setlocal indentexpr=GetElixirIndent(v:lnum)
-setlocal indentkeys+==end,=else:,=match:,=elsif:,=catch:,=after:,=rescue:
+setlocal indentkeys+==end,=else:,=match:,=elsif:,=catch:,=after:,=rescue:,},],)
 
 if exists("*GetElixirIndent")
   finish
@@ -37,6 +37,11 @@ function! GetElixirIndent(...)
   " At the start of the file use zero indent.
   if lnum == 0
     return 0
+  endif
+
+  if getline(v:lnum) =~ '^\s*[)}\]]'
+    " this line closed a block
+    let ind -= &sw
   endif
 
   if synIDattr(synID(v:lnum, 1, 1), "name") !~ s:skip_syntax

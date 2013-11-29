@@ -557,8 +557,7 @@ endif
 
 " supertab settings {{{2
 let g:SuperTabCrMapping = 0
-let g:SuperTabDefaultCompletionType = "context"
-
+au FileType go call SuperTabSetDefaultCompletionType("<c-x><c-o>")
 
 " powerline settings {{{2
 let g:Powerline_cache_file = '/tmp/Powerline_cache'

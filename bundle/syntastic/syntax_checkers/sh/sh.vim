@@ -39,7 +39,7 @@ endfunction
 function! s:ForwardToZshChecker()
     let registry = g:SyntasticRegistry.Instance()
     if registry.checkable('zsh')
-        return registry.getChecker('zsh', 'zsh').getLocListRaw()
+        return registry.getCheckers('zsh', ['zsh'])[0].getLocListRaw()
     else
         return []
     endif
@@ -56,7 +56,7 @@ function! SyntaxCheckers_sh_sh_IsAvailable() dict
 endfunction
 
 function! SyntaxCheckers_sh_sh_GetLocList() dict
-    if s:GetShell() == 'zsh'
+    if s:GetShell() ==# 'zsh'
         return s:ForwardToZshChecker()
     endif
 

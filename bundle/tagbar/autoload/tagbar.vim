@@ -972,7 +972,7 @@ function! s:CreateAutocommands() abort
             autocmd CursorMoved __Tagbar__ nested call s:ShowInPreviewWin()
         endif
 
-        autocmd BufEnter * nested call s:QuitIfOnlyWindow()
+        autocmd WinEnter * nested call s:QuitIfOnlyWindow()
         autocmd WinEnter * if bufwinnr('__Tagbar__') == -1 |
                          \     call s:ShrinkIfExpanded() |
                          \ endif
@@ -3000,9 +3000,7 @@ function! s:JumpToTag(stay_in_tagbar) abort
     normal! z.
     call cursor(taginfo.fields.line, taginfo.fields.column)
 
-    if foldclosed('.') != -1
-        .foldopen
-    endif
+    normal! zv
 
     if a:stay_in_tagbar
         call s:HighlightTag(0)
@@ -3023,6 +3021,25 @@ function! s:ShowInPreviewWin() abort
         return
     endif
 
+    " Check whether the preview window is already open and open it if not.
+    " This has to be done before the :psearch below so the window is relative
+    " to the Tagbar window.
+    let pwin_open = 0
+    for win in range(1, winnr('$'))
+        if getwinvar(win, '&previewwindow')
+            let pwin_open = 1
+            break
+        endif
+    endfor
+
+    if !pwin_open
+        silent! execute
+            \ g:tagbar_previewwin_pos . ' pedit ' . taginfo.fileinfo.fpath
+        " Remember that the preview window was opened by Tagbar so we can
+        " safely close it by ourselves
+        let s:pwin_by_tagbar = 1
+    endif
+
     " Use psearch instead of pedit since pedit essentially reloads the file
     " and creates an empty undo entry. psearch has to be called from the file
     " window, and since we only want matches in the current file we disable
@@ -3033,17 +3050,13 @@ function! s:ShowInPreviewWin() abort
     call s:GotoFileWindow(taginfo.fileinfo, 1)
     let include_save = &include
     set include=
-    silent! execute g:tagbar_previewwin_pos . ' ' .
-          \ taginfo.fields.line . ',$psearch! /' . taginfo.pattern . '/'
+    silent! execute taginfo.fields.line . ',$psearch! /' . taginfo.pattern . '/'
     let &include = include_save
     call s:goto_tagbar(1)
 
-    " Remember that the preview window was opened by Tagbar so we can safely
-    " close it by ourselves
-    let s:pwin_by_tagbar = 1
-
     call s:goto_win('P', 1)
     normal! zv
+    normal! zz
     call s:goto_win('p', 1)
 endfunction
 

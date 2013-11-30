@@ -68,7 +68,7 @@ endfunction
 function! s:space_inside_curly()
   let l = getline('.')
   let c = col('.')
-  if l[c-2] =~ '[{(\[]' && l[c-1] == s:alt_char(l[c-2])
+  if l[c-2] =~ '[{([]' && l[c-1] == s:alt_char(l[c-2])
     return "\<Space>\<Space>\<C-O>h"
   endif
   return "\<Space>"
@@ -457,6 +457,38 @@ if executable('gotags')
       \ 'ctagsargs' : '-sort -silent'
   \ }
 endif
+let g:tagbar_type_scala = {
+    \ 'ctagstype' : 'scala',
+    \ 'kinds'     : [
+        \ 'p:packages:1',
+        \ 'V:values',
+        \ 'v:variables',
+        \ 'T:types',
+        \ 't:traits',
+        \ 'o:objects',
+        \ 'a:aclasses',
+        \ 'c:classes',
+        \ 'r:cclasses',
+        \ 'm:methods'
+    \ ],
+    \ 'sro' : ".",
+    \ 'kind2scope' : {
+        \ 'T' : 'type',
+        \ 't' : 'trait',
+        \ 'o' : 'object',
+        \ 'a' : 'abstract class',
+        \ 'c' : 'class',
+        \ 'r' : 'case class'
+    \ },
+    \ 'scope2kind' : {
+        \ 'type' : 'T',
+        \ 'trait' : 't',
+        \ 'object' : 'o',
+        \ 'abstract class' : 'a',
+        \ 'class' : 'c',
+        \ 'case class' : 'r'
+    \ },
+\ }
 
 " NERD_tree settings {{{2
 let g:NERDTreeQuitOnOpen  = 1 " Close NERDTree when a file is opened
@@ -520,6 +552,11 @@ let g:ctrlp_open_multi = 'tr'
 let g:ctrlp_open_new_file = 'h'
 let g:ctrlp_mruf_exclude = '\.git\|\/var\/folders\|' . substitute($VIMRUNTIME, '/', '\\/', 'g')
 let g:ctrlp_custom_ignore = 'tmp'
+let g:ctrlp_buftag_types = {
+      \ 'go'     : '--language-force=Go --Go-types=fvt',
+      \ 'scala'  : '--language-force=scala --scala-types=ctTm'
+      \  }
+
 nnoremap <silent> <leader>m :CtrlPCurWD<CR>
 nnoremap <silent> <leader>r :CtrlPRoot<CR>
 nnoremap <silent> <leader>l :CtrlPBuffer<CR>

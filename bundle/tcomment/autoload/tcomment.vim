@@ -3,7 +3,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-09-17.
 " @Last Change: 2013-03-07.
-" @Revision:    1025
+" @Revision:    1046
 
 " call tlog#Log('Load: '. expand('<sfile>')) " vimtlib-sfile
 
@@ -417,6 +417,7 @@ call tcomment#DefineType('racket',           '; %s'             )
 call tcomment#DefineType('racket_block',     '#|%s|#'           )
 call tcomment#DefineType('rc',               '// %s'            )
 call tcomment#DefineType('readline',         '# %s'             )
+call tcomment#DefineType('remind',           {'commentstring_rx': '\[;#] %s', 'commentstring': '# %s'})
 call tcomment#DefineType('resolv',           '# %s'             )
 call tcomment#DefineType('robots',           '# %s'             )
 call tcomment#DefineType('ruby',             '# %s'             )
@@ -516,9 +517,10 @@ let s:nullCommentString    = '%s'
 "                              surrounded with whitespace; if
 "                              both ... surround with whitespace (default)
 "                              no   ... don't use whitespace
-"         strip_whitespace ... Strip trailing whitespace: if 1, strip 
-"                              from empty lines only, if 2, always strip 
-"                              whitespace
+"         strip_whitespace ... Strip trailing whitespace: if 1 
+"                              (default), strip from empty lines only, 
+"                              if 2, always strip whitespace; if 0, 
+"                              don't strip any whitespace
 "   2. 1-2 values for: ?commentPrefix, ?commentPostfix
 "   3. a dictionary (internal use only)
 "
@@ -746,11 +748,13 @@ function! s:SetWhitespaceMode(cdef) "{{{3
     let mid0 = mid
     " TLogVAR mode, cms, mid
     if mode =~ '^\(n\%[o]\|l\%[eft]\|r\%[ight]\)$'
-        if mode == 'no' || mode == 'right'
+        " Remove whitespace on the left
+        if mode =~ '^n\%[o]$' || mode =~ '^r\%[ight]$'
             let cms = substitute(cms, '\s\+\ze%\@<!%s', '', 'g')
             let mid = substitute(mid, '\s\+\ze%\@<!%s', '', 'g')
         endif
-        if mode == 'no' || mode == 'left'
+        " Remove whitespace on the right
+        if mode =~ '^n\%[o]$' || mode =~ '^l\%[eft]$'
             let cms = substitute(cms, '%\@<!%s\zs\s\+', '', 'g')
             let mid = substitute(mid, '%\@<!%s\zs\s\+', '', 'g')
         endif
@@ -1045,8 +1049,7 @@ endf
 function! s:StartPosRx(mode, line, col)
     " TLogVAR a:mode, a:line, a:col
     if a:mode =~# 'I'
-        let col = get(s:cdef, 'mixedindent', 0) ? a:col - 1 : a:col
-        return s:StartLineRx(a:line) . s:StartColRx(col)
+        return s:StartLineRx(a:line) . s:StartColRx(a:col)
     else
         return s:StartColRx(a:col)
     endif
@@ -1069,12 +1072,14 @@ function! s:EndLineRx(pos)
 endf
 
 function! s:StartColRx(pos)
-    if a:pos <= 1
+    let mixedindent = get(s:cdef, 'mixedindent', 0)
+    let pos = mixedindent ? a:pos - 1 : a:pos
+    if pos <= 1
         return '\^'
-    elseif get(s:cdef, 'mixedindent', 0)
-        return '\%>'. a:pos .'v'
+    elseif mixedindent
+        return '\%>'. pos .'v'
     else
-        return '\%'. a:pos .'c'
+        return '\%'. pos .'c'
     endif
 endf
 
@@ -1152,24 +1157,23 @@ endf
 function! s:ProcessLine(uncomment, match, checkRx, replace)
     " TLogVAR a:uncomment, a:match, a:checkRx, a:replace
     try
-        if !(a:match =~ '\S' || g:tcommentBlankLines)
+        if !(g:tcommentBlankLines || a:match =~ '\S')
             return a:match
         endif
-        let ml = len(a:match)
         if a:uncomment
             let rv = substitute(a:match, a:checkRx, '\1\2', '')
             let rv = s:UnreplaceInLine(rv)
         else
+            let ml = len(a:match)
             let rv = s:ReplaceInLine(a:match)
             let rv = printf(a:replace, rv)
-            let strip_whitespace = get(s:cdef, 'strip_whitespace', 0)
+            let strip_whitespace = get(s:cdef, 'strip_whitespace', 1)
             if strip_whitespace == 2 || (strip_whitespace == 1 && ml == 0)
                 let rv = substitute(rv, '\s\+$', '', '')
             endif
         endif
         " TLogVAR rv
         " echom "DBG s:cdef.mode=" string(s:cdef.mode) "s:cursor_pos=" string(s:cursor_pos)
-        " let md = len(rv) - ml
         if s:cdef.mode =~ '>'
             let s:cursor_pos = getpos('.')
             let s:cursor_pos[2] += len(rv)
@@ -1193,7 +1197,7 @@ function! s:ProcessLine(uncomment, match, checkRx, replace)
                 endif
             endif
         endif
-        " TLogVAR pe, md, a:match
+        " TLogVAR pe, a:match
         " TLogVAR rv
         if v:version > 702 || (v:version == 702 && has('patch407'))
             let rv = escape(rv, "\r")

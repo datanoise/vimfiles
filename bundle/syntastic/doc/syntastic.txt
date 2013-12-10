@@ -236,7 +236,7 @@ syntax errors: >
                      *'syntastic_error_symbol'* *'syntastic_style_error_symbol'*
                  *'syntastic_warning_symbol'* *'syntastic_style_warning_symbol'*
 Use this option to control what the syntastic |:sign| text contains. Several
-error symobls can be customized:
+error symbols can be customized:
     syntastic_error_symbol - For syntax errors, defaults to '>>'
     syntastic_style_error_symbol - For style errors, defaults to 'S>'
     syntastic_warning_symbol - For syntax warnings, defaults to '>>'
@@ -490,7 +490,7 @@ The result is a 'makeprg' of the form: >
     <exe> <args> <filename> <post_args> <tail>
 <
 
-All arguments above are optional, and can be overriden by setting global
+All arguments above are optional, and can be overridden by setting global
 variables - even parameters not specified in the call to makeprgBuild().  If
 'exe' is the same as the checker 'exec' attribute, it may be omitted.
 

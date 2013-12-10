@@ -24,7 +24,8 @@ if len(s:goarch) == 0
   if exists('g:golang_goarch')
     let s:goarch = g:golang_goarch
   else
-    let s:goarch = '*'
+    " let s:goarch = '*'
+    let s:goarch = substitute(system('go env GOARCH'), '\n', '', 'g')
   endif
 endif
 
@@ -88,7 +89,7 @@ function! go#complete#Package(ArgLead, CmdLine, CursorPos)
     let root = split(expand(dir . '/pkg/' . s:goos . '_' . s:goarch), "\n")
     call add(root, expand(dir . '/src'))
     for r in root
-      for i in split(globpath(r, a:ArgLead.'*'), "\n")
+      for i in split(globpath(r, a:ArgLead.'*', 1), "\n")
         if isdirectory(i)
           let i .= '/'
         elseif i !~ '\.a$'

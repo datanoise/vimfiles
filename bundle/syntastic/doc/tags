@@ -1,3 +1,5 @@
+'b:syntastic_checkers'	syntastic.txt	/*'b:syntastic_checkers'*
+'g:syntastic_<filetype>_checkers'	syntastic.txt	/*'g:syntastic_<filetype>_checkers'*
 'syntastic_aggregate_errors'	syntastic.txt	/*'syntastic_aggregate_errors'*
 'syntastic_always_populate_loc_list'	syntastic.txt	/*'syntastic_always_populate_loc_list'*
 'syntastic_auto_jump'	syntastic.txt	/*'syntastic_auto_jump'*
@@ -32,6 +34,7 @@
 :SyntasticToggleMode	syntastic.txt	/*:SyntasticToggleMode*
 syntastic	syntastic.txt	/*syntastic*
 syntastic-about	syntastic.txt	/*syntastic-about*
+syntastic-aggregating-errors	syntastic.txt	/*syntastic-aggregating-errors*
 syntastic-checker-options	syntastic.txt	/*syntastic-checker-options*
 syntastic-commands	syntastic.txt	/*syntastic-commands*
 syntastic-composite	syntastic.txt	/*syntastic-composite*
@@ -39,6 +42,8 @@ syntastic-config-makeprg	syntastic.txt	/*syntastic-config-makeprg*
 syntastic-contents	syntastic.txt	/*syntastic-contents*
 syntastic-error-signs	syntastic.txt	/*syntastic-error-signs*
 syntastic-error-window	syntastic.txt	/*syntastic-error-window*
+syntastic-filetype-checkers	syntastic.txt	/*syntastic-filetype-checkers*
+syntastic-filtering-errors	syntastic.txt	/*syntastic-filtering-errors*
 syntastic-fish	syntastic.txt	/*syntastic-fish*
 syntastic-functionality	syntastic.txt	/*syntastic-functionality*
 syntastic-global-options	syntastic.txt	/*syntastic-global-options*
@@ -47,5 +52,6 @@ syntastic-intro	syntastic.txt	/*syntastic-intro*
 syntastic-license	syntastic.txt	/*syntastic-license*
 syntastic-notes	syntastic.txt	/*syntastic-notes*
 syntastic-pymode	syntastic.txt	/*syntastic-pymode*
+syntastic-quickstart	syntastic.txt	/*syntastic-quickstart*
 syntastic-statusline-flag	syntastic.txt	/*syntastic-statusline-flag*
 syntastic.txt	syntastic.txt	/*syntastic.txt*

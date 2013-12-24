@@ -289,7 +289,7 @@ function! s:project_paths(...) dict abort
     for config in [expand('~/.bundle/config'), self.path('.bundle/config')]
       if filereadable(config)
         let body = join(readfile(config), "\n")
-        let bundle_path = matchstr(body, "\\C\\<BUNDLE_PATH: \\zs[^\n]*")
+        let bundle_path = matchstr(body, "\\C\\<BUNDLE_PATH: '\\=\\zs[^\n']*")
         if !empty(bundle_path)
           if body =~# '\C\<BUNDLE_DISABLE_SHARED_GEMS:'
             let gem_paths = [self.path(bundle_path, 'ruby', abi_version)]
@@ -319,7 +319,9 @@ function! s:project_paths(...) dict abort
 
     for source in self._locked.path
       for [name, ver] in items(source.versions)
-        if source.remote !~# '^/'
+        if source.remote =~# '^\~/'
+          let local = expand(source.remote)
+        elseif source.remote !~# '^/'
           let local = simplify(self.path(source.remote))
         else
           let local = source.remote

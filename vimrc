@@ -81,6 +81,11 @@ function! s:VSetSearch()
   let @s = tmp
 endfunction
 
+function! s:FilterQuickfixList(bang, pattern)
+  let cmp = a:bang ? '!~#' : '=~#'
+  call setqflist(filter(getqflist(), "bufname(v:val['bufnr']) " . cmp . " a:pattern"))
+endfunction
+
 " Section: Options {{{1
 " ------------------------------------------------------------------------------
 " tab options {{{2
@@ -376,6 +381,7 @@ command! -bar -nargs=0 SudoW   :exe "write !sudo tee % >/dev/null"|silent edit!
 au FileType ruby iabbrev <buffer> rb! #!<C-R>=substitute(system('which ruby'),'\n$','','')<CR><C-R>=Eatchar('\s')<CR>
 " display name of the syntax ID at the cursor
 command! SynName :echo SynName()
+command! -bang -nargs=1 -complete=file QFilter call s:FilterQuickfixList(<bang>0, <q-args>)
 cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
 cabbr ack Ack
 cabbr ag Ag

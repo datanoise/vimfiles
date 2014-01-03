@@ -1,7 +1,7 @@
 "============================================================================
-"File:        govet.vim
-"Description: Perform static analysis of Go code with the vet tool
-"Maintainer:  Kamil Kisiel <kamil@kamilkisiel.net>
+"File:        gotype.vim
+"Description: Perform syntactic and semantic checking of Go code using 'gotype'
+"Maintainer:  luz <ne.tetewi@gmail.com>
 "License:     This program is free software. It comes without any warranty,
 "             to the extent permitted by applicable law. You can redistribute
 "             it and/or modify it under the terms of the Do What The Fuck You
@@ -10,38 +10,37 @@
 "
 "============================================================================
 
-if exists("g:loaded_syntastic_go_govet_checker")
+if exists("g:loaded_syntastic_go_gotype_checker")
     finish
 endif
-let g:loaded_syntastic_go_govet_checker = 1
+let g:loaded_syntastic_go_gotype_checker = 1
 
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! SyntaxCheckers_go_govet_IsAvailable() dict
-    return executable('go')
-endfunction
+function! SyntaxCheckers_go_gotype_GetLocList() dict
+    let makeprg = self.getExec() . ' .'
 
-function! SyntaxCheckers_go_govet_GetLocList() dict
-    let makeprg = 'go vet'
-    let errorformat = '%Evet: %.%\+: %f:%l:%c: %m,%W%f:%l: %m,%-G%.%#'
+    let errorformat =
+        \ '%f:%l:%c: %m,' .
+        \ '%-G%.%#'
 
-    " The go compiler needs to either be run with an import path as an
-    " argument or directly from the package directory. Since figuring out
-    " the proper import path is fickle, just cwd to the package.
+    " gotype needs the full go package to test types properly. Just cwd to
+    " the package for the same reasons specified in go.vim ("figuring out
+    " the import path is fickle").
 
     let errors = SyntasticMake({
         \ 'makeprg': makeprg,
         \ 'errorformat': errorformat,
         \ 'cwd': expand('%:p:h'),
-        \ 'defaults': {'type': 'w'} })
+        \ 'defaults': {'type': 'e'} })
 
     return errors
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
     \ 'filetype': 'go',
-    \ 'name': 'govet'})
+    \ 'name': 'gotype'})
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

@@ -110,24 +110,23 @@ function! syntastic#util#wideMsg(msg)
     let old_ruler = &ruler
     let old_showcmd = &showcmd
 
-    "convert tabs to spaces so that the tabs count towards the window width
-    "as the proper amount of characters
-    let msg = substitute(a:msg, "\t", repeat(" ", &tabstop), "g")
-    let msg = strpart(msg, 0, winwidth(0)-1)
+    "This is here because it is possible for some error messages to
+    "begin with \n which will cause a "press enter" prompt.
+    let msg = substitute(a:msg, "\n", "", "g")
 
-    "This is here because it is possible for some error messages to begin with
-    "\n which will cause a "press enter" prompt. I have noticed this in the
-    "javascript:jshint checker and have been unable to figure out why it
-    "happens
-    let msg = substitute(msg, "\n", "", "g")
+    "convert tabs to spaces so that the tabs count towards the window
+    "width as the proper amount of characters
+    let chunks = split(msg, "\t", 1)
+    let msg = join(map(chunks[:-2], 'v:val . repeat(" ", &ts - len(v:val) % &ts)'), '') . chunks[-1]
+    let msg = strpart(msg, 0, winwidth(0) - 1)
 
     set noruler noshowcmd
     call syntastic#util#redraw(0)
 
     echo msg
 
-    let &ruler=old_ruler
-    let &showcmd=old_showcmd
+    let &ruler = old_ruler
+    let &showcmd = old_showcmd
 endfunction
 
 " Check whether a buffer is loaded, listed, and not hidden
@@ -234,6 +233,17 @@ function! syntastic#util#redrawHandler()
     endif
 endfunction
 
+function! syntastic#util#dictFilter(errors, filter)
+    let rules = s:translateFilter(a:filter)
+    " call syntastic#log#debug(g:SyntasticDebugFilters, "applying filter:", rules)
+    try
+        call filter(a:errors, rules)
+    catch /\m^Vim\%((\a\+)\)\=:E/
+        let msg = matchstr(v:exception, '\m^Vim\%((\a\+)\)\=:\zs.*')
+        call syntastic#log#error('quiet_messages: ' . msg)
+    endtry
+endfunction
+
 " Private functions {{{1
 
 "Redraw in a way that doesnt make the screen flicker or leave anomalies behind.
@@ -249,6 +259,31 @@ function! s:doRedraw(full)
     else
         redraw
     endif
+endfunction
+
+function! s:translateFilter(filters)
+    let conditions = []
+    for [k, v] in items(a:filters)
+        if type(v) == type([])
+            call extend(conditions, map(copy(v), 's:translateElement(k, v:val)'))
+        else
+            call add(conditions, s:translateElement(k, v))
+        endif
+    endfor
+    return len(conditions) == 1 ? conditions[0] : join(map(conditions, '"(" . v:val . ")"'), ' && ')
+endfunction
+
+function! s:translateElement(key, term)
+    if a:key ==? 'level'
+        let ret = 'v:val["type"] !=? ' . string(a:term[0])
+    elseif a:key ==? 'type'
+        let ret = a:term ==? 'style' ? 'get(v:val, "subtype", "") !=? "style"' : 'has_key(v:val, "subtype")'
+    elseif a:key ==? 'regex'
+        let ret = 'v:val["text"] !~? ' . string(a:term)
+    elseif a:key ==? 'file'
+        let ret = 'bufname(str2nr(v:val["bufnr"])) !~# ' . string(a:term)
+    endif
+    return ret
 endfunction
 
 let &cpo = s:save_cpo

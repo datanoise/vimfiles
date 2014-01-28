@@ -19,8 +19,6 @@ function! g:SyntasticLoclist.New(rawLoclist)
     endfor
 
     let newObj._rawLoclist = llist
-    let newObj._hasErrorsOrWarningsToDisplay = -1
-
     let newObj._name = ''
 
     return newObj
@@ -34,25 +32,74 @@ function! g:SyntasticLoclist.current()
 endfunction
 
 function! g:SyntasticLoclist.extend(other)
-    let list = self.toRaw()
-    call extend(list, a:other.toRaw())
+    let list = self.copyRaw()
+    call extend(list, a:other.copyRaw())
     return g:SyntasticLoclist.New(list)
-endfunction
-
-function! g:SyntasticLoclist.toRaw()
-    return copy(self._rawLoclist)
-endfunction
-
-function! g:SyntasticLoclist.filteredRaw()
-    return self._rawLoclist
 endfunction
 
 function! g:SyntasticLoclist.isEmpty()
     return empty(self._rawLoclist)
 endfunction
 
-function! g:SyntasticLoclist.getLength()
-    return len(self._rawLoclist)
+function! g:SyntasticLoclist.copyRaw()
+    return copy(self._rawLoclist)
+endfunction
+
+function! g:SyntasticLoclist.getRaw()
+    return self._rawLoclist
+endfunction
+
+function! g:SyntasticLoclist.getStatuslineFlag()
+    if !exists("self._stl_format")
+        let self._stl_format = ''
+    endif
+    if !exists("self._stl_flag")
+        let self._stl_flag = ''
+    endif
+
+    if g:syntastic_stl_format !=# self._stl_format
+        let self._stl_format = g:syntastic_stl_format
+
+        if !empty(self._rawLoclist)
+            let errors = self.errors()
+            let warnings = self.warnings()
+
+            let num_errors = len(errors)
+            let num_warnings = len(warnings)
+            let num_issues = len(self._rawLoclist)
+
+            let output = self._stl_format
+
+            "hide stuff wrapped in %E(...) unless there are errors
+            let output = substitute(output, '\m\C%E{\([^}]*\)}', num_errors ? '\1' : '' , 'g')
+
+            "hide stuff wrapped in %W(...) unless there are warnings
+            let output = substitute(output, '\m\C%W{\([^}]*\)}', num_warnings ? '\1' : '' , 'g')
+
+            "hide stuff wrapped in %B(...) unless there are both errors and warnings
+            let output = substitute(output, '\m\C%B{\([^}]*\)}', (num_warnings && num_errors) ? '\1' : '' , 'g')
+
+            "sub in the total errors/warnings/both
+            let output = substitute(output, '\m\C%w', num_warnings, 'g')
+            let output = substitute(output, '\m\C%e', num_errors, 'g')
+            let output = substitute(output, '\m\C%t', num_issues, 'g')
+
+            "first error/warning line num
+            let output = substitute(output, '\m\C%F', num_issues ? self._rawLoclist[0]['lnum'] : '', 'g')
+
+            "first error line num
+            let output = substitute(output, '\m\C%fe', num_errors ? errors[0]['lnum'] : '', 'g')
+
+            "first warning line num
+            let output = substitute(output, '\m\C%fw', num_warnings ? warnings[0]['lnum'] : '', 'g')
+
+            let self._stl_flag = output
+        else
+            let self._stl_flag = ''
+        endif
+    endif
+
+    return self._stl_flag
 endfunction
 
 function! g:SyntasticLoclist.getName()
@@ -67,14 +114,6 @@ function! g:SyntasticLoclist.decorate(name, filetype)
     for e in self._rawLoclist
         let e['text'] .= ' [' . a:filetype . '/' . a:name . ']'
     endfor
-endfunction
-
-function! g:SyntasticLoclist.hasErrorsOrWarningsToDisplay()
-    if self._hasErrorsOrWarningsToDisplay >= 0
-        return self._hasErrorsOrWarningsToDisplay
-    endif
-    let self._hasErrorsOrWarningsToDisplay = !empty(self._rawLoclist)
-    return self._hasErrorsOrWarningsToDisplay
 endfunction
 
 function! g:SyntasticLoclist.quietMessages(filters)
@@ -93,6 +132,12 @@ function! g:SyntasticLoclist.warnings()
         let self._cachedWarnings = self.filter({'type': "W"})
     endif
     return self._cachedWarnings
+endfunction
+
+" Legacy function.  Syntastic no longer calls it, but we keep it
+" around because other plugins (f.i. powerline) depend on it.
+function! g:SyntasticLoclist.hasErrorsOrWarningsToDisplay()
+    return !self.isEmpty()
 endfunction
 
 " cache used by EchoCurrentError()
@@ -138,7 +183,7 @@ function! g:SyntasticLoclist.setloclist()
     endif
     let replace = g:syntastic_reuse_loc_lists && w:syntastic_loclist_set
     call syntastic#log#debug(g:SyntasticDebugNotifications, 'loclist: setloclist ' . (replace ? '(replace)' : '(new)'))
-    call setloclist(0, self.filteredRaw(), replace ? 'r' : ' ')
+    call setloclist(0, self.getRaw(), replace ? 'r' : ' ')
     let w:syntastic_loclist_set = 1
 endfunction
 
@@ -147,7 +192,7 @@ function! g:SyntasticLoclist.show()
     call syntastic#log#debug(g:SyntasticDebugNotifications, 'loclist: show')
     call self.setloclist()
 
-    if self.hasErrorsOrWarningsToDisplay()
+    if !self.isEmpty()
         let num = winnr()
         execute "lopen " . g:syntastic_loc_list_height
         if num != winnr()

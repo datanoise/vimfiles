@@ -1,7 +1,7 @@
 "============================================================================
 "File:        syntastic.vim
 "Description: Vim plugin for on the fly syntax checking.
-"Version:     3.3.0
+"Version:     3.4.0-pre
 "License:     This program is free software. It comes without any warranty,
 "             to the extent permitted by applicable law. You can redistribute
 "             it and/or modify it under the terms of the Do What The Fuck You
@@ -23,9 +23,9 @@ runtime! plugin/syntastic/*.vim
 
 let s:running_windows = syntastic#util#isRunningWindows()
 
-for feature in ['autocmd', 'eval', 'modify_fname', 'quickfix', 'user_commands']
-    if !has(feature)
-        call syntastic#log#error("need Vim compiled with feature " . feature)
+for s:feature in ['autocmd', 'eval', 'modify_fname', 'quickfix', 'user_commands']
+    if !has(s:feature)
+        call syntastic#log#error("need Vim compiled with feature " . s:feature)
         finish
     endif
 endfor
@@ -96,12 +96,12 @@ endif
 if exists("g:syntastic_quiet_warnings")
     call syntastic#log#deprecationWarn("variable g:syntastic_quiet_warnings is deprecated, please use let g:syntastic_quiet_messages = {'level': 'warnings'} instead")
     if g:syntastic_quiet_warnings
-        let quiet_warnings = get(g:syntastic_quiet_messages, 'type', [])
-        if type(quiet_warnings) != type([])
-            let quiet_warnings = [quiet_warnings]
+        let s:quiet_warnings = get(g:syntastic_quiet_messages, 'type', [])
+        if type(s:quiet_warnings) != type([])
+            let s:quiet_warnings = [s:quiet_warnings]
         endif
-        call add(quiet_warnings, 'warnings')
-        let g:syntastic_quiet_messages['type'] = quiet_warnings
+        call add(s:quiet_warnings, 'warnings')
+        let g:syntastic_quiet_messages['type'] = s:quiet_warnings
     endif
 endif
 
@@ -118,6 +118,9 @@ let s:notifiers = g:SyntasticNotifiers.Instance()
 let s:modemap = g:SyntasticModeMap.Instance()
 
 
+" @vimlint(EVL103, 1, a:cursorPos)
+" @vimlint(EVL103, 1, a:cmdLine)
+" @vimlint(EVL103, 1, a:argLead)
 function! s:CompleteCheckerName(argLead, cmdLine, cursorPos)
     let checker_names = []
     for ft in s:CurrentFiletypes()
@@ -127,10 +130,21 @@ function! s:CompleteCheckerName(argLead, cmdLine, cursorPos)
     endfor
     return join(checker_names, "\n")
 endfunction
+" @vimlint(EVL103, 0, a:cursorPos)
+" @vimlint(EVL103, 0, a:cmdLine)
+" @vimlint(EVL103, 0, a:argLead)
 
+
+" @vimlint(EVL103, 1, a:cursorPos)
+" @vimlint(EVL103, 1, a:cmdLine)
+" @vimlint(EVL103, 1, a:argLead)
 function! s:CompleteFiletypes(argLead, cmdLine, cursorPos)
     return join(s:registry.knownFiletypes(), "\n")
 endfunction
+" @vimlint(EVL103, 0, a:cursorPos)
+" @vimlint(EVL103, 0, a:cmdLine)
+" @vimlint(EVL103, 0, a:argLead)
+
 
 command! SyntasticToggleMode call s:ToggleMode()
 command! -nargs=* -complete=custom,s:CompleteCheckerName SyntasticCheck
@@ -224,9 +238,9 @@ function! s:UpdateErrors(auto_invoked, ...)
     let w:syntastic_loclist_set = 0
     if g:syntastic_always_populate_loc_list || g:syntastic_auto_jump
         call syntastic#log#debug(g:SyntasticDebugNotifications, 'loclist: setloclist (new)')
-        call setloclist(0, loclist.filteredRaw())
+        call setloclist(0, loclist.getRaw())
         let w:syntastic_loclist_set = 1
-        if run_checks && g:syntastic_auto_jump && loclist.hasErrorsOrWarningsToDisplay()
+        if run_checks && g:syntastic_auto_jump && !loclist.isEmpty()
             call syntastic#log#debug(g:SyntasticDebugNotifications, 'loclist: jump')
             silent! lrewind
 
@@ -387,46 +401,7 @@ endfunction
 "
 "return '' if no errors are cached for the buffer
 function! SyntasticStatuslineFlag()
-    let loclist = g:SyntasticLoclist.current()
-    let issues = loclist.filteredRaw()
-    let num_issues = loclist.getLength()
-    if loclist.hasErrorsOrWarningsToDisplay()
-        let errors = loclist.errors()
-        let warnings = loclist.warnings()
-
-        let num_errors = len(errors)
-        let num_warnings = len(warnings)
-
-        let output = g:syntastic_stl_format
-
-        "hide stuff wrapped in %E(...) unless there are errors
-        let output = substitute(output, '\m\C%E{\([^}]*\)}', num_errors ? '\1' : '' , 'g')
-
-        "hide stuff wrapped in %W(...) unless there are warnings
-        let output = substitute(output, '\m\C%W{\([^}]*\)}', num_warnings ? '\1' : '' , 'g')
-
-        "hide stuff wrapped in %B(...) unless there are both errors and warnings
-        let output = substitute(output, '\m\C%B{\([^}]*\)}', (num_warnings && num_errors) ? '\1' : '' , 'g')
-
-
-        "sub in the total errors/warnings/both
-        let output = substitute(output, '\m\C%w', num_warnings, 'g')
-        let output = substitute(output, '\m\C%e', num_errors, 'g')
-        let output = substitute(output, '\m\C%t', num_issues, 'g')
-
-        "first error/warning line num
-        let output = substitute(output, '\m\C%F', num_issues ? issues[0]['lnum'] : '', 'g')
-
-        "first error line num
-        let output = substitute(output, '\m\C%fe', num_errors ? errors[0]['lnum'] : '', 'g')
-
-        "first warning line num
-        let output = substitute(output, '\m\C%fw', num_warnings ? warnings[0]['lnum'] : '', 'g')
-
-        return output
-    else
-        return ''
-    endif
+    return g:SyntasticLoclist.current().getStatuslineFlag()
 endfunction
 
 "Emulates the :lmake command. Sets up the make environment according to the

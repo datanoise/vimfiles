@@ -465,15 +465,6 @@ Changing it can in principle make screen redraws smoother, but it can also
 cause screen to flicker, or cause ghost characters. Leaving it to the default
 should be safe.
 
-                                                 *'syntastic_delayed_redraws'*
-Default: 0
-On older Vims, calling redraw when a popup menu is visible can cause Vim to
-segfault. If your version of Vim is affected, the solution is of course to
-upgrade Vim. If upgrading is not immediately feasible however, setting this
-variable to 1 might help, by delaying redraws until they are safe. Beware that
-there are functional and performance penalties involved, so only enable this
-if you actually need it.
-
                                                            *'syntastic_debug'*
 Default: 0
 Set this to the sum of one or more of the following flags to enable
@@ -507,7 +498,7 @@ addition to being added to Vim's |message-history|: >
                                            *'g:syntastic_<filetype>_checkers'*
 You can tell syntastic which checkers to run for a given filetype by setting a
 variable 'g:syntastic_<filetype>_checkers' to a list of checkers, e.g. >
-    let g:syntastic_python_checkers = ['php', 'phpcs', 'phpmd']
+    let g:syntastic_php_checkers = ['php', 'phpcs', 'phpmd']
 <
                                                       *'b:syntastic_checkers'*
 There is also a per-buffer version of this setting, 'b:syntastic_checkers'.
@@ -534,7 +525,7 @@ Use |:SyntasticInfo| to see which checkers are available for a given filetype.
 The executable used by a checker is normally defined automatically, when the
 checkers is registered. You can however override it by setting the variable
 'g:syntastic_<filetype>_<subchecker>_exec': >
-    let g:syntastic_ruby_mri_exe = '~/bin/ruby2'
+    let g:syntastic_ruby_mri_exec = '~/bin/ruby2'
 <
 ------------------------------------------------------------------------------
 5.3 Configuring specific checkers                   *syntastic-config-makeprg*
@@ -621,7 +612,7 @@ can't be used together with syntastic. You don't need to change your login
 shell to address this problem, but you do have to point Vim's 'shell' to a more
 traditional shell, such as 'zsh', 'bash', 'ksh', or even the original Bourne
 'sh': >
-    set shell = 'bash'
+    set shell=bash
 <
 
 ==============================================================================

@@ -123,7 +123,7 @@ let s:modemap = g:SyntasticModeMap.Instance()
 " @vimlint(EVL103, 1, a:argLead)
 function! s:CompleteCheckerName(argLead, cmdLine, cursorPos)
     let checker_names = []
-    for ft in s:CurrentFiletypes()
+    for ft in s:ResolveFiletypes()
         for checker in s:registry.availableCheckersFor(ft)
             call add(checker_names, checker.getName())
         endfor
@@ -165,7 +165,7 @@ augroup syntastic
 
     autocmd BufWinEnter * call s:BufWinEnterHook()
 
-    " TODO: the next autocmd should be "autocmd BufWinLeave * if empty(&buftype) | lclose | endif"
+    " TODO: the next autocmd should be "autocmd BufWinLeave * if &buftype == '' | lclose | endif"
     " but in recent versions of Vim lclose can no longer be called from BufWinLeave
     autocmd BufEnter * call s:BufEnterHook()
 augroup END
@@ -196,9 +196,8 @@ function! s:BufWinEnterHook()
     call syntastic#log#debug(g:SyntasticDebugAutocommands,
         \ 'autocmd: BufWinEnter, buffer ' . bufnr("") . ' = ' . string(bufname(str2nr(bufnr("")))) .
         \ ', &buftype = ' . string(&buftype))
-    if empty(&buftype)
-        let loclist = g:SyntasticLoclist.current()
-        call s:notifiers.refresh(loclist)
+    if &buftype == ''
+        call s:notifiers.refresh(g:SyntasticLoclist.current())
     endif
 endfunction
 
@@ -236,11 +235,18 @@ function! s:UpdateErrors(auto_invoked, ...)
     let loclist = g:SyntasticLoclist.current()
 
     let w:syntastic_loclist_set = 0
-    if g:syntastic_always_populate_loc_list || g:syntastic_auto_jump
+    let do_jump = g:syntastic_auto_jump
+    if g:syntastic_auto_jump == 2
+        let first = loclist.getFirstIssue()
+        let type = get(first, 'type', '')
+        let do_jump = type ==? 'E'
+    endif
+
+    if g:syntastic_always_populate_loc_list || do_jump
         call syntastic#log#debug(g:SyntasticDebugNotifications, 'loclist: setloclist (new)')
         call setloclist(0, loclist.getRaw())
         let w:syntastic_loclist_set = 1
-        if run_checks && g:syntastic_auto_jump && !loclist.isEmpty()
+        if run_checks && do_jump && !loclist.isEmpty()
             call syntastic#log#debug(g:SyntasticDebugNotifications, 'loclist: jump')
             silent! lrewind
 
@@ -268,10 +274,6 @@ function! s:ResolveFiletypes(...)
     return split( get(g:syntastic_filetype_map, type, type), '\m\.' )
 endfunction
 
-function! s:CurrentFiletypes()
-    return s:ResolveFiletypes(&filetype)
-endfunction
-
 "detect and cache all syntax errors in this buffer
 function! s:CacheErrors(checkers)
     call s:ClearCache()
@@ -281,17 +283,19 @@ function! s:CacheErrors(checkers)
         let active_checkers = 0
         let names = []
 
-        call syntastic#log#debugShowOptions(g:SyntasticDebugTrace,
-            \ ['shell', 'shellcmdflag', 'shellxquote', 'shellredir', 'shellslash'])
+        call syntastic#log#debugShowOptions(g:SyntasticDebugTrace, [
+            \ 'shell', 'shellcmdflag', 'shellquote', 'shellxquote', 'shellredir',
+            \ 'shellslash', 'shellpipe', 'shelltemp', 'shellxescape', 'shellxquote' ])
         call syntastic#log#debugDump(g:SyntasticDebugVariables)
         call syntastic#log#debugShowVariables(g:SyntasticDebugTrace, 'syntastic_aggregate_errors')
 
+        let filetypes = s:ResolveFiletypes()
         let aggregate_errors =
             \ exists('b:syntastic_aggregate_errors') ? b:syntastic_aggregate_errors : g:syntastic_aggregate_errors
-        let decorate_errors = (aggregate_errors || len(s:CurrentFiletypes()) > 1) &&
+        let decorate_errors = (aggregate_errors || len(filetypes) > 1) &&
             \ (exists('b:syntastic_id_checkers') ? b:syntastic_id_checkers : g:syntastic_id_checkers)
 
-        for ft in s:CurrentFiletypes()
+        for ft in filetypes
             let clist = empty(a:checkers) ? s:registry.getActiveCheckers(ft) : s:registry.getCheckers(ft, a:checkers)
 
             for checker in clist
@@ -358,8 +362,7 @@ endfunction
 
 "display the cached errors for this buf in the location list
 function! s:ShowLocList()
-    let loclist = g:SyntasticLoclist.current()
-    call loclist.show()
+    call g:SyntasticLoclist.current().show()
 endfunction
 
 "the script changes &shellredir and &shell to stop the screen flicking when
@@ -374,8 +377,8 @@ endfunction
 
 function! s:IgnoreFile(filename)
     let fname = fnamemodify(a:filename, ':p')
-    for p in g:syntastic_ignore_files
-        if fname =~# p
+    for pattern in g:syntastic_ignore_files
+        if fname =~# pattern
             return 1
         endif
     endfor
@@ -386,7 +389,7 @@ endfunction
 function! s:SkipFile()
     let force_skip = exists('b:syntastic_skip_checks') ? b:syntastic_skip_checks : 0
     let fname = expand('%')
-    return force_skip || !empty(&buftype) || !filereadable(fname) || getwinvar(0, '&diff') || s:IgnoreFile(fname)
+    return force_skip || (&buftype != '') || !filereadable(fname) || getwinvar(0, '&diff') || s:IgnoreFile(fname)
 endfunction
 
 function! s:uname()
@@ -471,7 +474,7 @@ function! SyntasticMake(options)
     let &errorformat = old_errorformat
     let &l:errorformat = old_local_errorformat
     let &shellredir = old_shellredir
-    let &shell=old_shell
+    let &shell = old_shell
 
     if s:IsRedrawRequiredAfterMake()
         call syntastic#util#redraw(g:syntastic_full_redraws)
@@ -489,7 +492,7 @@ function! SyntasticMake(options)
 
     " Add subtype info if present.
     if has_key(a:options, 'subtype')
-        call SyntasticAddToErrors(errors, {'subtype': a:options['subtype']})
+        call SyntasticAddToErrors(errors, { 'subtype': a:options['subtype'] })
     endif
 
     if has_key(a:options, 'postprocess') && !empty(a:options['postprocess'])
@@ -504,13 +507,14 @@ endfunction
 
 "take a list of errors and add default values to them from a:options
 function! SyntasticAddToErrors(errors, options)
-    for i in range(0, len(a:errors)-1)
+    for err in a:errors
         for key in keys(a:options)
-            if !has_key(a:errors[i], key) || empty(a:errors[i][key])
-                let a:errors[i][key] = a:options[key]
+            if !has_key(err, key) || empty(err[key])
+                let err[key] = a:options[key]
             endif
         endfor
     endfor
+
     return a:errors
 endfunction
 

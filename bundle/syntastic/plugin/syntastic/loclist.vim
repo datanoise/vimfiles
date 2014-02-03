@@ -13,7 +13,7 @@ function! g:SyntasticLoclist.New(rawLoclist)
     let llist = filter(copy(a:rawLoclist), 'v:val["valid"] == 1')
 
     for e in llist
-        if empty(e['type'])
+        if get(e, 'type', '') == ''
             let e['type'] = 'E'
         endif
     endfor
@@ -100,6 +100,10 @@ function! g:SyntasticLoclist.getStatuslineFlag()
     endif
 
     return self._stl_flag
+endfunction
+
+function! g:SyntasticLoclist.getFirstIssue()
+    return get(self._rawLoclist, 0, {})
 endfunction
 
 function! g:SyntasticLoclist.getName()

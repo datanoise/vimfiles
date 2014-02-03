@@ -7,6 +7,8 @@
 g:tcomment#blank_lines	tcomment.txt	/*g:tcomment#blank_lines*
 g:tcomment#ignore_char_type	tcomment.txt	/*g:tcomment#ignore_char_type*
 g:tcomment#ignore_comment_def	tcomment.txt	/*g:tcomment#ignore_comment_def*
+g:tcomment#options_comments	tcomment.txt	/*g:tcomment#options_comments*
+g:tcomment#options_commentstring	tcomment.txt	/*g:tcomment#options_commentstring*
 g:tcomment#replacements_c	tcomment.txt	/*g:tcomment#replacements_c*
 g:tcomment#replacements_xml	tcomment.txt	/*g:tcomment#replacements_xml*
 g:tcomment#rstrip_on_uncomment	tcomment.txt	/*g:tcomment#rstrip_on_uncomment*

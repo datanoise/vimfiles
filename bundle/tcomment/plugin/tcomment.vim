@@ -2,14 +2,18 @@
 " @Author:      Tom Link (micathom AT gmail com)
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     27-Dez-2004.
-" @Last Change: 2013-11-11.
-" @Revision:    783
+" @Last Change: 2014-02-05.
+" @Revision:    789
 " GetLatestVimScripts: 1173 1 tcomment.vim
 
 if &cp || exists('loaded_tcomment')
     finish
 endif
 let loaded_tcomment = 300
+
+let s:save_cpo = &cpo
+set cpo&vim
+
 
 if !exists('g:tcommentMaps')
     " If true, set maps.
@@ -158,8 +162,8 @@ if g:tcommentMaps
             exec 'nnoremap <silent> '. g:tcommentMapLeaderOp1 . s:i .'c :let w:tcommentPos = getpos(".") \| call tcomment#SetOption("count", '. s:i .') \| set opfunc=tcomment#Operator<cr>g@'
         endfor
         unlet s:i
-        exec 'nnoremap <silent> '. g:tcommentMapLeaderOp1 .'c :let w:tcommentPos = getpos(".") \| set opfunc=tcomment#OperatorLine<cr>g@$'
-        exec 'nnoremap <silent> '. g:tcommentMapLeaderOp1 .'b :let w:tcommentPos = getpos(".") \| call tcomment#SetOption("mode_extra", "B") \| set opfunc=tcomment#OperatorLine<cr>g@'
+        exec 'nnoremap <silent> '. g:tcommentMapLeaderOp1 .'c :<c-u>if v:count > 0 \| call tcomment#SetOption("count", v:count) \| endif \| let w:tcommentPos = getpos(".") \| set opfunc=tcomment#OperatorLine<cr>g@$'
+        exec 'nnoremap <silent> '. g:tcommentMapLeaderOp1 .'b :<c-u>if v:count > 0 \| call tcomment#SetOption("count", v:count) \| endif \| let w:tcommentPos = getpos(".") \| call tcomment#SetOption("mode_extra", "B") \| set opfunc=tcomment#OperatorLine<cr>g@'
         exec 'xnoremap <silent> '. g:tcommentMapLeaderOp1 .' :TCommentMaybeInline<cr>'
     endif
     if g:tcommentMapLeaderOp2 != ''
@@ -174,4 +178,7 @@ if g:tcommentMaps
     endif
 endif
 
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
 " vi: ft=vim:tw=72:ts=4:fo=w2croql

@@ -8,6 +8,7 @@ let s:defaultCheckers = {
         \ 'ada':         ['gcc'],
         \ 'applescript': ['osacompile'],
         \ 'asciidoc':    ['asciidoc'],
+        \ 'asm':         ['gcc'],
         \ 'bemhtml':     ['bemhtmllint'],
         \ 'c':           ['gcc'],
         \ 'chef':        ['foodcritic'],
@@ -154,6 +155,9 @@ function! g:SyntasticRegistry.knownFiletypes()
     call extend(types, keys(s:defaultFiletypeMap))
     if exists('g:syntastic_filetype_map')
         call extend(types, keys(g:syntastic_filetype_map))
+    endif
+    if exists('g:syntastic_extra_filetypes') && type(g:syntastic_extra_filetypes) == type([])
+        call extend(types, g:syntastic_extra_filetypes)
     endif
     return syntastic#util#unique(types)
 endfunction

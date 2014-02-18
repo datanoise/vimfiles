@@ -50,7 +50,7 @@ def err_to_scratch_buffer(func):
             msg = \
 """An error occured. This is either a bug in UltiSnips or a bug in a
 snippet definition. If you think this is a bug, please report it to
-https://bugs.launchpad.net/ultisnips/+filebug.
+https://github.com/SirVer/ultisnips/issues/new.
 
 Following is the full stack trace:
 """
@@ -169,10 +169,10 @@ class SnippetManager(object):
 
     @err_to_scratch_buffer
     def add_snippet(self, trigger, value, description,
-                    options, ft="all", globals=None, fn=None):
+                    options, ft="all", globals=None):
         """Add a snippet to the list of known snippets of the given 'ft'."""
         self._added_snippets_provider.add_snippet(ft, SnippetDefinition(
-            trigger, value, description, options, globals or {}), fn
+            trigger, value, description, options, globals or {})
         )
 
     @err_to_scratch_buffer
@@ -327,9 +327,8 @@ class SnippetManager(object):
     def _current_snippet_is_done(self):
         """The current snippet should be terminated."""
         self._csnippets.pop()
-        if (not self._csnippets and
-                _vim.eval("g:UltiSnipsClearJumpTrigger") != "0"):
-            _vim.command("call UltiSnips#RestoreInnerKeys()")
+        if not self._csnippets:
+            _vim.command("call UltiSnips#map_keys#RestoreInnerKeys()")
 
     def _jump(self, backwards=False):
         """Helper method that does the actual jump."""
@@ -409,8 +408,8 @@ class SnippetManager(object):
     def _do_snippet(self, snippet, before):
         """Expands the given snippet, and handles everything
         that needs to be done with it."""
-        if _vim.eval("g:UltiSnipsClearJumpTrigger") == "1":
-            _vim.command("call UltiSnips#MapInnerKeys()")
+        _vim.command("call UltiSnips#map_keys#MapInnerKeys()")
+
         # Adjust before, maybe the trigger is not the complete word
         text_before = before
         if snippet.matched:

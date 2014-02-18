@@ -124,6 +124,9 @@ permission to use his snippets.
 =============================================================================
 2. Installation and Updating                       *UltiSnips-installnupdate*
 
+The recommended way of getting ultisnips is to track SirVer/ultisnips on
+github. The master branch is always stable.
+
 Using Pathogen:                                     *UltiSnips-using-pathogen*
 
 If you are a pathogen user, you can track the official mirror of UltiSnips on
@@ -135,19 +138,10 @@ github: >
 See the pathogen documentation for more details on how to update a bundle.
 
 
-Using Bzr:                                               *UltiSnips-using-bzr*
+Using a downloaded packet:               *UltiSnips-using-a-downloaded-packet*
 
-To track the main repository on github, you will need bzr
-(http://bazaar-vcs.org/). bzr is available in all major Linux distributions
-(packaged as bzr or bazaar) and can be easily installed under Mac OS X: >
-   $ pip install bzr
-
-Using bzr, checkout UltiSnips into a directory of your choice. >
-   $ cd ~/.vim/
-   $ bzr get lp:ultisnips ultisnips_rep
-
-Then add this directory to your Vim runtime path by adding this line to your
-vimrc file. >
+Download the packet and unpack into a directory of your choice. Then add this
+directory to your Vim runtime path by adding this line to your vimrc file. >
    set runtimepath+=~/.vim/ultisnips_rep
 
 UltiSnips also needs that Vim sources files from the ftdetect/ directory.
@@ -159,15 +153,6 @@ therefore have to symlink/copy the files: >
 Restart Vim and UltiSnips should work. To access the help, use >
    :helptags ~/.vim/ultisnips_rep/doc
    :help UltiSnips
-
-To update an installation, simply pull the latest revision: >
-   $ cd ~/.vim/ultisnips_rep
-   $ bzr pull
-
-Using a downloaded packet:               *UltiSnips-using-a-downloaded-packet*
-
-Download the packet and unpack into a directory of your choice. Add the path
-to runtimepath. See |UltiSnips-using-bzr| for an example.
 
 =============================================================================
 3. Settings & Commands                                   *UltiSnips-settings*
@@ -240,9 +225,13 @@ vimrc file. >
    let g:UltiSnipsJumpForwardTrigger="<tab>"
    let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
-Note that the default value for g:UltiSnipsJumpBackwardTrigger interferes with
-the built-in complete function: |i_CTRL-X_CTRL-K|. A workaround is to add the
-following to your vimrc file. >
+UltiSnips will only map the jump triggers while a snippet is active to
+interfer as little as possible with other mappings. 
+
+The default value for g:UltiSnipsJumpBackwardTrigger interferes with the
+built-in complete function: |i_CTRL-X_CTRL-K|. A workaround is to add the
+following to your vimrc file or switching to a plugin like Supertab or
+YouCompleteMe. >
    inoremap <c-x><c-k> <c-x><c-k>
 
 3.2.1 Using your own trigger functions           *UltiSnips-trigger-functions*
@@ -387,11 +376,10 @@ UltiSnips provides some functions for extending core functionality.
  3.5.1 UltiSnips#AddSnippet                            *UltiSnips#AddSnippet*
 
 The first function is UltiSnips#AddSnippet(trigger, value, description,
-options, ...). It adds a new snippet with the provided trigger, value,
+options, filetyp="all"). It adds a new snippet with the provided trigger, value,
 description, and options to the current list of snippets. See
 |UltiSnips-syntax| for details on the meaning of the function arguments. All
-arguments are strings. An optional fifth argument can be used to specify the
-filetype for the new snippet.
+arguments are strings.
 
 
  3.5.2 UltiSnips#Anon                                        *UltiSnips#Anon*
@@ -936,7 +924,7 @@ Hello World                                                     HELLO WORLD
 
 Python global functions can be stored in a python module and then imported.
 This makes global functions easily accessible to all snippet files. Since Vim
-7.4 you can just drop python files into ~/.vim/pythonx and you an import them
+7.4 you can just drop python files into ~/.vim/pythonx and import them
 directly inside your snippets. For example to use
 ~/.vim/pythonx/my_snippets_helpers.py  >
 
@@ -976,16 +964,15 @@ Thanks for suggesting UltiSnips!
 Yours sincerely,
 Paul
 
-
 You can use <c-j> to jump to the next tabstop, and <c-k> to jump to the
 previous. The <Tab> key was not used for jumping forward because many people
 (myself included) use <Tab> for completion. See |UltiSnips-triggers| for
 help on defining different keys for tabstops.
 
-Many times it is useful to have some default text for a tabstop. The default
-text may be a value commonly used for the variable component, or it may be a
-word or phrase that reminds you what is expected for the variable component.
-To include default text, the syntax is '${1:value}'.
+It is often useful to have some default text for a tabstop. The default text
+may be a value commonly used for the variable component, or it may be a word
+or phrase that reminds you what is expected for the variable component. To
+include default text, the syntax is '${1:value}'.
 
 The following example illustrates a snippet for the shell 'case' statement.
 The tabstops use default values to remind the user of what value is expected.
@@ -1007,7 +994,6 @@ esac
 Sometimes it is useful to have a tabstop within a tabstop. To do this, simply
 include the nested tabstop as part of the default text. Consider the following
 example illustrating an HTML anchor snippet.
-
 
 ------------------- SNIP -------------------
 snippet a
@@ -1070,7 +1056,6 @@ a<tab>http://www.google.com<c-j><BS><c-j>Google ->
 <a href="http://www.google.com">
     Google
 </a>
-
 
 The default text of tabstops can also contain mirrors, transformations or
 interpolation.
@@ -1286,6 +1271,9 @@ that are aware of UltiSnips and use it to improve the user experience. This is
 an incomplete list - if you want to have your plugin listed here, just sent me
 a pull request.
 
+YouCompleteMe - comes with out of the box completion support for UltiSnips. It
+offers a really nice completion dialogue for snippets.
+
 Supertab - UltiSnips has built-in support for Supertab. Just use a recent
 enough version of both plugins and <tab> will either expand a snippet or defer
 to Supertab for expansion.
@@ -1306,8 +1294,6 @@ You can contribute snippets or patches in various ways. The methods are listed
 below in order of convenience for me. Please be as convenient as you
 can be :)
 
-* Clone the repository on launchpad (bzr clone lp:ultisnips), make fixes, push
-  the branch and send a merge request on launchpad.
 * Clone the repository on GitHub (git clone git@github.com:SirVer/ultisnips.git),
   make your changes and send a pull request on GitHub.
 * Make a patch, report a bug/feature request (see below) and attach the patch
@@ -1316,8 +1302,7 @@ can be :)
 * Send me an Email with the changed files only.
 
 You can contribute by fixing or reporting bugs in our issue tracker:
-https://bugs.launchpad.net/ultisnips
-
+https://github.com/sirver/ultisnips/issues
 
 If you like this plugin, please vote for it on its Vim script page >
     http://www.vim.org/scripts/script.php?script_id=2715
@@ -1327,19 +1312,17 @@ It is life-changing for me. Maybe it is for you too.
 =============================================================================
 7. Contact                                                *UltiSnips-contact*
 
-You can reach me at SirVer -AT- gmx -ADOT- de. You can also contact me through
-the UltiSnips launchpad project page at https://launchpad.net/ultisnips/. The
-launchpad project has an 'Answers' page where you can ask me questions and a
-bug tracker where you can report bugs and issues.
+You can reach me at SirVer -AT- gmx -ADOT- de.
 
 This project aims to be the one-for-all solution for Snippets for Vim. If you
-miss a feature or find a bug, please contact me or file a support ticket.
+miss a feature or find a bug, please contact me or add an issues to our issues
+tracker.
 
 =============================================================================
 8. Contributors                                      *UltiSnips-contributors*
 
 The primary developer of UltiSnips is SirVer (Holger Rapp). The following
-individuals have contributed code and snippets to UltiSnips.
+individuals have contributed to UltiSnips.
 
 
 8.1 Patches & Coding                                 *UltiSnips-contricoding*

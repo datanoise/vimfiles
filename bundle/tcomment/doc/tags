@@ -24,6 +24,7 @@
 <Plug>TComment-<c-_>r	tcomment.txt	/*<Plug>TComment-<c-_>r*
 <Plug>TComment-<c-_>s	tcomment.txt	/*<Plug>TComment-<c-_>s*
 <Plug>TComment-ic	tcomment.txt	/*<Plug>TComment-ic*
+b:tcomment_def_{NAME}	tcomment.txt	/*b:tcomment_def_{NAME}*
 g:tcomment#blank_lines	tcomment.txt	/*g:tcomment#blank_lines*
 g:tcomment#ignore_char_type	tcomment.txt	/*g:tcomment#ignore_char_type*
 g:tcomment#ignore_comment_def	tcomment.txt	/*g:tcomment#ignore_comment_def*
@@ -36,6 +37,7 @@ g:tcomment#syntax_substitute	tcomment.txt	/*g:tcomment#syntax_substitute*
 g:tcommentBlockC2	tcomment.txt	/*g:tcommentBlockC2*
 g:tcommentBlockXML	tcomment.txt	/*g:tcommentBlockXML*
 g:tcommentGuessFileType	tcomment.txt	/*g:tcommentGuessFileType*
+g:tcommentGuessFileType_blade	tcomment.txt	/*g:tcommentGuessFileType_blade*
 g:tcommentGuessFileType_django	tcomment.txt	/*g:tcommentGuessFileType_django*
 g:tcommentGuessFileType_dsl	tcomment.txt	/*g:tcommentGuessFileType_dsl*
 g:tcommentGuessFileType_eruby	tcomment.txt	/*g:tcommentGuessFileType_eruby*
@@ -76,6 +78,7 @@ n_<Plug>TComment-gcc	tcomment.txt	/*n_<Plug>TComment-gcc*
 tcomment#Comment()	tcomment.txt	/*tcomment#Comment()*
 tcomment#CommentAs()	tcomment.txt	/*tcomment#CommentAs()*
 tcomment#DefineType()	tcomment.txt	/*tcomment#DefineType()*
+tcomment#GetCommentDef()	tcomment.txt	/*tcomment#GetCommentDef()*
 tcomment#GuessCommentType()	tcomment.txt	/*tcomment#GuessCommentType()*
 tcomment#Operator()	tcomment.txt	/*tcomment#Operator()*
 tcomment#OperatorAnyway()	tcomment.txt	/*tcomment#OperatorAnyway()*

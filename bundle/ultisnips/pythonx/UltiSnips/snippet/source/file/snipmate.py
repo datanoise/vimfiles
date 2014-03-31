@@ -12,14 +12,6 @@ from UltiSnips.snippet.source.file._base import SnippetFileSource
 from UltiSnips.snippet.source.file._common import handle_extends
 from UltiSnips.text import LineIterator, head_tail
 
-# TODO(sirver): garbas/snipMate supports guard expressions. I could not figure
-# out how the work though and therefore did not implement them. They should be
-# fairly straightforward to add if I understand their purpose correctly.
-
-# TODO(sirver): the snipMate docs state that a snippet without description gets
-# overwritten by one with the same trigger but without description. I find this
-# silly and will only implement if people start complaining.
-
 def _splitall(path):
     """Split 'path' into all its components."""
     # From http://my.safaribooksonline.com/book/programming/
@@ -57,9 +49,9 @@ def snipmate_files_for(ft):
                 ret.add(fn)
     return ret
 
-def _parse_snippet_file(content, filename):
+def _parse_snippet_file(content, full_filename):
     """Parses 'content' assuming it is a .snippet file and yields events."""
-    filename = filename[:-len(".snippet")]  # strip extension
+    filename = full_filename[:-len(".snippet")]  # strip extension
     segments = _splitall(filename)
     segments = segments[segments.index("snippets")+1:]
     assert len(segments) in (2, 3)
@@ -70,10 +62,12 @@ def _parse_snippet_file(content, filename):
     # Chomp \n if any.
     if content and content.endswith(os.linesep):
         content = content[:-len(os.linesep)]
-    yield "snippet", (SnipMateSnippetDefinition(trigger, content, description),)
+    yield "snippet", (SnipMateSnippetDefinition(trigger, content,
+        description, full_filename),)
 
-def _parse_snippet(line, lines):
+def _parse_snippet(line, lines, filename):
     """Parse a snippet defintions."""
+    start_line_index = lines.line_index
     trigger, description = head_tail(line[len("snippet"):].lstrip())
     content = ""
     while True:
@@ -88,9 +82,9 @@ def _parse_snippet(line, lines):
         content += line
     content = content[:-1]  # Chomp the last newline
     return "snippet", (SnipMateSnippetDefinition(
-        trigger, content, description),)
+        trigger, content, description, "%s:%i" % (filename, start_line_index)),)
 
-def _parse_snippets_file(data):
+def _parse_snippets_file(data, filename):
     """Parse 'data' assuming it is a .snippets file. Yields events in the
     file."""
     lines = LineIterator(data)
@@ -102,7 +96,7 @@ def _parse_snippets_file(data):
         if head == "extends":
             yield handle_extends(tail, lines.line_index)
         elif head in "snippet":
-            snippet = _parse_snippet(line, lines)
+            snippet = _parse_snippet(line, lines, filename)
             if snippet is not None:
                 yield snippet
         elif head and not head.startswith('#'):
@@ -118,5 +112,5 @@ class SnipMateFileSource(SnippetFileSource):
             for event, data in _parse_snippet_file(filedata, filename):
                 yield event, data
         else:
-            for event, data in _parse_snippets_file(filedata):
+            for event, data in _parse_snippets_file(filedata, filename):
                 yield event, data

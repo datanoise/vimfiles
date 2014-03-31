@@ -984,7 +984,7 @@ function! s:CreateAutocommands() abort
         " was changed by an external command; see commit 17d199f
         autocmd BufReadPost,BufEnter,CursorHold,FileType * call
                     \ s:AutoUpdate(fnamemodify(expand('<afile>'), ':p'), 0)
-        autocmd BufDelete,BufUnload,BufWipeout * call
+        autocmd BufDelete,BufWipeout * call
                     \ s:known_files.rm(fnamemodify(expand('<afile>'), ':p'))
 
         autocmd QuickFixCmdPre  * let s:tagbar_qf_active = 1
@@ -2527,7 +2527,9 @@ function! s:ToggleSort() abort
         return
     endif
 
+    " Save the tag the cursor is currently on
     let curline = line('.')
+    let taginfo = s:GetTagInfo(curline, 0)
 
     match none
 
@@ -2544,7 +2546,13 @@ function! s:ToggleSort() abort
     call s:RenderContent()
     call s:SetStatusLine('current')
 
-    execute curline
+    " If we were on a tag before sorting then jump to it, otherwise restore
+    " the cursor to the current line
+    if !empty(taginfo)
+        execute taginfo.tline
+    else
+        execute curline
+    endif
 endfunction
 
 " Display {{{1

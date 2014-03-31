@@ -13,34 +13,26 @@ from UltiSnips.snippet.source.file._base import SnippetFileSource
 from UltiSnips.snippet.source.file._common import handle_extends
 from UltiSnips.text import LineIterator, head_tail
 
+def find_snippet_files(ft, directory):
+    """Returns all matching snippet files for 'ft' in 'directory'."""
+    patterns = ["%s.snippets", "%s_*.snippets", os.path.join("%s", "*")]
+    ret = set()
+    directory = os.path.expanduser(directory)
+    for pattern in patterns:
+        for fn in glob.glob(os.path.join(directory, pattern % ft)):
+            ret.add(os.path.realpath(fn))
+    return ret
 
-def _plugin_dir():
-    """Calculates the plugin directory for UltiSnips."""
-    directory = __file__
-    for _ in range(10):
-        directory = os.path.dirname(directory)
-        if (os.path.isdir(os.path.join(directory, "plugin")) and
-            os.path.isdir(os.path.join(directory, "doc"))):
-            return directory
-    raise Exception("Unable to find the plugin directory.")
-
-def base_snippet_files_for(ft, default=True):
-    """Returns a list of snippet files matching the given filetype (ft).
-    If default is set to false, it doesn't include shipped files.
-
-    Searches through each path in 'runtimepath' in reverse order,
-    in each of these, it searches each directory name listed in
-    'g:UltiSnipsSnippetDirectories' in order, then looks for files in these
-    directories called 'ft.snippets' or '*_ft.snippets' replacing ft with
-    the filetype.
-    """
+def find_all_snippet_files(ft):
+    """Returns all snippet files matching 'ft' in the given runtime path
+    directory."""
     if _vim.eval("exists('b:UltiSnipsSnippetDirectories')") == "1":
         snippet_dirs = _vim.eval("b:UltiSnipsSnippetDirectories")
     else:
         snippet_dirs = _vim.eval("g:UltiSnipsSnippetDirectories")
 
-    base_snippets = os.path.realpath(os.path.join(_plugin_dir(), "UltiSnips"))
-    ret = []
+    patterns = ["%s.snippets", "%s_*.snippets", os.path.join("%s", "*")]
+    ret = set()
     for rtp in _vim.eval("&runtimepath").split(','):
         for snippet_dir in snippet_dirs:
             if snippet_dir == "snippets":
@@ -50,18 +42,14 @@ def base_snippet_files_for(ft, default=True):
                     "directory for UltiSnips snippets.")
             pth = os.path.realpath(os.path.expanduser(
                 os.path.join(rtp, snippet_dir)))
-            patterns = ["%s.snippets", "%s_*.snippets", os.path.join("%s", "*")]
-            if not default and pth == base_snippets:
-                patterns.remove("%s.snippets")
-
             for pattern in patterns:
                 for fn in glob.glob(os.path.join(pth, pattern % ft)):
-                    if fn not in ret:
-                        ret.append(fn)
+                    ret.add(fn)
     return ret
 
-def _handle_snippet_or_global(line, lines, python_globals, priority):
+def _handle_snippet_or_global(filename, line, lines, python_globals, priority):
     """Parses the snippet that begins at the current line."""
+    start_line_index = lines.line_index
     descr = ""
     opts = ""
 
@@ -109,11 +97,12 @@ def _handle_snippet_or_global(line, lines, python_globals, priority):
         python_globals[trig].append(content)
     elif snip == "snippet":
         return "snippet", (UltiSnipsSnippetDefinition(priority, trig, content,
-            descr, opts, python_globals),)
+            descr, opts, python_globals,
+            "%s:%i" % (filename, start_line_index)),)
     else:
         return "error", ("Invalid snippet type: '%s'" % snip, lines.line_index)
 
-def _parse_snippets_file(data):
+def _parse_snippets_file(data, filename):
     """Parse 'data' assuming it is a snippet file. Yields events in the
     file."""
 
@@ -126,7 +115,7 @@ def _parse_snippets_file(data):
 
         head, tail = head_tail(line)
         if head in ("snippet", "global"):
-            snippet = _handle_snippet_or_global(line, lines,
+            snippet = _handle_snippet_or_global(filename, line, lines,
                     python_globals, current_priority)
             if snippet is not None:
                 yield snippet
@@ -146,8 +135,8 @@ class UltiSnipsFileSource(SnippetFileSource):
     """Manages all snippets definitions found in rtp for ultisnips."""
 
     def _get_all_snippet_files_for(self, ft):
-        return set(base_snippet_files_for(ft))
+        return find_all_snippet_files(ft)
 
     def _parse_snippet_file(self, filedata, filename):
-        for event, data in _parse_snippets_file(filedata):
+        for event, data in _parse_snippets_file(filedata, filename):
             yield event, data

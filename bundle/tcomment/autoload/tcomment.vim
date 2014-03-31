@@ -3,7 +3,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-09-17.
 " @Last Change: 2014-02-05.
-" @Revision:    1551
+" @Revision:    1565
 
 " call tlog#Log('Load: '. expand('<sfile>')) " vimtlib-sfile
 
@@ -300,10 +300,16 @@ function! tcomment#DefineType(name, commentdef, ...)
     let s:types_dirty = 1
 endf
 
-" :nodoc:
-" Return comment definition
-function! tcomment#GetCommentDef(name)
-    return get(s:definitions, a:name, "")
+" Return the comment definition for NAME.
+"                                                       *b:tcomment_def_{NAME}*
+" Return b:tcomment_def_{NAME} if the variable exists. Otherwise return 
+" the comment definition as set with |tcomment#DefineType|.
+function! tcomment#GetCommentDef(name, ...)
+    if exists('b:tcomment_def_'. a:name)
+        return b:tcomment_def_{a:name}
+    else
+        return get(s:definitions, a:name, a:0 >= 1 ? a:1 : '')
+    endif
 endf
 
 " :nodoc:
@@ -605,7 +611,17 @@ function! tcomment#Comment(beg, end, ...)
     " TLogVAR cursor_pos
     let s:cursor_pos = []
     if comment_mode =~# 'i'
-        let comment_mode = substitute(comment_mode, '\Ci', line("'<") == line("'>") ? 'I' : 'G', 'g')
+        let blnum = line("'<")
+        if blnum == line("'>")
+            if virtcol('.') <= indent(blnum)
+                let i_mode = 'G'
+            else
+                let i_mode = 'I'
+            endif
+        else
+            let i_mode = 'G'
+        endif
+        let comment_mode = substitute(comment_mode, '\Ci', i_mode, 'g')
         " TLogVAR 1, comment_mode
     endif
     let [lbeg, cbeg, lend, cend] = s:GetStartEnd(a:beg, a:end, comment_mode)
@@ -1665,6 +1681,7 @@ function! s:GuessFileType(beg, end, comment_mode, filetype, ...)
         while m <= le
             let syntax_name = s:GetSyntaxName(n, m)
             " TLogVAR syntax_name, n, m
+            unlet! ftype_map
             let ftype_map = get(g:tcommentSyntaxMap, syntax_name, '')
             " TLogVAR ftype_map
             if !empty(ftype_map) && type(ftype_map) == 4
@@ -1886,10 +1903,10 @@ function! s:GuessCustomCommentString(ft, comment_mode, ...)
     let default_supports_comment_mode = get(default_cdef, 'comment_mode', custom_comment_mode)
     " TLogVAR default, default_supports_comment_mode
     if comment_mode =~# '[IB]' && !empty(custom_comment_mode)
-        let def = s:definitions[custom_comment_mode]
+        let def = tcomment#GetCommentDef(custom_comment_mode)
         " TLogVAR 1, def
     elseif !empty(custom_comment)
-        let def = s:definitions[custom_comment]
+        let def = tcomment#GetCommentDef(custom_comment)
         let comment_mode = s:GuessCommentMode(comment_mode, supported_comment_mode)
         " TLogVAR 3, def, comment_mode
     elseif !empty(default)

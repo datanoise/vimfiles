@@ -7,6 +7,11 @@ if exists('g:loaded_bundler') || &cp || v:version < 700
 endif
 let g:loaded_bundler = 1
 
+if !exists('g:dispatch_compilers')
+  let g:dispatch_compilers = {}
+endif
+call extend(g:dispatch_compilers, {'bundle exec': ''})
+
 " Utility {{{1
 
 function! s:function(name) abort
@@ -145,7 +150,7 @@ endfunction
 augroup bundler_syntax
   autocmd!
   autocmd BufNewFile,BufRead */.bundle/config set filetype=yaml
-  autocmd BufNewFile,BufRead Gemfile set filetype=ruby
+  autocmd BufNewFile,BufRead Gemfile if &filetype !=# 'ruby' | setf ruby | endif
   autocmd Syntax ruby if expand('<afile>:t') ==? 'gemfile' | call s:syntaxfile() | endif
   autocmd BufNewFile,BufRead [Gg]emfile.lock setf gemfilelock
   autocmd FileType gemfilelock set suffixesadd=.rb
@@ -172,26 +177,45 @@ function! s:FindBundlerRoot(path) abort
   return ''
 endfunction
 
-function! s:Detect(path)
+function! s:Detect(path) abort
   if !exists('b:bundler_root')
     let dir = s:FindBundlerRoot(a:path)
     if dir != ''
       let b:bundler_root = dir
     endif
   endif
-  if exists('b:bundler_root')
+  return exists('b:bundler_root')
+endfunction
+
+function! s:Setup(path) abort
+  if s:Detect(a:path)
     silent doautocmd User Bundler
+  endif
+endfunction
+
+function! s:ProjectileDetect() abort
+  if s:Detect(g:projectile_file)
+    call projectile#append(b:bundler_root, {
+          \ 'Gemfile': {'dispatch': ['bundle', '--gemfile={file}'], 'alternate': 'Gemfile.lock'},
+          \ 'Gemfile.lock': {'alternate': 'Gemfile'}})
+    for projections in bundler#project().projections_list()
+      call projectile#append(b:bundler_root, projections)
+    endfor
   endif
 endfunction
 
 augroup bundler
   autocmd!
-  autocmd FileType               * call s:Detect(expand('<afile>:p'))
+  autocmd FileType               * call s:Setup(expand('<afile>:p'))
   autocmd BufNewFile,BufReadPost *
         \ if empty(&filetype) |
-        \   call s:Detect(expand('<afile>:p')) |
+        \   call s:Setup(expand('<afile>:p')) |
         \ endif
-  autocmd VimEnter * if expand('<amatch>')==''|call s:Detect(getcwd())|endif
+  autocmd User ProjectileDetect call s:ProjectileDetect()
+  autocmd User ProjectileActivate
+        \ if exists('b:bundler_root') && !exists(':Bopen') |
+        \   silent doautocmd User Bundler |
+        \ endif
 augroup END
 
 " }}}1
@@ -275,17 +299,21 @@ function! s:project_paths(...) dict abort
     let gem_paths = []
     if exists('$GEM_PATH')
       let gem_paths = split($GEM_PATH, has('win32') ? ';' : ':')
-    else
-      try
-        exe chdir s:fnameescape(self.path())
-        let gem_paths = split(system(prefix.'ruby -rubygems -e "print Gem.path.join(%(;))"'), ';')
-        exe chdir s:fnameescape(cwd)
-      finally
-        exe chdir s:fnameescape(cwd)
-      endtry
     endif
 
-    let abi_version = matchstr(get(gem_paths, 0, '1.9.1'), '[0-9.]\+$')
+    try
+      exe chdir s:fnameescape(self.path())
+
+      if len(gem_paths) == 0
+        let gem_paths = split(system(prefix.'ruby -rubygems -e "print Gem.path.join(%(;))"'), ';')
+      endif
+
+      let abi_version = system('ruby -rrbconfig -e "print RbConfig::CONFIG[\"ruby_version\"]"')
+      exe chdir s:fnameescape(cwd)
+    finally
+      exe chdir s:fnameescape(cwd)
+    endtry
+
     for config in [expand('~/.bundle/config'), self.path('.bundle/config')]
       if filereadable(config)
         let body = join(readfile(config), "\n")
@@ -356,6 +384,9 @@ function! s:project_paths(...) dict abort
       endfor
     endfor
 
+    if has_key(self, '_projections_list')
+      call remove(self, '_projections_list')
+    endif
     let self._path_time = time
     let self._paths = paths
     let self._sorted = sort(values(paths))
@@ -388,7 +419,28 @@ function! s:project_has(gem) dict abort
   return has_key(self.versions(), a:gem)
 endfunction
 
-call s:add_methods('project', ['locked', 'gems', 'paths', 'sorted', 'versions', 'has'])
+function! s:project_projections_list() dict abort
+  call self.paths()
+  if !has_key(self, '_projections_list')
+    let self._projections_list = []
+    let list = self._projections_list
+    if !empty(get(g:, 'gem_projections', {}))
+      for name in keys(self.versions())
+        if has_key(g:gem_projections, name)
+          call add(list, g:gem_projections[name])
+        endif
+      endfor
+    endif
+    for path in self.sorted()
+      if filereadable(path . '/lib/projections.json')
+        call add(list, projectile#json_parse(readfile(path . '/lib/projections.json')))
+      endif
+    endfor
+  endif
+  return self._projections_list
+endfunction
+
+call s:add_methods('project', ['locked', 'gems', 'paths', 'sorted', 'versions', 'has', 'projections_list'])
 
 " }}}1
 " Buffer {{{1

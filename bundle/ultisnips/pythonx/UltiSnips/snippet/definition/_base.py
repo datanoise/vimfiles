@@ -8,6 +8,7 @@ import re
 from UltiSnips import _vim
 from UltiSnips.compatibility import as_unicode
 from UltiSnips.indent_util import IndentUtil
+from UltiSnips.text import escape
 from UltiSnips.text_objects import SnippetInstance
 
 def _words_for_line(trigger, before, num_words=None):
@@ -38,7 +39,7 @@ class SnippetDefinition(object):
     _TABS = re.compile(r"^\t*")
 
     def __init__(self, priority, trigger, value, description,
-            options, globals):
+            options, globals, location):
         self._priority = priority
         self._trigger = as_unicode(trigger)
         self._value = as_unicode(value)
@@ -47,6 +48,11 @@ class SnippetDefinition(object):
         self._matched = ""
         self._last_re = None
         self._globals = globals
+        self._location = location
+
+        # Make sure that we actually match our trigger in case we are
+        # immediately expanded.
+        self.matches(self._trigger)
 
     def __repr__(self):
         return "_SnippetDefinition(%r,%s,%s,%s)" % (
@@ -92,6 +98,11 @@ class SnippetDefinition(object):
         could_match()."""
         return self._matched
 
+    @property
+    def location(self):
+        """Where this snippet was defined."""
+        return self._location
+
     def matches(self, trigger):
         """Returns True if this snippet matches 'trigger'."""
         # If user supplies both "w" and "i", it should perhaps be an
@@ -115,8 +126,8 @@ class SnippetDefinition(object):
             match = (words_suffix == self._trigger)
             if match and words_prefix:
                 # Require a word boundary between prefix and suffix.
-                boundary_chars = words_prefix[-1:] + words_suffix[:1]
-                boundary_chars = boundary_chars.replace('"', '\\"')
+                boundary_chars = escape(words_prefix[-1:] + \
+                        words_suffix[:1], r'\"')
                 match = _vim.eval('"%s" =~# "\\\\v.<."' % boundary_chars) != '0'
         elif "i" in self._opts:
             match = words.endswith(self._trigger)
@@ -152,7 +163,7 @@ class SnippetDefinition(object):
             match = self._re_match(trigger)
         elif "w" in self._opts:
             # Trim non-empty prefix up to word boundary, if present.
-            qwords = words.replace('"', '\\"')
+            qwords = escape(words, r'\"')
             words_suffix = _vim.eval(
                     'substitute("%s", "\\\\v^.+<(.+)", "\\\\1", "")' % qwords)
             match = self._trigger.startswith(words_suffix)

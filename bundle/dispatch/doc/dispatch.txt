@@ -41,13 +41,24 @@ COMMANDS                                        *dispatch-commands*
                         no compiler plugin is found, the generic format
                         %+G%.%# is used.
 
-                        :Dispatch picks a compiler by looking for
-                        CompilerSet makeprg={program} in compiler plugins.
+                        :Dispatch picks a compiler by looking for either
+                        CompilerSet makeprg={program}\ [arguments] or
+                        CompilerSet makeprg={command} in compiler plugins.
                         To force a given {program} to use a given {compiler},
                         create ~/.vim/after/compiler/{compiler}.vim and add to
                         it a line like the following: >
 
                         " CompilerSet makeprg={program}
+<
+                        If you need more control, *g:dispatch_compilers* can
+                        be set to a dictionary with commands for keys and
+                        compiler plugins for values.  Use an empty key to skip
+                        the matched string and try again with the rest of the
+                        command.
+>
+                        let g:dispatch_compilers = {
+                              \ 'latex': 'tex',
+                              \ 'bundle exec': ''}
 <
                                                 *b:dispatch*
 :Dispatch[!]            Invoke |:Dispatch| with the command and arguments

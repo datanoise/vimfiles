@@ -1,6 +1,6 @@
 " Location:     plugin/endwise.vim
 " Author:       Tim Pope <http://tpo.pe/>
-" Version:      1.1
+" Version:      1.2
 " License:      Same as Vim itself.  See :help license
 " GetLatestVimScripts: 2386 1 :AutoInstall: endwise.vim
 
@@ -75,6 +75,8 @@ if !exists('g:endwise_no_mappings')
     exe "imap <C-X><CR> ".maparg('<CR>', 'i')."<Plug>AlwaysEnd"
     exe "imap <CR> ".maparg('<CR>', 'i')."<Plug>DiscretionaryEnd"
   else
+    " imap <script> <C-X><CR> <CR><SID>AlwaysEnd
+    " imap <CR> <CR><Plug>DiscretionaryEnd
     imap <C-X><CR> <CR><Plug>AlwaysEnd
     " imap <CR>      <CR><Plug>DiscretionaryEnd
     imap <CR> <C-R>=pumvisible() ? "\<lt>c-y>" : <SID>preproc()<CR><Plug>DiscretionaryEnd

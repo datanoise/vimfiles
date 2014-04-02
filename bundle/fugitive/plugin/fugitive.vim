@@ -198,6 +198,7 @@ augroup fugitive
   autocmd FileType           netrw call fugitive#detect(expand('%:p'))
   autocmd User NERDTreeInit,NERDTreeNewRoot call fugitive#detect(b:NERDTreeRoot.path.str())
   autocmd VimEnter * if expand('<amatch>')==''|call fugitive#detect(getcwd())|endif
+  autocmd CmdWinEnter * call fugitive#detect(expand('#:p'))
   autocmd BufWinLeave * execute getwinvar(+bufwinnr(+expand('<abuf>')), 'fugitive_leave')
 augroup END
 
@@ -460,15 +461,15 @@ function! fugitive#buffer(...) abort
 endfunction
 
 function! s:buffer_getvar(var) dict abort
-  return getbufvar(bufname(self['#']), a:var)
+  return getbufvar(self['#'],a:var)
 endfunction
 
 function! s:buffer_setvar(var,value) dict abort
-  return setbufvar(bufname(self['#']), a:var, a:value)
+  return setbufvar(self['#'],a:var,a:value)
 endfunction
 
 function! s:buffer_getline(lnum) dict abort
-  return getbufline(bufname(self['#']), a:lnum)[0]
+  return get(getbufline(self['#'], a:lnum), 0, '')
 endfunction
 
 function! s:buffer_repo() dict abort
@@ -2268,6 +2269,7 @@ function! s:BufReadObject() abort
         endif
       elseif b:fugitive_type ==# 'blob'
         call s:ReplaceCmd(s:repo().git_command('cat-file',b:fugitive_type,hash))
+        setlocal nomodeline
       endif
     finally
       keepjumps call setpos('.',pos)

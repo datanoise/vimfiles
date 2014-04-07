@@ -10,7 +10,7 @@ let g:loaded_scriptease = 1
 " Utility {{{1
 
 function! s:function(name) abort
-  return function(substitute(a:name,'^s:',matchstr(expand('<sfile>'), '<SNR>\d\+_'),''))
+  return function(substitute(a:name,'^s:',matchstr(expand('<sfile>'), '.*\zs<SNR>\d\+_'),''))
 endfunction
 
 function! s:sub(str,pat,rep) abort
@@ -348,12 +348,12 @@ function! s:unlet_for(files) abort
   if empty(guards)
     return ''
   else
-    return 'unlet! '.join(guards, ' ')
+    return 'unlet! '.join(map(guards, '"g:".v:val'), ' ')
   endif
 endfunction
 
 function! s:lencompare(a, b)
-  return len(a:b) - len(a:b)
+  return len(a:a) - len(a:b)
 endfunction
 
 function! s:findinrtp(path)

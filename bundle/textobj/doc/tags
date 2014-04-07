@@ -216,6 +216,7 @@ textobj-user-changelog-0.4.0	textobj-user.txt	/*textobj-user-changelog-0.4.0*
 textobj-user-changelog-0.4.1	textobj-user.txt	/*textobj-user-changelog-0.4.1*
 textobj-user-changelog-0.4.2	textobj-user.txt	/*textobj-user-changelog-0.4.2*
 textobj-user-changelog-0.5.0	textobj-user.txt	/*textobj-user-changelog-0.5.0*
+textobj-user-changelog-0.6.0	textobj-user.txt	/*textobj-user-changelog-0.6.0*
 textobj-user-contents	textobj-user.txt	/*textobj-user-contents*
 textobj-user-example-between	textobj-user.txt	/*textobj-user-example-between*
 textobj-user-example-complex	textobj-user.txt	/*textobj-user-example-complex*
@@ -226,6 +227,7 @@ textobj-user-obsolete-api	textobj-user.txt	/*textobj-user-obsolete-api*
 textobj-user-obsolete-properties	textobj-user.txt	/*textobj-user-obsolete-properties*
 textobj-user-philosophy	textobj-user.txt	/*textobj-user-philosophy*
 textobj-user-reference	textobj-user.txt	/*textobj-user-reference*
+textobj-user-region-type	textobj-user.txt	/*textobj-user-region-type*
 textobj-user-specs	textobj-user.txt	/*textobj-user-specs*
 textobj-user.txt	textobj-user.txt	/*textobj-user.txt*
 v_ay	textobj-syntax.txt	/*v_ay*

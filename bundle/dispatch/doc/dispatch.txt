@@ -82,9 +82,14 @@ COMMANDS                                        *dispatch-commands*
                         with no arguments.
 
                                                 *dispatch-:Start*
-:Start {command}        Start a process in a new, focused window.
+:Start {command}        Start a process in a new, focused window.  If
+                        {command} and the current working directory match
+                        previous :Start invocation, focus it instead, if
+                        possible.
 
-:Start! {command}       Start a process in a new, unfocused window.
+:Start! {command}       Start a process in a new, unfocused window.  If
+                        {command} and the current working directory match
+                        previous :Start invocation, do nothing.
 
                                                 *b:start*
 :Start[!]               With no arguments, |:Start| the command given by
@@ -108,6 +113,8 @@ list.  (All other strategies use the GUI subsystem to get this to work.)
 The tmux strategy can be used from the GUI as well.  Either start Vim from
 inside of tmux or assign g:tmux_session.  This will use a new window for
 foreground makes rather than a split.
+
+Tmux 1.6 or newer is required.
 
 GNU Screen ~
 

@@ -40,11 +40,11 @@ CoffeeScript, Coco, Coq, CSS, Cucumber, CUDA, D, Dart, DocBook, Dust, Elixir,
 Erlang, eRuby, Fortran, Gentoo metadata, GLSL, Go, Haml, Haskell, Haxe,
 Handlebars, HSS, HTML, Java, JavaScript, JSON, JSX, LESS, Lex, Limbo, LISP,
 LLVM intermediate language, Lua, MATLAB, NASM, Objective-C, Objective-C++,
-OCaml, Perl, Perl POD, PHP, gettext Portable Object, Puppet, Python, Racket, R,
-reStructuredText, Ruby, Rust, SASS/SCSS, Scala, Slim, Tcl, TeX, Texinfo, Twig,
-TypeScript, Vala, Verilog, VHDL, VimL, xHtml, XML, XSLT, YACC, YAML, z80, Zope
-page templates, and zsh.  See the [wiki][3] for details about the corresponding
-supported checkers.
+OCaml, Perl, Perl POD, PHP, gettext Portable Object, OS X and iOS property
+lists, Puppet, Python, Racket, R, reStructuredText, Ruby, Rust, SASS/SCSS,
+Scala, Slim, Tcl, TeX, Texinfo, Twig, TypeScript, Vala, Verilog, VHDL, VimL,
+xHtml, XML, XSLT, YACC, YAML, z80, Zope page templates, and zsh.  See the
+[wiki][3] for details about the corresponding supported checkers.
 
 Below is a screenshot showing the methods that Syntastic uses to display syntax
 errors.  Note that, in practise, you will only have a subset of these methods
@@ -200,6 +200,30 @@ let g:syntastic_php_checkers = ['php', 'phpcs', 'phpmd']
 
 This is telling syntastic to run the `php` checker first, and if no errors are
 found, run `phpcs`, and then `phpmd`.
+
+You can also run checkers explicitly by calling `:SyntasticCheck <checker>`.
+
+e.g. to run `phpcs` and `phpmd`:
+```vim
+:SyntasticCheck phpcs phpmd
+```
+
+This works for any checkers available for the current filetype, even if they
+aren't listed in `g:syntastic_<filetype>_checkers`.  You can't run checkers for
+"foreign" filetypes though (e.g. you can't run, say, a Python checker if the
+current filetype is `php`).
+
+<a name="faqaggregate"></a>
+
+__Q. How can I display together the errors found by all checkers enabled for
+the current file?__
+
+A. Set `g:syntastic_aggregate_errors` to 1 in your vimrc:
+```vim
+let g:syntastic_aggregate_errors = 1
+```
+
+See `:help syntastic-aggregating-errors` for more details.
 
 <a name="faqlnext"></a>
 

@@ -22,8 +22,8 @@
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
 
-if !exists('*g:textobj_function_c_select')
-  function! g:textobj_function_c_select(object_type)
+if !exists('*Textobj_function_c_select')
+  function! Textobj_function_c_select(object_type)
     return s:select_{a:object_type}()
   endfunction
 
@@ -68,7 +68,7 @@ endif
 
 
 
-let b:textobj_function_select = function('g:textobj_function_c_select')
+let b:textobj_function_select = function('Textobj_function_c_select')
 
 
 

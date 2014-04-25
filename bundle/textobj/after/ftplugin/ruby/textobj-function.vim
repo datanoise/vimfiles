@@ -2,8 +2,8 @@
 " Version 0.1.0
 " Copyright (C) 2007-2009 Kent Sibilev
 
-if !exists('*g:textobj_function_ruby_select')
-  function! g:textobj_function_ruby_select(object_type)
+if !exists('*Textobj_function_ruby_select')
+  function! Textobj_function_ruby_select(object_type)
     return s:select_{a:object_type}()
   endfunction
 
@@ -46,7 +46,7 @@ if !exists('*g:textobj_function_ruby_select')
 endif
 
 if !exists('b:textobj_function_select')
-  let b:textobj_function_select = function('g:textobj_function_ruby_select')
+  let b:textobj_function_select = function('Textobj_function_ruby_select')
 end
 
 if exists('b:undo_ftplugin')

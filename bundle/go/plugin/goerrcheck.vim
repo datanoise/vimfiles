@@ -5,10 +5,6 @@ let g:go_loaded_errcheck = 1
 
 command! GoErrCheck call s:ErrCheck()
 
-if !exists('g:go_errcheck_bin')
-  let g:go_errcheck_bin = 'errcheck'
-endif
-
 function! s:ErrCheck() abort
   let out = system(g:go_errcheck_bin . ' ' . shellescape(expand('%:p:h')))
   if v:shell_error

@@ -1,21 +1,13 @@
-" needs https://code.google.com/p/rog-go/source/browse/exp/cmd/godef/godef.go
-
-if !exists("g:godef_command")
-    let g:godef_command = "godef"
+if exists("g:go_loaded_godef")
+  finish
 endif
+let g:go_loaded_godef = 1
 
-if !exists("g:godef_split")
-    let g:godef_split = 0
-endif
 
-if !exists("g:godef_same_file_in_same_window")
-    let g:godef_same_file_in_same_window=0
-endif
-
-function! s:currentOffset()
+function! s:current_offset()
     let pos = getpos(".")[1:2]
     if &encoding == 'utf-8'
-        let offs = line2byte(pos[0]) + pos[1]
+        let offs = line2byte(pos[0]) + pos[1] - 1
     else
         let c = pos[1]
         let buf = line('.') == 1 ? "" : (join(getline(1, pos[0] - 1), "\n") . "\n")
@@ -26,61 +18,56 @@ function! s:currentOffset()
 endfunction
 
 function s:execute_godef(args)
-    if &modified
-        " XXX not ideal, but I couldn't find a good way
-        "     to create a temporary buffer for use with
-        "     a filter
-        let filename=tempname()
-        echomsg filename
-        execute ":write " . filename
-    else
-        let filename=bufname("%")
-    endif
-
-    let cmd = g:godef_command . " -f=" . shellescape(filename) . " " . join(map(copy(a:args), 'shellescape(v:val)'))
-    let out=system(cmd)
+    let cmd = g:go_godef_bin . " -f=" . shellescape(expand("%")) . " -i " . join(map(copy(a:args), 'shellescape(v:val)'))
+    let out=system(cmd, join(getbufline(bufnr('%'), 1, '$'), "\n"))
     return out
-
 endfunction
 
-function! GodefUnderCursor()
-    call Godef("-o=" . s:currentOffset())
-endfunction
-
-function! GodefDefineUnderCursor()
-    let out = s:execute_godef(["-o=" . s:currentOffset(), "-t=true"])
+function! GodefSignature()
+    let out = s:execute_godef(["-o=" . s:current_offset(), "-t=true"])
     let out = substitute(substitute(out, '.\{-}\n', '', ''), '\n', ' ', 'g')
     echomsg out
 endfunction
 
+" modified and improved version of vim-godef
 function! Godef(...)
+    if !len(a:000)
+        let arg = "-o=" . s:current_offset()
+    else
+        let arg = a:1
+    endif
+
+    let out=s:execute_godef([arg])
 
     let old_errorformat = &errorformat
-    let &errorformat = "%f:%l:%v"
-
-    let out = s:execute_godef(a:000)
+    let &errorformat = "%f:%l:%c"
 
     if out =~ 'godef: '
         let out=substitute(out, '\n$', '', '')
         echom out
-    elseif g:godef_same_file_in_same_window == 1 && (out) =~ expand('%:t')
-        lexpr out
     else
-        if g:godef_split == 1
-            split
-        elseif g:godef_split == 2
-            tabnew
-        endif
         lexpr out
     end
-
     let &errorformat = old_errorformat
 endfunction
 
-autocmd FileType go nnoremap <buffer> gd :call GodefUnderCursor()<cr>
-autocmd FileType go nnoremap <buffer> gD :call GodefDefineUnderCursor()<cr>
-" augroup goDefine
-"     au!
-"     au CursorHold *.go nested call GodefDefineUnderCursor()
-" augroup END
-command! -range -nargs=1 Godef :call Godef(<q-args>)
+if !hasmapto('<Plug>(go-def)')
+  nnoremap <silent> <Plug>(go-def) :<C-u>call Godef()<CR>
+endif
+
+if !hasmapto('<Plug>(go-def-vertical)')
+  nnoremap <silent> <Plug>(go-def-vertical) :vsp <CR>:<C-u>call Godef()<CR>
+endif
+
+if !hasmapto('<Plug>(go-def-split)')
+  nnoremap <silent> <Plug>(go-def-split) :sp <CR>:<C-u>call Godef()<CR>
+endif
+
+if !hasmapto('<Plug>(go-def-tab)')
+  nnoremap <silent> <Plug>(go-def-tab) :tab split <CR>:<C-u>call Godef()<CR>
+endif
+
+
+command! -range -nargs=* GoDef :call Godef(<f-args>)
+autocmd FileType go nnoremap <buffer> gd :<C-u>call Godef()<CR>
+autocmd FileType go nnoremap <buffer> gD :call GodefSignature()<CR>

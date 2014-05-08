@@ -18,9 +18,13 @@
 "
 "       Flag to indicate whether to enable the commands listed above.
 "
-"   g:gofmt_command [default="gofmt"]
+"   g:go_fmt_command [default="gofmt"]
 "
 "       Flag naming the gofmt executable to use.
+"
+"   g:go_fmt_autosave [default=1]
+"
+"       Flag to auto call :Fmt when saved file
 "
 if exists("b:did_ftplugin_go_fmt")
     finish
@@ -30,20 +34,68 @@ if !exists("g:go_fmt_commands")
     let g:go_fmt_commands = 1
 endif
 
-if !exists("g:gofmt_command")
-    let g:gofmt_command = "gofmt"
+if !exists("g:go_fmt_command")
+    let g:go_fmt_command = g:go_goimports_bin
+endif
+
+if !exists('g:go_fmt_autosave')
+    let g:go_fmt_autosave = 1
+endif
+
+if !exists('g:go_fmt_fail_silently')
+    let g:go_fmt_fail_silently = 0
+endif
+
+if !exists('g:go_fmt_options')
+    let g:go_fmt_options = ''
+endif
+
+if g:go_fmt_autosave
+    autocmd BufWritePre <buffer> :GoFmt
 endif
 
 if g:go_fmt_commands
-    command! -buffer Fmt call s:GoFormat()
+    command! -buffer GoFmt call s:GoFormat()
+    command! -buffer GoDisableGoimports call s:GoDisableGoimports()
+    command! -buffer GoEnableGoimports call s:GoEnableGoimports()
 endif
 
+function! s:GoDisableGoimports()
+    let g:go_fmt_command = "gofmt"
+endfunction
+
+function! s:GoEnableGoimports()
+    let g:go_fmt_command = g:go_goimports_bin
+endfunction
+
+let s:got_fmt_error = 0
+
+"  modified and improved version, doesn't undo changes and break undo history
+"  - fatih 2014
 function! s:GoFormat()
-    let view = winsaveview()
-    silent execute "%!" . g:gofmt_command
-    if v:shell_error
+    let l:curw=winsaveview()
+    let l:tmpname=tempname()
+    call writefile(getline(1,'$'), l:tmpname)
+
+    let command = g:go_fmt_command . ' ' . g:go_fmt_options
+    let out = system(command . " " . l:tmpname)
+
+    "if there is no error on the temp file, gofmt our original file
+    if v:shell_error == 0
+        try | silent undojoin | catch | endtry
+        silent execute "%!" . command
+
+        " only clear quickfix if it was previously set, this prevents closing
+        " other quickfixs
+        if s:got_fmt_error 
+            let s:got_fmt_error = 0
+            call setqflist([])
+            cwindow
+        endif
+    elseif g:go_fmt_fail_silently == 0 
+        "otherwise get the errors and put them to quickfix window
         let errors = []
-        for line in getline(1, line('$'))
+        for line in split(out, '\n')
             let tokens = matchlist(line, '^\(.\{-}\):\(\d\+\):\(\d\+\)\s*\(.*\)')
             if !empty(tokens)
                 call add(errors, {"filename": @%,
@@ -55,13 +107,16 @@ function! s:GoFormat()
         if empty(errors)
             % | " Couldn't detect gofmt error format, output errors
         endif
-        undo
         if !empty(errors)
             call setqflist(errors, 'r')
+            echohl Error | echomsg "Gofmt returned error" | echohl None
         endif
-        echohl Error | echomsg "Gofmt returned error" | echohl None
+        let s:got_fmt_error = 1
+        cwindow
     endif
-    call winrestview(view)
+
+    call delete(l:tmpname)
+    call winrestview(l:curw)
 endfunction
 
 let b:did_ftplugin_go_fmt = 1

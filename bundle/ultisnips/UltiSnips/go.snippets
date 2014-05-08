@@ -128,4 +128,22 @@ snippet json "JSON field"
 \`json:"${1:displayName}"\`
 endsnippet
 
+snippet gof "go func() { ... }()"
+go func(${1}) {
+	${0}
+}(${2})
+endsnippet
+
+snippet fn "anonymous function"
+func(${1}) {
+	${0}
+}
+endsnippet
+
+snippet ife "if err != nil"
+if err != nil {
+	${0}
+}
+endsnippet
+
 # vim:ft=snippets:

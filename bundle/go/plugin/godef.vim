@@ -12,8 +12,7 @@ if !exists("g:godef_same_file_in_same_window")
     let g:godef_same_file_in_same_window=0
 endif
 
-
-function! GodefUnderCursor()
+function! s:currentOffset()
     let pos = getpos(".")[1:2]
     if &encoding == 'utf-8'
         let offs = line2byte(pos[0]) + pos[1]
@@ -23,11 +22,10 @@ function! GodefUnderCursor()
         let buf .= c == 1 ? "" : getline(pos[0])[:c-2]
         let offs = len(iconv(buf, &encoding, "utf-8"))
     endif
-    call Godef("-o=" . offs)
+    return offs
 endfunction
 
-function! Godef(arg)
-
+function s:execute_godef(args)
     if &modified
         " XXX not ideal, but I couldn't find a good way
         "     to create a temporary buffer for use with
@@ -39,10 +37,28 @@ function! Godef(arg)
         let filename=bufname("%")
     endif
 
-    let out=system(g:godef_command . " -f=" . shellescape(filename) . " " . shellescape(a:arg))
+    let cmd = g:godef_command . " -f=" . shellescape(filename) . " " . join(map(copy(a:args), 'shellescape(v:val)'))
+    let out=system(cmd)
+    return out
+
+endfunction
+
+function! GodefUnderCursor()
+    call Godef("-o=" . s:currentOffset())
+endfunction
+
+function! GodefDefineUnderCursor()
+    let out = s:execute_godef(["-o=" . s:currentOffset(), "-t=true"])
+    let out = substitute(substitute(out, '.\{-}\n', '', ''), '\n', ' ', 'g')
+    echomsg out
+endfunction
+
+function! Godef(...)
 
     let old_errorformat = &errorformat
     let &errorformat = "%f:%l:%v"
+
+    let out = s:execute_godef(a:000)
 
     if out =~ 'godef: '
         let out=substitute(out, '\n$', '', '')
@@ -62,4 +78,9 @@ function! Godef(arg)
 endfunction
 
 autocmd FileType go nnoremap <buffer> gd :call GodefUnderCursor()<cr>
+autocmd FileType go nnoremap <buffer> gD :call GodefDefineUnderCursor()<cr>
+" augroup goDefine
+"     au!
+"     au CursorHold *.go nested call GodefDefineUnderCursor()
+" augroup END
 command! -range -nargs=1 Godef :call Godef(<q-args>)

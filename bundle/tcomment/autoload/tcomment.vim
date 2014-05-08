@@ -3,7 +3,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-09-17.
 " @Last Change: 2014-02-05.
-" @Revision:    1615
+" @Revision:    1587
 
 " call tlog#Log('Load: '. expand('<sfile>')) " vimtlib-sfile
 
@@ -699,10 +699,10 @@ function! tcomment#Comment(beg, end, ...)
     " echom "DBG" string(a:000)
     let cms0 = s:BlockGetCommentRx(cdef)
     " TLogVAR cms0
-    "" make whitespace optional; this conflicts with comments that require some 
-    "" whitespace
+    " make whitespace optional; this conflicts with comments that require some 
+    " whitespace
     let cmt_check = substitute(cms0, '\([	 ]\)', '\1\\?', 'g')
-    "" turn commentstring into a search pattern
+    " turn commentstring into a search pattern
     " TLogVAR cmt_check
     let cmt_check = printf(cmt_check, '\(\_.\{-}\)')
     " TLogVAR cdef, cmt_check
@@ -1236,12 +1236,12 @@ function! s:StartPosRx(comment_mode, line, col)
 endf
 
 
-function! s:EndPosRx(comment_mode, lnum, col)
-    " TLogVAR a:comment_mode, a:lnum, a:col
+function! s:EndPosRx(comment_mode, line, col)
+    " TLogVAR a:comment_mode, a:line, a:col
     " if a:comment_mode =~# 'I'
-    "     return s:EndLineRx(a:lnum) . s:EndColRx(a:col)
+    "     return s:EndLineRx(a:line) . s:EndColRx(a:col)
     " else
-        return s:EndColRx(a:comment_mode, a:lnum, a:col)
+        return s:EndColRx(a:comment_mode, a:col)
     " endif
 endf
 
@@ -1277,12 +1277,9 @@ function! s:StartColRx(comment_mode, col, ...)
 endf
 
 
-function! s:EndColRx(comment_mode, lnum, pos)
-    " TLogVAR a:comment_mode, a:lnum, a:pos
-    let line = getline(a:lnum)
-    let cend = s:Strdisplaywidth(line)
-    " TLogVAR cend
-    if a:pos == 0 || a:pos >= cend
+function! s:EndColRx(comment_mode, pos)
+    " TLogVAR a:comment_mode, a:pos
+    if a:pos == 0
         return '\$'
     else
         if a:comment_mode =~? 'i' && a:comment_mode =~# 'o'
@@ -1306,7 +1303,7 @@ function! s:CommentDef(beg, end, checkRx, comment_mode, cbeg, cend)
     else
         let mdrx = '\V'. s:StartColRx(a:comment_mode, a:cbeg) .'\s\*'
     endif
-    let mdrx .= a:checkRx .'\s\*'. s:EndColRx(a:comment_mode, a:end, 0)
+    let mdrx .= a:checkRx .'\s\*'. s:EndColRx(a:comment_mode, 0)
     " let mdrx = '\V'. s:StartPosRx(a:comment_mode, beg, a:cbeg) .'\s\*'. a:checkRx .'\s\*'. s:EndPosRx(a:comment_mode, end, 0)
     " TLogVAR mdrx
     let line = getline(beg)
@@ -1486,10 +1483,8 @@ function! s:CommentBlock(beg, end, cbeg, cend, comment_mode, uncomment, checkRx,
         if a:uncomment
             let @t = substitute(@t, '\V\^\s\*'. a:checkRx .'\$', '\1', '')
             let tt = []
-            " TODO: Correctly handle foreign comments with inconsistent 
-            " whitespace around mx markers
-            let rx = '\V'. s:StartColRx(a:comment_mode, a:cbeg) . '\zs'. mx
-            " TLogVAR mx1, rx
+            let rx = '\V'. s:StartColRx(a:comment_mode, a:cbeg) . '\zs\s\*'. mx
+            " TLogVAR rx
             for line in split(@t, '\n')
                 let line1 = substitute(line, rx, '', 'g')
                 call add(tt, line1)

@@ -1,7 +1,7 @@
 "============================================================================
-"File:        phpcs.vim
+"File:        bro.vim
 "Description: Syntax checking plugin for syntastic.vim
-"Maintainer:  Martin Grenfell <martin.grenfell at gmail dot com>
+"Maintainer:  Justin Azoff <justin.azoff@gmail.com>
 "License:     This program is free software. It comes without any warranty,
 "             to the extent permitted by applicable law. You can redistribute
 "             it and/or modify it under the terms of the Do What The Fuck You
@@ -9,36 +9,35 @@
 "             See http://sam.zoy.org/wtfpl/COPYING for more details.
 "
 "============================================================================
-"
-" See here for details of phpcs
-"    - phpcs (see http://pear.php.net/package/PHP_CodeSniffer)
 
-if exists("g:loaded_syntastic_php_phpcs_checker")
+if exists("g:loaded_syntastic_bro_bro_checker")
     finish
 endif
-let g:loaded_syntastic_php_phpcs_checker = 1
+let g:loaded_syntastic_bro_bro_checker = 1
 
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! SyntaxCheckers_php_phpcs_GetLocList() dict
-    let makeprg = self.makeprgBuild({
-        \ 'args': '--tab-width=' . &tabstop,
-        \ 'args_after': '--report=csv' })
+function! SyntaxCheckers_bro_bro_IsAvailable() dict
+    return system(self.getExecEscaped() . ' --help') =~# '--parse-only'
+endfunction
 
+function! SyntaxCheckers_bro_bro_GetLocList() dict
+    let makeprg = self.makeprgBuild({ 'args_before': '--parse-only' })
+
+    "example: error in ./foo.bro, line 3: unknown identifier banana, at or "near "banana"
     let errorformat =
-        \ '%-GFile\,Line\,Column\,Type\,Message\,Source\,Severity%.%#,'.
-        \ '"%f"\,%l\,%v\,%t%*[a-zA-Z]\,"%m"\,%*[a-zA-Z0-9_.-]\,%*[0-9]%.%#'
+        \ '%trror in %f\, line %l: %m,' .
+        \ '%tarning in %f\, line %l: %m'
 
     return SyntasticMake({
         \ 'makeprg': makeprg,
-        \ 'errorformat': errorformat,
-        \ 'subtype': 'Style' })
+        \ 'errorformat': errorformat })
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
-    \ 'filetype': 'php',
-    \ 'name': 'phpcs' })
+    \ 'filetype': 'bro',
+    \ 'name': 'bro'})
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

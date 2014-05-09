@@ -610,6 +610,10 @@ let g:Powerline_theme = s:Powerline_theme
 let g:Powerline_colorscheme = s:Powerline_theme
 let g:Powerline_symbols = 'fancy'
 
+" powerline settings {{{2
+let g:UltiSnipsSnippetDirectories = ['UltiSnips']
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"
 let g:CSApprox_verbose_level = 0 " to shut it up
@@ -619,7 +623,6 @@ let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
 let $RUBYOPT = '' " I don't want any surprises like 'noexec' gem
 let go_highlight_space_tab_error = 0
 let go_highlight_trailing_whitespace_error = 0
-let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:netrw_liststyle = 3
 
 " }}}

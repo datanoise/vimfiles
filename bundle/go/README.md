@@ -26,6 +26,8 @@ plugins.
 * Checking with `errcheck` for unchecked errors.
 * Integrated and improved snippets. Supports `ultisnips` or `neosnippet`
 * Share your current code to [play.golang.org](http://play.golang.org)
+* On-the-fly type information about the word under the cursor
+* Tagbar support to show tags of the source code in a sidebar with `gotags` 
 
 ## Install
 
@@ -54,6 +56,9 @@ completion (completion by type) install:
 [YCM](https://github.com/Valloric/YouCompleteMe) or
 [neocomplete](https://github.com/Shougo/neocomplete.vim)
 
+To get displayed source code tag informations on a sidebar install
+[tagbar](https://github.com/majutsushi/tagbar).
+
 ## Usage
 
 All [features](#features) are enabled by default. There are no additional
@@ -80,6 +85,7 @@ Current commands:
 :GoBuild
 :GoInstall
 :GoPlay
+:GoInfo
 :GoTest
 :GoErrCheck
 :GoFiles
@@ -98,12 +104,11 @@ Current commands:
 vim-go has several `<Plug>` mappings which can be used to create custom
 mappings. Below are some examples you might find useful:
 
-
-Import the package under your cursor with `<leader>i` (useful if you have
-disabled auto import via `GoDisableGoimport`)
+Show type info for the word under your cursor with `<leader>i` (useful if you
+have disabled auto showing type info via `g:go_auto_type_info`)
 
 ```vim
-au FileType go nmap <Leader>i <Plug>(go-import)
+au FileType go nmap <Leader>i <Plug>(go-info)
 ```
 
 Open the relevant Godoc for the word under the cursor with `<leader>gd` or open
@@ -143,7 +148,7 @@ recommendations, you are free to create more advanced mappings or functions
 based on `:he go-commands`.
 
 ## Settings
-Below are some settings you might find useful. For the full list see `:he go-settings`:
+Below are some settings you might find useful. For the full list see `:he go-settings`.
 
 Disable opening browser after posting to your snippet to `play.golang.org`:
 
@@ -173,7 +178,7 @@ By default binaries are installed to `$HOME/.vim-go/`. To change it:
 
 ```vim
 let g:go_bin_path = expand("~/.mypath")
-let g:go_bin_path = "/home/fatih/.mypath"      "or give relative path
+let g:go_bin_path = "/home/fatih/.mypath"      "or give absolute path
 ```
 
 Change individual binary paths, if the binary doesn't exist vim-go will
@@ -262,6 +267,6 @@ Give it a try. I hope you like it. Feel free to contribute to the project.
 ## Credits
 
 * Go Authors for offical vim plugins
-* Gocode, Godef, Golint, Oracle, Goimports, Errcheck projects and authors of those projects.
+* Gocode, Godef, Golint, Oracle, Goimports, Gotags, Errcheck projects and authors of those projects.
 * Other vim-plugins, thanks for inspiration (vim-golang, go.vim, vim-gocode, vim-godef)
 

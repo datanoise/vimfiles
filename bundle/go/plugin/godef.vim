@@ -26,7 +26,7 @@ endfunction
 function! GodefSignature()
     let out = s:execute_godef(["-o=" . s:current_offset(), "-t=true"])
     let out = substitute(substitute(out, '.\{-}\n', '', ''), '\n', ' ', 'g')
-    echomsg out
+    echohl Function | echo out | echohl None
 endfunction
 
 " modified and improved version of vim-godef

@@ -624,5 +624,6 @@ let $RUBYOPT = '' " I don't want any surprises like 'noexec' gem
 let go_highlight_space_tab_error = 0
 let go_highlight_trailing_whitespace_error = 0
 let g:netrw_liststyle = 3
+let g:go_auto_type_info = 0
 
 " }}}

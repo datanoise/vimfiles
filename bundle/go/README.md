@@ -3,9 +3,10 @@
 Full featured Go development environment support for Vim. vim-go installs
 automatically all necessary binaries if they are not found. It comes with
 pre-defined sensible settings (like auto gofmt on save), has autocomplete,
-snippet support, go toolchain commands, etc... Do not use it with other Go
-plugins.
+snippet support, improved syntax highlighting, go toolchain commands, etc...
+Do not use it with other Go plugins.
 
+![vim-go](https://dl.dropboxusercontent.com/u/174404/vim-go.png)
 
 ## Features
 
@@ -27,7 +28,7 @@ plugins.
 * Integrated and improved snippets. Supports `ultisnips` or `neosnippet`
 * Share your current code to [play.golang.org](http://play.golang.org)
 * On-the-fly type information about the word under the cursor
-* Tagbar support to show tags of the source code in a sidebar with `gotags` 
+* Tagbar support to show tags of the source code in a sidebar with `gotags`
 
 ## Install
 
@@ -48,16 +49,20 @@ and execute `:PluginInstall`
 
 
 For the first Vim start it will try to download and install all necessary go
-binaries. To disable this behaviour please check out
-[settings](#settings).
+binaries. This can take some time. To disable this behaviour add `let g:go_disable_autoinstall = 1`
 
-Autocompletion is enabled by default via `<C-x><C-o>`, to get real-time
+### Optional
+
+* Autocompletion is enabled by default via `<C-x><C-o>`, to get real-time
 completion (completion by type) install:
 [YCM](https://github.com/Valloric/YouCompleteMe) or
-[neocomplete](https://github.com/Shougo/neocomplete.vim)
-
-To get displayed source code tag informations on a sidebar install
+[neocomplete](https://github.com/Shougo/neocomplete.vim).
+* To get displayed source code tag informations on a sidebar install
 [tagbar](https://github.com/majutsushi/tagbar).
+* For snippet feature install:
+[ultisnips](https://github.com/SirVer/ultisnips) or
+[neosnippet](https://github.com/Shougo/neosnippet.vim).
+* Screenshot color scheme is a slightly modified molokai: [fatih/molokai](https://github.com/fatih/molokai).
 
 ## Usage
 
@@ -67,37 +72,6 @@ the help page to see all commands:
 
     :help vim-go
 
-Current commands:
-
-```vimrc
-:GoImport <path>
-:GoImportAs <localname> <path>
-:GoDrop <path>
-:GoDisableGoimports
-:GoEnableGoimports
-:GoLint
-:GoDoc <identifier>
-:GoDocBrowser <identifier>
-:GoFmt
-:GoVet
-:GoDef <identifier>
-:GoRun <expand>
-:GoBuild
-:GoInstall
-:GoPlay
-:GoInfo
-:GoTest
-:GoErrCheck
-:GoFiles
-:GoDeps
-:GoUpdateBinaries
-:GoOracleDescribe
-:GoOracleCallees
-:GoOracleCallers
-:GoOracleCallgraph
-:GoOracleImplements
-:GoOracleChannelPeers
-```
 
 ## Mappings
 
@@ -201,9 +175,7 @@ let g:go_disable_autoinstall = 1
 
 ## Snippets
 
-Snippets are useful and very powerful. Vim-go has a sensible integration with
-[ultisnips](https://github.com/SirVer/ultisnips) and
-[neosnippet](https://github.com/Shougo/neosnippet.vim). By default ultisnips is
+Snippets are useful and very powerful. By default ultisnips is
 used, however you can change it to neosnippet with:
 
 ```vim
@@ -211,7 +183,7 @@ let g:go_snippet_engine = "neosnippet"
 ```
 
 Snippet feature is enabled only if the snippet plugins are installed.  Below are
-some examples snippets and the correspondings trigger keywords, The `|`
+some examples snippets and the corresponding trigger keywords, The `|`
 character defines the cursor. Ultisnips has suppport for multiple cursors
 
 
@@ -269,4 +241,3 @@ Give it a try. I hope you like it. Feel free to contribute to the project.
 * Go Authors for offical vim plugins
 * Gocode, Godef, Golint, Oracle, Goimports, Gotags, Errcheck projects and authors of those projects.
 * Other vim-plugins, thanks for inspiration (vim-golang, go.vim, vim-gocode, vim-godef)
-

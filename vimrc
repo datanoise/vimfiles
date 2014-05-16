@@ -356,7 +356,7 @@ au FileType cucumber inoremap <buffer> \| \|<Esc>:Tab /\|<CR>A
 au FileType help,godoc nnoremap <silent> <buffer> q :bd<CR>
 au FileType netrw nnoremap <silent> <buffer> qq :bw<CR>
 au FileType vim  nnoremap <silent> <buffer> K :h <c-r>=expand('<cword>')<CR><CR>
-au FileType go  nnoremap <silent> <buffer> K :Godoc<CR>
+au FileType go  nnoremap <silent> <buffer> K :GoDoc<CR>
 au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F4> :!rspec --format doc -c %<CR>|endif
 au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F5> :exe '!rspec --format doc -c ' . expand('%') . ':' . line('.')<CR>|else|nnoremap <buffer> <F5> :!ruby %<CR>|endif
 au FileType ruby,puppet inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "
@@ -625,5 +625,6 @@ let go_highlight_space_tab_error = 0
 let go_highlight_trailing_whitespace_error = 0
 let g:netrw_liststyle = 3
 let g:go_auto_type_info = 0
+let g:go_snippet_engine = ''
 
 " }}}

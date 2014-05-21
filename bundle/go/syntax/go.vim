@@ -50,19 +50,19 @@ if !exists("go_highlight_trailing_whitespace_error")
 endif
 
 if !exists("go_highlight_operators")
-	let go_highlight_operators = 1
+        let go_highlight_operators = 1
 endif
 
 if !exists("go_highlight_functions")
-	let go_highlight_functions = 1
+        let go_highlight_functions = 1
 endif
 
 if !exists("go_highlight_methods")
-	let go_highlight_methods = 1
+        let go_highlight_methods = 1
 endif
 
 if !exists("go_highlight_structs")
-	let go_highlight_structs = 1
+        let go_highlight_structs = 1
 endif
 
 syn case match
@@ -226,45 +226,46 @@ syn keyword     goTodo              contained NOTE
 hi def link     goTodo              Todo
 
 
-" Operators; 
+" Operators;
 if go_highlight_operators != 0
-	syn match goOperator /:=/
-	syn match goOperator />=/
-	syn match goOperator /<=/
-	syn match goOperator /==/
-	syn match goOperator /!=/
-	syn match goOperator /+=/
-	syn match goOperator /-=/
-	syn match goOperator /\s>\s/
-	syn match goOperator /\s<\s/
-	syn match goOperator /\s+\s/
-	syn match goOperator /\s-\s/
-	syn match goOperator /\s\*\s/
-	syn match goOperator /\s\/\s/
-	syn match goOperator /\s%\s/
+        syn match goOperator /:=/
+        syn match goOperator />=/
+        syn match goOperator /<=/
+        syn match goOperator /==/
+        syn match goOperator /!=/
+        syn match goOperator /+=/
+        syn match goOperator /-=/
+        syn match goOperator /\s>\s/
+        syn match goOperator /\s<\s/
+        syn match goOperator /\s+\s/
+        syn match goOperator /\s-\s/
+        syn match goOperator /\s\*\s/
+        syn match goOperator /\s\/\s/
+        syn match goOperator /\s%\s/
 endif
-hi def link     goOperator					Operator
+hi def link     goOperator          Operator
 
-" Functions; 
+" Functions;
 if go_highlight_functions != 0
-	syn match goFunction							/\%#=1\(func\s\+\)\@<=\w\+\((\)\@=/
-	syn match goFunction							/\%#=1\()\s\+\)\@<=\w\+\((\)\@=/
+        " syn match goFunction                                                  /\(func\s\+\)\@<=\w\+\((\)\@=/
+        " syn match goFunction                                                  /\()\s\+\)\@<=\w\+\((\)\@=/
+        syn match goFunction        /\%#=1\(func\)\@!\w\+\((.*)\)\@=/
 endif
-hi def link     goFunction					Function
+hi def link     goFunction          Function
 
-" Methods; 
+" Methods;
 if go_highlight_methods != 0
-	syn match goMethod								/\%#=1\(\.\)\@<=\w\+\((\)\@=/
+        syn match goMethod          /\%#=1\(\.\)\@<=\w\+\((\)\@=/
 endif
-hi def link     goMethod						Type
+hi def link     goMethod            Type
 
-" Structs; 
+" Structs;
 if go_highlight_structs != 0
-	syn match goStruct								/\%#=1\(.\)\@<=\w\+\({\)\@=/
-	syn match goStructDef							/\%#=1\(type\s\+\)\@<=\w\+\(\s\+struct\s\+{\)\@=/
+        syn match goStruct          /\%#=1\(.\)\@<=\w\+\({\)\@=/
+        syn match goTypeDef         /\%#=1\(type\s\+\)\@<=\w\+/
 endif
-hi def link     goStruct						Function
-hi def link     goStructDef         Function
+hi def link     goStruct            Define
+hi def link     goTypeDef           Define
 
 " Search backwards for a global declaration to start processing the syntax.
 "syn sync match goSync grouphere NONE /^\(const\|var\|type\|func\)\>/

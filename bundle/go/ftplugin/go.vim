@@ -16,6 +16,7 @@ endif
 
 setlocal comments=s1:/*,mb:*,ex:*/,://
 setlocal commentstring=//\ %s
+setlocal formatoptions-=t formatoptions+=croql
 
 setlocal noexpandtab
 

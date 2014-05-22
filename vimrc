@@ -151,6 +151,7 @@ set showbreak=»
 if exists('&breakindent')
   " NOTE: patched VIM version is required for this to work
   set breakindent
+  set breakindentopt+=sbr
 endif
 " }}}
 " invisible chars display options {{{2

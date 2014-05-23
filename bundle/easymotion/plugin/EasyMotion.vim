@@ -58,7 +58,7 @@
 	endfunction "}}}
 	" Default options {{{
 		call s:InitOptions({
-		\   'leader_key' : '<Leader><Leader>'
+		\   'leader_key' : '\'
 		\ , 'keys'       : 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 		\ , 'do_shade'   : 1
 		\ , 'do_mapping' : 1

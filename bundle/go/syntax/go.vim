@@ -67,11 +67,15 @@ endif
 
 syn case match
 
-syn keyword     goDirective         package import
+syn keyword     goPackage           package nextgroup=goPackageName skipwhite
+syn match       goPackageName       /\w\+/ contained
+syn keyword     goImport            import
 syn keyword     goDeclaration       var const type
 syn keyword     goDeclType          struct interface
 
-hi def link     goDirective         Statement
+hi def link     goPackage           Statement
+hi def link     goPackageName       PreProc
+hi def link     goImport            Statement
 hi def link     goDeclaration       Keyword
 hi def link     goDeclType          Keyword
 
@@ -257,21 +261,29 @@ hi def link     goFunction          Function
 if go_highlight_methods != 0
         syn match goMethod          /\%#=1\(\.\)\@<=\w\+\((\)\@=/
 endif
-hi def link     goMethod            Type
+hi def link     goMethod            Function
 
 " Structs;
 if go_highlight_structs != 0
         syn match goStruct          /\%#=1\(.\)\@<=\w\+\({\)\@=/
         syn match goTypeDef         /\%#=1\(type\s\+\)\@<=\w\+/
+
+        syn match  goMethodReceiver /\w\+/ skipwhite nextgroup=goMethodReceiverPointer,goMethodReceiverType contained
+        syn match  goMethodReceiverPointer /*/ transparent contained nextgroup=goMethodReceiverType
+        syn match  goMethodReceiverType /\w\+/ contained
+        syn region goMethodDef start="\(func\s\+\)\@<=(" end=")" contains=goMethodReceiver
+
+        hi def link     goMethodReceiverType    Define
+        hi def link     goStruct                Define
+        hi def link     goTypeDef               Define
 endif
-hi def link     goStruct            Define
-hi def link     goTypeDef           Define
+
 
 " Search backwards for a global declaration to start processing the syntax.
 "syn sync match goSync grouphere NONE /^\(const\|var\|type\|func\)\>/
 
 " There's a bug in the implementation of grouphere. For now, use the
 " following as a more expensive/less precise workaround.
-syn sync minlines=500
+" syn sync minlines=500
 
 let b:current_syntax = "go"

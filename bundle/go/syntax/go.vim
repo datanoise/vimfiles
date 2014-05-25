@@ -249,7 +249,7 @@ hi def link     goOperator          Operator
 if go_highlight_functions != 0
         " syn match goFunction                                                  /\(func\s\+\)\@<=\w\+\((\)\@=/
         " syn match goFunction                                                  /\()\s\+\)\@<=\w\+\((\)\@=/
-        syn match goFunction        /\%#=1\(func\)\@!\w\+\((.*)\)\@=/
+        syn match goFunction        /\%#=1\(func\s\+\)\@!\w\+\((.*)\)\@=/
 endif
 hi def link     goFunction          Function
 

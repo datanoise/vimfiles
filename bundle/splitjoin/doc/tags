@@ -14,6 +14,7 @@ g:splitjoin_split_mapping	splitjoin.txt	/*g:splitjoin_split_mapping*
 gJ	splitjoin.txt	/*gJ*
 gS	splitjoin.txt	/*gS*
 splitjoin	splitjoin.txt	/*splitjoin*
+splitjoin-c	splitjoin.txt	/*splitjoin-c*
 splitjoin-coffee	splitjoin.txt	/*splitjoin-coffee*
 splitjoin-contents	splitjoin.txt	/*splitjoin-contents*
 splitjoin-css	splitjoin.txt	/*splitjoin-css*

@@ -13,6 +13,7 @@ if !exists("g:go_auto_type_info")
     let g:go_auto_type_info = 0
 endif
 
+setlocal formatoptions-=t
 
 setlocal comments=s1:/*,mb:*,ex:*/,://
 setlocal commentstring=//\ %s
@@ -20,8 +21,7 @@ setlocal formatoptions-=t formatoptions+=croql
 
 setlocal noexpandtab
 
-
-let b:undo_ftplugin = "setl com< cms<"
+let b:undo_ftplugin = "setl fo< com< cms<"
 
 " Set gocode completion
 setlocal omnifunc=go#complete#Complete

@@ -115,3 +115,4 @@ hi link Debug       Special
 hi rubySymbol guifg=#ff6050 guibg=NONE gui=NONE
 hi elixirSymbol guifg=#ff6050 guibg=NONE gui=NONE
 hi link htmlLink Normal
+hi link htmlItalic Normal

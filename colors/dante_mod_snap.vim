@@ -1,5 +1,5 @@
 " This scheme was created by CSApproxSnapshot
-" on Sun, 24 Nov 2013
+" on Wed, 28 May 2014
 
 hi clear
 if exists("syntax_on")
@@ -17,24 +17,21 @@ endif
 if 0
 elseif has("gui_running") || (&t_Co == 256 && (&term ==# "xterm" || &term =~# "^screen") && exists("g:CSApprox_konsole") && g:CSApprox_konsole) || &term =~? "^konsole"
     CSAHi Normal term=NONE cterm=NONE ctermbg=233 ctermfg=181 gui=NONE guibg=#141414 guifg=#cdaf95
-    CSAHi Pl1c0087001c008700N term=NONE cterm=NONE ctermbg=34 ctermfg=34 gui=NONE guibg=#008700 guifg=#008700
-    CSAHi Ple7ffffff1c008700N term=NONE cterm=NONE ctermbg=34 ctermfg=231 gui=NONE guibg=#008700 guifg=#ffffff
-    CSAHi Pl465faf0016005f00b term=NONE cterm=bold ctermbg=28 ctermfg=106 gui=bold guibg=#005f00 guifg=#5faf00
-    CSAHi Pl465faf0016005f00N term=NONE cterm=NONE ctermbg=28 ctermfg=106 gui=NONE guibg=#005f00 guifg=#5faf00
-    CSAHi Pl16005f0016005f00N term=NONE cterm=NONE ctermbg=28 ctermfg=28 gui=NONE guibg=#005f00 guifg=#005f00
-    CSAHi Ple7ffffff16005f00N term=NONE cterm=NONE ctermbg=28 ctermfg=231 gui=NONE guibg=#005f00 guifg=#ffffff
-    CSAHi Plf4808080ec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=244 gui=NONE guibg=#303030 guifg=#808080
-    CSAHi Ple7ffffff62875fd7N term=NONE cterm=NONE ctermbg=140 ctermfg=231 gui=NONE guibg=#875fd7 guifg=#ffffff
-    CSAHi Plf1626262ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=241 gui=NONE guibg=#444444 guifg=#626262
-    CSAHi Plec303030fcd0d0d0b term=NONE cterm=bold ctermbg=252 ctermfg=236 gui=bold guibg=#d0d0d0 guifg=#303030
-    CSAHi Plf4808080fcd0d0d0N term=NONE cterm=NONE ctermbg=252 ctermfg=244 gui=NONE guibg=#d0d0d0 guifg=#808080
-    CSAHi Plfcd0d0d0f1626262N term=NONE cterm=NONE ctermbg=241 ctermfg=252 gui=NONE guibg=#626262 guifg=#d0d0d0
-    CSAHi Pla0d70000f1626262N term=NONE cterm=NONE ctermbg=241 ctermfg=160 gui=NONE guibg=#626262 guifg=#d70000
-    CSAHi Ple7fffffff1626262b term=NONE cterm=bold ctermbg=241 ctermfg=231 gui=bold guibg=#626262 guifg=#ffffff
-    CSAHi Pl58870000ea1c1c1cN term=NONE cterm=NONE ctermbg=234 ctermfg=124 gui=NONE guibg=#1c1c1c guifg=#870000
-    CSAHi Plf1626262ea1c1c1cN term=NONE cterm=NONE ctermbg=234 ctermfg=241 gui=NONE guibg=#1c1c1c guifg=#626262
-    CSAHi Plf58a8a8aea1c1c1cb term=NONE cterm=bold ctermbg=234 ctermfg=245 gui=bold guibg=#1c1c1c guifg=#8a8a8a
-    CSAHi Plea1c1c1cea1c1c1cN term=NONE cterm=NONE ctermbg=234 ctermfg=234 gui=NONE guibg=#1c1c1c guifg=#1c1c1c
+    CSAHi Pl18005f8718005f87N term=NONE cterm=NONE ctermbg=31 ctermfg=31 gui=NONE guibg=#005f87 guifg=#005f87
+    CSAHi Ple7ffffff18005f87N term=NONE cterm=NONE ctermbg=31 ctermfg=231 gui=NONE guibg=#005f87 guifg=#ffffff
+    CSAHi GReplaceText term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi Pl465faf001c008700N term=NONE cterm=NONE ctermbg=34 ctermfg=106 gui=NONE guibg=#008700 guifg=#5faf00
+    CSAHi Pl94afd7001c008700N term=NONE cterm=NONE ctermbg=34 ctermfg=148 gui=NONE guibg=#008700 guifg=#afd700
+    CSAHi Pl7587d7ff18005f87N term=NONE cterm=NONE ctermbg=31 ctermfg=153 gui=NONE guibg=#005f87 guifg=#87d7ff
+    CSAHi Pl94afd700ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=148 gui=NONE guibg=#444444 guifg=#afd700
+    CSAHi elixirSymbol term=NONE cterm=NONE ctermbg=bg ctermfg=210 gui=NONE guibg=bg guifg=#ff6050
+    CSAHi EasyMotionTargetDefault term=NONE cterm=bold ctermbg=bg ctermfg=196 gui=bold guibg=bg guifg=#ff0000
+    CSAHi EasyMotionShadeDefault term=NONE cterm=NONE ctermbg=bg ctermfg=240 gui=NONE guibg=bg guifg=#585858
+    CSAHi Pl62875fd7e7ffffffN term=NONE cterm=NONE ctermbg=231 ctermfg=140 gui=NONE guibg=#ffffff guifg=#875fd7
+    CSAHi Pl375f00afe7ffffffb term=NONE cterm=bold ctermbg=231 ctermfg=91 gui=bold guibg=#ffffff guifg=#5f00af
+    CSAHi Ple7ffffff7caf0000b term=NONE cterm=bold ctermbg=124 ctermfg=231 gui=bold guibg=#af0000 guifg=#ffffff
+    CSAHi Plc4ff0000375f00afb term=NONE cterm=bold ctermbg=91 ctermfg=196 gui=bold guibg=#5f00af guifg=#ff0000
+    CSAHi Pl375f00af375f00afN term=NONE cterm=NONE ctermbg=91 ctermfg=91 gui=NONE guibg=#5f00af guifg=#5f00af
     CSAHi Statement term=bold cterm=NONE ctermbg=bg ctermfg=178 gui=NONE guibg=bg guifg=#cdad00
     CSAHi PreProc term=underline cterm=NONE ctermbg=bg ctermfg=31 gui=NONE guibg=bg guifg=#104e8b
     CSAHi Type term=underline cterm=NONE ctermbg=bg ctermfg=112 gui=NONE guibg=bg guifg=#66cd00
@@ -42,8 +39,12 @@ elseif has("gui_running") || (&t_Co == 256 && (&term ==# "xterm" || &term =~# "^
     CSAHi Ignore term=bold cterm=NONE ctermbg=bg ctermfg=243 gui=NONE guibg=bg guifg=#737373
     CSAHi Error term=reverse cterm=NONE ctermbg=160 ctermfg=250 gui=NONE guibg=#cd0000 guifg=#bebebe
     CSAHi Todo term=NONE cterm=bold ctermbg=142 ctermfg=234 gui=bold guibg=#8b8b00 guifg=#1a1a1a
+    CSAHi Ple7ffffff58870000N term=NONE cterm=NONE ctermbg=124 ctermfg=231 gui=NONE guibg=#870000 guifg=#ffffff
     CSAHi Number term=underline cterm=NONE ctermbg=bg ctermfg=196 gui=NONE guibg=bg guifg=#ee0000
-    CSAHi Plf79e9e9eee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=247 gui=NONE guibg=#444444 guifg=#9e9e9e
+    CSAHi Pl5887000058870000N term=NONE cterm=NONE ctermbg=124 ctermfg=124 gui=NONE guibg=#870000 guifg=#870000
+    CSAHi Pl7caf000058870000N term=NONE cterm=NONE ctermbg=124 ctermfg=124 gui=NONE guibg=#870000 guifg=#af0000
+    CSAHi Ple7ffffffa0d70000b term=NONE cterm=bold ctermbg=160 ctermfg=231 gui=bold guibg=#d70000 guifg=#ffffff
+    CSAHi Pla0d70000345f0000b term=NONE cterm=bold ctermbg=88 ctermfg=160 gui=bold guibg=#5f0000 guifg=#d70000
     CSAHi SpecialKey term=bold cterm=NONE ctermbg=bg ctermfg=239 gui=NONE guibg=bg guifg=#4d4d4d
     CSAHi NonText term=bold cterm=bold ctermbg=233 ctermfg=59 gui=bold guibg=#141414 guifg=#333333
     CSAHi Directory term=bold cterm=NONE ctermbg=bg ctermfg=68 gui=NONE guibg=bg guifg=#4169e1
@@ -53,23 +54,26 @@ elseif has("gui_running") || (&t_Co == 256 && (&term ==# "xterm" || &term =~# "^
     CSAHi MoreMsg term=bold cterm=bold ctermbg=bg ctermfg=191 gui=bold guibg=bg guifg=#c0ff3e
     CSAHi ModeMsg term=bold cterm=bold ctermbg=bg ctermfg=fg gui=bold guibg=bg guifg=fg
     CSAHi LineNr term=underline cterm=NONE ctermbg=232 ctermfg=145 gui=NONE guibg=#0a0a0a guifg=#8b8b83
-    CSAHi Pl17005f5f7587d7ffb term=NONE cterm=bold ctermbg=153 ctermfg=30 gui=bold guibg=#87d7ff guifg=#005f5f
-    CSAHi Pl17005f5f7587d7ffN term=NONE cterm=NONE ctermbg=153 ctermfg=30 gui=NONE guibg=#87d7ff guifg=#005f5f
-    CSAHi Pla0d7000094afd700N term=NONE cterm=NONE ctermbg=148 ctermfg=160 gui=NONE guibg=#afd700 guifg=#d70000
-    CSAHi Pl16005f0094afd700b term=NONE cterm=bold ctermbg=148 ctermfg=28 gui=bold guibg=#afd700 guifg=#005f00
-    CSAHi Pl94afd700ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=148 gui=NONE guibg=#444444 guifg=#afd700
-    CSAHi Ple7ffffff7caf0000b term=NONE cterm=bold ctermbg=124 ctermfg=231 gui=bold guibg=#af0000 guifg=#ffffff
-    CSAHi Pl7caf000058870000N term=NONE cterm=NONE ctermbg=124 ctermfg=124 gui=NONE guibg=#870000 guifg=#af0000
-    CSAHi Ple7ffffff58870000N term=NONE cterm=NONE ctermbg=124 ctermfg=231 gui=NONE guibg=#870000 guifg=#ffffff
-    CSAHi Ple7ffffffa0d70000b term=NONE cterm=bold ctermbg=160 ctermfg=231 gui=bold guibg=#d70000 guifg=#ffffff
-    CSAHi Pla0d70000345f0000b term=NONE cterm=bold ctermbg=88 ctermfg=160 gui=bold guibg=#5f0000 guifg=#d70000
-    CSAHi Pl7587d7ff18005f87N term=NONE cterm=NONE ctermbg=31 ctermfg=153 gui=NONE guibg=#005f87 guifg=#87d7ff
-    CSAHi rubySymbol term=NONE cterm=NONE ctermbg=bg ctermfg=210 gui=NONE guibg=bg guifg=#ff6050
-    CSAHi elixirSymbol term=NONE cterm=NONE ctermbg=bg ctermfg=210 gui=NONE guibg=bg guifg=#ff6050
-    CSAHi EasyMotionTargetDefault term=NONE cterm=bold ctermbg=bg ctermfg=196 gui=bold guibg=bg guifg=#ff0000
-    CSAHi EasyMotionShadeDefault term=NONE cterm=NONE ctermbg=bg ctermfg=240 gui=NONE guibg=bg guifg=#585858
+    CSAHi htmlUnderlineItalic term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi Ple7ffffff465faf00b term=NONE cterm=bold ctermbg=106 ctermfg=231 gui=bold guibg=#5faf00 guifg=#ffffff
+    CSAHi Pla0d70000ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=160 gui=NONE guibg=#444444 guifg=#d70000
+    CSAHi Plc4ff0000ee444444b term=NONE cterm=bold ctermbg=238 ctermfg=196 gui=bold guibg=#444444 guifg=#ff0000
+    CSAHi Plfcd0d0d0ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=252 gui=NONE guibg=#444444 guifg=#d0d0d0
+    CSAHi Ple7ffffffee444444b term=NONE cterm=bold ctermbg=238 ctermfg=231 gui=bold guibg=#444444 guifg=#ffffff
+    CSAHi Plee444444ec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=238 gui=NONE guibg=#303030 guifg=#444444
+    CSAHi Pld6ffaf00ec303030b term=NONE cterm=bold ctermbg=236 ctermfg=214 gui=bold guibg=#303030 guifg=#ffaf00
+    CSAHi Plec303030ec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=236 gui=NONE guibg=#303030 guifg=#303030
+    CSAHi Plf79e9e9eee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=247 gui=NONE guibg=#444444 guifg=#9e9e9e
+    CSAHi SyntasticErrorLine term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi Plf58a8a8aeb262626N term=NONE cterm=NONE ctermbg=235 ctermfg=245 gui=NONE guibg=#262626 guifg=#8a8a8a
+    CSAHi Pl1c0087001c008700N term=NONE cterm=NONE ctermbg=34 ctermfg=34 gui=NONE guibg=#008700 guifg=#008700
+    CSAHi Ple7ffffff1c008700N term=NONE cterm=NONE ctermbg=34 ctermfg=231 gui=NONE guibg=#008700 guifg=#ffffff
+    CSAHi Pl465faf0016005f00b term=NONE cterm=bold ctermbg=28 ctermfg=106 gui=bold guibg=#005f00 guifg=#5faf00
+    CSAHi Pl465faf0016005f00N term=NONE cterm=NONE ctermbg=28 ctermfg=106 gui=NONE guibg=#005f00 guifg=#5faf00
+    CSAHi Pl16005f0016005f00N term=NONE cterm=NONE ctermbg=28 ctermfg=28 gui=NONE guibg=#005f00 guifg=#005f00
+    CSAHi Ple7ffffff16005f00N term=NONE cterm=NONE ctermbg=28 ctermfg=231 gui=NONE guibg=#005f00 guifg=#ffffff
     CSAHi SpellRare term=reverse cterm=undercurl ctermbg=bg ctermfg=201 gui=undercurl guibg=bg guifg=fg guisp=#ff00ff
-    CSAHi SpellLocal term=underline cterm=undercurl ctermbg=bg ctermfg=51 gui=undercurl guibg=bg guifg=fg guisp=#00ffff
+    CSAHi SpellLocal term=underline cterm=undercurl ctermbg=bg ctermfg=37 gui=undercurl guibg=bg guifg=fg guisp=#008b8b
     CSAHi Pmenu term=NONE cterm=NONE ctermbg=238 ctermfg=231 gui=NONE guibg=#444444 guifg=#f6f3e8
     CSAHi PmenuSel term=NONE cterm=NONE ctermbg=193 ctermfg=16 gui=NONE guibg=#cae682 guifg=#000000
     CSAHi PmenuSbar term=NONE cterm=NONE ctermbg=240 ctermfg=fg gui=NONE guibg=#555555 guifg=fg
@@ -77,12 +81,10 @@ elseif has("gui_running") || (&t_Co == 256 && (&term ==# "xterm" || &term =~# "^
     CSAHi TabLine term=underline cterm=NONE ctermbg=187 ctermfg=16 gui=NONE guibg=#c2bfa5 guifg=#000000
     CSAHi TabLineSel term=bold cterm=NONE ctermbg=25 ctermfg=231 gui=NONE guibg=#133293 guifg=#ffffff
     CSAHi TabLineFill term=reverse cterm=NONE ctermbg=187 ctermfg=16 gui=NONE guibg=#c2bfa5 guifg=#000000
-    CSAHi CursorColumn term=reverse cterm=NONE ctermbg=102 ctermfg=fg gui=NONE guibg=#666666 guifg=fg
-    CSAHi Pl62875fd7e7ffffffN term=NONE cterm=NONE ctermbg=231 ctermfg=140 gui=NONE guibg=#ffffff guifg=#875fd7
-    CSAHi Pl375f00afe7ffffffb term=NONE cterm=bold ctermbg=231 ctermfg=91 gui=bold guibg=#ffffff guifg=#5f00af
-    CSAHi Pl62875fd7375f00afN term=NONE cterm=NONE ctermbg=91 ctermfg=140 gui=NONE guibg=#5f00af guifg=#875fd7
-    CSAHi Plc4ff0000375f00afb term=NONE cterm=bold ctermbg=91 ctermfg=196 gui=bold guibg=#5f00af guifg=#ff0000
-    CSAHi Pl375f00af375f00afN term=NONE cterm=NONE ctermbg=91 ctermfg=91 gui=NONE guibg=#5f00af guifg=#5f00af
+    CSAHi CursorColumn term=reverse cterm=NONE ctermbg=254 ctermfg=fg gui=NONE guibg=#e5e5e5 guifg=fg
+    CSAHi rubySymbol term=NONE cterm=NONE ctermbg=bg ctermfg=210 gui=NONE guibg=bg guifg=#ff6050
+    CSAHi htmlBoldItalic term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi htmlBold term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
     CSAHi Ple7ffffff375f00afN term=NONE cterm=NONE ctermbg=91 ctermfg=231 gui=NONE guibg=#5f00af guifg=#ffffff
     CSAHi Plbdd7d7ff375f00afN term=NONE cterm=NONE ctermbg=91 ctermfg=189 gui=NONE guibg=#5f00af guifg=#d7d7ff
     CSAHi Pl375f00afe7ffffffN term=NONE cterm=NONE ctermbg=231 ctermfg=91 gui=NONE guibg=#ffffff guifg=#5f00af
@@ -93,10 +95,9 @@ elseif has("gui_running") || (&t_Co == 256 && (&term ==# "xterm" || &term =~# "^
     CSAHi Plf1626262ec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=241 gui=NONE guibg=#303030 guifg=#626262
     CSAHi Plec303030eb262626N term=NONE cterm=NONE ctermbg=235 ctermfg=236 gui=NONE guibg=#262626 guifg=#303030
     CSAHi Pla0d70000d0ff8700N term=NONE cterm=NONE ctermbg=214 ctermfg=160 gui=NONE guibg=#ff8700 guifg=#d70000
-    CSAHi Pl58870000d0ff8700b term=NONE cterm=bold ctermbg=214 ctermfg=124 gui=bold guibg=#ff8700 guifg=#870000
-    CSAHi Pld0ff8700ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=214 gui=NONE guibg=#444444 guifg=#ff8700
-    CSAHi Pla0d70000e7ffffffN term=NONE cterm=NONE ctermbg=231 ctermfg=160 gui=NONE guibg=#ffffff guifg=#d70000
-    CSAHi CursorLineNr term=bold cterm=bold ctermbg=bg ctermfg=226 gui=bold guibg=bg guifg=#ffff00
+    CSAHi Pl62875fd7375f00afN term=NONE cterm=NONE ctermbg=91 ctermfg=140 gui=NONE guibg=#5f00af guifg=#875fd7
+    CSAHi htmlBoldUnderline term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi CursorLineNr term=bold cterm=bold ctermbg=bg ctermfg=131 gui=bold guibg=bg guifg=#a52a2a
     CSAHi Question term=NONE cterm=bold ctermbg=bg ctermfg=191 gui=bold guibg=bg guifg=#c0ff3e
     CSAHi StatusLine term=reverse,bold cterm=NONE ctermbg=234 ctermfg=188 gui=NONE guibg=#202020 guifg=#cccccc
     CSAHi StatusLineNC term=reverse cterm=NONE ctermbg=234 ctermfg=16 gui=NONE guibg=#202020 guifg=#000000
@@ -106,43 +107,48 @@ elseif has("gui_running") || (&t_Co == 256 && (&term ==# "xterm" || &term =~# "^
     CSAHi VisualNOS term=bold,underline cterm=bold,underline ctermbg=bg ctermfg=fg gui=bold,underline guibg=bg guifg=fg
     CSAHi WarningMsg term=NONE cterm=bold ctermbg=bg ctermfg=160 gui=bold guibg=bg guifg=#cd0000
     CSAHi WildMenu term=NONE cterm=NONE ctermbg=220 ctermfg=16 gui=NONE guibg=#eec900 guifg=#000000
-    CSAHi Pl5887000058870000N term=NONE cterm=NONE ctermbg=124 ctermfg=124 gui=NONE guibg=#870000 guifg=#870000
-    CSAHi Pl345f0000345f0000N term=NONE cterm=NONE ctermbg=88 ctermfg=88 gui=NONE guibg=#5f0000 guifg=#5f0000
-    CSAHi Ple7ffffff345f0000N term=NONE cterm=NONE ctermbg=88 ctermfg=231 gui=NONE guibg=#5f0000 guifg=#ffffff
-    CSAHi Pla0d70000345f0000N term=NONE cterm=NONE ctermbg=88 ctermfg=160 gui=NONE guibg=#5f0000 guifg=#d70000
-    CSAHi Ple7fffffff4808080N term=NONE cterm=NONE ctermbg=244 ctermfg=231 gui=NONE guibg=#808080 guifg=#ffffff
-    CSAHi Plf4808080ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=244 gui=NONE guibg=#444444 guifg=#808080
-    CSAHi Plf58a8a8aeb262626N term=NONE cterm=NONE ctermbg=235 ctermfg=245 gui=NONE guibg=#262626 guifg=#8a8a8a
-    CSAHi Ple7ffffff465faf00b term=NONE cterm=bold ctermbg=106 ctermfg=231 gui=bold guibg=#5faf00 guifg=#ffffff
-    CSAHi Pla0d70000ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=160 gui=NONE guibg=#444444 guifg=#d70000
-    CSAHi Plc4ff0000ee444444b term=NONE cterm=bold ctermbg=238 ctermfg=196 gui=bold guibg=#444444 guifg=#ff0000
-    CSAHi Plfcd0d0d0ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=252 gui=NONE guibg=#444444 guifg=#d0d0d0
-    CSAHi Ple7ffffffee444444b term=NONE cterm=bold ctermbg=238 ctermfg=231 gui=bold guibg=#444444 guifg=#ffffff
-    CSAHi Plee444444ec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=238 gui=NONE guibg=#303030 guifg=#444444
-    CSAHi Pld6ffaf00ec303030b term=NONE cterm=bold ctermbg=236 ctermfg=214 gui=bold guibg=#303030 guifg=#ffaf00
-    CSAHi Plec303030ec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=236 gui=NONE guibg=#303030 guifg=#303030
     CSAHi Ple7ffffffec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=231 gui=NONE guibg=#303030 guifg=#ffffff
-    CSAHi SyntasticErrorLine term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
     CSAHi Plfabcbcbcf1626262N term=NONE cterm=NONE ctermbg=241 ctermfg=250 gui=NONE guibg=#626262 guifg=#bcbcbc
     CSAHi SyntasticWarningLine term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
-    CSAHi CursorLine term=underline cterm=NONE ctermbg=234 ctermfg=fg gui=NONE guibg=#1b1b1b guifg=fg
-    CSAHi Cursor term=NONE cterm=NONE ctermbg=181 ctermfg=233 gui=NONE guibg=#cdaf95 guifg=#141414
-    CSAHi lCursor term=NONE cterm=NONE ctermbg=181 ctermfg=233 gui=NONE guibg=#cdaf95 guifg=#141414
-    CSAHi MatchParen term=reverse cterm=NONE ctermbg=37 ctermfg=fg gui=NONE guibg=#008b8b guifg=fg
-    CSAHi Comment term=bold cterm=NONE ctermbg=bg ctermfg=37 gui=NONE guibg=bg guifg=#008b8b
-    CSAHi Constant term=underline cterm=NONE ctermbg=bg ctermfg=167 gui=NONE guibg=bg guifg=#cd2626
-    CSAHi Special term=underline cterm=NONE ctermbg=bg ctermfg=137 gui=NONE guibg=bg guifg=#a0522d
-    CSAHi Identifier term=underline cterm=NONE ctermbg=bg ctermfg=107 gui=NONE guibg=bg guifg=#6e8b3d
     CSAHi Pl17005f5fe7ffffffb term=NONE cterm=bold ctermbg=231 ctermfg=30 gui=bold guibg=#ffffff guifg=#005f5f
     CSAHi Ple7ffffff1f0087afN term=NONE cterm=NONE ctermbg=37 ctermfg=231 gui=NONE guibg=#0087af guifg=#ffffff
     CSAHi Plc4ff00001f0087afb term=NONE cterm=bold ctermbg=37 ctermfg=196 gui=bold guibg=#0087af guifg=#ff0000
     CSAHi Pl7587d7ff1f0087afN term=NONE cterm=NONE ctermbg=37 ctermfg=153 gui=NONE guibg=#0087af guifg=#87d7ff
     CSAHi Ple7ffffff1f0087afb term=NONE cterm=bold ctermbg=37 ctermfg=231 gui=bold guibg=#0087af guifg=#ffffff
-    CSAHi Pl1f0087af18005f87N term=NONE cterm=NONE ctermbg=31 ctermfg=37 gui=NONE guibg=#005f87 guifg=#0087af
-    CSAHi Pld6ffaf0018005f87b term=NONE cterm=bold ctermbg=31 ctermfg=214 gui=bold guibg=#005f87 guifg=#ffaf00
-    CSAHi Pl18005f8718005f87N term=NONE cterm=NONE ctermbg=31 ctermfg=31 gui=NONE guibg=#005f87 guifg=#005f87
-    CSAHi Ple7ffffff18005f87N term=NONE cterm=NONE ctermbg=31 ctermfg=231 gui=NONE guibg=#005f87 guifg=#ffffff
-    CSAHi GReplaceText term=reverse cterm=NONE ctermbg=181 ctermfg=233 gui=reverse guibg=bg guifg=fg
+    CSAHi Pl17005f5f7587d7ffb term=NONE cterm=bold ctermbg=153 ctermfg=30 gui=bold guibg=#87d7ff guifg=#005f5f
+    CSAHi Pl17005f5f7587d7ffN term=NONE cterm=NONE ctermbg=153 ctermfg=30 gui=NONE guibg=#87d7ff guifg=#005f5f
+    CSAHi Pla0d7000094afd700N term=NONE cterm=NONE ctermbg=148 ctermfg=160 gui=NONE guibg=#afd700 guifg=#d70000
+    CSAHi Pl16005f0094afd700b term=NONE cterm=bold ctermbg=148 ctermfg=28 gui=bold guibg=#afd700 guifg=#005f00
+    CSAHi Plec303030fcd0d0d0b term=NONE cterm=bold ctermbg=252 ctermfg=236 gui=bold guibg=#d0d0d0 guifg=#303030
+    CSAHi Plf4808080fcd0d0d0N term=NONE cterm=NONE ctermbg=252 ctermfg=244 gui=NONE guibg=#d0d0d0 guifg=#808080
+    CSAHi Plfcd0d0d0f1626262N term=NONE cterm=NONE ctermbg=241 ctermfg=252 gui=NONE guibg=#626262 guifg=#d0d0d0
+    CSAHi Pla0d70000f1626262N term=NONE cterm=NONE ctermbg=241 ctermfg=160 gui=NONE guibg=#626262 guifg=#d70000
+    CSAHi Ple7fffffff1626262b term=NONE cterm=bold ctermbg=241 ctermfg=231 gui=bold guibg=#626262 guifg=#ffffff
+    CSAHi Pl58870000ea1c1c1cN term=NONE cterm=NONE ctermbg=234 ctermfg=124 gui=NONE guibg=#1c1c1c guifg=#870000
+    CSAHi Plf1626262ea1c1c1cN term=NONE cterm=NONE ctermbg=234 ctermfg=241 gui=NONE guibg=#1c1c1c guifg=#626262
+    CSAHi CursorLine term=underline cterm=NONE ctermbg=234 ctermfg=fg gui=NONE guibg=#1b1b1b guifg=fg
+    CSAHi Plea1c1c1cea1c1c1cN term=NONE cterm=NONE ctermbg=234 ctermfg=234 gui=NONE guibg=#1c1c1c guifg=#1c1c1c
+    CSAHi Cursor term=NONE cterm=NONE ctermbg=181 ctermfg=233 gui=NONE guibg=#cdaf95 guifg=#141414
+    CSAHi lCursor term=NONE cterm=NONE ctermbg=181 ctermfg=233 gui=NONE guibg=#cdaf95 guifg=#141414
+    CSAHi MatchParen term=reverse cterm=NONE ctermbg=51 ctermfg=fg gui=NONE guibg=#00ffff guifg=fg
+    CSAHi Comment term=bold cterm=NONE ctermbg=bg ctermfg=37 gui=NONE guibg=bg guifg=#008b8b
+    CSAHi Constant term=underline cterm=NONE ctermbg=bg ctermfg=167 gui=NONE guibg=bg guifg=#cd2626
+    CSAHi Special term=underline cterm=NONE ctermbg=bg ctermfg=137 gui=NONE guibg=bg guifg=#a0522d
+    CSAHi Identifier term=underline cterm=NONE ctermbg=bg ctermfg=107 gui=NONE guibg=bg guifg=#6e8b3d
+    CSAHi htmlBoldUnderlineItalic term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi htmlUnderline term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi Plf58a8a8aea1c1c1cb term=NONE cterm=bold ctermbg=234 ctermfg=245 gui=bold guibg=#1c1c1c guifg=#8a8a8a
+    CSAHi Pl58870000d0ff8700b term=NONE cterm=bold ctermbg=214 ctermfg=124 gui=bold guibg=#ff8700 guifg=#870000
+    CSAHi Pld0ff8700ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=214 gui=NONE guibg=#444444 guifg=#ff8700
+    CSAHi Pla0d70000e7ffffffN term=NONE cterm=NONE ctermbg=231 ctermfg=160 gui=NONE guibg=#ffffff guifg=#d70000
+    CSAHi Plf4808080ec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=244 gui=NONE guibg=#303030 guifg=#808080
+    CSAHi Pl345f0000345f0000N term=NONE cterm=NONE ctermbg=88 ctermfg=88 gui=NONE guibg=#5f0000 guifg=#5f0000
+    CSAHi Ple7ffffff345f0000N term=NONE cterm=NONE ctermbg=88 ctermfg=231 gui=NONE guibg=#5f0000 guifg=#ffffff
+    CSAHi Pla0d70000345f0000N term=NONE cterm=NONE ctermbg=88 ctermfg=160 gui=NONE guibg=#5f0000 guifg=#d70000
+    CSAHi Ple7fffffff4808080N term=NONE cterm=NONE ctermbg=244 ctermfg=231 gui=NONE guibg=#808080 guifg=#ffffff
+    CSAHi Plf4808080ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=244 gui=NONE guibg=#444444 guifg=#808080
+    CSAHi Ple7ffffff62875fd7N term=NONE cterm=NONE ctermbg=140 ctermfg=231 gui=NONE guibg=#875fd7 guifg=#ffffff
+    CSAHi Plf1626262ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=241 gui=NONE guibg=#444444 guifg=#626262
     CSAHi Folded term=NONE cterm=NONE ctermbg=232 ctermfg=69 gui=NONE guibg=#050505 guifg=#4876ff
     CSAHi FoldColumn term=NONE cterm=NONE ctermbg=16 ctermfg=68 gui=NONE guibg=#000000 guifg=#3a5fcd
     CSAHi DiffAdd term=bold cterm=NONE ctermbg=31 ctermfg=231 gui=NONE guibg=#126493 guifg=#ffffff
@@ -153,28 +159,25 @@ elseif has("gui_running") || (&t_Co == 256 && (&term ==# "xterm" || &term =~# "^
     CSAHi Conceal term=NONE cterm=NONE ctermbg=233 ctermfg=235 gui=NONE guibg=#141414 guifg=#252525
     CSAHi SpellBad term=reverse cterm=undercurl ctermbg=bg ctermfg=196 gui=undercurl guibg=bg guifg=fg guisp=#ff0000
     CSAHi SpellCap term=reverse cterm=undercurl ctermbg=bg ctermfg=21 gui=undercurl guibg=bg guifg=fg guisp=#0000ff
-    CSAHi Pl465faf001c008700N term=NONE cterm=NONE ctermbg=34 ctermfg=106 gui=NONE guibg=#008700 guifg=#5faf00
-    CSAHi Pl94afd7001c008700N term=NONE cterm=NONE ctermbg=34 ctermfg=148 gui=NONE guibg=#008700 guifg=#afd700
+    CSAHi Pl1f0087af18005f87N term=NONE cterm=NONE ctermbg=31 ctermfg=37 gui=NONE guibg=#005f87 guifg=#0087af
+    CSAHi Pld6ffaf0018005f87b term=NONE cterm=bold ctermbg=31 ctermfg=214 gui=bold guibg=#005f87 guifg=#ffaf00
 elseif has("gui_running") || (&t_Co == 256 && (&term ==# "xterm" || &term =~# "^screen") && exists("g:CSApprox_eterm") && g:CSApprox_eterm) || &term =~? "^eterm"
     CSAHi Normal term=NONE cterm=NONE ctermbg=233 ctermfg=224 gui=NONE guibg=#141414 guifg=#cdaf95
-    CSAHi Pl1c0087001c008700N term=NONE cterm=NONE ctermbg=34 ctermfg=34 gui=NONE guibg=#008700 guifg=#008700
-    CSAHi Ple7ffffff1c008700N term=NONE cterm=NONE ctermbg=34 ctermfg=255 gui=NONE guibg=#008700 guifg=#ffffff
-    CSAHi Pl465faf0016005f00b term=NONE cterm=bold ctermbg=28 ctermfg=112 gui=bold guibg=#005f00 guifg=#5faf00
-    CSAHi Pl465faf0016005f00N term=NONE cterm=NONE ctermbg=28 ctermfg=112 gui=NONE guibg=#005f00 guifg=#5faf00
-    CSAHi Pl16005f0016005f00N term=NONE cterm=NONE ctermbg=28 ctermfg=28 gui=NONE guibg=#005f00 guifg=#005f00
-    CSAHi Ple7ffffff16005f00N term=NONE cterm=NONE ctermbg=28 ctermfg=255 gui=NONE guibg=#005f00 guifg=#ffffff
-    CSAHi Plf4808080ec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=244 gui=NONE guibg=#303030 guifg=#808080
-    CSAHi Ple7ffffff62875fd7N term=NONE cterm=NONE ctermbg=141 ctermfg=255 gui=NONE guibg=#875fd7 guifg=#ffffff
-    CSAHi Plf1626262ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=241 gui=NONE guibg=#444444 guifg=#626262
-    CSAHi Plec303030fcd0d0d0b term=NONE cterm=bold ctermbg=252 ctermfg=236 gui=bold guibg=#d0d0d0 guifg=#303030
-    CSAHi Plf4808080fcd0d0d0N term=NONE cterm=NONE ctermbg=252 ctermfg=244 gui=NONE guibg=#d0d0d0 guifg=#808080
-    CSAHi Plfcd0d0d0f1626262N term=NONE cterm=NONE ctermbg=241 ctermfg=252 gui=NONE guibg=#626262 guifg=#d0d0d0
-    CSAHi Pla0d70000f1626262N term=NONE cterm=NONE ctermbg=241 ctermfg=196 gui=NONE guibg=#626262 guifg=#d70000
-    CSAHi Ple7fffffff1626262b term=NONE cterm=bold ctermbg=241 ctermfg=255 gui=bold guibg=#626262 guifg=#ffffff
-    CSAHi Pl58870000ea1c1c1cN term=NONE cterm=NONE ctermbg=234 ctermfg=124 gui=NONE guibg=#1c1c1c guifg=#870000
-    CSAHi Plf1626262ea1c1c1cN term=NONE cterm=NONE ctermbg=234 ctermfg=241 gui=NONE guibg=#1c1c1c guifg=#626262
-    CSAHi Plf58a8a8aea1c1c1cb term=NONE cterm=bold ctermbg=234 ctermfg=245 gui=bold guibg=#1c1c1c guifg=#8a8a8a
-    CSAHi Plea1c1c1cea1c1c1cN term=NONE cterm=NONE ctermbg=234 ctermfg=234 gui=NONE guibg=#1c1c1c guifg=#1c1c1c
+    CSAHi Pl18005f8718005f87N term=NONE cterm=NONE ctermbg=31 ctermfg=31 gui=NONE guibg=#005f87 guifg=#005f87
+    CSAHi Ple7ffffff18005f87N term=NONE cterm=NONE ctermbg=31 ctermfg=255 gui=NONE guibg=#005f87 guifg=#ffffff
+    CSAHi GReplaceText term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi Pl465faf001c008700N term=NONE cterm=NONE ctermbg=34 ctermfg=112 gui=NONE guibg=#008700 guifg=#5faf00
+    CSAHi Pl94afd7001c008700N term=NONE cterm=NONE ctermbg=34 ctermfg=190 gui=NONE guibg=#008700 guifg=#afd700
+    CSAHi Pl7587d7ff18005f87N term=NONE cterm=NONE ctermbg=31 ctermfg=159 gui=NONE guibg=#005f87 guifg=#87d7ff
+    CSAHi Pl94afd700ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=190 gui=NONE guibg=#444444 guifg=#afd700
+    CSAHi elixirSymbol term=NONE cterm=NONE ctermbg=bg ctermfg=210 gui=NONE guibg=bg guifg=#ff6050
+    CSAHi EasyMotionTargetDefault term=NONE cterm=bold ctermbg=bg ctermfg=196 gui=bold guibg=bg guifg=#ff0000
+    CSAHi EasyMotionShadeDefault term=NONE cterm=NONE ctermbg=bg ctermfg=240 gui=NONE guibg=bg guifg=#585858
+    CSAHi Pl62875fd7e7ffffffN term=NONE cterm=NONE ctermbg=255 ctermfg=141 gui=NONE guibg=#ffffff guifg=#875fd7
+    CSAHi Pl375f00afe7ffffffb term=NONE cterm=bold ctermbg=255 ctermfg=92 gui=bold guibg=#ffffff guifg=#5f00af
+    CSAHi Ple7ffffff7caf0000b term=NONE cterm=bold ctermbg=160 ctermfg=255 gui=bold guibg=#af0000 guifg=#ffffff
+    CSAHi Plc4ff0000375f00afb term=NONE cterm=bold ctermbg=92 ctermfg=196 gui=bold guibg=#5f00af guifg=#ff0000
+    CSAHi Pl375f00af375f00afN term=NONE cterm=NONE ctermbg=92 ctermfg=92 gui=NONE guibg=#5f00af guifg=#5f00af
     CSAHi Statement term=bold cterm=NONE ctermbg=bg ctermfg=220 gui=NONE guibg=bg guifg=#cdad00
     CSAHi PreProc term=underline cterm=NONE ctermbg=bg ctermfg=31 gui=NONE guibg=bg guifg=#104e8b
     CSAHi Type term=underline cterm=NONE ctermbg=bg ctermfg=118 gui=NONE guibg=bg guifg=#66cd00
@@ -182,8 +185,12 @@ elseif has("gui_running") || (&t_Co == 256 && (&term ==# "xterm" || &term =~# "^
     CSAHi Ignore term=bold cterm=NONE ctermbg=bg ctermfg=243 gui=NONE guibg=bg guifg=#737373
     CSAHi Error term=reverse cterm=NONE ctermbg=196 ctermfg=250 gui=NONE guibg=#cd0000 guifg=#bebebe
     CSAHi Todo term=NONE cterm=bold ctermbg=142 ctermfg=234 gui=bold guibg=#8b8b00 guifg=#1a1a1a
+    CSAHi Ple7ffffff58870000N term=NONE cterm=NONE ctermbg=124 ctermfg=255 gui=NONE guibg=#870000 guifg=#ffffff
     CSAHi Number term=underline cterm=NONE ctermbg=bg ctermfg=196 gui=NONE guibg=bg guifg=#ee0000
-    CSAHi Plf79e9e9eee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=247 gui=NONE guibg=#444444 guifg=#9e9e9e
+    CSAHi Pl5887000058870000N term=NONE cterm=NONE ctermbg=124 ctermfg=124 gui=NONE guibg=#870000 guifg=#870000
+    CSAHi Pl7caf000058870000N term=NONE cterm=NONE ctermbg=124 ctermfg=160 gui=NONE guibg=#870000 guifg=#af0000
+    CSAHi Ple7ffffffa0d70000b term=NONE cterm=bold ctermbg=196 ctermfg=255 gui=bold guibg=#d70000 guifg=#ffffff
+    CSAHi Pla0d70000345f0000b term=NONE cterm=bold ctermbg=88 ctermfg=196 gui=bold guibg=#5f0000 guifg=#d70000
     CSAHi SpecialKey term=bold cterm=NONE ctermbg=bg ctermfg=239 gui=NONE guibg=bg guifg=#4d4d4d
     CSAHi NonText term=bold cterm=bold ctermbg=233 ctermfg=236 gui=bold guibg=#141414 guifg=#333333
     CSAHi Directory term=bold cterm=NONE ctermbg=bg ctermfg=105 gui=NONE guibg=bg guifg=#4169e1
@@ -193,23 +200,26 @@ elseif has("gui_running") || (&t_Co == 256 && (&term ==# "xterm" || &term =~# "^
     CSAHi MoreMsg term=bold cterm=bold ctermbg=bg ctermfg=227 gui=bold guibg=bg guifg=#c0ff3e
     CSAHi ModeMsg term=bold cterm=bold ctermbg=bg ctermfg=fg gui=bold guibg=bg guifg=fg
     CSAHi LineNr term=underline cterm=NONE ctermbg=232 ctermfg=145 gui=NONE guibg=#0a0a0a guifg=#8b8b83
-    CSAHi Pl17005f5f7587d7ffb term=NONE cterm=bold ctermbg=159 ctermfg=30 gui=bold guibg=#87d7ff guifg=#005f5f
-    CSAHi Pl17005f5f7587d7ffN term=NONE cterm=NONE ctermbg=159 ctermfg=30 gui=NONE guibg=#87d7ff guifg=#005f5f
-    CSAHi Pla0d7000094afd700N term=NONE cterm=NONE ctermbg=190 ctermfg=196 gui=NONE guibg=#afd700 guifg=#d70000
-    CSAHi Pl16005f0094afd700b term=NONE cterm=bold ctermbg=190 ctermfg=28 gui=bold guibg=#afd700 guifg=#005f00
-    CSAHi Pl94afd700ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=190 gui=NONE guibg=#444444 guifg=#afd700
-    CSAHi Ple7ffffff7caf0000b term=NONE cterm=bold ctermbg=160 ctermfg=255 gui=bold guibg=#af0000 guifg=#ffffff
-    CSAHi Pl7caf000058870000N term=NONE cterm=NONE ctermbg=124 ctermfg=160 gui=NONE guibg=#870000 guifg=#af0000
-    CSAHi Ple7ffffff58870000N term=NONE cterm=NONE ctermbg=124 ctermfg=255 gui=NONE guibg=#870000 guifg=#ffffff
-    CSAHi Ple7ffffffa0d70000b term=NONE cterm=bold ctermbg=196 ctermfg=255 gui=bold guibg=#d70000 guifg=#ffffff
-    CSAHi Pla0d70000345f0000b term=NONE cterm=bold ctermbg=88 ctermfg=196 gui=bold guibg=#5f0000 guifg=#d70000
-    CSAHi Pl7587d7ff18005f87N term=NONE cterm=NONE ctermbg=31 ctermfg=159 gui=NONE guibg=#005f87 guifg=#87d7ff
-    CSAHi rubySymbol term=NONE cterm=NONE ctermbg=bg ctermfg=210 gui=NONE guibg=bg guifg=#ff6050
-    CSAHi elixirSymbol term=NONE cterm=NONE ctermbg=bg ctermfg=210 gui=NONE guibg=bg guifg=#ff6050
-    CSAHi EasyMotionTargetDefault term=NONE cterm=bold ctermbg=bg ctermfg=196 gui=bold guibg=bg guifg=#ff0000
-    CSAHi EasyMotionShadeDefault term=NONE cterm=NONE ctermbg=bg ctermfg=240 gui=NONE guibg=bg guifg=#585858
+    CSAHi htmlUnderlineItalic term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi Ple7ffffff465faf00b term=NONE cterm=bold ctermbg=112 ctermfg=255 gui=bold guibg=#5faf00 guifg=#ffffff
+    CSAHi Pla0d70000ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=196 gui=NONE guibg=#444444 guifg=#d70000
+    CSAHi Plc4ff0000ee444444b term=NONE cterm=bold ctermbg=238 ctermfg=196 gui=bold guibg=#444444 guifg=#ff0000
+    CSAHi Plfcd0d0d0ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=252 gui=NONE guibg=#444444 guifg=#d0d0d0
+    CSAHi Ple7ffffffee444444b term=NONE cterm=bold ctermbg=238 ctermfg=255 gui=bold guibg=#444444 guifg=#ffffff
+    CSAHi Plee444444ec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=238 gui=NONE guibg=#303030 guifg=#444444
+    CSAHi Pld6ffaf00ec303030b term=NONE cterm=bold ctermbg=236 ctermfg=220 gui=bold guibg=#303030 guifg=#ffaf00
+    CSAHi Plec303030ec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=236 gui=NONE guibg=#303030 guifg=#303030
+    CSAHi Plf79e9e9eee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=247 gui=NONE guibg=#444444 guifg=#9e9e9e
+    CSAHi SyntasticErrorLine term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi Plf58a8a8aeb262626N term=NONE cterm=NONE ctermbg=235 ctermfg=245 gui=NONE guibg=#262626 guifg=#8a8a8a
+    CSAHi Pl1c0087001c008700N term=NONE cterm=NONE ctermbg=34 ctermfg=34 gui=NONE guibg=#008700 guifg=#008700
+    CSAHi Ple7ffffff1c008700N term=NONE cterm=NONE ctermbg=34 ctermfg=255 gui=NONE guibg=#008700 guifg=#ffffff
+    CSAHi Pl465faf0016005f00b term=NONE cterm=bold ctermbg=28 ctermfg=112 gui=bold guibg=#005f00 guifg=#5faf00
+    CSAHi Pl465faf0016005f00N term=NONE cterm=NONE ctermbg=28 ctermfg=112 gui=NONE guibg=#005f00 guifg=#5faf00
+    CSAHi Pl16005f0016005f00N term=NONE cterm=NONE ctermbg=28 ctermfg=28 gui=NONE guibg=#005f00 guifg=#005f00
+    CSAHi Ple7ffffff16005f00N term=NONE cterm=NONE ctermbg=28 ctermfg=255 gui=NONE guibg=#005f00 guifg=#ffffff
     CSAHi SpellRare term=reverse cterm=undercurl ctermbg=bg ctermfg=201 gui=undercurl guibg=bg guifg=fg guisp=#ff00ff
-    CSAHi SpellLocal term=underline cterm=undercurl ctermbg=bg ctermfg=51 gui=undercurl guibg=bg guifg=fg guisp=#00ffff
+    CSAHi SpellLocal term=underline cterm=undercurl ctermbg=bg ctermfg=37 gui=undercurl guibg=bg guifg=fg guisp=#008b8b
     CSAHi Pmenu term=NONE cterm=NONE ctermbg=238 ctermfg=231 gui=NONE guibg=#444444 guifg=#f6f3e8
     CSAHi PmenuSel term=NONE cterm=NONE ctermbg=229 ctermfg=16 gui=NONE guibg=#cae682 guifg=#000000
     CSAHi PmenuSbar term=NONE cterm=NONE ctermbg=102 ctermfg=fg gui=NONE guibg=#555555 guifg=fg
@@ -217,12 +227,10 @@ elseif has("gui_running") || (&t_Co == 256 && (&term ==# "xterm" || &term =~# "^
     CSAHi TabLine term=underline cterm=NONE ctermbg=224 ctermfg=16 gui=NONE guibg=#c2bfa5 guifg=#000000
     CSAHi TabLineSel term=bold cterm=NONE ctermbg=25 ctermfg=255 gui=NONE guibg=#133293 guifg=#ffffff
     CSAHi TabLineFill term=reverse cterm=NONE ctermbg=224 ctermfg=16 gui=NONE guibg=#c2bfa5 guifg=#000000
-    CSAHi CursorColumn term=reverse cterm=NONE ctermbg=241 ctermfg=fg gui=NONE guibg=#666666 guifg=fg
-    CSAHi Pl62875fd7e7ffffffN term=NONE cterm=NONE ctermbg=255 ctermfg=141 gui=NONE guibg=#ffffff guifg=#875fd7
-    CSAHi Pl375f00afe7ffffffb term=NONE cterm=bold ctermbg=255 ctermfg=92 gui=bold guibg=#ffffff guifg=#5f00af
-    CSAHi Pl62875fd7375f00afN term=NONE cterm=NONE ctermbg=92 ctermfg=141 gui=NONE guibg=#5f00af guifg=#875fd7
-    CSAHi Plc4ff0000375f00afb term=NONE cterm=bold ctermbg=92 ctermfg=196 gui=bold guibg=#5f00af guifg=#ff0000
-    CSAHi Pl375f00af375f00afN term=NONE cterm=NONE ctermbg=92 ctermfg=92 gui=NONE guibg=#5f00af guifg=#5f00af
+    CSAHi CursorColumn term=reverse cterm=NONE ctermbg=254 ctermfg=fg gui=NONE guibg=#e5e5e5 guifg=fg
+    CSAHi rubySymbol term=NONE cterm=NONE ctermbg=bg ctermfg=210 gui=NONE guibg=bg guifg=#ff6050
+    CSAHi htmlBoldItalic term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi htmlBold term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
     CSAHi Ple7ffffff375f00afN term=NONE cterm=NONE ctermbg=92 ctermfg=255 gui=NONE guibg=#5f00af guifg=#ffffff
     CSAHi Plbdd7d7ff375f00afN term=NONE cterm=NONE ctermbg=92 ctermfg=231 gui=NONE guibg=#5f00af guifg=#d7d7ff
     CSAHi Pl375f00afe7ffffffN term=NONE cterm=NONE ctermbg=255 ctermfg=92 gui=NONE guibg=#ffffff guifg=#5f00af
@@ -233,10 +241,9 @@ elseif has("gui_running") || (&t_Co == 256 && (&term ==# "xterm" || &term =~# "^
     CSAHi Plf1626262ec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=241 gui=NONE guibg=#303030 guifg=#626262
     CSAHi Plec303030eb262626N term=NONE cterm=NONE ctermbg=235 ctermfg=236 gui=NONE guibg=#262626 guifg=#303030
     CSAHi Pla0d70000d0ff8700N term=NONE cterm=NONE ctermbg=214 ctermfg=196 gui=NONE guibg=#ff8700 guifg=#d70000
-    CSAHi Pl58870000d0ff8700b term=NONE cterm=bold ctermbg=214 ctermfg=124 gui=bold guibg=#ff8700 guifg=#870000
-    CSAHi Pld0ff8700ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=214 gui=NONE guibg=#444444 guifg=#ff8700
-    CSAHi Pla0d70000e7ffffffN term=NONE cterm=NONE ctermbg=255 ctermfg=196 gui=NONE guibg=#ffffff guifg=#d70000
-    CSAHi CursorLineNr term=bold cterm=bold ctermbg=bg ctermfg=226 gui=bold guibg=bg guifg=#ffff00
+    CSAHi Pl62875fd7375f00afN term=NONE cterm=NONE ctermbg=92 ctermfg=141 gui=NONE guibg=#5f00af guifg=#875fd7
+    CSAHi htmlBoldUnderline term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi CursorLineNr term=bold cterm=bold ctermbg=bg ctermfg=167 gui=bold guibg=bg guifg=#a52a2a
     CSAHi Question term=NONE cterm=bold ctermbg=bg ctermfg=227 gui=bold guibg=bg guifg=#c0ff3e
     CSAHi StatusLine term=reverse,bold cterm=NONE ctermbg=234 ctermfg=252 gui=NONE guibg=#202020 guifg=#cccccc
     CSAHi StatusLineNC term=reverse cterm=NONE ctermbg=234 ctermfg=16 gui=NONE guibg=#202020 guifg=#000000
@@ -246,43 +253,48 @@ elseif has("gui_running") || (&t_Co == 256 && (&term ==# "xterm" || &term =~# "^
     CSAHi VisualNOS term=bold,underline cterm=bold,underline ctermbg=bg ctermfg=fg gui=bold,underline guibg=bg guifg=fg
     CSAHi WarningMsg term=NONE cterm=bold ctermbg=bg ctermfg=196 gui=bold guibg=bg guifg=#cd0000
     CSAHi WildMenu term=NONE cterm=NONE ctermbg=226 ctermfg=16 gui=NONE guibg=#eec900 guifg=#000000
-    CSAHi Pl5887000058870000N term=NONE cterm=NONE ctermbg=124 ctermfg=124 gui=NONE guibg=#870000 guifg=#870000
-    CSAHi Pl345f0000345f0000N term=NONE cterm=NONE ctermbg=88 ctermfg=88 gui=NONE guibg=#5f0000 guifg=#5f0000
-    CSAHi Ple7ffffff345f0000N term=NONE cterm=NONE ctermbg=88 ctermfg=255 gui=NONE guibg=#5f0000 guifg=#ffffff
-    CSAHi Pla0d70000345f0000N term=NONE cterm=NONE ctermbg=88 ctermfg=196 gui=NONE guibg=#5f0000 guifg=#d70000
-    CSAHi Ple7fffffff4808080N term=NONE cterm=NONE ctermbg=244 ctermfg=255 gui=NONE guibg=#808080 guifg=#ffffff
-    CSAHi Plf4808080ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=244 gui=NONE guibg=#444444 guifg=#808080
-    CSAHi Plf58a8a8aeb262626N term=NONE cterm=NONE ctermbg=235 ctermfg=245 gui=NONE guibg=#262626 guifg=#8a8a8a
-    CSAHi Ple7ffffff465faf00b term=NONE cterm=bold ctermbg=112 ctermfg=255 gui=bold guibg=#5faf00 guifg=#ffffff
-    CSAHi Pla0d70000ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=196 gui=NONE guibg=#444444 guifg=#d70000
-    CSAHi Plc4ff0000ee444444b term=NONE cterm=bold ctermbg=238 ctermfg=196 gui=bold guibg=#444444 guifg=#ff0000
-    CSAHi Plfcd0d0d0ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=252 gui=NONE guibg=#444444 guifg=#d0d0d0
-    CSAHi Ple7ffffffee444444b term=NONE cterm=bold ctermbg=238 ctermfg=255 gui=bold guibg=#444444 guifg=#ffffff
-    CSAHi Plee444444ec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=238 gui=NONE guibg=#303030 guifg=#444444
-    CSAHi Pld6ffaf00ec303030b term=NONE cterm=bold ctermbg=236 ctermfg=220 gui=bold guibg=#303030 guifg=#ffaf00
-    CSAHi Plec303030ec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=236 gui=NONE guibg=#303030 guifg=#303030
     CSAHi Ple7ffffffec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=255 gui=NONE guibg=#303030 guifg=#ffffff
-    CSAHi SyntasticErrorLine term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
     CSAHi Plfabcbcbcf1626262N term=NONE cterm=NONE ctermbg=241 ctermfg=250 gui=NONE guibg=#626262 guifg=#bcbcbc
     CSAHi SyntasticWarningLine term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
-    CSAHi CursorLine term=underline cterm=NONE ctermbg=234 ctermfg=fg gui=NONE guibg=#1b1b1b guifg=fg
-    CSAHi Cursor term=NONE cterm=NONE ctermbg=224 ctermfg=233 gui=NONE guibg=#cdaf95 guifg=#141414
-    CSAHi lCursor term=NONE cterm=NONE ctermbg=224 ctermfg=233 gui=NONE guibg=#cdaf95 guifg=#141414
-    CSAHi MatchParen term=reverse cterm=NONE ctermbg=37 ctermfg=fg gui=NONE guibg=#008b8b guifg=fg
-    CSAHi Comment term=bold cterm=NONE ctermbg=bg ctermfg=37 gui=NONE guibg=bg guifg=#008b8b
-    CSAHi Constant term=underline cterm=NONE ctermbg=bg ctermfg=203 gui=NONE guibg=bg guifg=#cd2626
-    CSAHi Special term=underline cterm=NONE ctermbg=bg ctermfg=173 gui=NONE guibg=bg guifg=#a0522d
-    CSAHi Identifier term=underline cterm=NONE ctermbg=bg ctermfg=143 gui=NONE guibg=bg guifg=#6e8b3d
     CSAHi Pl17005f5fe7ffffffb term=NONE cterm=bold ctermbg=255 ctermfg=30 gui=bold guibg=#ffffff guifg=#005f5f
     CSAHi Ple7ffffff1f0087afN term=NONE cterm=NONE ctermbg=38 ctermfg=255 gui=NONE guibg=#0087af guifg=#ffffff
     CSAHi Plc4ff00001f0087afb term=NONE cterm=bold ctermbg=38 ctermfg=196 gui=bold guibg=#0087af guifg=#ff0000
     CSAHi Pl7587d7ff1f0087afN term=NONE cterm=NONE ctermbg=38 ctermfg=159 gui=NONE guibg=#0087af guifg=#87d7ff
     CSAHi Ple7ffffff1f0087afb term=NONE cterm=bold ctermbg=38 ctermfg=255 gui=bold guibg=#0087af guifg=#ffffff
-    CSAHi Pl1f0087af18005f87N term=NONE cterm=NONE ctermbg=31 ctermfg=38 gui=NONE guibg=#005f87 guifg=#0087af
-    CSAHi Pld6ffaf0018005f87b term=NONE cterm=bold ctermbg=31 ctermfg=220 gui=bold guibg=#005f87 guifg=#ffaf00
-    CSAHi Pl18005f8718005f87N term=NONE cterm=NONE ctermbg=31 ctermfg=31 gui=NONE guibg=#005f87 guifg=#005f87
-    CSAHi Ple7ffffff18005f87N term=NONE cterm=NONE ctermbg=31 ctermfg=255 gui=NONE guibg=#005f87 guifg=#ffffff
-    CSAHi GReplaceText term=reverse cterm=NONE ctermbg=224 ctermfg=233 gui=reverse guibg=bg guifg=fg
+    CSAHi Pl17005f5f7587d7ffb term=NONE cterm=bold ctermbg=159 ctermfg=30 gui=bold guibg=#87d7ff guifg=#005f5f
+    CSAHi Pl17005f5f7587d7ffN term=NONE cterm=NONE ctermbg=159 ctermfg=30 gui=NONE guibg=#87d7ff guifg=#005f5f
+    CSAHi Pla0d7000094afd700N term=NONE cterm=NONE ctermbg=190 ctermfg=196 gui=NONE guibg=#afd700 guifg=#d70000
+    CSAHi Pl16005f0094afd700b term=NONE cterm=bold ctermbg=190 ctermfg=28 gui=bold guibg=#afd700 guifg=#005f00
+    CSAHi Plec303030fcd0d0d0b term=NONE cterm=bold ctermbg=252 ctermfg=236 gui=bold guibg=#d0d0d0 guifg=#303030
+    CSAHi Plf4808080fcd0d0d0N term=NONE cterm=NONE ctermbg=252 ctermfg=244 gui=NONE guibg=#d0d0d0 guifg=#808080
+    CSAHi Plfcd0d0d0f1626262N term=NONE cterm=NONE ctermbg=241 ctermfg=252 gui=NONE guibg=#626262 guifg=#d0d0d0
+    CSAHi Pla0d70000f1626262N term=NONE cterm=NONE ctermbg=241 ctermfg=196 gui=NONE guibg=#626262 guifg=#d70000
+    CSAHi Ple7fffffff1626262b term=NONE cterm=bold ctermbg=241 ctermfg=255 gui=bold guibg=#626262 guifg=#ffffff
+    CSAHi Pl58870000ea1c1c1cN term=NONE cterm=NONE ctermbg=234 ctermfg=124 gui=NONE guibg=#1c1c1c guifg=#870000
+    CSAHi Plf1626262ea1c1c1cN term=NONE cterm=NONE ctermbg=234 ctermfg=241 gui=NONE guibg=#1c1c1c guifg=#626262
+    CSAHi CursorLine term=underline cterm=NONE ctermbg=234 ctermfg=fg gui=NONE guibg=#1b1b1b guifg=fg
+    CSAHi Plea1c1c1cea1c1c1cN term=NONE cterm=NONE ctermbg=234 ctermfg=234 gui=NONE guibg=#1c1c1c guifg=#1c1c1c
+    CSAHi Cursor term=NONE cterm=NONE ctermbg=224 ctermfg=233 gui=NONE guibg=#cdaf95 guifg=#141414
+    CSAHi lCursor term=NONE cterm=NONE ctermbg=224 ctermfg=233 gui=NONE guibg=#cdaf95 guifg=#141414
+    CSAHi MatchParen term=reverse cterm=NONE ctermbg=51 ctermfg=fg gui=NONE guibg=#00ffff guifg=fg
+    CSAHi Comment term=bold cterm=NONE ctermbg=bg ctermfg=37 gui=NONE guibg=bg guifg=#008b8b
+    CSAHi Constant term=underline cterm=NONE ctermbg=bg ctermfg=203 gui=NONE guibg=bg guifg=#cd2626
+    CSAHi Special term=underline cterm=NONE ctermbg=bg ctermfg=173 gui=NONE guibg=bg guifg=#a0522d
+    CSAHi Identifier term=underline cterm=NONE ctermbg=bg ctermfg=143 gui=NONE guibg=bg guifg=#6e8b3d
+    CSAHi htmlBoldUnderlineItalic term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi htmlUnderline term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi Plf58a8a8aea1c1c1cb term=NONE cterm=bold ctermbg=234 ctermfg=245 gui=bold guibg=#1c1c1c guifg=#8a8a8a
+    CSAHi Pl58870000d0ff8700b term=NONE cterm=bold ctermbg=214 ctermfg=124 gui=bold guibg=#ff8700 guifg=#870000
+    CSAHi Pld0ff8700ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=214 gui=NONE guibg=#444444 guifg=#ff8700
+    CSAHi Pla0d70000e7ffffffN term=NONE cterm=NONE ctermbg=255 ctermfg=196 gui=NONE guibg=#ffffff guifg=#d70000
+    CSAHi Plf4808080ec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=244 gui=NONE guibg=#303030 guifg=#808080
+    CSAHi Pl345f0000345f0000N term=NONE cterm=NONE ctermbg=88 ctermfg=88 gui=NONE guibg=#5f0000 guifg=#5f0000
+    CSAHi Ple7ffffff345f0000N term=NONE cterm=NONE ctermbg=88 ctermfg=255 gui=NONE guibg=#5f0000 guifg=#ffffff
+    CSAHi Pla0d70000345f0000N term=NONE cterm=NONE ctermbg=88 ctermfg=196 gui=NONE guibg=#5f0000 guifg=#d70000
+    CSAHi Ple7fffffff4808080N term=NONE cterm=NONE ctermbg=244 ctermfg=255 gui=NONE guibg=#808080 guifg=#ffffff
+    CSAHi Plf4808080ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=244 gui=NONE guibg=#444444 guifg=#808080
+    CSAHi Ple7ffffff62875fd7N term=NONE cterm=NONE ctermbg=141 ctermfg=255 gui=NONE guibg=#875fd7 guifg=#ffffff
+    CSAHi Plf1626262ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=241 gui=NONE guibg=#444444 guifg=#626262
     CSAHi Folded term=NONE cterm=NONE ctermbg=232 ctermfg=111 gui=NONE guibg=#050505 guifg=#4876ff
     CSAHi FoldColumn term=NONE cterm=NONE ctermbg=16 ctermfg=69 gui=NONE guibg=#000000 guifg=#3a5fcd
     CSAHi DiffAdd term=bold cterm=NONE ctermbg=31 ctermfg=255 gui=NONE guibg=#126493 guifg=#ffffff
@@ -293,28 +305,25 @@ elseif has("gui_running") || (&t_Co == 256 && (&term ==# "xterm" || &term =~# "^
     CSAHi Conceal term=NONE cterm=NONE ctermbg=233 ctermfg=235 gui=NONE guibg=#141414 guifg=#252525
     CSAHi SpellBad term=reverse cterm=undercurl ctermbg=bg ctermfg=196 gui=undercurl guibg=bg guifg=fg guisp=#ff0000
     CSAHi SpellCap term=reverse cterm=undercurl ctermbg=bg ctermfg=21 gui=undercurl guibg=bg guifg=fg guisp=#0000ff
-    CSAHi Pl465faf001c008700N term=NONE cterm=NONE ctermbg=34 ctermfg=112 gui=NONE guibg=#008700 guifg=#5faf00
-    CSAHi Pl94afd7001c008700N term=NONE cterm=NONE ctermbg=34 ctermfg=190 gui=NONE guibg=#008700 guifg=#afd700
+    CSAHi Pl1f0087af18005f87N term=NONE cterm=NONE ctermbg=31 ctermfg=38 gui=NONE guibg=#005f87 guifg=#0087af
+    CSAHi Pld6ffaf0018005f87b term=NONE cterm=bold ctermbg=31 ctermfg=220 gui=bold guibg=#005f87 guifg=#ffaf00
 elseif has("gui_running") || &t_Co == 256
     CSAHi Normal term=NONE cterm=NONE ctermbg=233 ctermfg=180 gui=NONE guibg=#141414 guifg=#cdaf95
-    CSAHi Pl1c0087001c008700N term=NONE cterm=NONE ctermbg=28 ctermfg=28 gui=NONE guibg=#008700 guifg=#008700
-    CSAHi Ple7ffffff1c008700N term=NONE cterm=NONE ctermbg=28 ctermfg=231 gui=NONE guibg=#008700 guifg=#ffffff
-    CSAHi Pl465faf0016005f00b term=NONE cterm=bold ctermbg=22 ctermfg=70 gui=bold guibg=#005f00 guifg=#5faf00
-    CSAHi Pl465faf0016005f00N term=NONE cterm=NONE ctermbg=22 ctermfg=70 gui=NONE guibg=#005f00 guifg=#5faf00
-    CSAHi Pl16005f0016005f00N term=NONE cterm=NONE ctermbg=22 ctermfg=22 gui=NONE guibg=#005f00 guifg=#005f00
-    CSAHi Ple7ffffff16005f00N term=NONE cterm=NONE ctermbg=22 ctermfg=231 gui=NONE guibg=#005f00 guifg=#ffffff
-    CSAHi Plf4808080ec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=244 gui=NONE guibg=#303030 guifg=#808080
-    CSAHi Ple7ffffff62875fd7N term=NONE cterm=NONE ctermbg=98 ctermfg=231 gui=NONE guibg=#875fd7 guifg=#ffffff
-    CSAHi Plf1626262ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=241 gui=NONE guibg=#444444 guifg=#626262
-    CSAHi Plec303030fcd0d0d0b term=NONE cterm=bold ctermbg=252 ctermfg=236 gui=bold guibg=#d0d0d0 guifg=#303030
-    CSAHi Plf4808080fcd0d0d0N term=NONE cterm=NONE ctermbg=252 ctermfg=244 gui=NONE guibg=#d0d0d0 guifg=#808080
-    CSAHi Plfcd0d0d0f1626262N term=NONE cterm=NONE ctermbg=241 ctermfg=252 gui=NONE guibg=#626262 guifg=#d0d0d0
-    CSAHi Pla0d70000f1626262N term=NONE cterm=NONE ctermbg=241 ctermfg=160 gui=NONE guibg=#626262 guifg=#d70000
-    CSAHi Ple7fffffff1626262b term=NONE cterm=bold ctermbg=241 ctermfg=231 gui=bold guibg=#626262 guifg=#ffffff
-    CSAHi Pl58870000ea1c1c1cN term=NONE cterm=NONE ctermbg=234 ctermfg=88 gui=NONE guibg=#1c1c1c guifg=#870000
-    CSAHi Plf1626262ea1c1c1cN term=NONE cterm=NONE ctermbg=234 ctermfg=241 gui=NONE guibg=#1c1c1c guifg=#626262
-    CSAHi Plf58a8a8aea1c1c1cb term=NONE cterm=bold ctermbg=234 ctermfg=245 gui=bold guibg=#1c1c1c guifg=#8a8a8a
-    CSAHi Plea1c1c1cea1c1c1cN term=NONE cterm=NONE ctermbg=234 ctermfg=234 gui=NONE guibg=#1c1c1c guifg=#1c1c1c
+    CSAHi Pl18005f8718005f87N term=NONE cterm=NONE ctermbg=24 ctermfg=24 gui=NONE guibg=#005f87 guifg=#005f87
+    CSAHi Ple7ffffff18005f87N term=NONE cterm=NONE ctermbg=24 ctermfg=231 gui=NONE guibg=#005f87 guifg=#ffffff
+    CSAHi GReplaceText term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi Pl465faf001c008700N term=NONE cterm=NONE ctermbg=28 ctermfg=70 gui=NONE guibg=#008700 guifg=#5faf00
+    CSAHi Pl94afd7001c008700N term=NONE cterm=NONE ctermbg=28 ctermfg=148 gui=NONE guibg=#008700 guifg=#afd700
+    CSAHi Pl7587d7ff18005f87N term=NONE cterm=NONE ctermbg=24 ctermfg=117 gui=NONE guibg=#005f87 guifg=#87d7ff
+    CSAHi Pl94afd700ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=148 gui=NONE guibg=#444444 guifg=#afd700
+    CSAHi elixirSymbol term=NONE cterm=NONE ctermbg=bg ctermfg=203 gui=NONE guibg=bg guifg=#ff6050
+    CSAHi EasyMotionTargetDefault term=NONE cterm=bold ctermbg=bg ctermfg=196 gui=bold guibg=bg guifg=#ff0000
+    CSAHi EasyMotionShadeDefault term=NONE cterm=NONE ctermbg=bg ctermfg=240 gui=NONE guibg=bg guifg=#585858
+    CSAHi Pl62875fd7e7ffffffN term=NONE cterm=NONE ctermbg=231 ctermfg=98 gui=NONE guibg=#ffffff guifg=#875fd7
+    CSAHi Pl375f00afe7ffffffb term=NONE cterm=bold ctermbg=231 ctermfg=55 gui=bold guibg=#ffffff guifg=#5f00af
+    CSAHi Ple7ffffff7caf0000b term=NONE cterm=bold ctermbg=124 ctermfg=231 gui=bold guibg=#af0000 guifg=#ffffff
+    CSAHi Plc4ff0000375f00afb term=NONE cterm=bold ctermbg=55 ctermfg=196 gui=bold guibg=#5f00af guifg=#ff0000
+    CSAHi Pl375f00af375f00afN term=NONE cterm=NONE ctermbg=55 ctermfg=55 gui=NONE guibg=#5f00af guifg=#5f00af
     CSAHi Statement term=bold cterm=NONE ctermbg=bg ctermfg=178 gui=NONE guibg=bg guifg=#cdad00
     CSAHi PreProc term=underline cterm=NONE ctermbg=bg ctermfg=24 gui=NONE guibg=bg guifg=#104e8b
     CSAHi Type term=underline cterm=NONE ctermbg=bg ctermfg=76 gui=NONE guibg=bg guifg=#66cd00
@@ -322,8 +331,12 @@ elseif has("gui_running") || &t_Co == 256
     CSAHi Ignore term=bold cterm=NONE ctermbg=bg ctermfg=243 gui=NONE guibg=bg guifg=#737373
     CSAHi Error term=reverse cterm=NONE ctermbg=160 ctermfg=250 gui=NONE guibg=#cd0000 guifg=#bebebe
     CSAHi Todo term=NONE cterm=bold ctermbg=100 ctermfg=234 gui=bold guibg=#8b8b00 guifg=#1a1a1a
+    CSAHi Ple7ffffff58870000N term=NONE cterm=NONE ctermbg=88 ctermfg=231 gui=NONE guibg=#870000 guifg=#ffffff
     CSAHi Number term=underline cterm=NONE ctermbg=bg ctermfg=196 gui=NONE guibg=bg guifg=#ee0000
-    CSAHi Plf79e9e9eee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=247 gui=NONE guibg=#444444 guifg=#9e9e9e
+    CSAHi Pl5887000058870000N term=NONE cterm=NONE ctermbg=88 ctermfg=88 gui=NONE guibg=#870000 guifg=#870000
+    CSAHi Pl7caf000058870000N term=NONE cterm=NONE ctermbg=88 ctermfg=124 gui=NONE guibg=#870000 guifg=#af0000
+    CSAHi Ple7ffffffa0d70000b term=NONE cterm=bold ctermbg=160 ctermfg=231 gui=bold guibg=#d70000 guifg=#ffffff
+    CSAHi Pla0d70000345f0000b term=NONE cterm=bold ctermbg=52 ctermfg=160 gui=bold guibg=#5f0000 guifg=#d70000
     CSAHi SpecialKey term=bold cterm=NONE ctermbg=bg ctermfg=239 gui=NONE guibg=bg guifg=#4d4d4d
     CSAHi NonText term=bold cterm=bold ctermbg=233 ctermfg=236 gui=bold guibg=#141414 guifg=#333333
     CSAHi Directory term=bold cterm=NONE ctermbg=bg ctermfg=62 gui=NONE guibg=bg guifg=#4169e1
@@ -333,23 +346,26 @@ elseif has("gui_running") || &t_Co == 256
     CSAHi MoreMsg term=bold cterm=bold ctermbg=bg ctermfg=155 gui=bold guibg=bg guifg=#c0ff3e
     CSAHi ModeMsg term=bold cterm=bold ctermbg=bg ctermfg=fg gui=bold guibg=bg guifg=fg
     CSAHi LineNr term=underline cterm=NONE ctermbg=232 ctermfg=102 gui=NONE guibg=#0a0a0a guifg=#8b8b83
-    CSAHi Pl17005f5f7587d7ffb term=NONE cterm=bold ctermbg=117 ctermfg=23 gui=bold guibg=#87d7ff guifg=#005f5f
-    CSAHi Pl17005f5f7587d7ffN term=NONE cterm=NONE ctermbg=117 ctermfg=23 gui=NONE guibg=#87d7ff guifg=#005f5f
-    CSAHi Pla0d7000094afd700N term=NONE cterm=NONE ctermbg=148 ctermfg=160 gui=NONE guibg=#afd700 guifg=#d70000
-    CSAHi Pl16005f0094afd700b term=NONE cterm=bold ctermbg=148 ctermfg=22 gui=bold guibg=#afd700 guifg=#005f00
-    CSAHi Pl94afd700ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=148 gui=NONE guibg=#444444 guifg=#afd700
-    CSAHi Ple7ffffff7caf0000b term=NONE cterm=bold ctermbg=124 ctermfg=231 gui=bold guibg=#af0000 guifg=#ffffff
-    CSAHi Pl7caf000058870000N term=NONE cterm=NONE ctermbg=88 ctermfg=124 gui=NONE guibg=#870000 guifg=#af0000
-    CSAHi Ple7ffffff58870000N term=NONE cterm=NONE ctermbg=88 ctermfg=231 gui=NONE guibg=#870000 guifg=#ffffff
-    CSAHi Ple7ffffffa0d70000b term=NONE cterm=bold ctermbg=160 ctermfg=231 gui=bold guibg=#d70000 guifg=#ffffff
-    CSAHi Pla0d70000345f0000b term=NONE cterm=bold ctermbg=52 ctermfg=160 gui=bold guibg=#5f0000 guifg=#d70000
-    CSAHi Pl7587d7ff18005f87N term=NONE cterm=NONE ctermbg=24 ctermfg=117 gui=NONE guibg=#005f87 guifg=#87d7ff
-    CSAHi rubySymbol term=NONE cterm=NONE ctermbg=bg ctermfg=203 gui=NONE guibg=bg guifg=#ff6050
-    CSAHi elixirSymbol term=NONE cterm=NONE ctermbg=bg ctermfg=203 gui=NONE guibg=bg guifg=#ff6050
-    CSAHi EasyMotionTargetDefault term=NONE cterm=bold ctermbg=bg ctermfg=196 gui=bold guibg=bg guifg=#ff0000
-    CSAHi EasyMotionShadeDefault term=NONE cterm=NONE ctermbg=bg ctermfg=240 gui=NONE guibg=bg guifg=#585858
+    CSAHi htmlUnderlineItalic term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi Ple7ffffff465faf00b term=NONE cterm=bold ctermbg=70 ctermfg=231 gui=bold guibg=#5faf00 guifg=#ffffff
+    CSAHi Pla0d70000ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=160 gui=NONE guibg=#444444 guifg=#d70000
+    CSAHi Plc4ff0000ee444444b term=NONE cterm=bold ctermbg=238 ctermfg=196 gui=bold guibg=#444444 guifg=#ff0000
+    CSAHi Plfcd0d0d0ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=252 gui=NONE guibg=#444444 guifg=#d0d0d0
+    CSAHi Ple7ffffffee444444b term=NONE cterm=bold ctermbg=238 ctermfg=231 gui=bold guibg=#444444 guifg=#ffffff
+    CSAHi Plee444444ec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=238 gui=NONE guibg=#303030 guifg=#444444
+    CSAHi Pld6ffaf00ec303030b term=NONE cterm=bold ctermbg=236 ctermfg=214 gui=bold guibg=#303030 guifg=#ffaf00
+    CSAHi Plec303030ec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=236 gui=NONE guibg=#303030 guifg=#303030
+    CSAHi Plf79e9e9eee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=247 gui=NONE guibg=#444444 guifg=#9e9e9e
+    CSAHi SyntasticErrorLine term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi Plf58a8a8aeb262626N term=NONE cterm=NONE ctermbg=235 ctermfg=245 gui=NONE guibg=#262626 guifg=#8a8a8a
+    CSAHi Pl1c0087001c008700N term=NONE cterm=NONE ctermbg=28 ctermfg=28 gui=NONE guibg=#008700 guifg=#008700
+    CSAHi Ple7ffffff1c008700N term=NONE cterm=NONE ctermbg=28 ctermfg=231 gui=NONE guibg=#008700 guifg=#ffffff
+    CSAHi Pl465faf0016005f00b term=NONE cterm=bold ctermbg=22 ctermfg=70 gui=bold guibg=#005f00 guifg=#5faf00
+    CSAHi Pl465faf0016005f00N term=NONE cterm=NONE ctermbg=22 ctermfg=70 gui=NONE guibg=#005f00 guifg=#5faf00
+    CSAHi Pl16005f0016005f00N term=NONE cterm=NONE ctermbg=22 ctermfg=22 gui=NONE guibg=#005f00 guifg=#005f00
+    CSAHi Ple7ffffff16005f00N term=NONE cterm=NONE ctermbg=22 ctermfg=231 gui=NONE guibg=#005f00 guifg=#ffffff
     CSAHi SpellRare term=reverse cterm=undercurl ctermbg=bg ctermfg=201 gui=undercurl guibg=bg guifg=fg guisp=#ff00ff
-    CSAHi SpellLocal term=underline cterm=undercurl ctermbg=bg ctermfg=51 gui=undercurl guibg=bg guifg=fg guisp=#00ffff
+    CSAHi SpellLocal term=underline cterm=undercurl ctermbg=bg ctermfg=30 gui=undercurl guibg=bg guifg=fg guisp=#008b8b
     CSAHi Pmenu term=NONE cterm=NONE ctermbg=238 ctermfg=230 gui=NONE guibg=#444444 guifg=#f6f3e8
     CSAHi PmenuSel term=NONE cterm=NONE ctermbg=186 ctermfg=16 gui=NONE guibg=#cae682 guifg=#000000
     CSAHi PmenuSbar term=NONE cterm=NONE ctermbg=240 ctermfg=fg gui=NONE guibg=#555555 guifg=fg
@@ -357,12 +373,10 @@ elseif has("gui_running") || &t_Co == 256
     CSAHi TabLine term=underline cterm=NONE ctermbg=145 ctermfg=16 gui=NONE guibg=#c2bfa5 guifg=#000000
     CSAHi TabLineSel term=bold cterm=NONE ctermbg=24 ctermfg=231 gui=NONE guibg=#133293 guifg=#ffffff
     CSAHi TabLineFill term=reverse cterm=NONE ctermbg=145 ctermfg=16 gui=NONE guibg=#c2bfa5 guifg=#000000
-    CSAHi CursorColumn term=reverse cterm=NONE ctermbg=241 ctermfg=fg gui=NONE guibg=#666666 guifg=fg
-    CSAHi Pl62875fd7e7ffffffN term=NONE cterm=NONE ctermbg=231 ctermfg=98 gui=NONE guibg=#ffffff guifg=#875fd7
-    CSAHi Pl375f00afe7ffffffb term=NONE cterm=bold ctermbg=231 ctermfg=55 gui=bold guibg=#ffffff guifg=#5f00af
-    CSAHi Pl62875fd7375f00afN term=NONE cterm=NONE ctermbg=55 ctermfg=98 gui=NONE guibg=#5f00af guifg=#875fd7
-    CSAHi Plc4ff0000375f00afb term=NONE cterm=bold ctermbg=55 ctermfg=196 gui=bold guibg=#5f00af guifg=#ff0000
-    CSAHi Pl375f00af375f00afN term=NONE cterm=NONE ctermbg=55 ctermfg=55 gui=NONE guibg=#5f00af guifg=#5f00af
+    CSAHi CursorColumn term=reverse cterm=NONE ctermbg=254 ctermfg=fg gui=NONE guibg=#e5e5e5 guifg=fg
+    CSAHi rubySymbol term=NONE cterm=NONE ctermbg=bg ctermfg=203 gui=NONE guibg=bg guifg=#ff6050
+    CSAHi htmlBoldItalic term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi htmlBold term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
     CSAHi Ple7ffffff375f00afN term=NONE cterm=NONE ctermbg=55 ctermfg=231 gui=NONE guibg=#5f00af guifg=#ffffff
     CSAHi Plbdd7d7ff375f00afN term=NONE cterm=NONE ctermbg=55 ctermfg=189 gui=NONE guibg=#5f00af guifg=#d7d7ff
     CSAHi Pl375f00afe7ffffffN term=NONE cterm=NONE ctermbg=231 ctermfg=55 gui=NONE guibg=#ffffff guifg=#5f00af
@@ -373,10 +387,9 @@ elseif has("gui_running") || &t_Co == 256
     CSAHi Plf1626262ec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=241 gui=NONE guibg=#303030 guifg=#626262
     CSAHi Plec303030eb262626N term=NONE cterm=NONE ctermbg=235 ctermfg=236 gui=NONE guibg=#262626 guifg=#303030
     CSAHi Pla0d70000d0ff8700N term=NONE cterm=NONE ctermbg=208 ctermfg=160 gui=NONE guibg=#ff8700 guifg=#d70000
-    CSAHi Pl58870000d0ff8700b term=NONE cterm=bold ctermbg=208 ctermfg=88 gui=bold guibg=#ff8700 guifg=#870000
-    CSAHi Pld0ff8700ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=208 gui=NONE guibg=#444444 guifg=#ff8700
-    CSAHi Pla0d70000e7ffffffN term=NONE cterm=NONE ctermbg=231 ctermfg=160 gui=NONE guibg=#ffffff guifg=#d70000
-    CSAHi CursorLineNr term=bold cterm=bold ctermbg=bg ctermfg=226 gui=bold guibg=bg guifg=#ffff00
+    CSAHi Pl62875fd7375f00afN term=NONE cterm=NONE ctermbg=55 ctermfg=98 gui=NONE guibg=#5f00af guifg=#875fd7
+    CSAHi htmlBoldUnderline term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi CursorLineNr term=bold cterm=bold ctermbg=bg ctermfg=124 gui=bold guibg=bg guifg=#a52a2a
     CSAHi Question term=NONE cterm=bold ctermbg=bg ctermfg=155 gui=bold guibg=bg guifg=#c0ff3e
     CSAHi StatusLine term=reverse,bold cterm=NONE ctermbg=234 ctermfg=252 gui=NONE guibg=#202020 guifg=#cccccc
     CSAHi StatusLineNC term=reverse cterm=NONE ctermbg=234 ctermfg=16 gui=NONE guibg=#202020 guifg=#000000
@@ -386,43 +399,48 @@ elseif has("gui_running") || &t_Co == 256
     CSAHi VisualNOS term=bold,underline cterm=bold,underline ctermbg=bg ctermfg=fg gui=bold,underline guibg=bg guifg=fg
     CSAHi WarningMsg term=NONE cterm=bold ctermbg=bg ctermfg=160 gui=bold guibg=bg guifg=#cd0000
     CSAHi WildMenu term=NONE cterm=NONE ctermbg=220 ctermfg=16 gui=NONE guibg=#eec900 guifg=#000000
-    CSAHi Pl5887000058870000N term=NONE cterm=NONE ctermbg=88 ctermfg=88 gui=NONE guibg=#870000 guifg=#870000
-    CSAHi Pl345f0000345f0000N term=NONE cterm=NONE ctermbg=52 ctermfg=52 gui=NONE guibg=#5f0000 guifg=#5f0000
-    CSAHi Ple7ffffff345f0000N term=NONE cterm=NONE ctermbg=52 ctermfg=231 gui=NONE guibg=#5f0000 guifg=#ffffff
-    CSAHi Pla0d70000345f0000N term=NONE cterm=NONE ctermbg=52 ctermfg=160 gui=NONE guibg=#5f0000 guifg=#d70000
-    CSAHi Ple7fffffff4808080N term=NONE cterm=NONE ctermbg=244 ctermfg=231 gui=NONE guibg=#808080 guifg=#ffffff
-    CSAHi Plf4808080ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=244 gui=NONE guibg=#444444 guifg=#808080
-    CSAHi Plf58a8a8aeb262626N term=NONE cterm=NONE ctermbg=235 ctermfg=245 gui=NONE guibg=#262626 guifg=#8a8a8a
-    CSAHi Ple7ffffff465faf00b term=NONE cterm=bold ctermbg=70 ctermfg=231 gui=bold guibg=#5faf00 guifg=#ffffff
-    CSAHi Pla0d70000ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=160 gui=NONE guibg=#444444 guifg=#d70000
-    CSAHi Plc4ff0000ee444444b term=NONE cterm=bold ctermbg=238 ctermfg=196 gui=bold guibg=#444444 guifg=#ff0000
-    CSAHi Plfcd0d0d0ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=252 gui=NONE guibg=#444444 guifg=#d0d0d0
-    CSAHi Ple7ffffffee444444b term=NONE cterm=bold ctermbg=238 ctermfg=231 gui=bold guibg=#444444 guifg=#ffffff
-    CSAHi Plee444444ec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=238 gui=NONE guibg=#303030 guifg=#444444
-    CSAHi Pld6ffaf00ec303030b term=NONE cterm=bold ctermbg=236 ctermfg=214 gui=bold guibg=#303030 guifg=#ffaf00
-    CSAHi Plec303030ec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=236 gui=NONE guibg=#303030 guifg=#303030
     CSAHi Ple7ffffffec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=231 gui=NONE guibg=#303030 guifg=#ffffff
-    CSAHi SyntasticErrorLine term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
     CSAHi Plfabcbcbcf1626262N term=NONE cterm=NONE ctermbg=241 ctermfg=250 gui=NONE guibg=#626262 guifg=#bcbcbc
     CSAHi SyntasticWarningLine term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
-    CSAHi CursorLine term=underline cterm=NONE ctermbg=234 ctermfg=fg gui=NONE guibg=#1b1b1b guifg=fg
-    CSAHi Cursor term=NONE cterm=NONE ctermbg=180 ctermfg=233 gui=NONE guibg=#cdaf95 guifg=#141414
-    CSAHi lCursor term=NONE cterm=NONE ctermbg=180 ctermfg=233 gui=NONE guibg=#cdaf95 guifg=#141414
-    CSAHi MatchParen term=reverse cterm=NONE ctermbg=30 ctermfg=fg gui=NONE guibg=#008b8b guifg=fg
-    CSAHi Comment term=bold cterm=NONE ctermbg=bg ctermfg=30 gui=NONE guibg=bg guifg=#008b8b
-    CSAHi Constant term=underline cterm=NONE ctermbg=bg ctermfg=160 gui=NONE guibg=bg guifg=#cd2626
-    CSAHi Special term=underline cterm=NONE ctermbg=bg ctermfg=130 gui=NONE guibg=bg guifg=#a0522d
-    CSAHi Identifier term=underline cterm=NONE ctermbg=bg ctermfg=65 gui=NONE guibg=bg guifg=#6e8b3d
     CSAHi Pl17005f5fe7ffffffb term=NONE cterm=bold ctermbg=231 ctermfg=23 gui=bold guibg=#ffffff guifg=#005f5f
     CSAHi Ple7ffffff1f0087afN term=NONE cterm=NONE ctermbg=31 ctermfg=231 gui=NONE guibg=#0087af guifg=#ffffff
     CSAHi Plc4ff00001f0087afb term=NONE cterm=bold ctermbg=31 ctermfg=196 gui=bold guibg=#0087af guifg=#ff0000
     CSAHi Pl7587d7ff1f0087afN term=NONE cterm=NONE ctermbg=31 ctermfg=117 gui=NONE guibg=#0087af guifg=#87d7ff
     CSAHi Ple7ffffff1f0087afb term=NONE cterm=bold ctermbg=31 ctermfg=231 gui=bold guibg=#0087af guifg=#ffffff
-    CSAHi Pl1f0087af18005f87N term=NONE cterm=NONE ctermbg=24 ctermfg=31 gui=NONE guibg=#005f87 guifg=#0087af
-    CSAHi Pld6ffaf0018005f87b term=NONE cterm=bold ctermbg=24 ctermfg=214 gui=bold guibg=#005f87 guifg=#ffaf00
-    CSAHi Pl18005f8718005f87N term=NONE cterm=NONE ctermbg=24 ctermfg=24 gui=NONE guibg=#005f87 guifg=#005f87
-    CSAHi Ple7ffffff18005f87N term=NONE cterm=NONE ctermbg=24 ctermfg=231 gui=NONE guibg=#005f87 guifg=#ffffff
-    CSAHi GReplaceText term=reverse cterm=NONE ctermbg=180 ctermfg=233 gui=reverse guibg=bg guifg=fg
+    CSAHi Pl17005f5f7587d7ffb term=NONE cterm=bold ctermbg=117 ctermfg=23 gui=bold guibg=#87d7ff guifg=#005f5f
+    CSAHi Pl17005f5f7587d7ffN term=NONE cterm=NONE ctermbg=117 ctermfg=23 gui=NONE guibg=#87d7ff guifg=#005f5f
+    CSAHi Pla0d7000094afd700N term=NONE cterm=NONE ctermbg=148 ctermfg=160 gui=NONE guibg=#afd700 guifg=#d70000
+    CSAHi Pl16005f0094afd700b term=NONE cterm=bold ctermbg=148 ctermfg=22 gui=bold guibg=#afd700 guifg=#005f00
+    CSAHi Plec303030fcd0d0d0b term=NONE cterm=bold ctermbg=252 ctermfg=236 gui=bold guibg=#d0d0d0 guifg=#303030
+    CSAHi Plf4808080fcd0d0d0N term=NONE cterm=NONE ctermbg=252 ctermfg=244 gui=NONE guibg=#d0d0d0 guifg=#808080
+    CSAHi Plfcd0d0d0f1626262N term=NONE cterm=NONE ctermbg=241 ctermfg=252 gui=NONE guibg=#626262 guifg=#d0d0d0
+    CSAHi Pla0d70000f1626262N term=NONE cterm=NONE ctermbg=241 ctermfg=160 gui=NONE guibg=#626262 guifg=#d70000
+    CSAHi Ple7fffffff1626262b term=NONE cterm=bold ctermbg=241 ctermfg=231 gui=bold guibg=#626262 guifg=#ffffff
+    CSAHi Pl58870000ea1c1c1cN term=NONE cterm=NONE ctermbg=234 ctermfg=88 gui=NONE guibg=#1c1c1c guifg=#870000
+    CSAHi Plf1626262ea1c1c1cN term=NONE cterm=NONE ctermbg=234 ctermfg=241 gui=NONE guibg=#1c1c1c guifg=#626262
+    CSAHi CursorLine term=underline cterm=NONE ctermbg=234 ctermfg=fg gui=NONE guibg=#1b1b1b guifg=fg
+    CSAHi Plea1c1c1cea1c1c1cN term=NONE cterm=NONE ctermbg=234 ctermfg=234 gui=NONE guibg=#1c1c1c guifg=#1c1c1c
+    CSAHi Cursor term=NONE cterm=NONE ctermbg=180 ctermfg=233 gui=NONE guibg=#cdaf95 guifg=#141414
+    CSAHi lCursor term=NONE cterm=NONE ctermbg=180 ctermfg=233 gui=NONE guibg=#cdaf95 guifg=#141414
+    CSAHi MatchParen term=reverse cterm=NONE ctermbg=51 ctermfg=fg gui=NONE guibg=#00ffff guifg=fg
+    CSAHi Comment term=bold cterm=NONE ctermbg=bg ctermfg=30 gui=NONE guibg=bg guifg=#008b8b
+    CSAHi Constant term=underline cterm=NONE ctermbg=bg ctermfg=160 gui=NONE guibg=bg guifg=#cd2626
+    CSAHi Special term=underline cterm=NONE ctermbg=bg ctermfg=130 gui=NONE guibg=bg guifg=#a0522d
+    CSAHi Identifier term=underline cterm=NONE ctermbg=bg ctermfg=65 gui=NONE guibg=bg guifg=#6e8b3d
+    CSAHi htmlBoldUnderlineItalic term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi htmlUnderline term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi Plf58a8a8aea1c1c1cb term=NONE cterm=bold ctermbg=234 ctermfg=245 gui=bold guibg=#1c1c1c guifg=#8a8a8a
+    CSAHi Pl58870000d0ff8700b term=NONE cterm=bold ctermbg=208 ctermfg=88 gui=bold guibg=#ff8700 guifg=#870000
+    CSAHi Pld0ff8700ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=208 gui=NONE guibg=#444444 guifg=#ff8700
+    CSAHi Pla0d70000e7ffffffN term=NONE cterm=NONE ctermbg=231 ctermfg=160 gui=NONE guibg=#ffffff guifg=#d70000
+    CSAHi Plf4808080ec303030N term=NONE cterm=NONE ctermbg=236 ctermfg=244 gui=NONE guibg=#303030 guifg=#808080
+    CSAHi Pl345f0000345f0000N term=NONE cterm=NONE ctermbg=52 ctermfg=52 gui=NONE guibg=#5f0000 guifg=#5f0000
+    CSAHi Ple7ffffff345f0000N term=NONE cterm=NONE ctermbg=52 ctermfg=231 gui=NONE guibg=#5f0000 guifg=#ffffff
+    CSAHi Pla0d70000345f0000N term=NONE cterm=NONE ctermbg=52 ctermfg=160 gui=NONE guibg=#5f0000 guifg=#d70000
+    CSAHi Ple7fffffff4808080N term=NONE cterm=NONE ctermbg=244 ctermfg=231 gui=NONE guibg=#808080 guifg=#ffffff
+    CSAHi Plf4808080ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=244 gui=NONE guibg=#444444 guifg=#808080
+    CSAHi Ple7ffffff62875fd7N term=NONE cterm=NONE ctermbg=98 ctermfg=231 gui=NONE guibg=#875fd7 guifg=#ffffff
+    CSAHi Plf1626262ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=241 gui=NONE guibg=#444444 guifg=#626262
     CSAHi Folded term=NONE cterm=NONE ctermbg=232 ctermfg=69 gui=NONE guibg=#050505 guifg=#4876ff
     CSAHi FoldColumn term=NONE cterm=NONE ctermbg=16 ctermfg=62 gui=NONE guibg=#000000 guifg=#3a5fcd
     CSAHi DiffAdd term=bold cterm=NONE ctermbg=24 ctermfg=231 gui=NONE guibg=#126493 guifg=#ffffff
@@ -433,28 +451,25 @@ elseif has("gui_running") || &t_Co == 256
     CSAHi Conceal term=NONE cterm=NONE ctermbg=233 ctermfg=235 gui=NONE guibg=#141414 guifg=#252525
     CSAHi SpellBad term=reverse cterm=undercurl ctermbg=bg ctermfg=196 gui=undercurl guibg=bg guifg=fg guisp=#ff0000
     CSAHi SpellCap term=reverse cterm=undercurl ctermbg=bg ctermfg=21 gui=undercurl guibg=bg guifg=fg guisp=#0000ff
-    CSAHi Pl465faf001c008700N term=NONE cterm=NONE ctermbg=28 ctermfg=70 gui=NONE guibg=#008700 guifg=#5faf00
-    CSAHi Pl94afd7001c008700N term=NONE cterm=NONE ctermbg=28 ctermfg=148 gui=NONE guibg=#008700 guifg=#afd700
+    CSAHi Pl1f0087af18005f87N term=NONE cterm=NONE ctermbg=24 ctermfg=31 gui=NONE guibg=#005f87 guifg=#0087af
+    CSAHi Pld6ffaf0018005f87b term=NONE cterm=bold ctermbg=24 ctermfg=214 gui=bold guibg=#005f87 guifg=#ffaf00
 elseif has("gui_running") || &t_Co == 88
     CSAHi Normal term=NONE cterm=NONE ctermbg=16 ctermfg=57 gui=NONE guibg=#141414 guifg=#cdaf95
-    CSAHi Pl1c0087001c008700N term=NONE cterm=NONE ctermbg=20 ctermfg=20 gui=NONE guibg=#008700 guifg=#008700
-    CSAHi Ple7ffffff1c008700N term=NONE cterm=NONE ctermbg=20 ctermfg=79 gui=NONE guibg=#008700 guifg=#ffffff
-    CSAHi Pl465faf0016005f00b term=NONE cterm=bold ctermbg=20 ctermfg=40 gui=bold guibg=#005f00 guifg=#5faf00
-    CSAHi Pl465faf0016005f00N term=NONE cterm=NONE ctermbg=20 ctermfg=40 gui=NONE guibg=#005f00 guifg=#5faf00
-    CSAHi Pl16005f0016005f00N term=NONE cterm=NONE ctermbg=20 ctermfg=20 gui=NONE guibg=#005f00 guifg=#005f00
-    CSAHi Ple7ffffff16005f00N term=NONE cterm=NONE ctermbg=20 ctermfg=79 gui=NONE guibg=#005f00 guifg=#ffffff
-    CSAHi Plf4808080ec303030N term=NONE cterm=NONE ctermbg=80 ctermfg=83 gui=NONE guibg=#303030 guifg=#808080
-    CSAHi Ple7ffffff62875fd7N term=NONE cterm=NONE ctermbg=38 ctermfg=79 gui=NONE guibg=#875fd7 guifg=#ffffff
-    CSAHi Plf1626262ee444444N term=NONE cterm=NONE ctermbg=80 ctermfg=81 gui=NONE guibg=#444444 guifg=#626262
-    CSAHi Plec303030fcd0d0d0b term=NONE cterm=bold ctermbg=86 ctermfg=80 gui=bold guibg=#d0d0d0 guifg=#303030
-    CSAHi Plf4808080fcd0d0d0N term=NONE cterm=NONE ctermbg=86 ctermfg=83 gui=NONE guibg=#d0d0d0 guifg=#808080
-    CSAHi Plfcd0d0d0f1626262N term=NONE cterm=NONE ctermbg=81 ctermfg=86 gui=NONE guibg=#626262 guifg=#d0d0d0
-    CSAHi Pla0d70000f1626262N term=NONE cterm=NONE ctermbg=81 ctermfg=48 gui=NONE guibg=#626262 guifg=#d70000
-    CSAHi Ple7fffffff1626262b term=NONE cterm=bold ctermbg=81 ctermfg=79 gui=bold guibg=#626262 guifg=#ffffff
-    CSAHi Pl58870000ea1c1c1cN term=NONE cterm=NONE ctermbg=80 ctermfg=32 gui=NONE guibg=#1c1c1c guifg=#870000
-    CSAHi Plf1626262ea1c1c1cN term=NONE cterm=NONE ctermbg=80 ctermfg=81 gui=NONE guibg=#1c1c1c guifg=#626262
-    CSAHi Plf58a8a8aea1c1c1cb term=NONE cterm=bold ctermbg=80 ctermfg=83 gui=bold guibg=#1c1c1c guifg=#8a8a8a
-    CSAHi Plea1c1c1cea1c1c1cN term=NONE cterm=NONE ctermbg=80 ctermfg=80 gui=NONE guibg=#1c1c1c guifg=#1c1c1c
+    CSAHi Pl18005f8718005f87N term=NONE cterm=NONE ctermbg=21 ctermfg=21 gui=NONE guibg=#005f87 guifg=#005f87
+    CSAHi Ple7ffffff18005f87N term=NONE cterm=NONE ctermbg=21 ctermfg=79 gui=NONE guibg=#005f87 guifg=#ffffff
+    CSAHi GReplaceText term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi Pl465faf001c008700N term=NONE cterm=NONE ctermbg=20 ctermfg=40 gui=NONE guibg=#008700 guifg=#5faf00
+    CSAHi Pl94afd7001c008700N term=NONE cterm=NONE ctermbg=20 ctermfg=56 gui=NONE guibg=#008700 guifg=#afd700
+    CSAHi Pl7587d7ff18005f87N term=NONE cterm=NONE ctermbg=21 ctermfg=43 gui=NONE guibg=#005f87 guifg=#87d7ff
+    CSAHi Pl94afd700ee444444N term=NONE cterm=NONE ctermbg=80 ctermfg=56 gui=NONE guibg=#444444 guifg=#afd700
+    CSAHi elixirSymbol term=NONE cterm=NONE ctermbg=bg ctermfg=69 gui=NONE guibg=bg guifg=#ff6050
+    CSAHi EasyMotionTargetDefault term=NONE cterm=bold ctermbg=bg ctermfg=64 gui=bold guibg=bg guifg=#ff0000
+    CSAHi EasyMotionShadeDefault term=NONE cterm=NONE ctermbg=bg ctermfg=81 gui=NONE guibg=bg guifg=#585858
+    CSAHi Pl62875fd7e7ffffffN term=NONE cterm=NONE ctermbg=79 ctermfg=38 gui=NONE guibg=#ffffff guifg=#875fd7
+    CSAHi Pl375f00afe7ffffffb term=NONE cterm=bold ctermbg=79 ctermfg=34 gui=bold guibg=#ffffff guifg=#5f00af
+    CSAHi Ple7ffffff7caf0000b term=NONE cterm=bold ctermbg=48 ctermfg=79 gui=bold guibg=#af0000 guifg=#ffffff
+    CSAHi Plc4ff0000375f00afb term=NONE cterm=bold ctermbg=34 ctermfg=64 gui=bold guibg=#5f00af guifg=#ff0000
+    CSAHi Pl375f00af375f00afN term=NONE cterm=NONE ctermbg=34 ctermfg=34 gui=NONE guibg=#5f00af guifg=#5f00af
     CSAHi Statement term=bold cterm=NONE ctermbg=bg ctermfg=56 gui=NONE guibg=bg guifg=#cdad00
     CSAHi PreProc term=underline cterm=NONE ctermbg=bg ctermfg=21 gui=NONE guibg=bg guifg=#104e8b
     CSAHi Type term=underline cterm=NONE ctermbg=bg ctermfg=40 gui=NONE guibg=bg guifg=#66cd00
@@ -462,8 +477,12 @@ elseif has("gui_running") || &t_Co == 88
     CSAHi Ignore term=bold cterm=NONE ctermbg=bg ctermfg=82 gui=NONE guibg=bg guifg=#737373
     CSAHi Error term=reverse cterm=NONE ctermbg=48 ctermfg=85 gui=NONE guibg=#cd0000 guifg=#bebebe
     CSAHi Todo term=NONE cterm=bold ctermbg=36 ctermfg=80 gui=bold guibg=#8b8b00 guifg=#1a1a1a
+    CSAHi Ple7ffffff58870000N term=NONE cterm=NONE ctermbg=32 ctermfg=79 gui=NONE guibg=#870000 guifg=#ffffff
     CSAHi Number term=underline cterm=NONE ctermbg=bg ctermfg=64 gui=NONE guibg=bg guifg=#ee0000
-    CSAHi Plf79e9e9eee444444N term=NONE cterm=NONE ctermbg=80 ctermfg=84 gui=NONE guibg=#444444 guifg=#9e9e9e
+    CSAHi Pl5887000058870000N term=NONE cterm=NONE ctermbg=32 ctermfg=32 gui=NONE guibg=#870000 guifg=#870000
+    CSAHi Pl7caf000058870000N term=NONE cterm=NONE ctermbg=32 ctermfg=48 gui=NONE guibg=#870000 guifg=#af0000
+    CSAHi Ple7ffffffa0d70000b term=NONE cterm=bold ctermbg=48 ctermfg=79 gui=bold guibg=#d70000 guifg=#ffffff
+    CSAHi Pla0d70000345f0000b term=NONE cterm=bold ctermbg=32 ctermfg=48 gui=bold guibg=#5f0000 guifg=#d70000
     CSAHi SpecialKey term=bold cterm=NONE ctermbg=bg ctermfg=81 gui=NONE guibg=bg guifg=#4d4d4d
     CSAHi NonText term=bold cterm=bold ctermbg=16 ctermfg=80 gui=bold guibg=#141414 guifg=#333333
     CSAHi Directory term=bold cterm=NONE ctermbg=bg ctermfg=22 gui=NONE guibg=bg guifg=#4169e1
@@ -473,23 +492,26 @@ elseif has("gui_running") || &t_Co == 88
     CSAHi MoreMsg term=bold cterm=bold ctermbg=bg ctermfg=60 gui=bold guibg=bg guifg=#c0ff3e
     CSAHi ModeMsg term=bold cterm=bold ctermbg=bg ctermfg=fg gui=bold guibg=bg guifg=fg
     CSAHi LineNr term=underline cterm=NONE ctermbg=16 ctermfg=83 gui=NONE guibg=#0a0a0a guifg=#8b8b83
-    CSAHi Pl17005f5f7587d7ffb term=NONE cterm=bold ctermbg=43 ctermfg=21 gui=bold guibg=#87d7ff guifg=#005f5f
-    CSAHi Pl17005f5f7587d7ffN term=NONE cterm=NONE ctermbg=43 ctermfg=21 gui=NONE guibg=#87d7ff guifg=#005f5f
-    CSAHi Pla0d7000094afd700N term=NONE cterm=NONE ctermbg=56 ctermfg=48 gui=NONE guibg=#afd700 guifg=#d70000
-    CSAHi Pl16005f0094afd700b term=NONE cterm=bold ctermbg=56 ctermfg=20 gui=bold guibg=#afd700 guifg=#005f00
-    CSAHi Pl94afd700ee444444N term=NONE cterm=NONE ctermbg=80 ctermfg=56 gui=NONE guibg=#444444 guifg=#afd700
-    CSAHi Ple7ffffff7caf0000b term=NONE cterm=bold ctermbg=48 ctermfg=79 gui=bold guibg=#af0000 guifg=#ffffff
-    CSAHi Pl7caf000058870000N term=NONE cterm=NONE ctermbg=32 ctermfg=48 gui=NONE guibg=#870000 guifg=#af0000
-    CSAHi Ple7ffffff58870000N term=NONE cterm=NONE ctermbg=32 ctermfg=79 gui=NONE guibg=#870000 guifg=#ffffff
-    CSAHi Ple7ffffffa0d70000b term=NONE cterm=bold ctermbg=48 ctermfg=79 gui=bold guibg=#d70000 guifg=#ffffff
-    CSAHi Pla0d70000345f0000b term=NONE cterm=bold ctermbg=32 ctermfg=48 gui=bold guibg=#5f0000 guifg=#d70000
-    CSAHi Pl7587d7ff18005f87N term=NONE cterm=NONE ctermbg=21 ctermfg=43 gui=NONE guibg=#005f87 guifg=#87d7ff
-    CSAHi rubySymbol term=NONE cterm=NONE ctermbg=bg ctermfg=69 gui=NONE guibg=bg guifg=#ff6050
-    CSAHi elixirSymbol term=NONE cterm=NONE ctermbg=bg ctermfg=69 gui=NONE guibg=bg guifg=#ff6050
-    CSAHi EasyMotionTargetDefault term=NONE cterm=bold ctermbg=bg ctermfg=64 gui=bold guibg=bg guifg=#ff0000
-    CSAHi EasyMotionShadeDefault term=NONE cterm=NONE ctermbg=bg ctermfg=81 gui=NONE guibg=bg guifg=#585858
+    CSAHi htmlUnderlineItalic term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi Ple7ffffff465faf00b term=NONE cterm=bold ctermbg=40 ctermfg=79 gui=bold guibg=#5faf00 guifg=#ffffff
+    CSAHi Pla0d70000ee444444N term=NONE cterm=NONE ctermbg=80 ctermfg=48 gui=NONE guibg=#444444 guifg=#d70000
+    CSAHi Plc4ff0000ee444444b term=NONE cterm=bold ctermbg=80 ctermfg=64 gui=bold guibg=#444444 guifg=#ff0000
+    CSAHi Plfcd0d0d0ee444444N term=NONE cterm=NONE ctermbg=80 ctermfg=86 gui=NONE guibg=#444444 guifg=#d0d0d0
+    CSAHi Ple7ffffffee444444b term=NONE cterm=bold ctermbg=80 ctermfg=79 gui=bold guibg=#444444 guifg=#ffffff
+    CSAHi Plee444444ec303030N term=NONE cterm=NONE ctermbg=80 ctermfg=80 gui=NONE guibg=#303030 guifg=#444444
+    CSAHi Pld6ffaf00ec303030b term=NONE cterm=bold ctermbg=80 ctermfg=72 gui=bold guibg=#303030 guifg=#ffaf00
+    CSAHi Plec303030ec303030N term=NONE cterm=NONE ctermbg=80 ctermfg=80 gui=NONE guibg=#303030 guifg=#303030
+    CSAHi Plf79e9e9eee444444N term=NONE cterm=NONE ctermbg=80 ctermfg=84 gui=NONE guibg=#444444 guifg=#9e9e9e
+    CSAHi SyntasticErrorLine term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi Plf58a8a8aeb262626N term=NONE cterm=NONE ctermbg=80 ctermfg=83 gui=NONE guibg=#262626 guifg=#8a8a8a
+    CSAHi Pl1c0087001c008700N term=NONE cterm=NONE ctermbg=20 ctermfg=20 gui=NONE guibg=#008700 guifg=#008700
+    CSAHi Ple7ffffff1c008700N term=NONE cterm=NONE ctermbg=20 ctermfg=79 gui=NONE guibg=#008700 guifg=#ffffff
+    CSAHi Pl465faf0016005f00b term=NONE cterm=bold ctermbg=20 ctermfg=40 gui=bold guibg=#005f00 guifg=#5faf00
+    CSAHi Pl465faf0016005f00N term=NONE cterm=NONE ctermbg=20 ctermfg=40 gui=NONE guibg=#005f00 guifg=#5faf00
+    CSAHi Pl16005f0016005f00N term=NONE cterm=NONE ctermbg=20 ctermfg=20 gui=NONE guibg=#005f00 guifg=#005f00
+    CSAHi Ple7ffffff16005f00N term=NONE cterm=NONE ctermbg=20 ctermfg=79 gui=NONE guibg=#005f00 guifg=#ffffff
     CSAHi SpellRare term=reverse cterm=undercurl ctermbg=bg ctermfg=67 gui=undercurl guibg=bg guifg=fg guisp=#ff00ff
-    CSAHi SpellLocal term=underline cterm=undercurl ctermbg=bg ctermfg=31 gui=undercurl guibg=bg guifg=fg guisp=#00ffff
+    CSAHi SpellLocal term=underline cterm=undercurl ctermbg=bg ctermfg=21 gui=undercurl guibg=bg guifg=fg guisp=#008b8b
     CSAHi Pmenu term=NONE cterm=NONE ctermbg=80 ctermfg=79 gui=NONE guibg=#444444 guifg=#f6f3e8
     CSAHi PmenuSel term=NONE cterm=NONE ctermbg=57 ctermfg=16 gui=NONE guibg=#cae682 guifg=#000000
     CSAHi PmenuSbar term=NONE cterm=NONE ctermbg=81 ctermfg=fg gui=NONE guibg=#555555 guifg=fg
@@ -497,12 +519,10 @@ elseif has("gui_running") || &t_Co == 88
     CSAHi TabLine term=underline cterm=NONE ctermbg=57 ctermfg=16 gui=NONE guibg=#c2bfa5 guifg=#000000
     CSAHi TabLineSel term=bold cterm=NONE ctermbg=17 ctermfg=79 gui=NONE guibg=#133293 guifg=#ffffff
     CSAHi TabLineFill term=reverse cterm=NONE ctermbg=57 ctermfg=16 gui=NONE guibg=#c2bfa5 guifg=#000000
-    CSAHi CursorColumn term=reverse cterm=NONE ctermbg=81 ctermfg=fg gui=NONE guibg=#666666 guifg=fg
-    CSAHi Pl62875fd7e7ffffffN term=NONE cterm=NONE ctermbg=79 ctermfg=38 gui=NONE guibg=#ffffff guifg=#875fd7
-    CSAHi Pl375f00afe7ffffffb term=NONE cterm=bold ctermbg=79 ctermfg=34 gui=bold guibg=#ffffff guifg=#5f00af
-    CSAHi Pl62875fd7375f00afN term=NONE cterm=NONE ctermbg=34 ctermfg=38 gui=NONE guibg=#5f00af guifg=#875fd7
-    CSAHi Plc4ff0000375f00afb term=NONE cterm=bold ctermbg=34 ctermfg=64 gui=bold guibg=#5f00af guifg=#ff0000
-    CSAHi Pl375f00af375f00afN term=NONE cterm=NONE ctermbg=34 ctermfg=34 gui=NONE guibg=#5f00af guifg=#5f00af
+    CSAHi CursorColumn term=reverse cterm=NONE ctermbg=87 ctermfg=fg gui=NONE guibg=#e5e5e5 guifg=fg
+    CSAHi rubySymbol term=NONE cterm=NONE ctermbg=bg ctermfg=69 gui=NONE guibg=bg guifg=#ff6050
+    CSAHi htmlBoldItalic term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi htmlBold term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
     CSAHi Ple7ffffff375f00afN term=NONE cterm=NONE ctermbg=34 ctermfg=79 gui=NONE guibg=#5f00af guifg=#ffffff
     CSAHi Plbdd7d7ff375f00afN term=NONE cterm=NONE ctermbg=34 ctermfg=59 gui=NONE guibg=#5f00af guifg=#d7d7ff
     CSAHi Pl375f00afe7ffffffN term=NONE cterm=NONE ctermbg=79 ctermfg=34 gui=NONE guibg=#ffffff guifg=#5f00af
@@ -513,10 +533,9 @@ elseif has("gui_running") || &t_Co == 88
     CSAHi Plf1626262ec303030N term=NONE cterm=NONE ctermbg=80 ctermfg=81 gui=NONE guibg=#303030 guifg=#626262
     CSAHi Plec303030eb262626N term=NONE cterm=NONE ctermbg=80 ctermfg=80 gui=NONE guibg=#262626 guifg=#303030
     CSAHi Pla0d70000d0ff8700N term=NONE cterm=NONE ctermbg=68 ctermfg=48 gui=NONE guibg=#ff8700 guifg=#d70000
-    CSAHi Pl58870000d0ff8700b term=NONE cterm=bold ctermbg=68 ctermfg=32 gui=bold guibg=#ff8700 guifg=#870000
-    CSAHi Pld0ff8700ee444444N term=NONE cterm=NONE ctermbg=80 ctermfg=68 gui=NONE guibg=#444444 guifg=#ff8700
-    CSAHi Pla0d70000e7ffffffN term=NONE cterm=NONE ctermbg=79 ctermfg=48 gui=NONE guibg=#ffffff guifg=#d70000
-    CSAHi CursorLineNr term=bold cterm=bold ctermbg=bg ctermfg=76 gui=bold guibg=bg guifg=#ffff00
+    CSAHi Pl62875fd7375f00afN term=NONE cterm=NONE ctermbg=34 ctermfg=38 gui=NONE guibg=#5f00af guifg=#875fd7
+    CSAHi htmlBoldUnderline term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi CursorLineNr term=bold cterm=bold ctermbg=bg ctermfg=32 gui=bold guibg=bg guifg=#a52a2a
     CSAHi Question term=NONE cterm=bold ctermbg=bg ctermfg=60 gui=bold guibg=bg guifg=#c0ff3e
     CSAHi StatusLine term=reverse,bold cterm=NONE ctermbg=80 ctermfg=58 gui=NONE guibg=#202020 guifg=#cccccc
     CSAHi StatusLineNC term=reverse cterm=NONE ctermbg=80 ctermfg=16 gui=NONE guibg=#202020 guifg=#000000
@@ -526,43 +545,48 @@ elseif has("gui_running") || &t_Co == 88
     CSAHi VisualNOS term=bold,underline cterm=bold,underline ctermbg=bg ctermfg=fg gui=bold,underline guibg=bg guifg=fg
     CSAHi WarningMsg term=NONE cterm=bold ctermbg=bg ctermfg=48 gui=bold guibg=bg guifg=#cd0000
     CSAHi WildMenu term=NONE cterm=NONE ctermbg=72 ctermfg=16 gui=NONE guibg=#eec900 guifg=#000000
-    CSAHi Pl5887000058870000N term=NONE cterm=NONE ctermbg=32 ctermfg=32 gui=NONE guibg=#870000 guifg=#870000
-    CSAHi Pl345f0000345f0000N term=NONE cterm=NONE ctermbg=32 ctermfg=32 gui=NONE guibg=#5f0000 guifg=#5f0000
-    CSAHi Ple7ffffff345f0000N term=NONE cterm=NONE ctermbg=32 ctermfg=79 gui=NONE guibg=#5f0000 guifg=#ffffff
-    CSAHi Pla0d70000345f0000N term=NONE cterm=NONE ctermbg=32 ctermfg=48 gui=NONE guibg=#5f0000 guifg=#d70000
-    CSAHi Ple7fffffff4808080N term=NONE cterm=NONE ctermbg=83 ctermfg=79 gui=NONE guibg=#808080 guifg=#ffffff
-    CSAHi Plf4808080ee444444N term=NONE cterm=NONE ctermbg=80 ctermfg=83 gui=NONE guibg=#444444 guifg=#808080
-    CSAHi Plf58a8a8aeb262626N term=NONE cterm=NONE ctermbg=80 ctermfg=83 gui=NONE guibg=#262626 guifg=#8a8a8a
-    CSAHi Ple7ffffff465faf00b term=NONE cterm=bold ctermbg=40 ctermfg=79 gui=bold guibg=#5faf00 guifg=#ffffff
-    CSAHi Pla0d70000ee444444N term=NONE cterm=NONE ctermbg=80 ctermfg=48 gui=NONE guibg=#444444 guifg=#d70000
-    CSAHi Plc4ff0000ee444444b term=NONE cterm=bold ctermbg=80 ctermfg=64 gui=bold guibg=#444444 guifg=#ff0000
-    CSAHi Plfcd0d0d0ee444444N term=NONE cterm=NONE ctermbg=80 ctermfg=86 gui=NONE guibg=#444444 guifg=#d0d0d0
-    CSAHi Ple7ffffffee444444b term=NONE cterm=bold ctermbg=80 ctermfg=79 gui=bold guibg=#444444 guifg=#ffffff
-    CSAHi Plee444444ec303030N term=NONE cterm=NONE ctermbg=80 ctermfg=80 gui=NONE guibg=#303030 guifg=#444444
-    CSAHi Pld6ffaf00ec303030b term=NONE cterm=bold ctermbg=80 ctermfg=72 gui=bold guibg=#303030 guifg=#ffaf00
-    CSAHi Plec303030ec303030N term=NONE cterm=NONE ctermbg=80 ctermfg=80 gui=NONE guibg=#303030 guifg=#303030
     CSAHi Ple7ffffffec303030N term=NONE cterm=NONE ctermbg=80 ctermfg=79 gui=NONE guibg=#303030 guifg=#ffffff
-    CSAHi SyntasticErrorLine term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
     CSAHi Plfabcbcbcf1626262N term=NONE cterm=NONE ctermbg=81 ctermfg=85 gui=NONE guibg=#626262 guifg=#bcbcbc
     CSAHi SyntasticWarningLine term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
-    CSAHi CursorLine term=underline cterm=NONE ctermbg=80 ctermfg=fg gui=NONE guibg=#1b1b1b guifg=fg
-    CSAHi Cursor term=NONE cterm=NONE ctermbg=57 ctermfg=16 gui=NONE guibg=#cdaf95 guifg=#141414
-    CSAHi lCursor term=NONE cterm=NONE ctermbg=57 ctermfg=16 gui=NONE guibg=#cdaf95 guifg=#141414
-    CSAHi MatchParen term=reverse cterm=NONE ctermbg=21 ctermfg=fg gui=NONE guibg=#008b8b guifg=fg
-    CSAHi Comment term=bold cterm=NONE ctermbg=bg ctermfg=21 gui=NONE guibg=bg guifg=#008b8b
-    CSAHi Constant term=underline cterm=NONE ctermbg=bg ctermfg=48 gui=NONE guibg=bg guifg=#cd2626
-    CSAHi Special term=underline cterm=NONE ctermbg=bg ctermfg=36 gui=NONE guibg=bg guifg=#a0522d
-    CSAHi Identifier term=underline cterm=NONE ctermbg=bg ctermfg=36 gui=NONE guibg=bg guifg=#6e8b3d
     CSAHi Pl17005f5fe7ffffffb term=NONE cterm=bold ctermbg=79 ctermfg=21 gui=bold guibg=#ffffff guifg=#005f5f
     CSAHi Ple7ffffff1f0087afN term=NONE cterm=NONE ctermbg=22 ctermfg=79 gui=NONE guibg=#0087af guifg=#ffffff
     CSAHi Plc4ff00001f0087afb term=NONE cterm=bold ctermbg=22 ctermfg=64 gui=bold guibg=#0087af guifg=#ff0000
     CSAHi Pl7587d7ff1f0087afN term=NONE cterm=NONE ctermbg=22 ctermfg=43 gui=NONE guibg=#0087af guifg=#87d7ff
     CSAHi Ple7ffffff1f0087afb term=NONE cterm=bold ctermbg=22 ctermfg=79 gui=bold guibg=#0087af guifg=#ffffff
-    CSAHi Pl1f0087af18005f87N term=NONE cterm=NONE ctermbg=21 ctermfg=22 gui=NONE guibg=#005f87 guifg=#0087af
-    CSAHi Pld6ffaf0018005f87b term=NONE cterm=bold ctermbg=21 ctermfg=72 gui=bold guibg=#005f87 guifg=#ffaf00
-    CSAHi Pl18005f8718005f87N term=NONE cterm=NONE ctermbg=21 ctermfg=21 gui=NONE guibg=#005f87 guifg=#005f87
-    CSAHi Ple7ffffff18005f87N term=NONE cterm=NONE ctermbg=21 ctermfg=79 gui=NONE guibg=#005f87 guifg=#ffffff
-    CSAHi GReplaceText term=reverse cterm=NONE ctermbg=57 ctermfg=16 gui=reverse guibg=bg guifg=fg
+    CSAHi Pl17005f5f7587d7ffb term=NONE cterm=bold ctermbg=43 ctermfg=21 gui=bold guibg=#87d7ff guifg=#005f5f
+    CSAHi Pl17005f5f7587d7ffN term=NONE cterm=NONE ctermbg=43 ctermfg=21 gui=NONE guibg=#87d7ff guifg=#005f5f
+    CSAHi Pla0d7000094afd700N term=NONE cterm=NONE ctermbg=56 ctermfg=48 gui=NONE guibg=#afd700 guifg=#d70000
+    CSAHi Pl16005f0094afd700b term=NONE cterm=bold ctermbg=56 ctermfg=20 gui=bold guibg=#afd700 guifg=#005f00
+    CSAHi Plec303030fcd0d0d0b term=NONE cterm=bold ctermbg=86 ctermfg=80 gui=bold guibg=#d0d0d0 guifg=#303030
+    CSAHi Plf4808080fcd0d0d0N term=NONE cterm=NONE ctermbg=86 ctermfg=83 gui=NONE guibg=#d0d0d0 guifg=#808080
+    CSAHi Plfcd0d0d0f1626262N term=NONE cterm=NONE ctermbg=81 ctermfg=86 gui=NONE guibg=#626262 guifg=#d0d0d0
+    CSAHi Pla0d70000f1626262N term=NONE cterm=NONE ctermbg=81 ctermfg=48 gui=NONE guibg=#626262 guifg=#d70000
+    CSAHi Ple7fffffff1626262b term=NONE cterm=bold ctermbg=81 ctermfg=79 gui=bold guibg=#626262 guifg=#ffffff
+    CSAHi Pl58870000ea1c1c1cN term=NONE cterm=NONE ctermbg=80 ctermfg=32 gui=NONE guibg=#1c1c1c guifg=#870000
+    CSAHi Plf1626262ea1c1c1cN term=NONE cterm=NONE ctermbg=80 ctermfg=81 gui=NONE guibg=#1c1c1c guifg=#626262
+    CSAHi CursorLine term=underline cterm=NONE ctermbg=80 ctermfg=fg gui=NONE guibg=#1b1b1b guifg=fg
+    CSAHi Plea1c1c1cea1c1c1cN term=NONE cterm=NONE ctermbg=80 ctermfg=80 gui=NONE guibg=#1c1c1c guifg=#1c1c1c
+    CSAHi Cursor term=NONE cterm=NONE ctermbg=57 ctermfg=16 gui=NONE guibg=#cdaf95 guifg=#141414
+    CSAHi lCursor term=NONE cterm=NONE ctermbg=57 ctermfg=16 gui=NONE guibg=#cdaf95 guifg=#141414
+    CSAHi MatchParen term=reverse cterm=NONE ctermbg=31 ctermfg=fg gui=NONE guibg=#00ffff guifg=fg
+    CSAHi Comment term=bold cterm=NONE ctermbg=bg ctermfg=21 gui=NONE guibg=bg guifg=#008b8b
+    CSAHi Constant term=underline cterm=NONE ctermbg=bg ctermfg=48 gui=NONE guibg=bg guifg=#cd2626
+    CSAHi Special term=underline cterm=NONE ctermbg=bg ctermfg=36 gui=NONE guibg=bg guifg=#a0522d
+    CSAHi Identifier term=underline cterm=NONE ctermbg=bg ctermfg=36 gui=NONE guibg=bg guifg=#6e8b3d
+    CSAHi htmlBoldUnderlineItalic term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi htmlUnderline term=NONE cterm=NONE ctermbg=bg ctermfg=fg gui=NONE guibg=bg guifg=fg
+    CSAHi Plf58a8a8aea1c1c1cb term=NONE cterm=bold ctermbg=80 ctermfg=83 gui=bold guibg=#1c1c1c guifg=#8a8a8a
+    CSAHi Pl58870000d0ff8700b term=NONE cterm=bold ctermbg=68 ctermfg=32 gui=bold guibg=#ff8700 guifg=#870000
+    CSAHi Pld0ff8700ee444444N term=NONE cterm=NONE ctermbg=80 ctermfg=68 gui=NONE guibg=#444444 guifg=#ff8700
+    CSAHi Pla0d70000e7ffffffN term=NONE cterm=NONE ctermbg=79 ctermfg=48 gui=NONE guibg=#ffffff guifg=#d70000
+    CSAHi Plf4808080ec303030N term=NONE cterm=NONE ctermbg=80 ctermfg=83 gui=NONE guibg=#303030 guifg=#808080
+    CSAHi Pl345f0000345f0000N term=NONE cterm=NONE ctermbg=32 ctermfg=32 gui=NONE guibg=#5f0000 guifg=#5f0000
+    CSAHi Ple7ffffff345f0000N term=NONE cterm=NONE ctermbg=32 ctermfg=79 gui=NONE guibg=#5f0000 guifg=#ffffff
+    CSAHi Pla0d70000345f0000N term=NONE cterm=NONE ctermbg=32 ctermfg=48 gui=NONE guibg=#5f0000 guifg=#d70000
+    CSAHi Ple7fffffff4808080N term=NONE cterm=NONE ctermbg=83 ctermfg=79 gui=NONE guibg=#808080 guifg=#ffffff
+    CSAHi Plf4808080ee444444N term=NONE cterm=NONE ctermbg=80 ctermfg=83 gui=NONE guibg=#444444 guifg=#808080
+    CSAHi Ple7ffffff62875fd7N term=NONE cterm=NONE ctermbg=38 ctermfg=79 gui=NONE guibg=#875fd7 guifg=#ffffff
+    CSAHi Plf1626262ee444444N term=NONE cterm=NONE ctermbg=80 ctermfg=81 gui=NONE guibg=#444444 guifg=#626262
     CSAHi Folded term=NONE cterm=NONE ctermbg=16 ctermfg=39 gui=NONE guibg=#050505 guifg=#4876ff
     CSAHi FoldColumn term=NONE cterm=NONE ctermbg=16 ctermfg=22 gui=NONE guibg=#000000 guifg=#3a5fcd
     CSAHi DiffAdd term=bold cterm=NONE ctermbg=21 ctermfg=79 gui=NONE guibg=#126493 guifg=#ffffff
@@ -573,10 +597,12 @@ elseif has("gui_running") || &t_Co == 88
     CSAHi Conceal term=NONE cterm=NONE ctermbg=16 ctermfg=80 gui=NONE guibg=#141414 guifg=#252525
     CSAHi SpellBad term=reverse cterm=undercurl ctermbg=bg ctermfg=64 gui=undercurl guibg=bg guifg=fg guisp=#ff0000
     CSAHi SpellCap term=reverse cterm=undercurl ctermbg=bg ctermfg=19 gui=undercurl guibg=bg guifg=fg guisp=#0000ff
-    CSAHi Pl465faf001c008700N term=NONE cterm=NONE ctermbg=20 ctermfg=40 gui=NONE guibg=#008700 guifg=#5faf00
-    CSAHi Pl94afd7001c008700N term=NONE cterm=NONE ctermbg=20 ctermfg=56 gui=NONE guibg=#008700 guifg=#afd700
+    CSAHi Pl1f0087af18005f87N term=NONE cterm=NONE ctermbg=21 ctermfg=22 gui=NONE guibg=#005f87 guifg=#0087af
+    CSAHi Pld6ffaf0018005f87b term=NONE cterm=bold ctermbg=21 ctermfg=72 gui=bold guibg=#005f87 guifg=#ffaf00
 endif
 
 if 1
     delcommand CSAHi
 endif
+hi link htmlLink Normal
+hi link htmlItalic Normal

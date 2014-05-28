@@ -154,7 +154,9 @@ set showbreak=»
 if exists('&breakindent')
   " NOTE: patched VIM version is required for this to work
   set breakindent
-  set breakindentopt+=sbr
+  if exists('&breakindentopt')
+    set breakindentopt+=sbr
+  endif
 endif
 " }}}
 " invisible chars display options {{{2
@@ -528,19 +530,6 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_coffee_lint_options = '-f ~/.coffeelint.json'
 let g:syntastic_error_symbol='✗'
 let g:syntastic_warning_symbol='⚠'
-
-" snipmate settings {{{2
-function! MyGetSnips(scopes, word)
-  if &ft == 'eruby'
-    call add(a:scopes, b:eruby_subtype)
-    call add(a:scopes, 'ruby')
-  endif
-  return snipMate#GetSnippets(a:scopes, a:word)
-  if &ft == 'ruby'
-    call add(a:scopes, 'ruby_motion')
-  endif
-endfunction
-let g:snipMate = {'get_snippets': function('MyGetSnips')}
 
 " A settings {{{2
 let g:alternateExtensions_h = "c,cpp,cxx,cc,CC,m,mm"

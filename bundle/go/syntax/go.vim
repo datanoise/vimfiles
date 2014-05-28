@@ -271,7 +271,7 @@ if go_highlight_structs != 0
         syn match  goMethodReceiver /\w\+/ skipwhite nextgroup=goMethodReceiverPointer,goMethodReceiverType contained
         syn match  goMethodReceiverPointer /*/ transparent contained nextgroup=goMethodReceiverType
         syn match  goMethodReceiverType /\w\+/ contained
-        syn region goMethodDef start="\(func\s\+\)\@<=(" end=")" contains=goMethodReceiver
+        syn region goMethodDef start="\(func\s\+\)\@<=(" end=")" contains=goMethodReceiver,goMethodReceiverPointer,goMethodReceiverType
 
         hi def link     goMethodReceiverType    Define
         hi def link     goStruct                Define

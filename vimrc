@@ -4,7 +4,7 @@
 " ------------------------------------------------------------------------------
 runtime! macros/matchit.vim
 set nocompatible      " We're running Vim, not Vi!
-let g:pathogen_disabled = ['bundler']
+let g:pathogen_disabled = ['bundler', 'xptemplate']
 if $GOPATH == ""
   call add(g:pathogen_disabled, "go")
 endif
@@ -605,7 +605,7 @@ let g:Powerline_symbols = 'fancy'
 
 " powerline settings {{{2
 let g:UltiSnipsSnippetDirectories = ['UltiSnips']
-let g:UltiSnipsJumpForwardTrigger="<tab>"
+" let g:UltiSnipsJumpForwardTrigger="<tab>"
 
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"
@@ -619,5 +619,7 @@ let go_highlight_trailing_whitespace_error = 0
 let g:netrw_liststyle = 3
 let g:go_auto_type_info = 0
 let g:go_snippet_engine = ''
+let g:xptemplate_nav_prev = '<C-k>'
+let g:xptemplate_nav_next = '<C-j>'
 
 " }}}

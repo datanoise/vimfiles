@@ -603,9 +603,16 @@ let g:Powerline_theme = s:Powerline_theme
 let g:Powerline_colorscheme = s:Powerline_theme
 let g:Powerline_symbols = 'fancy'
 
-" powerline settings {{{2
+" ultisnips settings {{{2
 let g:UltiSnipsSnippetDirectories = ['UltiSnips']
 " let g:UltiSnipsJumpForwardTrigger="<tab>"
+
+" go settings {{{2
+let g:go_highlight_space_tab_error = 0
+let g:go_highlight_trailing_whitespace_error = 0
+let g:go_auto_type_info = 0
+let g:go_snippet_engine = ''
+
 
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"
@@ -614,12 +621,6 @@ let c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:xml_syntax_folding = 1 " enable folding in xml files
 let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
 let $RUBYOPT = '' " I don't want any surprises like 'noexec' gem
-let go_highlight_space_tab_error = 0
-let go_highlight_trailing_whitespace_error = 0
 let g:netrw_liststyle = 3
-let g:go_auto_type_info = 0
-let g:go_snippet_engine = ''
-let g:xptemplate_nav_prev = '<C-k>'
-let g:xptemplate_nav_next = '<C-j>'
 
 " }}}

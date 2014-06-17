@@ -352,35 +352,12 @@ call s:add_methods('buffer',['getvar','setvar','getline','project','name','path'
 " }}}1
 " Rake {{{1
 
-function! s:push_chdir(...)
-  if !exists("s:command_stack") | let s:command_stack = [] | endif
-  let chdir = exists("*haslocaldir") && haslocaldir() ? "lchdir " : "chdir "
-  call add(s:command_stack,chdir.s:fnameescape(getcwd()))
-  exe chdir.'`=s:project().path()`'
-endfunction
-
-function! s:pop_command()
-  if exists("s:command_stack") && len(s:command_stack) > 0
-    exe remove(s:command_stack,-1)
-  endif
-endfunction
-
-let g:rake#errorformat = '%D(in\ %f),'
-      \.'%\\s%#from\ %f:%l:%m,'
-      \.'%\\s%#from\ %f:%l:,'
-      \.'%\\s%##\ %f:%l:%m,'
-      \.'%\\s%##\ %f:%l,'
-      \.'%\\s%#[%f:%l:\ %#%m,'
-      \.'%\\s%#%f:%l:\ %#%m,'
-      \.'%\\s%#%f:%l:,'
-      \.'%m\ [%f:%l]:'
-
-function! s:project_makeprg()
-  if executable(s:project().path('bin/rake'))
+function! s:project_makeprg() dict abort
+  if executable(self.path('bin/rake'))
     return 'bin/rake'
-  elseif filereadable(s:project().path('bin/rake'))
+  elseif filereadable(self.path('bin/rake'))
     return 'ruby bin/rake'
-  elseif filereadable(s:project().path('Gemfile'))
+  elseif filereadable(self.path('Gemfile'))
     return 'bundle exec rake'
   else
     return 'rake'
@@ -389,15 +366,21 @@ endfunction
 
 call s:add_methods('project', ['makeprg'])
 
-function! s:Rake(bang,arg)
+function! s:Rake(bang, arg) abort
   let old_makeprg = &l:makeprg
   let old_errorformat = &l:errorformat
   let old_compiler = get(b:, 'current_compiler', '')
-  call s:push_chdir()
+  let cd = exists('*haslocaldir') && haslocaldir() ? 'lcd' : 'cd'
+  let cwd = getcwd()
   try
+    execute cd fnameescape(s:project().path())
+    if !empty(findfile('compiler/rake.vim', escape(&rtp, ' ')))
+      compiler rake
+    else
+      let &l:errorformat = '%+I%.%#'
+      let b:current_compiler = 'rake'
+    endif
     let &l:makeprg = s:project().makeprg()
-    let &l:errorformat = g:rake#errorformat
-    let b:current_compiler = 'rake'
     if exists(':Make') == 2
       execute 'Make'.a:bang.' '.a:arg
     else
@@ -414,20 +397,40 @@ function! s:Rake(bang,arg)
     if empty(old_compiler)
       unlet! b:current_compiler
     endif
-    call s:pop_command()
+    execute cd fnameescape(cwd)
   endtry
 endfunction
 
-function! s:RakeComplete(A,L,P)
-  return s:completion_filter(s:project().tasks(),a:A)
+function! s:RakeComplete(A, L, P, ...) abort
+  let project = a:0 ? a:1 : s:project()
+  if exists('*projectionist#completion_filter')
+    return projectionist#completion_filter(project.tasks(), a:A, ':')
+  else
+    return s:completion_filter(project.tasks(), a:A)
+  endif
 endfunction
 
-function! s:project_tasks()
-  call s:push_chdir()
+function! CompilerComplete_rake(A, L, P)
+  let path = findfile('Rakefile', escape(getcwd(), ' ,;').';')
+  if empty(path)
+    return []
+  endif
+  let path = fnamemodify(path, ':p:h')
+  if path ==# get(b:, 'rails_root', 'x') && exists('*rails#complete_rake')
+    return rails#complete_rake(a:A, a:L, a:P)
+  else
+    return s:RakeComplete(a:A, a:L, a:P, s:project(path))
+  endif
+endfunction
+
+function! s:project_tasks() dict abort
+  let cd = exists('*haslocaldir') && haslocaldir() ? 'lcd' : 'cd'
+  let cwd = getcwd()
   try
-    let lines = split(system('rake -T'),"\n")
+    execute cd fnameescape(self.path())
+    let lines = split(system(self.makeprg() . ' -T'), "\n")
   finally
-    call s:pop_command()
+    execute cd fnameescape(cwd)
   endtry
   if v:shell_error != 0
     return []
@@ -437,7 +440,7 @@ function! s:project_tasks()
   return lines
 endfunction
 
-call s:add_methods('project',['tasks'])
+call s:add_methods('project', ['tasks'])
 
 call s:command("-bar -bang -nargs=? -complete=customlist,s:RakeComplete Rake :execute s:Rake('<bang>',<q-args>)")
 

@@ -58,6 +58,12 @@ for ${2:name} := range ${1:collection} {
 }
 endsnippet
 
+snippet fori "Integer for loop" b
+for ${1:i} := 0; $1 < ${2:N}; $1++ {
+	${0:${VISUAL}}
+}
+endsnippet
+
 snippet if "If statement" b
 if ${1:condition}${1/(.+)/ /}{
 	${0:${VISUAL}}

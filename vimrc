@@ -315,7 +315,7 @@ nnoremap <leader>a :let align = input("Align to: ")<Bar>exe ":Tab /" . align<CR>
 " inoremap [<Space> []<Esc>i<Space><Space><Esc>i
 inoremap <silent> <Space> <C-R>=<SID>space_inside_curly()<CR>
 " inoremap <Tab> <C-p>
-inoremap <silent> <C-j> <C-\><C-O>:call search('[{("\[\]'')}]', 'Wc', line('.'))<CR><Right>
+inoremap <silent> <C-l> <C-\><C-O>:call search('[{("\[\]'')}]', 'Wc', line('.'))<CR><Right>
 inoremap jj <Esc>
 imap kk <C-O>A<Enter>
 nnoremap <F2> <C-w><C-w>
@@ -553,6 +553,7 @@ let g:ctrlp_mruf_exclude = '\.git\|\/var\/folders\|' . substitute($VIMRUNTIME, '
 let g:ctrlp_custom_ignore = 'tmp'
 let g:ctrlp_buftag_types = {
       \ 'go'     : '--language-force=Go --Go-types=fvt',
+      \ 'rust'   : '--language-force=Rust --Rust-types=fti',
       \ 'scala'  : '--language-force=scala --scala-types=ctTm'
       \  }
 

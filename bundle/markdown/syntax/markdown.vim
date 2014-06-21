@@ -27,7 +27,7 @@ for s:type in map(copy(g:markdown_fenced_languages),'matchstr(v:val,"[^=]*$")')
 endfor
 unlet! s:type
 
-syn sync minlines=10
+" syn sync minlines=50
 syn case ignore
 
 syn match markdownValid '[<>]\c[a-z/$!]\@!'
@@ -53,6 +53,7 @@ syn region markdownH6 matchgroup=markdownHeadingDelimiter start="#######\@!" end
 syn match markdownBlockquote ">\%(\s\|$\)" contained nextgroup=@markdownBlock
 
 syn region markdownCodeBlock start="    \|\t" end="$" contained
+syn region markdownCodeBlock start="^\~\+" end="^\~\+" contained
 
 " TODO: real nesting
 syn match markdownListMarker "\%(\t\| \{0,4\}\)[-*+]\%(\s\+\S\)\@=" contained

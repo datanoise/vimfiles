@@ -52,8 +52,9 @@ g:tcommentInlineC	tcomment.txt	/*g:tcommentInlineC*
 g:tcommentInlineXML	tcomment.txt	/*g:tcommentInlineXML*
 g:tcommentMapLeader1	tcomment.txt	/*g:tcommentMapLeader1*
 g:tcommentMapLeader2	tcomment.txt	/*g:tcommentMapLeader2*
+g:tcommentMapLeaderCommentAnyway	tcomment.txt	/*g:tcommentMapLeaderCommentAnyway*
 g:tcommentMapLeaderOp1	tcomment.txt	/*g:tcommentMapLeaderOp1*
-g:tcommentMapLeaderOp2	tcomment.txt	/*g:tcommentMapLeaderOp2*
+g:tcommentMapLeaderUncommentAnyway	tcomment.txt	/*g:tcommentMapLeaderUncommentAnyway*
 g:tcommentMaps	tcomment.txt	/*g:tcommentMaps*
 g:tcommentModeExtra	tcomment.txt	/*g:tcommentModeExtra*
 g:tcommentOpModeExtra	tcomment.txt	/*g:tcommentOpModeExtra*
@@ -70,9 +71,12 @@ i_<Plug>TComment-<c-_>n	tcomment.txt	/*i_<Plug>TComment-<c-_>n*
 i_<Plug>TComment-<c-_>p	tcomment.txt	/*i_<Plug>TComment-<c-_>p*
 i_<Plug>TComment-<c-_>r	tcomment.txt	/*i_<Plug>TComment-<c-_>r*
 i_<Plug>TComment-<c-_>s	tcomment.txt	/*i_<Plug>TComment-<c-_>s*
-n_<Plug>TComment-gC	tcomment.txt	/*n_<Plug>TComment-gC*
-n_<Plug>TComment-gCb	tcomment.txt	/*n_<Plug>TComment-gCb*
-n_<Plug>TComment-gCc	tcomment.txt	/*n_<Plug>TComment-gCc*
+n_<Plug>TComment-Comment	tcomment.txt	/*n_<Plug>TComment-Comment*
+n_<Plug>TComment-Commentb	tcomment.txt	/*n_<Plug>TComment-Commentb*
+n_<Plug>TComment-Commentc	tcomment.txt	/*n_<Plug>TComment-Commentc*
+n_<Plug>TComment-Uncomment	tcomment.txt	/*n_<Plug>TComment-Uncomment*
+n_<Plug>TComment-Uncommentb	tcomment.txt	/*n_<Plug>TComment-Uncommentb*
+n_<Plug>TComment-Uncommentc	tcomment.txt	/*n_<Plug>TComment-Uncommentc*
 n_<Plug>TComment-gc	tcomment.txt	/*n_<Plug>TComment-gc*
 n_<Plug>TComment-gcb	tcomment.txt	/*n_<Plug>TComment-gcb*
 n_<Plug>TComment-gcc	tcomment.txt	/*n_<Plug>TComment-gcc*
@@ -95,5 +99,6 @@ v_<Plug>TComment-<c-_>i	tcomment.txt	/*v_<Plug>TComment-<c-_>i*
 v_<Plug>TComment-ic	tcomment.txt	/*v_<Plug>TComment-ic*
 x_<Plug>TComment-<Leader>__	tcomment.txt	/*x_<Plug>TComment-<Leader>__*
 x_<Plug>TComment-<Leader>_i	tcomment.txt	/*x_<Plug>TComment-<Leader>_i*
-x_<Plug>TComment-gC	tcomment.txt	/*x_<Plug>TComment-gC*
+x_<Plug>TComment-Comment	tcomment.txt	/*x_<Plug>TComment-Comment*
+x_<Plug>TComment-Uncomment	tcomment.txt	/*x_<Plug>TComment-Uncomment*
 x_<Plug>TComment-gc	tcomment.txt	/*x_<Plug>TComment-gc*

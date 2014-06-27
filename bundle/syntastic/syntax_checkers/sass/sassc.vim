@@ -1,7 +1,7 @@
 "============================================================================
-"File:        scala.vim
-"Description: Syntax checking plugin for syntastic.vim
-"Maintainer:  Rickey Visinski <rickeyvisinski at gmail dot com>
+"File:        sassc.vim
+"Description: Syntax checking plugin for syntastic
+"Maintainer:  LCD 47 <lcd047 at gmail dot com>
 "License:     This program is free software. It comes without any warranty,
 "             to the extent permitted by applicable law. You can redistribute
 "             it and/or modify it under the terms of the Do What The Fuck You
@@ -10,23 +10,18 @@
 "
 "============================================================================
 
-if exists("g:loaded_syntastic_scala_scalac_checker")
+if exists("g:loaded_syntastic_sass_sassc_checker")
     finish
 endif
-let g:loaded_syntastic_scala_scalac_checker = 1
+let g:loaded_syntastic_sass_sassc_checker = 1
 
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! SyntaxCheckers_scala_scalac_GetLocList() dict
-    call syntastic#log#deprecationWarn('scala_options', 'scala_scalac_args')
+function! SyntaxCheckers_sass_sassc_GetLocList() dict
+    let makeprg = self.makeprgBuild({ 'fname_after': syntastic#util#DevNull() })
 
-    let makeprg = self.makeprgBuild({ 'args_after': '-Ystop-after:parser' })
-
-    let errorformat =
-        \ '%E%f:%l: %trror: %m,' .
-        \ '%Z%p^,' .
-        \ '%-G%.%#'
+    let errorformat = '%f:%l: %trror: %m'
 
     return SyntasticMake({
         \ 'makeprg': makeprg,
@@ -34,8 +29,8 @@ function! SyntaxCheckers_scala_scalac_GetLocList() dict
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
-    \ 'filetype': 'scala',
-    \ 'name': 'scalac'})
+    \ 'filetype': 'sass',
+    \ 'name': 'sassc'})
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

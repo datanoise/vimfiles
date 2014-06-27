@@ -1802,8 +1802,8 @@ function! s:app_server_command(bang,arg) dict
 endfunction
 
 function! s:color_efm(pre, before, after)
-   return a:pre . '%\S%#  %#' . a:before . "\e[0m  %#" . a:after . ',' .
-         \ a:pre . '   %#'.a:before.' %#'.a:after . ','
+   return a:pre . '%\S%\+  %#' . a:before . "\e[0m  %#" . a:after . ',' .
+         \ a:pre . '%\s %#'.a:before.'  %#'.a:after . ','
 endfunction
 
 let s:efm_generate =
@@ -1813,6 +1813,7 @@ let s:efm_generate =
       \ s:color_efm('%-G', 'create', ' ') .
       \ s:color_efm('%-G', 'exist', ' ') .
       \ s:color_efm('Overwrite%.%#', '%m', '%f') .
+      \ s:color_efm('', '%m', '   %f') .
       \ s:color_efm('', '%m', '%f') .
       \ '%-G%.%#'
 
@@ -1826,17 +1827,17 @@ function! s:app_generator_command(bang,...) dict
     let &l:makeprg = self.prepare_rails_command(cmd)
     let &l:errorformat = s:efm_generate
     call s:push_chdir(1)
-    if a:bang
-      make!
-    else
-      make
-    endif
+    noautocmd make!
   finally
     call s:pop_command()
     let &l:errorformat = old_errorformat
     let &l:makeprg = old_makeprg
   endtry
-  return ''
+  if a:bang || empty(getqflist())
+    return ''
+  else
+    return 'cfirst'
+  endif
 endfunction
 
 call s:add_methods('app', ['generators','script_command','output_command','server_command','generator_command'])
@@ -3261,13 +3262,27 @@ function! s:readable_alternate_candidates(...) dict abort
     return ['app/helpers/application_helper.rb']
   elseif f =~# 'spec\.js$'
     return [s:sub(s:sub(f, 'spec/javascripts', 'app/assets/javascripts'), '_spec.js', '.js')."\n"]
+  elseif f =~# 'spec\.coffee$'
+    return [s:sub(s:sub(f, 'spec/javascripts', 'app/assets/javascripts'), '_spec.coffee', '.coffee')."\n"]
+  elseif f =~# 'spec\.js\.coffee$'
+    return [s:sub(s:sub(f, 'spec/javascripts', 'app/assets/javascripts'), '_spec.js.coffee', '.js.coffee')."\n"]
   elseif self.type_name('javascript')
     if f =~ 'public/javascripts'
       let to_replace = 'public/javascripts'
     else
       let to_replace = 'app/assets/javascripts'
     endif
-    return [s:sub(s:sub(f, to_replace, 'spec/javascripts'), '.js', '_spec.js')."\n"]
+    if f =~ '.coffee.js$'
+      let suffix = '.coffee.js'
+      let suffix_replacement = '_spec.coffee.js'
+    elseif f =~ '.coffee$'
+      let suffix = '.coffee'
+      let suffix_replacement = '_spec.coffee'
+    else
+      let suffix = '.js'
+      let suffix_replacement = '_spec.js'
+    endif
+    return [s:sub(s:sub(f, to_replace, 'spec/javascripts'), suffix, suffix_replacement)."\n"]
   elseif self.type_name('db-schema') || f =~# '^db/\w*structure.sql$'
     return ['db/seeds.rb']
   elseif f ==# 'db/seeds.rb'

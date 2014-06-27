@@ -259,6 +259,7 @@ end
 au FileType ruby setlocal completefunc=syntaxcomplete#Complete
 au FileType ruby if has('balloonexpr') | setlocal balloonexpr& | endif
 au FileType scala,ruby,go exe 'compiler '. expand('<amatch>')
+au FileType rust compiler rustc
 au FileType xml setlocal foldmethod=syntax
 " go settings
 au FileType go setlocal tabstop=4
@@ -397,7 +398,7 @@ iabbr WHen When
 augroup shebang_chmod
   au!
   au BufWritePre *
-        \   if getline(1) =~ '^#!' && match(getfperm(expand('<afile>')), 'x') == -1 |
+        \   if getline(1) =~ '^#![\@!' && match(getfperm(expand('<afile>')), 'x') == -1 |
         \     let b:chmod_post = '+x' |
         \   endif |
   au BufWritePost,FileWritePost *

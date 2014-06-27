@@ -30,8 +30,7 @@ syn keyword   rustKeyword     unsafe virtual while
 syn keyword   rustKeyword     use nextgroup=rustModPath skipwhite skipempty
 " FIXME: Scoped impl's name is also fallen in this category
 syn keyword   rustKeyword     mod trait struct enum type nextgroup=rustIdentifier skipwhite skipempty
-syn keyword   rustStorage     mut ref static
-syn keyword   rustObsoleteStorage const
+syn keyword   rustStorage     mut ref static const
 
 syn keyword   rustInvalidBareKeyword crate
 
@@ -82,7 +81,7 @@ syn keyword rustTrait Ascii AsciiCast OwnedAsciiCast AsciiStr IntoBytes
 syn keyword rustTrait ToCStr
 syn keyword rustTrait Char
 syn keyword rustTrait Clone
-syn keyword rustTrait Eq Ord TotalEq TotalOrd Ordering Equiv
+syn keyword rustTrait Eq Ord PartialEq PartialOrd Ordering Equiv
 syn keyword rustEnumVariant Less Equal Greater
 syn keyword rustTrait Container Mutable Map MutableMap Set MutableSet
 syn keyword rustTrait FromIterator Extendable
@@ -104,7 +103,7 @@ syn keyword rustTrait Tuple5 Tuple6 Tuple7 Tuple8
 syn keyword rustTrait Tuple9 Tuple10 Tuple11 Tuple12
 syn keyword rustTrait CloneableVector ImmutableCloneableVector MutableCloneableVector
 syn keyword rustTrait ImmutableVector MutableVector
-syn keyword rustTrait ImmutableEqVector ImmutableTotalOrdVector MutableTotalOrdVector
+syn keyword rustTrait ImmutableEqVector ImmutableOrdVector MutableOrdVector
 syn keyword rustTrait Vector VectorVector OwnedVector MutableVectorAllocating
 syn keyword rustTrait String
 syn keyword rustTrait Vec

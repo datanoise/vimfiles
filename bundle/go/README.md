@@ -1,10 +1,12 @@
 # vim-go
 
-Full featured Go development environment support for Vim. vim-go installs
-automatically all necessary binaries if they are not found. It comes with
+Full featured Go (golang) support for Vim. vim-go installs automatically all
+necessary binaries for providing seamless Vim integration . It comes with
 pre-defined sensible settings (like auto gofmt on save), has autocomplete,
 snippet support, improved syntax highlighting, go toolchain commands, etc...
-Do not use it with other Go plugins.
+It's highly customizable and has settings for disabling/enabling features
+easily. Do not use it with other Go plugins.
+
 
 ![vim-go](https://dl.dropboxusercontent.com/u/174404/vim-go.png)
 
@@ -92,6 +94,12 @@ it vertically with `<leader>gv`
 ```vim
 au FileType go nmap <Leader>gd <Plug>(go-doc)
 au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
+```
+
+Or open the Godoc in browser
+
+```vim
+au FileType go nmap <Leader>gb <Plug>(go-doc-browser)
 ```
 
 Run commands, such as  `go run` with `<leader>r` for the current file or `go build` and `go test` for

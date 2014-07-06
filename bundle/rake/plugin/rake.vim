@@ -29,14 +29,6 @@ function! s:gsub(str,pat,rep) abort
   return substitute(a:str,'\v\C'.a:pat,a:rep,'g')
 endfunction
 
-function! s:shellesc(arg) abort
-  if a:arg =~ '^[A-Za-z0-9_/.-]\+$'
-    return a:arg
-  else
-    return shellescape(a:arg)
-  endif
-endfunction
-
 function! s:fnameescape(file) abort
   if exists('*fnameescape')
     return fnameescape(a:file)
@@ -169,23 +161,23 @@ augroup END
 
 let s:projections = {
       \ '*': {},
-      \ 'lib/*.rb': {'command': 'lib', 'alternate': [
+      \ 'lib/*.rb': {'type': 'lib', 'alternate': [
       \   'test/{}_test.rb', 'test/lib/{}_test.rb', 'test/unit/{}_test.rb',
       \   'spec/{}_spec.rb', 'spec/lib/{}_spec.rb', 'spec/unit/{}_spec.rb']},
-      \ 'test/test_helper.rb': {'command': 'test'},
+      \ 'test/test_helper.rb': {'type': 'test'},
       \ 'test/*_test.rb': {
-      \   'command': 'test',
+      \   'type': 'test',
       \   'alternate': 'lib/{}.rb'},
       \ 'test/lib/*_test.rb': {'alternate': 'lib/{}.rb'},
       \ 'test/unit/*_test.rb': {'alternate': 'lib/{}.rb'},
-      \ 'spec/spec_helper.rb': {'command': 'spec'},
+      \ 'spec/spec_helper.rb': {'type': 'spec'},
       \ 'spec/*_spec.rb': {
-      \   'command': 'spec',
+      \   'type': 'spec',
       \   'alternate': 'lib/{}.rb'},
       \ 'spec/lib/*_spec.rb': {'alternate': 'lib/{}.rb'},
       \ 'spec/unit/*_spec.rb': {'alternate': 'lib/{}.rb'},
-      \ 'rakelib/*.rake': {'command': 'task'},
-      \ 'Rakefile': {'command': 'task'}}
+      \ 'rakelib/*.rake': {'type': 'task'},
+      \ 'Rakefile': {'type': 'task'}}
 
 function! s:binstub(root, cmd) abort
   if !has('win32') && a:root !~# '\s' && executable(a:root.'/bin/'.a:cmd)
@@ -210,19 +202,28 @@ function! s:ProjectionistDetect() abort
     let projections['*'].make = split(s:project().makeprg())
     let projections['Rakefile'].dispatch = projections['*'].make
     let projections['rakelib/*.rake'].dispatch = projections['*'].make + ['{}']
-    let projections['test/*.rb'] = {'dispatch': s:binstub(b:rake_root, 'ruby') + ['-Itest', '{file}']}
+    let ruby = s:binstub(b:rake_root, 'ruby')
+    if ruby ==# ['ruby']
+      let projections['test/*.rb'] = {'dispatch': ruby + ['-Itest', '-Ilib', '{file}']}
+    else
+      let projections['test/*.rb'] = {'dispatch': ruby + ['-Itest', '{file}']}
+    endif
     let projections['spec/*_spec.rb'].dispatch = s:binstub(b:rake_root, 'rspec') + ['{file}']
     call filter(projections['lib/*.rb'].alternate, 'exists(v:val[0:3])')
     call filter(projections, 'v:key[4] !=# "/" || exists(v:key[0:3])')
     let gemspec = fnamemodify(get(split(glob(b:rake_root.'/*.gemspec'), "\n"), 0, 'Gemfile'), ':t')
-    let projections[gemspec] = {'command': 'lib'}
+    let projections[gemspec] = {'type': 'lib'}
     if gemspec !=# 'Gemfile'
       let projections[gemspec].dispatch = ['gem', 'build', '{file}']
     endif
     call projectionist#append(b:rake_root, projections)
-    call projectionist#append(b:rake_root, {
-          \ 'test/*_test.rb': {'command': 'spec'},
-          \ 'spec/*_spec.rb': {'command': 'test'}})
+    let secondary = {
+          \ 'test/*_test.rb': exists('test') ? {'type': 'spec'} : {},
+          \ 'spec/*_spec.rb': exists('spec') ? {'type': 'test'} : {}}
+    call filter(secondary, '!empty(v:val)')
+    if !empty(secondary)
+      call projectionist#append(b:rake_root, secondary)
+    endif
   endif
 endfunction
 

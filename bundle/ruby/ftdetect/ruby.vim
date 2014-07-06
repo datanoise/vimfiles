@@ -26,7 +26,7 @@ au BufNewFile,BufRead .pryrc			call s:setf('ruby')
 au BufNewFile,BufRead *.ru			call s:setf('ruby')
 
 " Capistrano
-au BufNewFile,BufRead Capfile			call s:setf('ruby')
+au BufNewFile,BufRead Capfile,*.cap 		call s:setf('ruby')
 
 " Bundler
 au BufNewFile,BufRead Gemfile			call s:setf('ruby')
@@ -67,7 +67,5 @@ au BufNewFile,BufRead Appraisals		call s:setf('ruby')
 
 " CocoaPods
 au BufNewFile,BufRead Podfile,*.podspec		call s:setf('ruby')
-
-au BufNewFile,BufRead *.prawn			call s:setf('ruby')
 
 " vim: nowrap sw=2 sts=2 ts=8 noet:

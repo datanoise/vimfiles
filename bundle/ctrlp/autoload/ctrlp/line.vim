@@ -67,10 +67,6 @@ fu! ctrlp#line#cmd(mode, ...)
 	en
 	retu s:id
 endf
-
-fu! ctrlp#line#id()
-	retu s:id
-endf
 "}}}
 
 " vim:fen:fdm=marker:fmr={{{,}}}:fdl=0:fdc=1:ts=2:sw=2:sts=2

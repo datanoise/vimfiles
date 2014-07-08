@@ -21,6 +21,9 @@ setlocal formatoptions-=t formatoptions+=croql
 
 setlocal noexpandtab
 
+" keywordprg doesn't allow to use vim commands, override it
+nnoremap <buffer> <silent> K :GoDoc<cr>
+
 let b:undo_ftplugin = "setl fo< com< cms<"
 
 " Set gocode completion

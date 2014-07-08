@@ -3,7 +3,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-09-17.
 " @Last Change: 2014-06-25.
-" @Revision:    1651
+" @Revision:    1654
 
 " call tlog#Log('Load: '. expand('<sfile>')) " vimtlib-sfile
 
@@ -48,12 +48,14 @@ if !exists('g:tcommentOptions')
 endif
 
 if !exists('g:tcomment#options_comments')
-    " Options when using a the 'comments' option.
+    " Additional args for |tcomment#Comment()| when using the 'comments' 
+    " option.
     let g:tcomment#options_comments = {'whitespace': 'both'}   "{{{2
 endif
 
 if !exists('g:tcomment#options_commentstring')
-    " Options when using a the 'commentstring' option.
+    " Additional args for |tcomment#Comment()| when using the 
+    " 'commentstring' option.
     let g:tcomment#options_commentstring = {'whitespace': 'both'}   "{{{2
 endif
 
@@ -420,6 +422,7 @@ call tcomment#DefineType('htmljinja_block', "{%% comment %%}%s{%% endcomment %%}
 call tcomment#DefineType('hy',               '; %s'             )
 call tcomment#DefineType('ini',              '; %s'             ) " php ini (/etc/php5/...)
 call tcomment#DefineType('io',               '// %s'            )
+call tcomment#DefineType('jade',             '// %s'            )
 call tcomment#DefineType('jasmine',          '# %s'             )
 call tcomment#DefineType('java',             '/* %s */'         )
 call tcomment#DefineType('java_block',       g:tcommentBlockC   )

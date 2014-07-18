@@ -30,11 +30,11 @@ if exists("b:current_syntax")
 endif
 
 if !exists("go_highlight_array_whitespace_error")
-  let go_highlight_array_whitespace_error = 1
+  let go_highlight_array_whitespace_error = 0
 endif
 
 if !exists("go_highlight_chan_whitespace_error")
-  let go_highlight_chan_whitespace_error = 1
+  let go_highlight_chan_whitespace_error = 0
 endif
 
 if !exists("go_highlight_extra_types")
@@ -42,11 +42,11 @@ if !exists("go_highlight_extra_types")
 endif
 
 if !exists("go_highlight_space_tab_error")
-  let go_highlight_space_tab_error = 1
+  let go_highlight_space_tab_error = 0
 endif
 
 if !exists("go_highlight_trailing_whitespace_error")
-  let go_highlight_trailing_whitespace_error = 1
+  let go_highlight_trailing_whitespace_error = 0
 endif
 
 if !exists("go_highlight_operators")
@@ -285,5 +285,6 @@ endif
 " There's a bug in the implementation of grouphere. For now, use the
 " following as a more expensive/less precise workaround.
 " syn sync minlines=500
+" syn sync fromstart
 
 let b:current_syntax = "go"

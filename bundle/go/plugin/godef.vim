@@ -69,5 +69,3 @@ endif
 
 
 command! -range -nargs=* GoDef :call Godef(<f-args>)
-autocmd FileType go nnoremap <buffer> gd :<C-u>call Godef()<CR>
-autocmd FileType go nnoremap <buffer> gD :call GodefSignature()<CR>

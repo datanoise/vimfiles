@@ -3,12 +3,23 @@
 " Maintainer:   Patrick Walton <pcwalton@mozilla.com>
 " Maintainer:   Ben Blum <bblum@cs.cmu.edu>
 " Maintainer:   Chris Morgan <me@chrismorgan.info>
-" Last Change:  2014 Feb 27
+" Last Change:  July 06, 2014
 
 if version < 600
   syntax clear
 elseif exists("b:current_syntax")
   finish
+endif
+
+" Fold settings {{{1
+
+if has("folding") && exists('g:rust_fold') && g:rust_fold != 0
+  setlocal foldmethod=syntax
+  if g:rust_fold == 2
+    setlocal foldlevel<
+  else
+    setlocal foldlevel=99
+  endif
 endif
 
 " Syntax definitions {{{1
@@ -100,7 +111,7 @@ syn keyword rustTrait RawPtr
 syn keyword rustTrait Buffer Writer Reader Seek
 syn keyword rustTrait Str StrVector StrSlice OwnedStr
 syn keyword rustTrait IntoMaybeOwned StrAllocating
-syn keyword rustTrait ToStr IntoStr
+syn keyword rustTrait ToString IntoStr
 syn keyword rustTrait Tuple1 Tuple2 Tuple3 Tuple4
 syn keyword rustTrait Tuple5 Tuple6 Tuple7 Tuple8
 syn keyword rustTrait Tuple9 Tuple10 Tuple11 Tuple12
@@ -213,8 +224,6 @@ syn keyword rustTodo contained TODO FIXME XXX NB NOTE
 " Trivial folding rules to begin with.
 " TODO: use the AST to make really good folding
 syn region rustFoldBraces start="{" end="}" transparent fold
-" If you wish to enable this, setlocal foldmethod=syntax
-" It's not enabled by default as it would drive some people mad.
 
 " Default highlighting {{{1
 hi def link rustDecNumber       rustNumber

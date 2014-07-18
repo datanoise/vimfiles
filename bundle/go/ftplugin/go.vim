@@ -23,6 +23,9 @@ setlocal noexpandtab
 
 " keywordprg doesn't allow to use vim commands, override it
 nnoremap <buffer> <silent> K :GoDoc<cr>
+nnoremap <buffer> <silent> gd :GoDef<cr>
+nmap <buffer> <silent> gD <Plug>(go-def-split)
+nnoremap <buffer> gs :call GodefSignature()<CR>
 
 let b:undo_ftplugin = "setl fo< com< cms<"
 

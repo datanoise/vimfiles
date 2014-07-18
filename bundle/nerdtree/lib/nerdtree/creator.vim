@@ -49,7 +49,7 @@ function! s:Creator.createPrimary(name)
         call path.changeToDir()
     endif
 
-    if nerdtree#treeExistsForTab()
+    if g:NERDTree.ExistsForTab()
         if nerdtree#isTreeOpen()
             call nerdtree#closeTree()
         endif
@@ -58,12 +58,12 @@ function! s:Creator.createPrimary(name)
 
     call self._createTreeWin()
     call self._createNERDTree(path)
+    let b:NERDTreeType = "primary"
     let b:treeShowHelp = 0
     let b:NERDTreeIgnoreEnabled = 1
     let b:NERDTreeShowFiles = g:NERDTreeShowFiles
     let b:NERDTreeShowHidden = g:NERDTreeShowHidden
     let b:NERDTreeShowBookmarks = g:NERDTreeShowBookmarks
-    let b:NERDTreeType = "primary"
 
     call b:NERDTree.render()
     call b:NERDTreeRoot.putCursorHere(0, 0)
@@ -108,12 +108,12 @@ endfunction
 " FUNCTION: s:Creator._createNERDTree(path) {{{1
 function! s:Creator._createNERDTree(path)
     let b:NERDTree = g:NERDTree.New(a:path)
-    call b:NERDTree.root.open()
-
     "TODO: This is kept for compatability only since many things use
     "b:NERDTreeRoot instead of the new NERDTree.root
     "Remove this one day
     let b:NERDTreeRoot = b:NERDTree.root
+
+    call b:NERDTree.root.open()
 endfunction
 
 " FUNCTION: s:Creator.CreateMirror() {{{1
@@ -163,7 +163,7 @@ function! s:Creator.createMirror()
         return
     endif
 
-    if nerdtree#treeExistsForTab() && nerdtree#isTreeOpen()
+    if g:NERDTree.ExistsForTab() && nerdtree#isTreeOpen()
         call nerdtree#closeTree()
     endif
 
@@ -327,7 +327,7 @@ endfunction
 "dir: the full path for the root node (is only used if the NERD tree is being
 "initialized.
 function! s:Creator.togglePrimary(dir)
-    if nerdtree#treeExistsForTab()
+    if g:NERDTree.ExistsForTab()
         if !nerdtree#isTreeOpen()
             call self._createTreeWin()
             if !&hidden

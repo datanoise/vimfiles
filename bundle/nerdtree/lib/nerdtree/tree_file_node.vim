@@ -181,7 +181,7 @@ endfunction
 "FUNCTION: TreeFileNode.GetRootForTab(){{{1
 "get the root node for this tab
 function! s:TreeFileNode.GetRootForTab()
-    if nerdtree#treeExistsForTab()
+    if g:NERDTree.ExistsForTab()
         return getbufvar(t:NERDTreeBufName, 'NERDTreeRoot')
     end
     return {}
@@ -211,7 +211,7 @@ endfunction
 "FUNCTION: TreeFileNode.isRoot() {{{1
 "returns 1 if this node is b:NERDTreeRoot
 function! s:TreeFileNode.isRoot()
-    if !nerdtree#treeExistsForBuf()
+    if !g:NERDTree.ExistsForBuf()
         throw "NERDTree.NoTreeError: No tree exists for the current buffer"
     endif
 
@@ -311,6 +311,11 @@ endfunction
 "FUNCTION: TreeFileNode.refresh() {{{1
 function! s:TreeFileNode.refresh()
     call self.path.refresh()
+endfunction
+
+"FUNCTION: TreeFileNode.refreshFlags() {{{1
+function! s:TreeFileNode.refreshFlags()
+    call self.path.refreshFlags()
 endfunction
 
 "FUNCTION: TreeFileNode.rename() {{{1

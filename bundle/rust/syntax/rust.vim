@@ -11,17 +11,6 @@ elseif exists("b:current_syntax")
   finish
 endif
 
-" Fold settings {{{1
-
-if has("folding") && exists('g:rust_fold') && g:rust_fold != 0
-  setlocal foldmethod=syntax
-  if g:rust_fold == 2
-    setlocal foldlevel<
-  else
-    setlocal foldlevel=99
-  endif
-endif
-
 " Syntax definitions {{{1
 " Basic keywords {{{2
 syn keyword   rustConditional match if else
@@ -76,7 +65,7 @@ syn keyword   rustType        f64 i8 i16 i32 i64 str Self
 " to make it easy to update.
 
 " Core operators {{{3
-syn keyword   rustTrait       Copy Send Sized Share
+syn keyword   rustTrait       Copy Send Sized Sync
 syn keyword   rustTrait       Add Sub Mul Div Rem Neg Not
 syn keyword   rustTrait       BitAnd BitOr BitXor
 syn keyword   rustTrait       Drop Deref DerefMut
@@ -100,7 +89,7 @@ syn keyword rustTrait Clone
 syn keyword rustTrait PartialEq PartialOrd Eq Ord Equiv
 syn keyword rustEnum Ordering
 syn keyword rustEnumVariant Less Equal Greater
-syn keyword rustTrait Collection Mutable Map MutableMap
+syn keyword rustTrait Collection Mutable Map MutableMap MutableSeq
 syn keyword rustTrait Set MutableSet
 syn keyword rustTrait FromIterator Extendable ExactSize
 syn keyword rustTrait Iterator DoubleEndedIterator

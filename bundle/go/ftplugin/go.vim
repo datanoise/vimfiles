@@ -21,8 +21,16 @@ setlocal formatoptions-=t formatoptions+=croql
 
 setlocal noexpandtab
 
-" keywordprg doesn't allow to use vim commands, override it
-nnoremap <buffer> <silent> K :GoDoc<cr>
+
+if !exists("g:go_doc_keywordprg_enabled")
+    let g:go_doc_keywordprg_enabled = 1
+endif
+
+if g:go_doc_keywordprg_enabled
+    " keywordprg doesn't allow to use vim commands, override it
+    nnoremap <buffer> <silent> K :GoDoc<cr>
+endif
+
 nnoremap <buffer> <silent> gd :GoDef<cr>
 nmap <buffer> <silent> gD <Plug>(go-def-split)
 nnoremap <buffer> gs :call GodefSignature()<CR>

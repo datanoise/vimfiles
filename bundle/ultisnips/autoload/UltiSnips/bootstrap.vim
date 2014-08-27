@@ -35,6 +35,7 @@ function! UltiSnips#bootstrap#Bootstrap()
    exec g:_uspy "module_path = os.path.join(sourced_file, 'pythonx')"
    exec g:_uspy "vim.command(\"let g:UltiSnipsPythonPath = '%s'\" % module_path)"
    exec g:_uspy "if not hasattr(vim, 'VIM_SPECIAL_PATH'): sys.path.append(module_path)"
+   " exec g:_uspy "sys.path.append(module_path)"
    exec g:_uspy "from UltiSnips import UltiSnips_Manager"
 endfunction
 

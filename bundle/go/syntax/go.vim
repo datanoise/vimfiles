@@ -50,19 +50,19 @@ if !exists("go_highlight_trailing_whitespace_error")
 endif
 
 if !exists("go_highlight_operators")
-	let go_highlight_operators = 0
+	let go_highlight_operators = 1
 endif
 
 if !exists("go_highlight_functions")
-	let go_highlight_functions = 0
+	let go_highlight_functions = 1
 endif
 
 if !exists("go_highlight_methods")
-	let go_highlight_methods = 0
+	let go_highlight_methods = 1
 endif
 
 if !exists("go_highlight_structs")
-	let go_highlight_structs = 0
+	let go_highlight_structs = 1
 endif
 
 syn case match

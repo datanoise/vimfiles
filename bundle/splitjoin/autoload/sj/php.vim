@@ -62,7 +62,7 @@ endfunction
 function! sj#php#SplitIfClause()
   let pattern = '\<if\s*(.\{-})\s*{.*}'
 
-  if search(pattern, 'Wbc') <= 0
+  if search(pattern, 'Wbc', line('.')) <= 0
     return 0
   endif
 
@@ -80,7 +80,7 @@ endfunction
 function! sj#php#JoinIfClause()
   let pattern = '\<if\s*(.\{-})\s*{\s*$'
 
-  if search(pattern, 'Wbc') <= 0
+  if search(pattern, 'Wbc', line('.')) <= 0
     return 0
   endif
 
@@ -91,6 +91,46 @@ function! sj#php#JoinIfClause()
   let body = sj#GetMotion('Va{')
   let body = substitute(body, "\\s*\n\\s*", ' ', 'g')
   call sj#ReplaceMotion('Va{', body)
+
+  return 1
+endfunction
+
+function! sj#php#SplitPhpMarker()
+  if sj#SearchUnderCursor('<?=\=\%(php\)\=.\{-}?>') <= 0
+    return 0
+  endif
+
+  let start_col = col('.')
+  let skip = sj#SkipSyntax('phpStringSingle', 'phpStringDouble', 'phpComment')
+  if sj#SearchSkip('?>', skip, 'We', line('.')) <= 0
+    return 0
+  endif
+  let end_col = col('.')
+
+  let body = sj#GetCols(start_col, end_col)
+  let body = substitute(body, '^<?\(=\=\%(php\)\=\)\s*', "<?\\1\n", '')
+  let body = substitute(body, '\s*?>$', "\n?>", '')
+
+  call sj#ReplaceCols(start_col, end_col, body)
+  return 1
+endfunction
+
+function! sj#php#JoinPhpMarker()
+  if sj#SearchUnderCursor('<?=\=\%(php\)\=\s*$') <= 0
+    return 0
+  endif
+
+  let start_lineno = line('.')
+  let skip = sj#SkipSyntax('phpStringSingle', 'phpStringDouble', 'phpComment')
+  if sj#SearchSkip('?>', skip, 'We') <= 0
+    return 0
+  endif
+  let end_lineno = line('.')
+
+  let saved_joinspaces = &joinspaces
+  set nojoinspaces
+  exe start_lineno.','.end_lineno.'join'
+  let &joinspaces = saved_joinspaces
 
   return 1
 endfunction

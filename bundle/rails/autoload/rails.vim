@@ -1048,7 +1048,7 @@ function! rails#new_app_command(bang,...) abort
   let temp = tempname()
   try
     if &shellpipe =~# '%s'
-      let pipe = s:sub(&shellpipe, '%s', temp, 'g')
+      let pipe = s:sub(&shellpipe, '\%s', temp)
     else
       let pipe = &shellpipe . ' ' . temp
     endif
@@ -1608,7 +1608,7 @@ endfunction
 " Script Wrappers {{{1
 
 function! s:BufScriptWrappers()
-  command! -buffer -bang -bar -nargs=* -complete=customlist,s:Complete_script   Rscript       :execute empty(<q-args>) ? rails#app().script_command(<bang>0, 'console') ? rails#app().script_command(<bang>0,<f-args>)
+  command! -buffer -bang -bar -nargs=* -complete=customlist,s:Complete_script   Rscript       :execute empty(<q-args>) ? rails#app().script_command(<bang>0, 'console') : rails#app().script_command(<bang>0,<f-args>)
   command! -buffer -bang -bar -nargs=* -complete=customlist,s:Complete_environments Console   :Rails<bang> console <args>
   command! -buffer -bang -bar -nargs=* -complete=customlist,s:Complete_script   Rails         :execute rails#app().script_command(<bang>0,<f-args>)
   command! -buffer -bang -bar -nargs=* -complete=customlist,s:Complete_generate Rgenerate     :execute rails#app().generator_command(<bang>0,'generate',<f-args>)
@@ -1825,7 +1825,7 @@ let s:efm_generate =
       \ s:color_efm('%-G', 'create', ' ') .
       \ s:color_efm('%-G', 'exist', ' ') .
       \ s:color_efm('Overwrite%.%#', '%m', '%f') .
-      \ s:color_efm('', '%m', '   %f') .
+      \ s:color_efm('', '%m', ' %f') .
       \ s:color_efm('', '%m', '%f') .
       \ '%-G%.%#'
 
@@ -3342,7 +3342,7 @@ endfunction
 function! s:readable_alternate(...) dict abort
   let candidates = self.alternate_candidates(a:0 ? a:1 : 0)
   for file in candidates
-    if self.app().has_path(file)
+    if self.app().has_path(s:sub(file, '#.*', ''))
       return file
     endif
   endfor

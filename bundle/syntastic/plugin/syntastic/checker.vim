@@ -47,8 +47,8 @@ endfunction " }}}2
 
 function! g:SyntasticChecker.getExec() " {{{2
     return
-        \ exists('b:syntastic_' . self._name . '_exec') ? b:syntastic_{self._name}_exec :
-        \ expand(syntastic#util#var(self._filetype . '_' . self._name . '_exec', self._exec))
+        \ expand( exists('b:syntastic_' . self._name . '_exec') ? b:syntastic_{self._name}_exec :
+        \ syntastic#util#var(self._filetype . '_' . self._name . '_exec', self._exec) )
 endfunction " }}}2
 
 function! g:SyntasticChecker.getExecEscaped() " {{{2
@@ -59,13 +59,13 @@ function! g:SyntasticChecker.getLocListRaw() " {{{2
     let name = self._filetype . '/' . self._name
     try
         let list = self._locListFunc()
-        call syntastic#log#debug(g:SyntasticDebugTrace, 'getLocList: checker ' . name . ' returned ' . v:shell_error)
+        call syntastic#log#debug(g:_SYNTASTIC_DEBUG_TRACE, 'getLocList: checker ' . name . ' returned ' . v:shell_error)
     catch /\m\C^Syntastic: checker error$/
         let list = []
         call syntastic#log#error('checker ' . name . ' returned abnormal status ' . v:shell_error)
     endtry
     call self._populateHighlightRegexes(list)
-    call syntastic#log#debug(g:SyntasticDebugLoclist, name . ' raw:', list)
+    call syntastic#log#debug(g:_SYNTASTIC_DEBUG_LOCLIST, name . ' raw:', list)
     call self._quietMessages(list)
     return list
 endfunction " }}}2
@@ -80,6 +80,15 @@ endfunction " }}}2
 
 function! g:SyntasticChecker.setWantSort(val) " {{{2
     let self._sort = a:val
+endfunction " }}}2
+
+function! g:SyntasticChecker.log(msg, ...) " {{{2
+    let leader = self._filetype . '/' . self._name . ': '
+    if a:0 > 0
+        call syntastic#log#debug(g:_SYNTASTIC_DEBUG_CHECKERS, leader . a:msg, a:1)
+    else
+        call syntastic#log#debug(g:_SYNTASTIC_DEBUG_CHECKERS, leader . a:msg)
+    endif
 endfunction " }}}2
 
 function! g:SyntasticChecker.makeprgBuild(opts) " {{{2
@@ -123,11 +132,11 @@ function! g:SyntasticChecker._quietMessages(errors) " {{{2
         call syntastic#log#warn('ignoring invalid syntastic_' . name . '_quiet_messages')
     endtry
 
-    call syntastic#log#debug(g:SyntasticDebugLoclist, 'quiet_messages filter:', quiet_filters)
+    call syntastic#log#debug(g:_SYNTASTIC_DEBUG_LOCLIST, 'quiet_messages filter:', quiet_filters)
 
     if !empty(quiet_filters)
         call syntastic#util#dictFilter(a:errors, quiet_filters)
-        call syntastic#log#debug(g:SyntasticDebugLoclist, 'filtered by quiet_messages:', a:errors)
+        call syntastic#log#debug(g:_SYNTASTIC_DEBUG_LOCLIST, 'filtered by quiet_messages:', a:errors)
     endif
 endfunction " }}}2
 

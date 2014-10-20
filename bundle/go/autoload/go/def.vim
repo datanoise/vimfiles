@@ -1,22 +1,17 @@
-if exists("g:go_loaded_godef")
-	finish
+if !exists("g:go_godef_bin")
+	let g:go_godef_bin = "godef"
 endif
-let g:go_loaded_godef = 1
 
-function! GodefSignature()
+function! go#def#Signature()
     let cmd = g:go_godef_bin . " -f=" . shellescape(expand("%")) . " -i " . s:getOffset() . " -t=true"
     let out=system(cmd, join(getbufline(bufnr('%'), 1, '$'), "\n"))
     let out = substitute(substitute(out, '.\{-}\n', '', ''), '\n', ' ', 'g')
     echohl Function | echo out | echohl None
 endfunction
 
-if !exists("g:go_godef_bin")
-	let g:go_godef_bin = "godef"
-endif
-
 
 " modified and improved version of vim-godef
-function! Godef(...)
+function! go#def#Jump(...)
 	if !len(a:000)
 		" gives us the offset of the word, basicall the position of the word under
 		" he cursor
@@ -25,31 +20,35 @@ function! Godef(...)
 		let arg = a:1
 	endif
 
+	let bin_path = go#tool#BinPath(g:go_godef_bin) 
+	if empty(bin_path) 
+		return 
+	endif
 
-	"return with a warning if the bin doesn't exist
-	if go#tool#BinExists(g:go_godef_bin) == -1 | return | endif
-
-	let command = g:go_godef_bin . " -f=" . expand("%:p") . " -i " . shellescape(arg)
+	let command = bin_path . " -f=" . expand("%:p") . " -i " . shellescape(arg)
 
 	" get output of godef
 	let out=system(command, join(getbufline(bufnr('%'), 1, '$'), "\n"))
 
 	" jump to it
-	call GodefJump(out, "")
+	call s:godefJump(out, "")
 endfunction
 
 
-function! GodefMode(mode)
+function! go#def#JumpMode(mode)
 	let arg = s:getOffset()
 
-	if go#tool#BinExists(g:go_godef_bin) == -1 | return | endif
+	let bin_path = go#tool#BinPath(g:go_godef_bin) 
+	if empty(bin_path) 
+		return 
+	endif
 
-	let command = g:go_godef_bin . " -f=" . expand("%:p") . " -i " . shellescape(arg)
+	let command = bin_path . " -f=" . expand("%:p") . " -i " . shellescape(arg)
 
 	" get output of godef
 	let out=system(command, join(getbufline(bufnr('%'), 1, '$'), "\n"))
 
-	call GodefJump(out, a:mode)
+	call s:godefJump(out, a:mode)
 endfunction
 
 
@@ -69,7 +68,7 @@ function! s:getOffset()
 endfunction
 
 
-function! GodefJump(out, mode)
+function! s:godefJump(out, mode)
 	let old_errorformat = &errorformat
 	let &errorformat = "%f:%l:%c"
 
@@ -86,7 +85,7 @@ function! GodefJump(out, mode)
 		lgetexpr a:out
 
 		" needed for restoring back user setting this is because there are two
-		" modes of switchbuf whic we need based on the split mode
+		" modes of switchbuf which we need based on the split mode
 		let old_switchbuf = &switchbuf
 
 		if a:mode == "tab"
@@ -117,9 +116,3 @@ function! GodefJump(out, mode)
 	let &errorformat = old_errorformat
 endfunction
 
-nnoremap <silent> <Plug>(go-def) :<C-u>call Godef()<CR>
-nnoremap <silent> <Plug>(go-def-vertical) :<C-u>call GodefMode("vsplit")<CR>
-nnoremap <silent> <Plug>(go-def-split) :<C-u>call GodefMode("split")<CR>
-nnoremap <silent> <Plug>(go-def-tab) :<C-u>call GodefMode("tab")<CR>
-
-command! -range -nargs=* GoDef :call Godef(<f-args>)

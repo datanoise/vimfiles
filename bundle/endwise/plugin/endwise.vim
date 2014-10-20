@@ -16,6 +16,11 @@ augroup endwise " {{{1
         \ let b:endwise_words = 'function,do,then' |
         \ let b:endwise_pattern = '^\s*\zs\%(\%(local\s\+\)\=function\)\>\%(.*\<end\>\)\@!\|\<\%(then\|do\)\ze\s*$' |
         \ let b:endwise_syngroups = 'luaFunction,luaStatement,luaCond'
+  autocmd FileType elixir
+        \ let b:endwise_addition = 'end' |
+        \ let b:endwise_words = 'do,fn' |
+        \ let b:endwise_pattern = '.*[^.:@$]\zs\<\%(do\|fn\)\>\ze\%(.*[^.:@$]\<end\>\)\@!' |
+        \ let b:endwise_syngroups = 'elixirKeyword'
   autocmd FileType ruby
         \ let b:endwise_addition = 'end' |
         \ let b:endwise_words = 'module,class,def,if,unless,case,while,until,begin,do' |

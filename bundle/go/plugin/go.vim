@@ -11,10 +11,17 @@ let s:packages = [
             \ "code.google.com/p/go.tools/cmd/goimports", 
             \ "code.google.com/p/rog-go/exp/cmd/godef", 
             \ "code.google.com/p/go.tools/cmd/oracle", 
+            \ "code.google.com/p/go.tools/cmd/gorename",
             \ "github.com/golang/lint/golint", 
             \ "github.com/kisielk/errcheck",
             \ "github.com/jstemmer/gotags",
             \ ]
+
+" Commands
+command! GoErrCheck call go#errcheck#Run()
+
+command! GoInstallBinaries call s:GoInstallBinaries(-1)
+command! GoUpdateBinaries call s:GoInstallBinaries(1)
 
 
 " GetBinPath returns the binary path of installed go tools
@@ -39,8 +46,8 @@ function! GetBinPath()
             let bin_path = go_paths[0]. '/bin/'
         endif
     else
-        " couldn not find anything
-        return 0
+        " could not find anything
+        return ""
     endif
 
     " add trailing slash if there is no one
@@ -124,8 +131,4 @@ function! s:CheckBinaries()
 endfunction
 
 
-command! GoInstallBinaries call s:GoInstallBinaries(-1)
-command! GoUpdateBinaries call s:GoInstallBinaries(1)
-
 " vim:ts=4:sw=4:et
-"

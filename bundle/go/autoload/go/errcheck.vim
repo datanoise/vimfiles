@@ -1,17 +1,14 @@
-if exists("g:go_loaded_errcheck") 
-    finish
-endif
-let g:go_loaded_errcheck = 1
-
 if !exists("g:go_errcheck_bin")
     let g:go_errcheck_bin = "errcheck"
 endif
 
-command! GoErrCheck call s:ErrCheck()
+function! go#errcheck#Run() abort
+    let bin_path = go#tool#BinPath(g:go_errcheck_bin) 
+    if empty(bin_path) 
+        return 
+    endif
 
-function! s:ErrCheck() abort
-    if go#tool#BinExists(g:go_errcheck_bin) == -1 | return | endif
-    let out = system(g:go_errcheck_bin . ' ' . shellescape(expand('%:p:h')))
+    let out = system(bin_path . ' ' . shellescape(expand('%:p:h')))
     if v:shell_error
         let errors = []
         let mx = '^\(.\{-}\):\(\d\+\):\(\d\+\)\s*\(.*\)'
@@ -37,6 +34,3 @@ function! s:ErrCheck() abort
     endif
     cwindow
 endfunction
-
-
-" vim:ts=4:sw=4:et

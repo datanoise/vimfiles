@@ -14,10 +14,6 @@
 "
 " Options:
 "
-"   g:go_fmt_commands [default=1]
-"
-"       Flag to indicate whether to enable the commands listed above.
-"
 "   g:go_fmt_command [default="gofmt"]
 "
 "       Flag naming the gofmt executable to use.
@@ -26,24 +22,13 @@
 "
 "       Flag to auto call :Fmt when saved file
 "
-if exists("b:did_ftplugin_go_fmt")
-    finish
-endif
-
-if !exists("g:go_fmt_commands")
-    let g:go_fmt_commands = 1
-endif
 
 if !exists("g:go_fmt_command")
     let g:go_fmt_command = "gofmt"
 endif
 
 if !exists("g:go_goimports_bin")
-	let g:go_goimports_bin = "goimports"
-endif
-
-if !exists('g:go_fmt_autosave')
-    let g:go_fmt_autosave = 1
+    let g:go_goimports_bin = "goimports"
 endif
 
 if !exists('g:go_fmt_fail_silently')
@@ -52,15 +37,6 @@ endif
 
 if !exists('g:go_fmt_options')
     let g:go_fmt_options = ''
-endif
-
-if g:go_fmt_autosave
-    autocmd BufWritePre <buffer> :GoFmt
-endif
-
-if g:go_fmt_commands
-    command! -buffer GoFmt call s:GoFormat(-1)
-    command! -buffer GoImports call s:GoFormat(1)
 endif
 
 let s:got_fmt_error = 0
@@ -73,7 +49,7 @@ let s:got_fmt_error = 0
 "  it doesn't undo changes and break undo history.  If you are here reading
 "  this and have VimL experience, please look at the function for
 "  improvements, patches are welcome :)
-function! s:GoFormat(withGoimport)
+function! go#fmt#Format(withGoimport)
     " save cursor position and many other things
     let l:curw=winsaveview()
 
@@ -91,10 +67,13 @@ function! s:GoFormat(withGoimport)
     " get the command first so we can test it
     let fmt_command = g:go_fmt_command
     if a:withGoimport  == 1 
-        let fmt_command = g:go_goimports_bin
-
         " check if the user has installed goimports
-        if go#tool#BinExists(fmt_command) == -1 | return | endif
+        let bin_path = go#tool#BinPath(g:go_goimports_bin) 
+        if empty(bin_path) 
+            return 
+        endif
+
+        let fmt_command = bin_path
     endif
 
     " populate the final command with user based fmt options
@@ -158,6 +137,5 @@ function! s:GoFormat(withGoimport)
     call winrestview(l:curw)
 endfunction
 
-let b:did_ftplugin_go_fmt = 1
 
 " vim:ts=4:sw=4:et

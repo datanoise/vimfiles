@@ -615,7 +615,6 @@ let g:go_highlight_trailing_whitespace_error = 0
 let g:go_auto_type_info = 0
 let g:go_snippet_engine = ''
 
-
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"
 let g:CSApprox_verbose_level = 0 " to shut it up

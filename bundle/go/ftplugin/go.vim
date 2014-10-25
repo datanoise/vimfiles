@@ -26,15 +26,20 @@ compiler go
 if !exists("g:go_doc_keywordprg_enabled")
     let g:go_doc_keywordprg_enabled = 1
 endif
-
 if g:go_doc_keywordprg_enabled
     " keywordprg doesn't allow to use vim commands, override it
-    nnoremap <buffer> <silent> K :GoDoc<cr>
+    nnoremap <buffer> <silent> K :GoDoc<cr> 
 endif
 
-nnoremap <buffer> <silent> gd :GoDef<cr>
-nmap <buffer> <silent> gD <Plug>(go-def-split)
-nnoremap <buffer> gs :call GodefSignature()<CR>
+
+if !exists("g:go_def_mapping_enabled")
+    let g:go_def_mapping_enabled = 1
+endif
+if g:go_def_mapping_enabled
+   nnoremap <buffer> <silent> gd :GoDef<cr>
+   nmap <buffer> <silent> gD <Plug>(go-def-split)
+   nnoremap <buffer> gs :call GodefSignature()<CR>
+endif
 
 let b:undo_ftplugin = "setl fo< com< cms<"
 

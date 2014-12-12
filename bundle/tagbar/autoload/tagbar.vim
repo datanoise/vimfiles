@@ -955,6 +955,8 @@ function! s:MapKeys() abort
         \ ['togglefold',    'ToggleFold()'],
         \ ['openallfolds',  'SetFoldLevel(99, 1)'],
         \ ['closeallfolds', 'SetFoldLevel(0, 1)'],
+        \ ['nextfold',      'GotoNextFold()'],
+        \ ['prevfold',      'GotoPrevFold()'],
         \
         \ ['togglesort',      'ToggleSort()'],
         \ ['toggleautoclose', 'ToggleAutoclose()'],
@@ -1156,7 +1158,7 @@ function! s:CheckFTCtags(bin, ftype) abort
     endif
 
     if exists('g:tagbar_type_' . a:ftype)
-        execute 'let userdef = ' . 'g:tagbar_type_' . a:ftype
+        let userdef = g:tagbar_type_{a:ftype}
         if has_key(userdef, 'ctagsbin')
             return userdef.ctagsbin
         else
@@ -1289,7 +1291,6 @@ endfunction
 " s:BaseTag.getClosedParentTline() {{{3
 function! s:BaseTag.getClosedParentTline() abort dict
     let tagline  = self.tline
-    let fileinfo = self.fileinfo
 
     " Find the first closed parent, starting from the top of the hierarchy.
     let parents   = []
@@ -1372,7 +1373,6 @@ endfunction
 
 " s:NormalTag.strfmt() {{{3
 function! s:NormalTag.strfmt() abort dict
-    let fileinfo = self.fileinfo
     let typeinfo = self.typeinfo
 
     let suffix = get(self.fields, 'signature', '')
@@ -1475,7 +1475,6 @@ endfunction
 
 " s:PseudoTag.strfmt() {{{3
 function! s:PseudoTag.strfmt() abort dict
-    let fileinfo = self.fileinfo
     let typeinfo = self.typeinfo
 
     let suffix = get(self.fields, 'signature', '')
@@ -1767,8 +1766,14 @@ function! s:OpenWindow(flags) abort
     endif
 
     let s:window_opening = 1
-    let openpos = g:tagbar_left ? 'topleft vertical ' : 'botright vertical '
-    exe 'silent keepalt ' . openpos . g:tagbar_width . 'split ' . '__Tagbar__'
+    if g:tagbar_vertical == 0
+        let openpos = g:tagbar_left ? 'topleft vertical ' : 'botright vertical '
+        let width = g:tagbar_width
+    else
+        let openpos = g:tagbar_left ? 'leftabove ' : 'rightbelow '
+        let width = g:tagbar_vertical
+    endif
+    exe 'silent keepalt ' . openpos . width . 'split ' . '__Tagbar__'
     unlet s:window_opening
 
     call s:InitWindow(autoclose)
@@ -2006,7 +2011,8 @@ function! s:ProcessFile(fname, ftype) abort
 
     " If the file has only been updated preserve the fold states, otherwise
     " create a new entry
-    if s:known_files.has(a:fname) && !empty(s:known_files.get(a:fname))
+    if s:known_files.has(a:fname) && !empty(s:known_files.get(a:fname)) &&
+     \ s:known_files.get(a:fname).ftype == a:ftype
         let fileinfo = s:known_files.get(a:fname)
         let typeinfo = fileinfo.typeinfo
         call fileinfo.reset()
@@ -2847,6 +2853,8 @@ function! s:PrintHelp() abort
         silent  put ='\" ' . s:get_map_str('togglefold') . ': Toggle fold'
         silent  put ='\" ' . s:get_map_str('openallfolds') . ': Open all folds'
         silent  put ='\" ' . s:get_map_str('closeallfolds') . ': Close all folds'
+        silent  put ='\" ' . s:get_map_str('nextfold') . ': Go to next fold'
+        silent  put ='\" ' . s:get_map_str('prevfold') . ': Go to previous fold'
         silent  put ='\"'
         silent  put ='\" ---------- Misc -----------'
         silent  put ='\" ' . s:get_map_str('togglesort') . ': Toggle sort'
@@ -3049,12 +3057,6 @@ function! s:ShowInPreviewWin() abort
         return
     endif
 
-    call s:GotoFileWindow(taginfo.fileinfo, 1)
-    call s:mark_window()
-
-    " Check whether the preview window is already open and open it if not.
-    " This has to be done before the :psearch below so the window is relative
-    " to the Tagbar window.
     let pwin_open = 0
     for win in range(1, winnr('$'))
         if getwinvar(win, '&previewwindow')
@@ -3063,12 +3065,30 @@ function! s:ShowInPreviewWin() abort
         endif
     endfor
 
+    " We want the preview window to be relative to the file window in normal
+    " (horizontal) mode, and relative to the Tagbar window in vertical mode,
+    " to make the best use of space.
+    if g:tagbar_vertical == 0
+        call s:GotoFileWindow(taginfo.fileinfo, 1)
+        call s:mark_window()
+    endif
+
+    " Open the preview window if it is not already open. This has to be done
+    " explicitly before the :psearch below to better control its positioning.
     if !pwin_open
         silent execute
             \ g:tagbar_previewwin_pos . ' pedit ' . taginfo.fileinfo.fpath
+        if g:tagbar_vertical != 0
+            silent execute 'vertical resize ' . g:tagbar_width
+        endif
         " Remember that the preview window was opened by Tagbar so we can
         " safely close it by ourselves
         let s:pwin_by_tagbar = 1
+    endif
+
+    if g:tagbar_vertical != 0
+        call s:GotoFileWindow(taginfo.fileinfo, 1)
+        call s:mark_window()
     endif
 
     " Use psearch instead of pedit since pedit essentially reloads the file
@@ -3269,8 +3289,6 @@ endfunction
 
 " s:OpenParents() {{{2
 function! s:OpenParents(...) abort
-    let tagline = 0
-
     if a:0 == 1
         let tag = a:1
     else
@@ -3281,6 +3299,67 @@ function! s:OpenParents(...) abort
         call tag.openParents()
         call s:RenderKeepView()
     endif
+endfunction
+
+" s:GotoNextFold() {{{2
+function! s:GotoNextFold() abort
+    let curlinenr = line('.')
+    let newlinenr = line('.')
+
+    let range = range(line('.') + 1, line('$'))
+
+    for linenr in range
+        let taginfo = s:GetTagInfo(linenr, 0)
+
+        if empty(taginfo)
+            continue
+        elseif !empty(get(taginfo, 'children', [])) || taginfo.isKindheader()
+            let newlinenr = linenr
+            break
+        endif
+    endfor
+
+    if curlinenr != newlinenr
+        execute linenr
+        call winline()
+    endif
+
+    redraw
+endfunction
+
+" s:GotoPrevFold() {{{2
+function! s:GotoPrevFold() abort
+    let curlinenr = line('.')
+    let newlinenr = line('.')
+    let curtag = s:GetTagInfo(curlinenr, 0)
+    let curparent = get(curtag, 'parent', {})
+
+    let range = range(line('.') - 1, 1, -1)
+
+    for linenr in range
+        let taginfo = s:GetTagInfo(linenr, 0)
+
+        if empty(taginfo)
+            continue
+        " Check for the first tag that is either:
+        " - the last tag in an open fold, that is skip all tags that have the
+        "   same parent as the current one, or
+        " - a closed parent fold.
+        elseif (!empty(taginfo.parent) && taginfo.parent != curparent &&
+              \ empty(get(taginfo, 'children', []))) ||
+             \ ((!empty(get(taginfo, 'children', [])) || taginfo.isKindheader()) &&
+              \ taginfo.isFolded())
+            let newlinenr = linenr
+            break
+        endif
+    endfor
+
+    if curlinenr != newlinenr
+        execute linenr
+        call winline()
+    endif
+
+    redraw
 endfunction
 
 " Helper functions {{{1
@@ -3334,7 +3413,7 @@ function! s:AutoUpdate(fname, force) abort
     if s:known_files.has(a:fname)
         let curfile = s:known_files.get(a:fname)
         " if a:force || getbufvar(curfile.bufnr, '&modified') ||
-        if a:force || empty(curfile) ||
+        if a:force || empty(curfile) || curfile.ftype != sftype ||
          \ (filereadable(a:fname) && getftime(a:fname) > curfile.mtime)
             call s:debug('File data outdated, updating [' . a:fname . ']')
             call s:ProcessFile(a:fname, sftype)

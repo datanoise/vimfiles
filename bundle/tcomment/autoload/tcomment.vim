@@ -3,7 +3,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-09-17.
 " @Last Change: 2014-10-13.
-" @Revision:    1681
+" @Revision:    1704
 
 " call tlog#Log('Load: '. expand('<sfile>')) " vimtlib-sfile
 
@@ -345,7 +345,11 @@ endf
 
 call tcomment#DefineType('aap',              '# %s'             )
 call tcomment#DefineType('ada',              '-- %s'            )
+call tcomment#DefineType('autohotkey',       '; %s'             )
 call tcomment#DefineType('apache',           '# %s'             )
+call tcomment#DefineType('applescript',      '(* %s *)'         )
+call tcomment#DefineType('applescript_block',"(*%s*)\n"         )
+call tcomment#DefineType('applescript_inline','(* %s *)'        )
 call tcomment#DefineType('asciidoc',         '// %s'            )
 call tcomment#DefineType('asm',              '; %s'             )
 call tcomment#DefineType('asterisk',         '; %s'             )
@@ -371,6 +375,7 @@ call tcomment#DefineType('conkyrc',          '# %s'             )
 call tcomment#DefineType('cpp',              '// %s'            )
 call tcomment#DefineType('cpp_block',        g:tcommentBlockC   )
 call tcomment#DefineType('cpp_inline',       g:tcommentInlineC  )
+call tcomment#DefineType('cram',             {'col': 1, 'commentstring': '# %s' })
 call tcomment#DefineType('crontab',          '# %s'             )
 call tcomment#DefineType('cs',               '// %s'            )
 call tcomment#DefineType('cs_block',         g:tcommentBlockC   )
@@ -398,6 +403,7 @@ call tcomment#DefineType('esmtprc',          '# %s'             )
 call tcomment#DefineType('expect',           '# %s'             )
 call tcomment#DefineType('form',             {'commentstring': '* %s', 'col': 1})
 call tcomment#DefineType('fstab',            '# %s'             )
+call tcomment#DefineType('gitconfig',        '# %s'             )
 call tcomment#DefineType('gitcommit',        '# %s'             )
 call tcomment#DefineType('gitignore',        '# %s'             )
 call tcomment#DefineType('gnuplot',          '# %s'             )
@@ -526,6 +532,7 @@ call tcomment#DefineType('tex',              '%% %s'            )
 call tcomment#DefineType('tpl',              '<!-- %s -->'      )
 call tcomment#DefineType('typoscript',       '# %s'             )
 call tcomment#DefineType('upstart',          '# %s'             )
+call tcomment#DefineType('vader',            {'col': 1, 'commentstring': '" %s' })
 call tcomment#DefineType('vhdl',             '-- %s'            )
 call tcomment#DefineType('verilog',          '// %s'            )
 call tcomment#DefineType('verilog_inline',   g:tcommentInlineC  )
@@ -839,6 +846,20 @@ else
 endif
 
 
+function! tcomment#MaybeReuseOptions(name) "{{{3
+    if exists('s:options_cache') && get(s:options_cache, 'name', '') == a:name
+        if exists('s:temp_options')
+            let s:temp_options = extend(deepcopy(s:options_cache.options), s:temp_options)
+            let s:options_cache = {'name': a:name, 'options': s:temp_options}
+        else
+            let s:temp_options = deepcopy(s:options_cache.options)
+        endif
+    elseif exists('s:temp_options')
+        let s:options_cache = {'name': a:name, 'options': s:temp_options}
+    endif
+endf
+
+
 function! s:GetTempOption(name, default) "{{{3
     if exists('s:temp_options') && has_key(s:temp_options, a:name)
         return s:temp_options[a:name]
@@ -849,7 +870,7 @@ endf
 
 
 function! tcomment#ResetOption() "{{{3
-    unlet! s:temp_options
+    unlet! s:temp_options s:options_cache
 endf
 
 

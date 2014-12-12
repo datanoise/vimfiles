@@ -68,6 +68,4 @@ au BufNewFile,BufRead Appraisals		call s:setf('ruby')
 " CocoaPods
 au BufNewFile,BufRead Podfile,*.podspec		call s:setf('ruby')
 
-au BufNewFile,BufRead *.prawn		call s:setf('ruby')
-
 " vim: nowrap sw=2 sts=2 ts=8 noet:

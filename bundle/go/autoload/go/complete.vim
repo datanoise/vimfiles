@@ -19,7 +19,12 @@ fu! s:gocodeCurrentBuffer()
     return file
 endf
 
-let s:vim_system = get(g:, 'gocomplete#system_function', 'system')
+
+if go#vimproc#has_vimproc()
+    let s:vim_system = get(g:, 'gocomplete#system_function', 'vimproc#system2')
+else
+    let s:vim_system = get(g:, 'gocomplete#system_function', 'system')
+endif
 
 fu! s:system(str, ...)
     return call(s:vim_system, [a:str] + a:000)
@@ -128,7 +133,7 @@ function! go#complete#Info()
     if !empty(result)
         echo "vim-go: " | echohl Function | echon result | echohl None
     endif
-endfunction!
+endfunction
 
 fu! go#complete#Complete(findstart, base)
     "findstart = 1 when we need to get the text length

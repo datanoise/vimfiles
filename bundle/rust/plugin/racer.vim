@@ -10,7 +10,7 @@
 
 
 if !exists('g:racer_cmd')
-    let g:racer_cmd = "/Users/kent/bin/racer"
+    let g:racer_cmd = "/Users/kent/Rep/rust-repos/racer/target/racer"
 endif
 
 if !exists($RUST_SRC_PATH)

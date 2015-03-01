@@ -32,9 +32,16 @@ function! sj#python#SplitDict()
     let body_start = line('.') + 1
     let body_end   = body_start + len(pairs)
 
-    call sj#PushCursor()
-    exe "normal! jV".(body_end - body_start)."j2>"
-    call sj#PopCursor()
+    let base_indent = indent('.')
+    for line in range(body_start, body_end + 1)
+      if base_indent == indent(line)
+        " then indentation didn't work quite right, let's just indent it
+        " ourselves
+        exe line.'normal! >>>>'
+      endif
+    endfor
+
+    exe body_start.','.body_end.'normal! =='
 
     return 1
   endif
@@ -67,7 +74,7 @@ function! sj#python#SplitArray()
 endfunction
 
 function! sj#python#JoinArray()
-  return s:JoinList('\[[^]]*\s*$', '[')
+  return s:JoinList('\[[^]]*\s*$', '[', ']')
 endfunction
 
 function! sj#python#SplitTuple()
@@ -75,7 +82,7 @@ function! sj#python#SplitTuple()
 endfunction
 
 function! sj#python#JoinTuple()
-  return s:JoinList('([^)]*\s*$', '(')
+  return s:JoinList('([^)]*\s*$', '(', ')')
 endfunction
 
 function! sj#python#SplitImport()
@@ -132,7 +139,12 @@ function! s:SplitList(regex, opening_char, closing_char)
   let end = col('.')
 
   let items = sj#ParseJsonObjectBody(start, end)
-  let body = a:opening_char.join(items, ",\n").a:closing_char
+
+  if g:splitjoin_python_brackets_on_separate_lines
+    let body = a:opening_char."\n".join(items, ",\n")."\n".a:closing_char
+  else
+    let body = a:opening_char.join(items, ",\n").a:closing_char
+  endif
 
   call sj#PopCursor()
 
@@ -140,11 +152,17 @@ function! s:SplitList(regex, opening_char, closing_char)
   return 1
 endfunction
 
-function! s:JoinList(regex, opening_char)
+function! s:JoinList(regex, opening_char, closing_char)
   if sj#SearchUnderCursor(a:regex) <= 0
     return 0
   endif
 
-  exe 'normal! va'.a:opening_char.'J'
+  let body = sj#GetMotion('va'.a:opening_char)
+  let body = substitute(body, '\_s\+', ' ', 'g')
+  let body = substitute(body, '^'.a:opening_char.'\s\+', a:opening_char, '')
+  let body = substitute(body, '\s\+'.a:closing_char.'$', a:closing_char, '')
+
+  call sj#ReplaceMotion('va'.a:opening_char, body)
+
   return 1
 endfunction

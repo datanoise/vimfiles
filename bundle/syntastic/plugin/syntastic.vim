@@ -19,7 +19,7 @@ if has('reltime')
     lockvar! g:_SYNTASTIC_START
 endif
 
-let g:_SYNTASTIC_VERSION = '3.5.0-72'
+let g:_SYNTASTIC_VERSION = '3.6.0-30'
 lockvar g:_SYNTASTIC_VERSION
 
 " Sanity checks {{{1
@@ -42,15 +42,21 @@ endfor
 let s:_running_windows = syntastic#util#isRunningWindows()
 lockvar s:_running_windows
 
-if !s:_running_windows && executable('uname')
+if s:_running_windows
+    let g:_SYNTASTIC_UNAME = 'Windows'
+elseif executable('uname')
     try
-        let s:_uname = system('uname')
+        let g:_SYNTASTIC_UNAME = split(system('uname'), "\n")[0]
     catch /\m^Vim\%((\a\+)\)\=:E484/
         call syntastic#log#error("your shell " . &shell . " can't handle traditional UNIX syntax for redirections")
         finish
+    catch /\m^Vim\%((\a\+)\)\=:E684/
+        let g:_SYNTASTIC_UNAME = 'Unknown'
     endtry
-    lockvar s:_uname
+else
+    let g:_SYNTASTIC_UNAME = 'Unknown'
 endif
+lockvar g:_SYNTASTIC_UNAME
 
 " }}}1
 
@@ -351,7 +357,8 @@ function! s:CacheErrors(checker_names) " {{{2
     if !s:_skip_file()
         " debug logging {{{3
         call syntastic#log#debugShowVariables(g:_SYNTASTIC_DEBUG_TRACE, 'aggregate_errors')
-        call syntastic#log#debug(g:_SYNTASTIC_DEBUG_TRACE, 'getcwd() = ' . getcwd())
+        call syntastic#log#debug(g:_SYNTASTIC_DEBUG_CHECKERS, '$PATH = ' . string($PATH))
+        call syntastic#log#debug(g:_SYNTASTIC_DEBUG_TRACE, 'getcwd() = ' . string(getcwd()))
         " }}}3
 
         let filetypes = s:_resolve_filetypes([])
@@ -479,8 +486,8 @@ function! SyntasticMake(options) " {{{2
     if has_key(a:options, 'env') && len(a:options['env'])
         for key in keys(a:options['env'])
             if key =~? '\m^[a-z_]\+$'
-                exec 'let env_save[' . string(key) . '] = $' . key
-                exec 'let $' . key . ' = ' . string(a:options['env'][key])
+                execute 'let env_save[' . string(key) . '] = $' . key
+                execute 'let $' . key . ' = ' . string(a:options['env'][key])
             endif
         endfor
     endif
@@ -495,7 +502,7 @@ function! SyntasticMake(options) " {{{2
     let $LC_MESSAGES = old_lc_messages
     if len(env_save)
         for key in keys(env_save)
-            exec 'let $' . key . ' = ' . string(env_save[key])
+            execute 'let $' . key . ' = ' . string(env_save[key])
         endfor
     endif
     " }}}3
@@ -607,7 +614,7 @@ endfunction " }}}2
 
 " Skip running in special buffers
 function! s:_skip_file() " {{{2
-    let fname = expand('%')
+    let fname = expand('%', 1)
     let skip = get(b:, 'syntastic_skip_checks', 0) || (&buftype != '') ||
         \ !filereadable(fname) || getwinvar(0, '&diff') || s:_ignore_file(fname) ||
         \ fnamemodify(fname, ':e') =~? g:syntastic_ignore_extensions
@@ -621,7 +628,7 @@ endfunction " }}}2
 function! s:_explain_skip(filetypes) " {{{2
     if empty(a:filetypes) && s:_skip_file()
         let why = []
-        let fname = expand('%')
+        let fname = expand('%', 1)
 
         if get(b:, 'syntastic_skip_checks', 0)
             call add(why, 'b:syntastic_skip_checks set')
@@ -678,11 +685,7 @@ function! s:_bash_hack() " {{{2
 endfunction " }}}2
 
 function! s:_os_name() " {{{2
-    if !exists('s:_uname')
-        let s:_uname = system('uname')
-        lockvar s:_uname
-    endif
-    return s:_uname
+    return g:_SYNTASTIC_UNAME
 endfunction " }}}2
 
 " }}}1

@@ -49,9 +49,8 @@ function! g:SyntasticChecker.getName() " {{{2
 endfunction " }}}2
 
 function! g:SyntasticChecker.getExec() " {{{2
-    return
-        \ expand( exists('b:syntastic_' . self._name . '_exec') ? b:syntastic_{self._name}_exec :
-        \ syntastic#util#var(self._filetype . '_' . self._name . '_exec', self._exec) )
+    call self._syncExec()
+    return self._exec
 endfunction " }}}2
 
 function! g:SyntasticChecker.getExecEscaped() " {{{2
@@ -77,6 +76,27 @@ function! g:SyntasticChecker.getLocList() " {{{2
     return g:SyntasticLoclist.New(self.getLocListRaw())
 endfunction " }}}2
 
+function! g:SyntasticChecker.getVersion(...) " {{{2
+    if !exists('self._version')
+        let command = a:0 ? a:1 : self.getExecEscaped() . ' --version'
+        let version_output = system(command)
+        call self.log('getVersion: ' . string(command) . ': ' .
+            \ string(split(version_output, "\n", 1)) .
+            \ (v:shell_error ? ' (exit code ' . v:shell_error . ')' : '') )
+        call self.setVersion(syntastic#util#parseVersion(version_output))
+    endif
+    return get(self, '_version', [])
+endfunction " }}}2
+
+function! g:SyntasticChecker.setVersion(version) " {{{2
+    if len(a:version)
+        let self._version = copy(a:version)
+        call self.log(self.getExec() . ' version =', a:version)
+    else
+        call syntastic#log#error("checker " . self._filetype . "/" . self._name . ": can't parse version string (abnormal termination?)")
+    endif
+endfunction " }}}2
+
 function! g:SyntasticChecker.log(msg, ...) " {{{2
     let leader = self._filetype . '/' . self._name . ': '
     if a:0 > 0
@@ -100,6 +120,7 @@ function! g:SyntasticChecker.makeprgBuild(opts) " {{{2
 endfunction " }}}2
 
 function! g:SyntasticChecker.isAvailable() " {{{2
+    call self._syncExec()
     if !has_key(self, '_available')
         let self._available = self._isAvailableFunc()
     endif
@@ -121,6 +142,21 @@ endfunction " }}}2
 " }}}1
 
 " Private methods {{{1
+
+" Synchronise _exec with user's setting.  Force re-validation if needed.
+function! g:SyntasticChecker._syncExec() dict " {{{2
+    let user_exec =
+        \ expand( exists('b:syntastic_' . self._name . '_exec') ? b:syntastic_{self._name}_exec :
+        \ syntastic#util#var(self._filetype . '_' . self._name . '_exec'), 1 )
+
+    if user_exec != '' && user_exec !=# self._exec
+        let self._exec = user_exec
+        if has_key(self, '_available')
+            " we have a new _exec on the block, it has to be validated
+            call remove(self, '_available')
+        endif
+    endif
+endfunction " }}}2
 
 function! g:SyntasticChecker._quietMessages(errors) " {{{2
     " wildcard quiet_messages
@@ -162,21 +198,11 @@ endfunction " }}}2
 
 function! g:SyntasticChecker._getOpt(opts, basename, name, default) " {{{2
     let ret = []
-    call extend( ret, self._shescape(get(a:opts, a:name . '_before', '')) )
-    call extend( ret, self._shescape(syntastic#util#var( a:basename . a:name, get(a:opts, a:name, a:default) )) )
-    call extend( ret, self._shescape(get(a:opts, a:name . '_after', '')) )
+    call extend( ret, syntastic#util#argsescape(get(a:opts, a:name . '_before', '')) )
+    call extend( ret, syntastic#util#argsescape(syntastic#util#var( a:basename . a:name, get(a:opts, a:name, a:default) )) )
+    call extend( ret, syntastic#util#argsescape(get(a:opts, a:name . '_after', '')) )
 
     return ret
-endfunction " }}}2
-
-function! g:SyntasticChecker._shescape(opt) " {{{2
-    if type(a:opt) == type('') && a:opt != ''
-        return [a:opt]
-    elseif type(a:opt) == type([])
-        return map(copy(a:opt), 'syntastic#util#shescape(v:val)')
-    endif
-
-    return []
 endfunction " }}}2
 
 " }}}1

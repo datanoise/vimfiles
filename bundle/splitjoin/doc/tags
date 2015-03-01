@@ -7,7 +7,9 @@ g:splitjoin_coffee_suffix_if_clause	splitjoin.txt	/*g:splitjoin_coffee_suffix_if
 g:splitjoin_join_mapping	splitjoin.txt	/*g:splitjoin_join_mapping*
 g:splitjoin_normalize_whitespace	splitjoin.txt	/*g:splitjoin_normalize_whitespace*
 g:splitjoin_perl_brace_on_same_line	splitjoin.txt	/*g:splitjoin_perl_brace_on_same_line*
+g:splitjoin_python_brackets_on_separate_lines	splitjoin.txt	/*g:splitjoin_python_brackets_on_separate_lines*
 g:splitjoin_ruby_curly_braces	splitjoin.txt	/*g:splitjoin_ruby_curly_braces*
+g:splitjoin_ruby_hanging_args	splitjoin.txt	/*g:splitjoin_ruby_hanging_args*
 g:splitjoin_ruby_heredoc_type	splitjoin.txt	/*g:splitjoin_ruby_heredoc_type*
 g:splitjoin_ruby_trailing_comma	splitjoin.txt	/*g:splitjoin_ruby_trailing_comma*
 g:splitjoin_split_mapping	splitjoin.txt	/*g:splitjoin_split_mapping*

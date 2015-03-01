@@ -2,7 +2,7 @@ if exists("g:loaded_splitjoin") || &cp
   finish
 endif
 
-let g:loaded_splitjoin = '0.7.0' " version number
+let g:loaded_splitjoin = '0.8.0' " version number
 let s:keepcpo          = &cpo
 set cpo&vim
 
@@ -26,7 +26,11 @@ if !exists('g:splitjoin_ruby_heredoc_type')
 endif
 
 if !exists('g:splitjoin_ruby_trailing_comma')
-  let g:splitjoin_ruby_trailing_comma = 1
+  let g:splitjoin_ruby_trailing_comma = 0
+endif
+
+if !exists('g:splitjoin_ruby_hanging_args')
+  let g:splitjoin_ruby_hanging_args = 1
 endif
 
 if !exists('g:splitjoin_coffee_suffix_if_clause')
@@ -35,6 +39,10 @@ endif
 
 if !exists('g:splitjoin_perl_brace_on_same_line')
   let g:splitjoin_perl_brace_on_same_line = 1
+endif
+
+if !exists('g:splitjoin_python_brackets_on_separate_lines')
+  let g:splitjoin_python_brackets_on_separate_lines = 0
 endif
 
 if !exists('g:splitjoin_join_mapping')

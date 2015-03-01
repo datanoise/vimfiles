@@ -72,12 +72,12 @@ function! g:SyntasticModeMap.echoMode() " {{{2
 endfunction " }}}2
 
 function! g:SyntasticModeMap.modeInfo(filetypes) " {{{2
-    echomsg 'Syntastic version: ' . g:_SYNTASTIC_VERSION
+    echomsg 'Syntastic version: ' . g:_SYNTASTIC_VERSION . ' (Vim ' . v:version . ', ' . g:_SYNTASTIC_UNAME . ')'
     let type = len(a:filetypes) ? a:filetypes[0] : &filetype
     echomsg 'Info for filetype: ' . type
 
     call self.synch()
-    echomsg 'Mode: ' . self._mode
+    echomsg 'Global mode: ' . self._mode
     if self._mode ==# 'active'
         if len(self._passiveFiletypes)
             let plural = len(self._passiveFiletypes) != 1 ? 's' : ''
@@ -90,6 +90,14 @@ function! g:SyntasticModeMap.modeInfo(filetypes) " {{{2
         endif
     endif
     echomsg 'Filetype ' . type . ' is ' . (self.allowsAutoChecking(type) ? 'active' : 'passive')
+
+    if !len(a:filetypes)
+        if exists('b:syntastic_mode') && (b:syntastic_mode ==# 'active' || b:syntastic_mode ==# 'passive')
+            echomsg 'Local mode: ' . b:syntastic_mode
+        endif
+
+        echomsg 'The current file will ' . (self.doAutoChecking() ? '' : 'not ') . 'be checked automatically'
+    endif
 endfunction " }}}2
 
 " }}}1

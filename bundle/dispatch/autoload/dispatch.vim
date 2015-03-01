@@ -101,7 +101,7 @@ endfunction
 function! dispatch#prepare_start(request, ...) abort
   let exec = 'echo $$ > ' . a:request.file . '.pid; '
   if executable('perl')
-    let exec .= 'perl -e "select(undef,undef,undef,0.1)"; '
+    let exec .= 'perl -e "select(undef,undef,undef,0.1)" 2>/dev/null; '
   else
     let exec .= 'sleep 1; '
   endif
@@ -581,7 +581,11 @@ function! s:running(pid) abort
   if !a:pid
     return 0
   elseif has('win32')
-    return system('tasklist /fi "pid eq '.a:pid.'"') =~# '==='
+    let tasklist_cmd = 'tasklist /fi "pid eq '.a:pid.'"'
+    if &shellxquote ==# '"'
+      let tasklist_cmd = substitute(tasklist_cmd, '"', "'", "g")
+    endif
+    return system(tasklist_cmd) =~# '==='
   else
     call system('kill -0 '.a:pid)
     return !v:shell_error

@@ -212,6 +212,36 @@ curly braces are present after splitting or joining.
 
     foo 1, 2, { :one => 1, :two => 2 }
 <
+Method arguments ~
+
+These only get split if there is no option hash at the end.
+
+The variable |g:splitjoin_ruby_hanging_args| controls whether the arguments
+will be left "hanging", aligned near the brackets, or if the brackets will be
+put on their own lines.
+
+Joining for the "hanging" style doesn't really work, since there's no easy,
+reliable way to detect the continued arguments. However, a simple vanilla-vim
+J should do the trick.
+>
+    params.permit(:title, :action, :subject_type, :subject_id, :own)
+
+    params.permit(:title,
+                  :action,
+                  :subject_type,
+                  :subject_id,
+                  :own)
+
+    # with g:splitjoin_ruby_hanging_args == 0
+
+    params.permit(
+      :title,
+      :action,
+      :subject_type,
+      :subject_id,
+      :own
+    )
+<
 Caching constructs  ~
 >
     @two ||= 1 + 1
@@ -507,7 +537,22 @@ Arrays ~
       'three',
       'four'
     ];
+
 <
+
+Function Arguments ~
+
+>
+    var foo = bar('one', 'two', 'three');
+
+    var foo = bar(
+      'one',
+      'two',
+      'three'
+    );
+<
+
+
 Functions ~
 
 When the cursor is on the "function" keyword, the script attempts to split the
@@ -521,6 +566,15 @@ use-case of one-line to multi-line functions.
     };
 <
 
+One-line if conditionals ~
+>
+    if (isTrue()) {
+      doSomething();
+    }
+
+
+    if (isTrue()) doSomething;
+<
 ==============================================================================
 PHP                                                            *splitjoin-php*
 
@@ -599,12 +653,27 @@ HTML                                                          *splitjoin-html*
 
 Tags ~
 >
-    <div class="foo">bar</div>
+   <div class="foo">bar</div>
 
     <div class="foo">
       bar
     </div>
 <
+
+Attributes ~
+>
+    <button class="foo bar" ng-click="click()" ng-class="{ clicked: clicked }">
+      Click me!
+    </button>
+
+    <button
+      class="foo bar"
+      ng-click="click()"
+      ng-class="{ clicked: clicked }">
+      Click me!
+    </button>
+<
+
 
 ==============================================================================
 CSS                                                             *splitjoin-css*
@@ -909,10 +978,10 @@ if there are braces, so the first example will always be joined to:
     g:splitjoin_ruby_trailing_comma
 <
 
-Default value: 1
+Default value: 0
 
 This controls whether to put a trailing comma on a split hash. With this set
-to 1 (the default), a hash will split like so:
+to 1, a hash will split like so:
 >
     User.new :one, :first_name => "Andrew", :last_name => "Radev"
 
@@ -923,6 +992,27 @@ to 1 (the default), a hash will split like so:
 <
 Note the trailing comma for the last element.
 
+                                              *g:splitjoin_ruby_hanging_args*
+>
+    g:splitjoin_ruby_hanging_args
+<
+
+Default value: 1
+
+This controls whether to split function arguments in the "hanging" style:
+>
+    params.permit(:title,
+                  :action,
+                  :subject)
+<
+If it is set to 0, the result will be:
+>
+    params.permit(
+      :title,
+      :action,
+      :subject
+    )
+>
 
                                          *g:splitjoin_coffee_suffix_if_clause*
 >
@@ -994,6 +1084,32 @@ If it's set to "<<", the result is this:
     EOF
     end
 <
+                               *g:splitjoin_python_brackets_on_separate_lines*
+>
+    g:splitjoin_python_brackets_on_separate_lines
+<
+
+Default value: 0
+
+If set to 1, then python will split lists and tuples so that the opening and
+closing bracket are placed on separate lines. If it's 0, the first argument
+will remain where it is, and the rest will be split on separate lines.
+
+Example:
+>
+    # let g:splitjoin_python_brackets_on_separate_lines = 0
+    some_method(
+            one,
+            two
+            )
+
+    # let g:splitjoin_python_brackets_on_separate_lines = 1
+    some_method(one,
+            two)
+<
+The first example might look a bit odd, but if you have the python-pep8-indent
+plugin (https://github.com/hynek/vim-python-pep8-indent), it should look quite
+reasonable.
 
 ==============================================================================
 INTERNALS                                                *splitjoin-internals*

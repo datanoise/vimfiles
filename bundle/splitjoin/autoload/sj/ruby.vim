@@ -297,6 +297,24 @@ function! sj#ruby#JoinWhenThen()
   return 0
 endfunction
 
+function! sj#ruby#SplitProcShorthand()
+  let pattern = '(&:\k\+[!?]\=)'
+
+  if sj#SearchUnderCursor(pattern) <= 0
+    return 0
+  endif
+
+  if search('(&:\zs\k\+[!?]\=)', '', line('.')) <= 0
+    return 0
+  endif
+
+  let method_name = matchstr(sj#GetMotion('Vi('), '\k\+[!?]\=')
+  let body = " do |i|\ni.".method_name."\nend"
+
+  call sj#ReplaceMotion('Va(', body)
+  return 1
+endfunction
+
 function! sj#ruby#SplitBlock()
   let pattern = '\v\{(\s*\|.{-}\|)?\s*(.{-})\s*\}'
 
@@ -360,6 +378,9 @@ function! sj#ruby#JoinBlock()
 
   let replacement = do_line.' '.body.' '.end_line
 
+  " shorthand to_proc if possible
+  let replacement = substitute(replacement, '\s*{ |\(\k\+\)| \1\.\(\k\+[!?]\=\) }$', '(\&:\2)', '')
+
   call sj#ReplaceLines(do_line_no, end_line_no, replacement)
 
   return 1
@@ -411,6 +432,12 @@ function! sj#ruby#JoinHash()
 endfunction
 
 function! sj#ruby#SplitOptions()
+  " Variables:
+  "
+  " option_type:   ['option', 'hash']
+  " function_type: ['with_spaces', 'with_round_braces']
+  "
+
   call sj#PushCursor()
   let [from, to] = sj#argparser#ruby#LocateHash()
   call sj#PopCursor()
@@ -434,11 +461,32 @@ function! sj#ruby#SplitOptions()
     return 0
   endif
 
+  " if we know both start and end, but the cursor is not there, bail out
+  if option_type == 'option' && to >= 0 && !sj#CursorBetween(from, to)
+    return 0
+  endif
+
   let [from, to, args, opts, hash_type] = sj#argparser#ruby#ParseArguments(from, to, getline('.'))
 
-  if len(opts) < 1
-    " no options found, leave it as it is
-    return 0
+  if len(opts) < 1 && len(args) > 0 && option_type == 'option'
+    " no options found, but there are arguments, split those
+    let replacement = join(args, ",\n")
+
+    if !g:splitjoin_ruby_hanging_args
+      let replacement = "\n".replacement."\n"
+    elseif len(args) == 1
+      " if there's only one argument, there's nothing to do in the "hanging"
+      " case
+      return 0
+    endif
+
+    if function_type == 'with_spaces'
+      let replacement = "(".replacement.")"
+      let from -= 1 " Also replace the space before the argument list
+    endif
+
+    call sj#ReplaceCols(from, to, replacement)
+    return 1
   endif
 
   let replacement = ''
@@ -450,29 +498,47 @@ function! sj#ruby#SplitOptions()
   endif
 
   " add opening brace
-  if !g:splitjoin_ruby_curly_braces && option_type == 'option' && function_type == 'with_round_braces' && len(args) > 0
-    " Example: User.new(:one, :two => 'three')
-    "
-    let replacement .= "\n"
-    let alignment_start += 1
-  elseif !g:splitjoin_ruby_curly_braces && option_type == 'option' && function_type == 'with_spaces' && len(args) > 0
-    " Example: User.new :one, :two => 'three'
-    "
-    let replacement .= "\n"
-    let alignment_start += 1
-  elseif !g:splitjoin_ruby_curly_braces && option_type == 'option' && function_type == 'with_round_braces' && len(args) == 0
-    " Example: User.new(:two => 'three')
-    "
-    " no need to add anything
-  elseif g:splitjoin_ruby_curly_braces && (option_type == 'hash' || function_type == 'with_round_braces')
-    " Example: one = {:two => 'three'}
-    "
-    let replacement .= "{\n"
-    let alignment_start += 1
-  elseif g:splitjoin_ruby_curly_braces
-    " add braces in all other cases
-    let replacement .= " {\n"
-    let alignment_start += 1
+  if g:splitjoin_ruby_curly_braces
+
+    if option_type == 'hash'
+      " Example: one = {:two => 'three'}
+      "
+      let replacement .= "{\n"
+      let alignment_start += 1
+    elseif function_type == 'with_round_braces' && len(args) > 0
+      " Example: create(:inquiry, :state => state)
+      "
+      let replacement .= " {\n"
+      let alignment_start += 1
+    elseif function_type == 'with_round_braces' && len(args) == 0
+      " Example: create(one: 'two', three: 'four')
+      "
+      let replacement .= "{\n"
+      let alignment_start += 1
+    else
+      " add braces in all other cases
+      let replacement .= " {\n"
+      let alignment_start += 1
+    endif
+
+  else " !g:splitjoin_ruby_curly_braces
+
+    if option_type == 'option' && function_type == 'with_round_braces' && len(args) > 0
+      " Example: User.new(:one, :two => 'three')
+      "
+      let replacement .= "\n"
+      let alignment_start += 1
+    elseif option_type == 'option' && function_type == 'with_spaces' && len(args) > 0
+      " Example: User.new :one, :two => 'three'
+      "
+      let replacement .= "\n"
+      let alignment_start += 1
+    elseif option_type == 'option' && function_type == 'with_round_braces' && len(args) == 0
+      " Example: User.new(:two => 'three')
+      "
+      " no need to add anything
+    endif
+
   endif
 
   " add options
@@ -602,6 +668,104 @@ function! sj#ruby#SplitString()
   else
     throw 'Unknown value for g:splitjoin_ruby_heredoc_type, "'.g:splitjoin_ruby_heredoc_type.'"'
   endif
+
+  return 1
+endfunction
+
+function! sj#ruby#SplitArrayLiteral()
+  if synIDattr(synID(line('.'), col('.'), 1), "name") !~ 'rubyString\%(Delimiter\)\='
+    return 0
+  endif
+
+  let lineno = line('.')
+  let indent = indent('.')
+
+  if search('%[wiWI]', 'Wbce', line('.')) <= 0 &&
+        \ search('%[wiWI]', 'Wce', line('.')) <= 0
+    return 0
+  endif
+
+  if col('.') == col('$')
+    " we're at the end of the line, bail out
+    return 0
+  endif
+
+  normal! l
+  let opening_bracket = getline('.')[col('.') - 1]
+
+  if col('.') == col('$')
+    " we're at the end of the line, bail out
+    return 0
+  endif
+  normal! l
+
+  let closing_bracket = s:ArrayLiteralClosingBracket(opening_bracket)
+
+  let array_pattern = '\%(\k\|\s\)*\ze\V'.closing_bracket
+  let [start_col, end_col] = sj#SearchposUnderCursor(array_pattern)
+  if start_col <= 0
+    return 0
+  endif
+
+  if start_col == end_col - 1
+    " just insert a newline, nothing inside the list
+    exe "normal! i\<cr>"
+    call sj#SetIndent(end_col, indent)
+    return 1
+  endif
+
+  let array_body = sj#GetCols(start_col, end_col - 1)
+  let array_items = split(array_body, '\s\+')
+  call sj#ReplaceCols(start_col, end_col - 1, "\n".join(array_items, "\n")."\n")
+
+  call sj#SetIndent(lineno + 1, lineno + len(array_items), indent + &sw)
+  call sj#SetIndent(lineno + len(array_items) + 1, indent)
+
+  return 0
+endfunction
+
+function! sj#ruby#JoinArrayLiteral()
+  if synIDattr(synID(line('.'), col('.'), 1), "name") != 'rubyStringDelimiter'
+    return 0
+  endif
+
+  if search('%[wiWI].$', 'Wce', line('.')) <= 0
+    return 0
+  endif
+
+  let opening_bracket = getline('.')[col('.') - 1]
+  let closing_bracket = s:ArrayLiteralClosingBracket(opening_bracket)
+
+  let start_lineno = line('.')
+  let end_lineno   = start_lineno + 1
+  let end_pattern  = '^\s*\V'.closing_bracket.'\m\s*$'
+  let word_pattern =  '^\%(\k\|\s\)*$'
+
+  while end_lineno <= line('$') && getline(end_lineno) !~ end_pattern
+    if getline(end_lineno) !~ word_pattern
+      return 0
+    endif
+    let end_lineno += 1
+  endwhile
+
+  if getline(end_lineno) !~ end_pattern
+    return 0
+  endif
+
+  if end_lineno - start_lineno < 1
+    " nothing to join, bail out
+    return 0
+  endif
+
+  if end_lineno - start_lineno == 1
+    call sj#Keeppatterns('s/\n\_s*//')
+    return 1
+  endif
+
+  let words = sj#TrimList(sj#GetLines(start_lineno + 1, end_lineno - 1))
+  call sj#ReplaceLines(start_lineno + 1, end_lineno, join(words, ' ').closing_bracket)
+  exe start_lineno
+  call sj#Keeppatterns('s/\n\_s*//')
 
   return 1
 endfunction
@@ -749,4 +913,22 @@ function! s:MigrateComments(comments, start_line_no, end_line_no)
   call sj#PopCursor()
 
   return [start_line_no, end_line_no]
+endfunction
+
+function! s:ArrayLiteralClosingBracket(opening_bracket)
+  let opening_bracket = a:opening_bracket
+
+  if opening_bracket == '{'
+    let closing_bracket = '}'
+  elseif opening_bracket == '('
+    let closing_bracket = ')'
+  elseif opening_bracket == '<'
+    let closing_bracket = '>'
+  elseif opening_bracket == '['
+    let closing_bracket = ']'
+  else
+    let closing_bracket = opening_bracket
+  endif
+
+  return closing_bracket
 endfunction

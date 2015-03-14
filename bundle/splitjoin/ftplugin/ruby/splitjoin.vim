@@ -1,6 +1,8 @@
 if !exists('b:splitjoin_split_callbacks')
   let b:splitjoin_split_callbacks = [
+        \ 'sj#ruby#SplitArrayLiteral',
         \ 'sj#ruby#SplitIfClause',
+        \ 'sj#ruby#SplitProcShorthand',
         \ 'sj#ruby#SplitBlock',
         \ 'sj#ruby#SplitOptions',
         \ 'sj#ruby#SplitCachingConstruct',
@@ -13,6 +15,7 @@ endif
 
 if !exists('b:splitjoin_join_callbacks')
   let b:splitjoin_join_callbacks = [
+        \ 'sj#ruby#JoinArrayLiteral',
         \ 'sj#ruby#JoinBlock',
         \ 'sj#ruby#JoinHash',
         \ 'sj#ruby#JoinIfClause',

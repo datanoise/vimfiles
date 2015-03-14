@@ -38,7 +38,7 @@ function! SyntaxCheckers_r_lint_IsAvailable() dict
     if !executable(self.getExec())
         return 0
     endif
-    call system(self.getExecEscaped() . ' --slave --restore --no-save -e ' . syntastic#util#shescape('library(lint)'))
+    call syntastic#util#system(self.getExecEscaped() . ' --slave --restore --no-save -e ' . syntastic#util#shescape('library(lint)'))
     return v:shell_error == 0
 endfunction
 
@@ -62,7 +62,7 @@ function! SyntaxCheckers_r_lint_GetLocList() dict
         \ 'returns': [0] })
 
     for e in loclist
-        if e['type'] == 'F'
+        if e['type'] ==? 'F'
             " parse error
             let e['type'] = 'E'
             call remove(e, 'subtype')

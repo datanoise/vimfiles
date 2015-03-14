@@ -258,6 +258,14 @@ Blocks ~
       puts b.to_s
     end
 <
+Block &-shorthand ~
+>
+    [1, 2, 3].map(&:to_s)
+
+    [1, 2, 3].map do |i|
+      i.to_s
+    end
+<
 Heredocs ~
 >
     string = 'something'
@@ -297,6 +305,16 @@ case-keyword, as shown in the example.
     else do_baz
     end
 >
+Array literals ~
+>
+    list = %w{one two three}
+
+    list = %w{
+    one
+    two
+    three
+    }
+<
 
 ==============================================================================
 PYTHON                                                      *splitjoin-python*

@@ -1,6 +1,7 @@
 "============================================================================
-"File:        macruby.vim
+"File:        smlnj.vim
 "Description: Syntax checking plugin for syntastic.vim
+"Maintainer:  LCD 47 <lcd047 at gmail dot com>
 "License:     This program is free software. It comes without any warranty,
 "             to the extent permitted by applicable law. You can redistribute
 "             it and/or modify it under the terms of the Do What The Fuck You
@@ -9,39 +10,36 @@
 "
 "============================================================================
 
-if exists("g:loaded_syntastic_ruby_macruby_checker")
+if exists("g:loaded_syntastic_sml_smlnj_checker")
     finish
 endif
-let g:loaded_syntastic_ruby_macruby_checker = 1
+let g:loaded_syntastic_sml_smlnj_checker = 1
 
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! SyntaxCheckers_ruby_macruby_GetLocList() dict
-    let makeprg = self.makeprgBuild({
-        \ 'args': '-W1',
-        \ 'args_after': '-c' })
+function! SyntaxCheckers_sml_smlnj_GetLocList() dict
+    let makeprg = self.makeprgBuild({})
 
     let errorformat =
-        \ '%-GSyntax OK,'.
-        \ '%E%f:%l: syntax error\, %m,'.
-        \ '%Z%p^,'.
-        \ '%W%f:%l: warning: %m,'.
-        \ '%Z%p^,'.
-        \ '%W%f:%l: %m,'.
-        \ '%-C%.%#'
-
-    let env = { 'RUBYOPT': '' }
+        \ '%E%f:%l%\%.%c %trror: %m,' .
+        \ '%E%f:%l%\%.%c-%\d%\+%\%.%\d%\+ %trror: %m,' .
+        \ '%W%f:%l%\%.%c %tarning: %m,' .
+        \ '%W%f:%l%\%.%c-%\d%\+%\%.%\d%\+ %tarning: %m,' .
+        \ '%C%\s%\+%m,' .
+        \ '%-G%.%#'
 
     return SyntasticMake({
         \ 'makeprg': makeprg,
         \ 'errorformat': errorformat,
-        \ 'env': env })
+        \ 'postprocess': ['compressWhitespace'],
+        \ 'returns': [0, 1] })
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
-    \ 'filetype': 'ruby',
-    \ 'name': 'macruby'})
+    \ 'filetype': 'sml',
+    \ 'name': 'smlnj',
+    \ 'exec': 'sml'})
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

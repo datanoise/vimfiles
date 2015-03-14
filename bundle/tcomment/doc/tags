@@ -76,6 +76,7 @@ tcomment#Comment()	tcomment.txt	/*tcomment#Comment()*
 tcomment#CommentAs()	tcomment.txt	/*tcomment#CommentAs()*
 tcomment#DefineType()	tcomment.txt	/*tcomment#DefineType()*
 tcomment#GetCommentDef()	tcomment.txt	/*tcomment#GetCommentDef()*
+tcomment#GetLineC()	tcomment.txt	/*tcomment#GetLineC()*
 tcomment#GuessCommentType()	tcomment.txt	/*tcomment#GuessCommentType()*
 tcomment#MaybeReuseOptions()	tcomment.txt	/*tcomment#MaybeReuseOptions()*
 tcomment#Operator()	tcomment.txt	/*tcomment#Operator()*

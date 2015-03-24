@@ -4,7 +4,7 @@
 " ------------------------------------------------------------------------------
 runtime! macros/matchit.vim
 set nocompatible      " We're running Vim, not Vi!
-let g:pathogen_disabled = ['bundler', 'rsi']
+let g:pathogen_disabled = ['bundler', 'rsi', 'powerline']
 if $GOPATH == ""
   call add(g:pathogen_disabled, "go")
 endif
@@ -126,7 +126,7 @@ set wrapscan
 " status line options {{{2
 set laststatus=2
 set statusline=%m%<%.99f\ (%{GetCurDir()})\ %h%w%r%y
-set statusline+=%{fugitive#statusline()}
+set statusline+=\ %{fugitive#statusline()}
 set statusline+=%{SynNameStatus()}
 " set statusline+=\ %#errormsg#%{SyntasticStatuslineFlag()}%*
 set statusline+=%=

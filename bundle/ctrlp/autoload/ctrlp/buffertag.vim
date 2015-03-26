@@ -81,6 +81,7 @@ let s:types = {
 	\ 'verilog': '%sverilog%sverilog%smcPertwpvf',
 	\ 'vim'    : '%svim%svim%savf',
 	\ 'yacc'   : '%syacc%syacc%sl',
+	\ 'coffee' : '%scoffee%scoffee%sm'
 	\ }
 
 cal map(s:types, 'printf(v:val, "--language-force=", " --", "-types=")')
@@ -88,10 +89,6 @@ cal map(s:types, 'printf(v:val, "--language-force=", " --", "-types=")')
 if executable('jsctags')
 	cal extend(s:types, { 'javascript': { 'args': '-f -', 'bin': 'jsctags' } })
 en
-
-if executable('coffeetags')
-	cal extend(s:types, { 'coffee': { 'args': '-f -', 'bin': 'coffeetags' } })
-endif
 
 fu! ctrlp#buffertag#opts()
 	for [ke, va] in items(s:opts)

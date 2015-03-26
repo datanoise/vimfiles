@@ -4,12 +4,12 @@
 " ------------------------------------------------------------------------------
 runtime! macros/matchit.vim
 set nocompatible      " We're running Vim, not Vi!
-let g:pathogen_disabled = ['bundler', 'rsi', 'powerline']
+let g:pathogen_disabled = ['bundler', 'rsi']
 if $GOPATH == ""
   call add(g:pathogen_disabled, "go")
 endif
 if $TERM != "" && $TERM != 'xterm-256color' && $TERM != 'screen-256color'
-  call add(g:pathogen_disabled, 'powerline')
+  call add(g:pathogen_disabled, 'airline')
 endif
 call pathogen#infect('bundle/{}')
 call pathogen#helptags()
@@ -200,6 +200,7 @@ set imsearch=0
 " uncategorized options {{{2
 au ColorScheme * hi! link ColorColumn StatusLine
 set bg=dark
+set noshowmode
 colo dante_mod_snap
 " colo solarized
 if exists('&mc')
@@ -598,13 +599,6 @@ let g:SuperTabCrMapping = 0
 " au FileType go call SuperTabSetDefaultCompletionType("<c-x><c-o>")
 au FileType go call SuperTabSetDefaultCompletionType("context")
 
-" powerline settings {{{2
-let g:Powerline_cache_file = '/tmp/Powerline_cache'
-let s:Powerline_theme = 'datanoise'
-let g:Powerline_theme = s:Powerline_theme
-let g:Powerline_colorscheme = s:Powerline_theme
-let g:Powerline_symbols = 'fancy'
-
 " ultisnips settings {{{2
 let g:UltiSnipsSnippetDirectories = ['UltiSnips']
 " let g:UltiSnipsJumpForwardTrigger="<tab>"
@@ -614,6 +608,10 @@ let g:go_highlight_space_tab_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
 let g:go_auto_type_info = 0
 let g:go_snippet_engine = ''
+
+" airline settings {{{2
+let g:airline_theme='serene'
+let g:airline#extensions#whitespace#enabled=0
 
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"

@@ -267,6 +267,11 @@ au FileType go setlocal tabstop=4
 au FileType go setlocal shiftwidth=4
 au FileType go setlocal nolist
 au FileType go setlocal noexpandtab
+" ignore target directory for cargo projects
+au VimEnter *
+      \ if filereadable('Cargo.toml') |
+      \   set wildignore+=target |
+      \ endif
 
 au BufReadPost quickfix nmap <silent> <buffer> q :call <SID>close_quick_fix()<CR>
 au BufReadPre,BufNewFile *.{iphone,ipad}.erb let b:eruby_subtype = 'html'

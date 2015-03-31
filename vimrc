@@ -4,9 +4,12 @@
 " ------------------------------------------------------------------------------
 runtime! macros/matchit.vim
 set nocompatible      " We're running Vim, not Vi!
-let g:pathogen_disabled = ['bundler', 'rsi']
+let g:pathogen_disabled = ['bundler']
 if $GOPATH == ""
   call add(g:pathogen_disabled, "go")
+endif
+if !has('python')
+  call add(g:pathogen_disabled, "ultisnips")
 endif
 if $TERM != "" && $TERM != 'xterm-256color' && $TERM != 'screen-256color'
   call add(g:pathogen_disabled, 'airline')
@@ -193,7 +196,7 @@ set foldmethod=marker
 set foldlevel=99 " always expand folds
 " }}}
 " input method options {{{2
-set keymap=russian-jcukenwin
+" set keymap=russian-jcukenwin
 set iminsert=0
 set imsearch=0
 "}}}

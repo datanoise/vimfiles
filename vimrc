@@ -491,6 +491,29 @@ if executable('gotags')
       \ 'ctagsargs' : '-sort -silent'
   \ }
 endif
+if executable('crystal-tags')
+  let g:tagbar_type_crystal = {
+      \ 'ctagstype' : 'crystal',
+      \ 'kinds'     : [
+          \ 's:struct',
+          \ 'c:class',
+          \ 'm:module',
+          \ 'f:method'
+      \ ],
+      \ 'sro' : '.',
+      \ 'kind2scope' : {
+          \ 'c' : 'class',
+          \ 'm' : 'module',
+          \ 's' : 'struct'
+      \ },
+      \ 'scope2kind' : {
+          \ 'class' : 'c',
+          \ 'module' : 'm'
+      \ },
+      \ 'ctagsbin'  : 'crystal-tags',
+      \ 'ctagsargs' : '-f -'
+  \ }
+endif
 let g:tagbar_type_scala = {
     \ 'ctagstype' : 'scala',
     \ 'kinds'     : [

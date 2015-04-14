@@ -81,13 +81,18 @@ let s:types = {
 	\ 'verilog': '%sverilog%sverilog%smcPertwpvf',
 	\ 'vim'    : '%svim%svim%savf',
 	\ 'yacc'   : '%syacc%syacc%sl',
-	\ 'coffee' : '%scoffee%scoffee%sm'
+	\ 'coffee' : '%scoffee%scoffee%sm',
+	\ 'crystal': '%scrystal%scrystal%sf'
 	\ }
 
 cal map(s:types, 'printf(v:val, "--language-force=", " --", "-types=")')
 
 if executable('jsctags')
 	cal extend(s:types, { 'javascript': { 'args': '-f -', 'bin': 'jsctags' } })
+en
+
+if executable('crystal-tags')
+	cal extend(s:types, { 'crystal': { 'args': '-f - -N --fields nK', 'bin': 'crystal-tags' } })
 en
 
 fu! ctrlp#buffertag#opts()
@@ -237,7 +242,7 @@ endf
 
 fu! ctrlp#buffertag#accept(mode, str)
 	let vals = matchlist(a:str,
-		\ '\v^[^\t]+\t+[^\t|]+\|(\d+)\:[^\t|]+\|(\d+)\|\s(.+)$')
+		\ '\v^[^\t]+\t+[^|]+\|(\d+)\:[^\t|]+\|(\d+)\|\s(.+)$')
 	let bufnr = str2nr(get(vals, 1))
 	if bufnr
 		cal ctrlp#acceptfile(a:mode, bufnr)

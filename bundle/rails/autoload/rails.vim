@@ -1177,8 +1177,12 @@ function! s:make(bang, args, ...)
     exe 'Make'.(a:bang ? '! ' : ' ').a:args
   else
     exe 'make! '.a:args
+    let qf = &l:buftype ==# 'quickfix'
     if !a:bang
       exe (a:0 ? a:1 : 'cwindow')
+      if !qf && &l:buftype ==# 'quickfix'
+        wincmd p
+      endif
     endif
   endif
 endfunction
@@ -1191,7 +1195,6 @@ function! s:Rake(bang,lnum,arg)
   let old_compiler = get(b:, 'current_compiler', '')
   try
     call s:push_chdir(1)
-    let b:current_compiler = 'rake'
     if !empty(findfile('compiler/rake.vim', escape(&rtp, ' ')))
       compiler rake
     else
@@ -1220,7 +1223,7 @@ function! s:Rake(bang,lnum,arg)
     let self.options['last_rake_task'] = arg
     let withrubyargs = '-r ./config/boot -r '.s:rquote(self.path('config/environment')).' -e "puts \%((in \#{Dir.getwd}))" '
     if arg =~# '^notes\>'
-      let &l:errorformat = '%-P%f:,\ \ *\ [%*[\ ]%l]\ [%t%*[^]]] %m,\ \ *\ [%*[\ ]%l] %m,%-Q'
+      let &l:errorformat = '%-P%f:,\ \ *\ [%\ %#%l]\ [%t%*[^]]] %m,\ \ *\ [%[\ ]%#%l] %m,%-Q'
       call s:make(a:bang, arg)
     elseif arg =~# '^\%(stats\|routes\|secret\|time:zones\|db:\%(charset\|collation\|fixtures:identify\>.*\|migrate:status\|version\)\)\%([: ]\|$\)'
       let &l:errorformat = '%D(in\ %f),%+G%.%#'
@@ -1810,7 +1813,7 @@ function! s:app_server_command(bang,arg) dict
 endfunction
 
 function! s:color_efm(pre, before, after)
-   return a:pre . '%\S%\+  %#' . a:before . "\e[0m  %#" . a:after . ',' .
+   return a:pre . '%\e%\S%\+  %#' . a:before . '%\e[0m  %#' . a:after . ',' .
          \ a:pre . '%\s %#'.a:before.'  %#'.a:after . ','
 endfunction
 
@@ -1818,11 +1821,9 @@ let s:efm_generate =
       \ s:color_efm('%-G', 'invoke', '%f') .
       \ s:color_efm('%-G', 'conflict', '%f') .
       \ s:color_efm('%-G', 'run', '%f') .
-      \ s:color_efm('%-G', 'create', ' ') .
-      \ s:color_efm('%-G', 'exist', ' ') .
-      \ s:color_efm('Overwrite%.%#', '%m', '%f') .
-      \ s:color_efm('', '%m', ' %f') .
-      \ s:color_efm('', '%m', '%f') .
+      \ s:color_efm('%-G', '%\w%\+', ' ') .
+      \ 'Overwrite%.%#%\S%\+  %#%m%\e[0m  %#%f,' .
+      \ s:color_efm('', '%m%\>', '%f') .
       \ '%-G%.%#'
 
 function! s:app_generator_command(bang,...) dict
@@ -1850,48 +1851,62 @@ endfunction
 
 call s:add_methods('app', ['generators','script_command','output_command','server_command','generator_command'])
 
-function! s:Complete_script(ArgLead,CmdLine,P)
+function! s:Complete_script(ArgLead, CmdLine, P) abort
+  return rails#complete_rails(a:ArgLead, a:CmdLine, a:P, rails#app())
+endfunction
+
+function! rails#complete_rails(ArgLead, CmdLine, P, ...) abort
+  if a:0
+    let app = a:1
+  else
+    let manifest = findfile('config/environment.rb', escape(getcwd(), ' ,;').';')
+    let app = empty(manifest) ? {} : rails#app(fnamemodify(manifest, ':h:h'))
+  endif
   let cmd = s:sub(a:CmdLine,'^\u\w*\s+','')
-  if cmd !~ '^[ A-Za-z0-9_=:-]*$'
-    return []
+  if cmd =~# '^new\s\+'
+    return split(glob(a:ArgLead.'*/'), "\n")
+  elseif empty(app)
+    return s:completion_filter(['new'], a:ArgLead)
   elseif cmd =~# '^\w*$'
     return s:completion_filter(['generate', 'console', 'server', 'dbconsole', 'application', 'destroy', 'plugin', 'runner'],a:ArgLead)
-  elseif cmd =~# '^\%(generate\|destroy\)\s\+'.a:ArgLead.'$'
-    return s:completion_filter(rails#app().generators(),a:ArgLead)
-  elseif cmd =~# '^\%(generate\|destroy\)\s\+\w\+\s\+'.a:ArgLead.'$'
+  elseif cmd =~# '^\%([gd]\|generate\|destroy\)\s\+'.a:ArgLead.'$'
+    return s:completion_filter(app.generators(),a:ArgLead)
+  elseif cmd =~# '^\%([gd]\|generate\|destroy\)\s\+\w\+\s\+'.a:ArgLead.'$'
     let target = matchstr(cmd,'^\w\+\s\+\%(\w\+:\)\=\zs\w\+\ze\s\+')
     if target =~# '^\w*controller$'
       return filter(s:controllerList(a:ArgLead,"",""),'v:val !=# "application"')
     elseif target ==# 'generator'
-      return s:completion_filter(map(rails#app().relglob('lib/generators/','*'),'s:sub(v:val,"/$","")'), a:ArgLead)
+      return s:completion_filter(map(app.relglob('lib/generators/','*'),'s:sub(v:val,"/$","")'), a:ArgLead)
     elseif target ==# 'helper'
-      return s:autocamelize(rails#app().relglob('app/helpers/','**/*','_helper.rb'),a:ArgLead)
+      return s:autocamelize(app.relglob('app/helpers/','**/*','_helper.rb'),a:ArgLead)
     elseif target ==# 'integration_test' || target ==# 'integration_spec' || target ==# 'feature'
       return s:autocamelize(
-            \ rails#app().relglob('test/integration/','**/*','_test.rb') +
-            \ rails#app().relglob('spec/features/', '**/*', '_spec.rb') +
-            \ rails#app().relglob('spec/requests/', '**/*', '_spec.rb') +
-            \ rails#app().relglob('features/', '**/*', '.feature'), a:ArgLead)
+            \ app.relglob('test/integration/','**/*','_test.rb') +
+            \ app.relglob('spec/features/', '**/*', '_spec.rb') +
+            \ app.relglob('spec/requests/', '**/*', '_spec.rb') +
+            \ app.relglob('features/', '**/*', '.feature'), a:ArgLead)
     elseif target ==# 'migration' || target ==# 'session_migration'
       return s:migrationList(a:ArgLead,"","")
     elseif target ==# 'mailer'
       return s:mailerList(a:ArgLead,"","")
-      return s:completion_filter(rails#app().relglob("app/mailers/","**/*",".rb"),a:ArgLead)
+      return s:completion_filter(app.relglob("app/mailers/","**/*",".rb"),a:ArgLead)
     elseif target =~# '^\w*\%(model\|resource\)$' || target =~# '\w*scaffold\%(_controller\)\=$'
-      return s:completion_filter(rails#app().relglob('app/models/','**/*','.rb'), a:ArgLead)
+      return s:completion_filter(app.relglob('app/models/','**/*','.rb'), a:ArgLead)
     else
       return []
     endif
-  elseif cmd =~# '^\%(generate\|destroy\)\s\+scaffold\s\+\w\+\s\+'.a:ArgLead.'$'
+  elseif cmd =~# '^\%([gd]\|generate\|destroy\)\s\+scaffold\s\+\w\+\s\+'.a:ArgLead.'$'
     return filter(s:controllerList(a:ArgLead,"",""),'v:val !=# "application"')
-    return s:completion_filter(rails#app().environments())
-  elseif cmd =~# '^\%(console\)\s\+\(--\=\w\+\s\+\)\='.a:ArgLead."$"
-    return s:completion_filter(rails#app().environments()+["-s","--sandbox"],a:ArgLead)
-  elseif cmd =~# '^\%(server\)\s\+.*-e\s\+'.a:ArgLead."$"
-    return s:completion_filter(rails#app().environments(),a:ArgLead)
-  elseif cmd =~# '^\%(server\)\s\+'
+    return s:completion_filter(app.environments())
+  elseif cmd =~# '^\%(c\|console\)\s\+\(--\=\w\+\s\+\)\='.a:ArgLead."$"
+    return s:completion_filter(app.environments()+["-s","--sandbox"],a:ArgLead)
+  elseif cmd =~# '^\%(db\|dbconsole\)\s\+\(--\=\w\+\s\+\)\='.a:ArgLead."$"
+    return s:completion_filter(app.environments()+["-p","--include-password"],a:ArgLead)
+  elseif cmd =~# '^\%(s\|server\)\s\+.*-e\s\+'.a:ArgLead."$"
+    return s:completion_filter(app.environments(),a:ArgLead)
+  elseif cmd =~# '^\%(s\|server\)\s\+'
     if a:ArgLead =~# '^--environment='
-      return s:completion_filter(map(copy(rails#app().environments()),'"--environment=".v:val'),a:ArgLead)
+      return s:completion_filter(map(copy(app.environments()),'"--environment=".v:val'),a:ArgLead)
     else
       return filter(["-p","-b","-c","-d","-u","-e","-P","-h","--port=","--binding=","--config=","--daemon","--debugger","--environment=","--pid=","--help"],'s:startswith(v:val,a:ArgLead)')
     endif
@@ -3856,7 +3871,7 @@ function! rails#buffer_syntax()
           syn keyword rubyRailsTestControllerMethod assert_response assert_redirected_to assert_template assert_recognizes assert_generates assert_routing assert_dom_equal assert_dom_not_equal assert_select assert_select_rjs assert_select_encoded assert_select_email assert_tag assert_no_tag
         endif
       elseif buffer.type_name('spec')
-        syn keyword rubyRailsTestMethod describe context it its specify shared_context shared_examples shared_examples_for shared_context include_examples include_context it_should_behave_like it_behaves_like before after around subject fixtures controller_name helper_name scenario feature background
+        syn keyword rubyRailsTestMethod describe context it its specify shared_context shared_examples shared_examples_for shared_context include_examples include_context it_should_behave_like it_behaves_like before after around subject fixtures controller_name helper_name scenario feature background described_class
         syn match rubyRailsTestMethod '\<let\>!\='
         syn keyword rubyRailsTestMethod violated pending expect expect_any_instance_of allow allow_any_instance_of double instance_double mock mock_model stub_model xit
         syn match rubyRailsTestMethod '\.\@<!\<stub\>!\@!'

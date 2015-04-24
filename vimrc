@@ -498,17 +498,21 @@ if executable('crystal-tags')
           \ 's:struct',
           \ 'c:class',
           \ 'm:module',
-          \ 'f:method'
+          \ 'f:method',
+          \ 'l:library',
+          \ 't:type'
       \ ],
       \ 'sro' : '.',
       \ 'kind2scope' : {
           \ 'c' : 'class',
           \ 'm' : 'module',
-          \ 's' : 'struct'
+          \ 's' : 'struct',
+          \ 'l' : 'library'
       \ },
       \ 'scope2kind' : {
           \ 'class' : 'c',
-          \ 'module' : 'm'
+          \ 'module' : 'm',
+          \ 'library': 'l'
       \ },
       \ 'ctagsbin'  : 'crystal-tags',
       \ 'ctagsargs' : '-f -'

@@ -93,7 +93,7 @@ if !exists('g:endwise_no_mappings')
     " imap <CR> <CR><Plug>DiscretionaryEnd
     imap <C-X><CR> <CR><Plug>AlwaysEnd
     " imap <CR>      <CR><Plug>DiscretionaryEnd
-    imap <CR> <C-R>=pumvisible() ? "\<lt>c-y>" : <SID>preproc()<CR><Plug>DiscretionaryEnd
+    imap <silent> <CR> <C-R>=pumvisible() ? "\<lt>c-y>" : <SID>preproc()<CR><Plug>DiscretionaryEnd
   endif
 endif
 

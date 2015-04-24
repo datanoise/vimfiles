@@ -180,21 +180,23 @@ syn match  crystalModuleDeclaration   "[^[:space:];#<]\+"	 contained contains=cr
 syn match  crystalStructDeclaration   "[^[:space:];#<]\+"	 contained contains=crystalConstant,crystalOperator
 syn match  crystalLibDeclaration      "[^[:space:];#<]\+"	 contained contains=crystalConstant,crystalOperator
 syn match  crystalMacroDeclaration      "[^[:space:];#<\"]\+"	 contained contains=crystalConstant,crystalOperator
+syn match  crystalEnumDeclaration      "[^[:space:];#<\"]\+"	 contained contains=crystalConstant,crystalOperator
 syn match  crystalFunction "\<[_[:alpha:]][_[:alnum:]]*[?!=]\=[[:alnum:]_.:?!=]\@!" contained containedin=crystalMethodDeclaration,crystalFunctionDeclaration
 syn match  crystalFunction "\%(\s\|^\)\@<=[_[:alpha:]][_[:alnum:]]*[?!=]\=\%(\s\|$\)\@=" contained containedin=crystalAliasDeclaration,crystalAliasDeclaration2
 syn match  crystalFunction "\%([[:space:].]\|^\)\@<=\%(\[\]=\=\|\*\*\|[+-]@\=\|[*/%|&^~]\|<<\|>>\|[<>]=\=\|<=>\|===\|[=!]=\|[=!]\~\|!\|`\)\%([[:space:];#(]\|$\)\@=" contained containedin=crystalAliasDeclaration,crystalAliasDeclaration2,crystalMethodDeclaration,crystalFunctionDeclaration
 
-syn cluster crystalDeclaration contains=crystalAliasDeclaration,crystalAliasDeclaration2,crystalMethodDeclaration,crystalFunctionDeclaration,crystalModuleDeclaration,crystalClassDeclaration,crystalStructDeclaration,crystalLibDeclaration,crystalMacroDeclaration,crystalFunction,crystalBlockParameter
+syn cluster crystalDeclaration contains=crystalAliasDeclaration,crystalAliasDeclaration2,crystalMethodDeclaration,crystalFunctionDeclaration,crystalModuleDeclaration,crystalClassDeclaration,crystalStructDeclaration,crystalLibDeclaration,crystalMacroDeclaration,crystalEnumDeclaration,crystalFunction,crystalBlockParameter
 
 " Keywords
 " Note: the following keywords have already been defined:
 " begin case class def do end for if module unless until while
 syn match   crystalControl	       "\<\%(and\|break\|in\|next\|not\|or\|redo\|rescue\|retry\|return\)\>[?!]\@!"
 syn match   crystalOperator       "\<defined?" display
-syn match   crystalKeyword	       "\<\%(super\|yield\|as\|of\)\>[?!]\@!"
+syn match   crystalKeyword	       "\<\%(super\|yield\|as\|of\|out\|pointerof\|sizeof\|typeof\)\>[?!]\@!"
 syn match   crystalBoolean	       "\<\%(true\|false\)\>[?!]\@!"
 syn match   crystalPseudoVariable "\<\%(nil\|self\|__ENCODING__\|__FILE__\|__LINE__\|__callee__\|__method__\)\>[?!]\@!" " TODO: reorganise
 syn match   crystalBeginEnd       "\<\%(BEGIN\|END\)\>[?!]\@!"
+syn match   crystalType           "\<type\>"
 
 " Expensive Mode - match 'end' with the appropriate opening keyword for syntax
 " based folding and special highlighting of module/class/method definitions
@@ -203,11 +205,12 @@ if !exists("b:crystal_no_expensive") && !exists("crystal_no_expensive")
   syn match  crystalDefine "\<def\>"    nextgroup=crystalMethodDeclaration skipwhite skipnl
   syn match  crystalDefine "\<fun\>"    nextgroup=crystalFunctionDeclaration skipwhite skipnl
   syn match  crystalDefine "\<undef\>"  nextgroup=crystalFunction	     skipwhite skipnl
-  syn match  crystalClass	"\<class\>"  nextgroup=crystalClassDeclaration  skipwhite skipnl
+  syn match  crystalClass  "\<class\>"  nextgroup=crystalClassDeclaration  skipwhite skipnl
   syn match  crystalModule "\<module\>" nextgroup=crystalModuleDeclaration skipwhite skipnl
   syn match  crystalStruct "\<struct\>" nextgroup=crystalStructDeclaration skipwhite skipnl
-  syn match  crystalLib	   "\<lib\>" nextgroup=crystalLibDeclaration skipwhite skipnl
-  syn match  crystalMacro  "\<macro\>" nextgroup=crystalMacroDeclaration skipwhite skipnl
+  syn match  crystalLib    "\<lib\>"    nextgroup=crystalLibDeclaration skipwhite skipnl
+  syn match  crystalMacro  "\<macro\>"  nextgroup=crystalMacroDeclaration skipwhite skipnl
+  syn match  crystalEnum   "\<enum\>"   nextgroup=crystalEnumDeclaration skipwhite skipnl
 
   syn region crystalMethodBlock start="\<\%(def\|fun\)\>"	matchgroup=crystalDefine end="\%(\<\%(def\|fun\)\_s\+\)\@<!\<end\>" contains=ALLBUT,@crystalNotTop fold
   syn region crystalBlock	     start="\<class\>"	matchgroup=crystalClass  end="\<end\>"		       contains=ALLBUT,@crystalNotTop fold
@@ -252,17 +255,18 @@ else
   syn match crystalControl "\<module\>[?!]\@!" nextgroup=crystalModuleDeclaration skipwhite skipnl
   syn match crystalControl "\<struct\>[?!]\@!" nextgroup=crystalStructDeclaration skipwhite skipnl
   syn match crystalControl "\<lib\>[?!]\@!"    nextgroup=crystalLibDeclaration skipwhite skipnl
-  syn match crystalControl "\<macro\>[?!]\@!"    nextgroup=crystalMacroDeclaration skipwhite skipnl
+  syn match crystalControl "\<macro\>[?!]\@!"  nextgroup=crystalMacroDeclaration skipwhite skipnl
+  syn match crystalControl "\<enum\>[?!]\@!"   nextgroup=crystalEnumDeclaration skipwhite skipnl
   syn match crystalControl "\<\%(case\|begin\|do\|for\|if\|ifdef\|unless\|while\|until\|else\|elsif\|ensure\|then\|when\|end\)\>[?!]\@!"
   syn match crystalKeyword "\<\%(alias\|undef\)\>[?!]\@!"
 endif
 
 " Special Methods
 if !exists("crystal_no_special_methods")
-  syn keyword crystalAccess    public protected private public_class_method private_class_method public_constant private_constant module_function
+  syn keyword crystalAccess    public protected private public_class_method private_class_method public_constant private_constant module_function abstract
   " attr is a common variable name
   syn match   crystalAttribute "\%(\%(^\|;\)\s*\)\@<=attr\>\(\s*[.=]\)\@!"
-  syn keyword crystalAttribute attr_accessor attr_reader attr_writer
+  syn keyword crystalAttribute getter setter property
   syn match   crystalControl   "\<\%(exit!\|\%(abort\|at_exit\|exit\|fork\|loop\|trap\)\>[?!]\@!\)"
   syn keyword crystalEval	    eval class_eval instance_eval module_eval
   syn keyword crystalException raise fail catch throw
@@ -307,7 +311,9 @@ hi def link crystalModule			crystalDefine
 hi def link crystalStruct			crystalDefine
 hi def link crystalLib			crystalDefine
 hi def link crystalMacro			crystalDefine
+hi def link crystalEnum			crystalDefine
 hi def link crystalMethodExceptional	crystalDefine
+hi def link crystalType crystalDefine
 hi def link crystalDefine			Define
 hi def link crystalFunction		Function
 hi def link crystalConditional		Conditional

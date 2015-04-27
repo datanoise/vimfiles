@@ -43,6 +43,7 @@ g:tcommentGuessFileType_django	tcomment.txt	/*g:tcommentGuessFileType_django*
 g:tcommentGuessFileType_dsl	tcomment.txt	/*g:tcommentGuessFileType_dsl*
 g:tcommentGuessFileType_eruby	tcomment.txt	/*g:tcommentGuessFileType_eruby*
 g:tcommentGuessFileType_html	tcomment.txt	/*g:tcommentGuessFileType_html*
+g:tcommentGuessFileType_jinja	tcomment.txt	/*g:tcommentGuessFileType_jinja*
 g:tcommentGuessFileType_php	tcomment.txt	/*g:tcommentGuessFileType_php*
 g:tcommentGuessFileType_rnoweb	tcomment.txt	/*g:tcommentGuessFileType_rnoweb*
 g:tcommentGuessFileType_smarty	tcomment.txt	/*g:tcommentGuessFileType_smarty*

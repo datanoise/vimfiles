@@ -34,7 +34,8 @@ CompilerSet errorformat^=
       \%+GCurrent\ version:%.%#,
       \%+G\ %#Prefix\ %#Verb%.%#,
       \%+G\ %#Code\ LOC:\ %.%#,
-      \%+EUsage:\ rails\ %.%#,
+      \%+EUsage:%.%#,
+      \%+ECould\ not\ find\ generator%.%#,
       \%+EType\ 'rails'\ for\ help.
 
 " -complete=customlist,rails#complete_rails

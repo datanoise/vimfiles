@@ -73,15 +73,11 @@ endif
 
 syn case match
 
-syn keyword     goPackage           package nextgroup=goPackageName skipwhite
-syn match       goPackageName       /\w\+/ contained
-syn keyword     goImport            import
+syn keyword     goDirective         package import
 syn keyword     goDeclaration       var const type
 syn keyword     goDeclType          struct interface
 
-hi def link     goPackage           Statement
-hi def link     goPackageName       PreProc
-hi def link     goImport            Statement
+hi def link     goDirective         Statement
 hi def link     goDeclaration       Keyword
 hi def link     goDeclType          Keyword
 
@@ -253,35 +249,28 @@ if g:go_highlight_operators != 0
 	" match ...
 	syn match goOperator /\.\.\./
 endif
-hi def link     goOperator          Operator
+hi def link     goOperator					Operator
 
-" Functions;
-if go_highlight_functions != 0
-        syn match goFunction        /\%#=1\(func\s\+\)\@!\w\+\((.*)\)\@=/
+" Functions; 
+if g:go_highlight_functions != 0
+	syn match goFunction							/\(func\s\+\)\@<=\w\+\((\)\@=/
+	syn match goFunction							/\()\s\+\)\@<=\w\+\((\)\@=/
 endif
-hi def link     goFunction          Function
+hi def link     goFunction					Function
 
-" Methods;
-if go_highlight_methods != 0
-        syn match goMethod          /\%#=1\(\.\)\@<=\w\+\((\)\@=/
+" Methods; 
+if g:go_highlight_methods != 0
+	syn match goMethod								/\(\.\)\@<=\w\+\((\)\@=/
 endif
-hi def link     goMethod            Function
+hi def link     goMethod						Type
 
-" Structs;
-if go_highlight_structs != 0
-        syn match goStruct          /\%#=1\(.\)\@<=\w\+\({\)\@=/
-        syn match goTypeDef         /\%#=1\(type\s\+\)\@<=\w\+/
-
-        syn match  goMethodReceiver /\w\+/ skipwhite nextgroup=goMethodReceiverPointer,goMethodReceiverType contained
-        syn match  goMethodReceiverPointer /*/ transparent contained nextgroup=goMethodReceiverType
-        syn match  goMethodReceiverType /\w\+/ contained
-        syn region goMethodDef start="\(func\s\+\)\@<=(" end=")" contains=goMethodReceiver
-
-        hi def link     goMethodReceiverType    Define
-        hi def link     goStruct                Define
-        hi def link     goTypeDef               Define
+" Structs; 
+if g:go_highlight_structs != 0
+	syn match goStruct								/\(.\)\@<=\w\+\({\)\@=/
+	syn match goStructDef							/\(type\s\+\)\@<=\w\+\(\s\+struct\s\+{\)\@=/
 endif
-
+hi def link     goStruct						Function
+hi def link     goStructDef         Function
 
 " Build Constraints
 if g:go_highlight_build_constraints != 0
@@ -303,6 +292,6 @@ hi def link     goBuildDirective    PreProc
 
 " There's a bug in the implementation of grouphere. For now, use the
 " following as a more expensive/less precise workaround.
-" syn sync minlines=500
+syn sync minlines=500
 
 let b:current_syntax = "go"

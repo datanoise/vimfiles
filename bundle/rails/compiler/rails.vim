@@ -23,6 +23,8 @@ runtime! compiler/rake.vim
 let current_compiler = "rails"
 
 CompilerSet makeprg=rails
+" CompilerSet makeprg=ruby\ bin/rails
+" CompilerSet makeprg=ruby\ script/rails
 
 CompilerSet errorformat^=
       \%\\S%\\+\ \ %#%[cefi]%[rxod]%[eir]%[a-z]%#%\\x1b[0m\ %\\+%\\S%\\+%$
@@ -32,8 +34,12 @@ CompilerSet errorformat^=
       \Overwrite%.%#%\\S%\\+\ \ %#%m%\\x1b[0m\ \ %#%f,
       \%-GOverwrite%.%#\"h\"%.%#,
       \%+GCurrent\ version:%.%#,
+      \%+G\ %#Status\ %#Migration\ ID%.%#,
       \%+G\ %#Prefix\ %#Verb%.%#,
       \%+G\ %#Code\ LOC:\ %.%#,
+      \%+GAbout\ your\ application's\ environment,
+      \%+Grun\ %\\S%#::Application.routes,
+      \%+Eruby:%.%#(LoadError),
       \%+EUsage:%.%#,
       \%+ECould\ not\ find\ generator%.%#,
       \%+EType\ 'rails'\ for\ help.

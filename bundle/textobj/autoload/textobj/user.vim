@@ -1,5 +1,5 @@
 " textobj-user - Create your own text objects
-" Version: 0.7.0
+" Version: 0.7.1
 " Copyright (C) 2007-2015 Kana Natsuno <http://whileimautomaton.net/>
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
@@ -25,9 +25,9 @@
 " simple  "{{{2
 
 function! textobj#user#move(pattern, flags, previous_mode)
-  call s:prepare_movement(a:previous_mode)
-
   let i = v:count1
+
+  call s:prepare_movement(a:previous_mode)
   while 0 < i
     let result = searchpos(a:pattern, a:flags.'W')
     let i = i - 1

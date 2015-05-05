@@ -599,7 +599,7 @@ let g:ctrlp_max_files = 10000
 let g:ctrlp_open_multi = 'tr'
 let g:ctrlp_open_new_file = 'h'
 let g:ctrlp_mruf_exclude = '\.git\|\/var\/folders\|' . substitute($VIMRUNTIME, '/', '\\/', 'g')
-let g:ctrlp_custom_ignore = 'tmp'
+" let g:ctrlp_custom_ignore = 'tmp'
 let g:ctrlp_buftag_types = {
       \ 'go'     : '--language-force=Go --Go-types=fvt',
       \ 'rust'   : '--language-force=Rust --Rust-types=fti',

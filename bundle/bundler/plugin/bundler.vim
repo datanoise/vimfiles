@@ -12,7 +12,7 @@ if !exists('g:dispatch_compilers')
 endif
 let g:dispatch_compilers['bundle exec'] = ''
 
-" Utility {{{1
+" Section: Utility
 
 function! s:function(name) abort
   return function(substitute(a:name,'^s:',matchstr(expand('<sfile>'), '<SNR>\d\+_'),''))
@@ -101,8 +101,7 @@ augroup END
 
 let s:abstract_prototype = {}
 
-" }}}1
-" Syntax highlighting {{{1
+" Section: Syntax highlighting
 
 function! s:syntaxfile()
   syntax keyword rubyGemfileMethod gemspec gem source path git group platforms env ruby
@@ -161,8 +160,7 @@ augroup bundler_syntax
   autocmd User Rails/Gemfile.lock,Rails/gems.locked call s:setuplock()
 augroup END
 
-" }}}1
-" Initialization {{{1
+" Section: Initialization
 
 function! s:FindBundlerLock(path) abort
   let path = s:shellslash(a:path)
@@ -224,8 +222,7 @@ augroup bundler
         \ endif
 augroup END
 
-" }}}1
-" Project {{{1
+" Section: Project
 
 let s:project_prototype = {}
 let s:projects = {}
@@ -476,8 +473,7 @@ endfunction
 
 call s:add_methods('project', ['locked', 'gems', 'paths', 'sorted', 'versions', 'has', 'projections_list'])
 
-" }}}1
-" Buffer {{{1
+" Section: Buffer
 
 let s:buffer_prototype = {}
 
@@ -508,8 +504,7 @@ endfunction
 
 call s:add_methods('buffer',['getvar','setvar','project'])
 
-" }}}1
-" Bundle {{{1
+" Section: Bundle
 
 function! s:push_chdir()
   if !exists("s:command_stack") | let s:command_stack = [] | endif
@@ -528,13 +523,27 @@ function! s:Bundle(bang,arg)
   let old_makeprg = &l:makeprg
   let old_errorformat = &l:errorformat
   let old_compiler = get(b:, 'current_compiler', '')
+  let cd = exists('*haslocaldir') && haslocaldir() ? 'lcd' : 'cd'
+  let cwd = getcwd()
   try
-    compiler bundler
-    execute 'make! '.a:arg
-    if a:bang ==# ''
-      return 'if !empty(getqflist()) | cfirst | endif'
+    execute cd fnameescape(s:project().path())
+    if a:arg =~# '^\s*console\>'
+      let arg = substitute(a:arg, '^\s*console\s*', '', '')
+      if exists(':Start') > 1
+        execute 'Start'.a:bang '-title=' .
+              \ escape(fnamemodify(s:project().path(), ':t'), ' ') .
+              \ '\ console bundle console' arg
+      else
+        execute '!bundle console' arg
+      endif
     else
-      return ''
+      compiler bundler
+      execute 'make! '.a:arg
+      if a:bang ==# ''
+        return 'if !empty(getqflist()) | cfirst | endif'
+      else
+        return ''
+      endif
     endif
   finally
     let &l:errorformat = old_errorformat
@@ -543,6 +552,7 @@ function! s:Bundle(bang,arg)
     if empty(b:current_compiler)
       unlet b:current_compiler
     endif
+    execute cd fnameescape(cwd)
   endtry
 endfunction
 
@@ -583,7 +593,7 @@ function! s:QuickFixCmdPostMake()
   call s:project().paths('refresh')
 endfunction
 
-augroup bundler_make
+augroup bundler_command
   autocmd FileType gemfilelock call s:SetupMake()
   autocmd FileType ruby
         \ if expand('<afile>:t') =~# '^\%([Gg]emfile\|gems\.rb\)$' |
@@ -591,10 +601,13 @@ augroup bundler_make
         \ endif
   autocmd QuickFixCmdPre *make* call s:QuickFixCmdPreMake()
   autocmd QuickFixCmdPost *make* call s:QuickFixCmdPostMake()
+  autocmd User Bundler
+        \ if exists(':Console') < 2 |
+        \   exe "command! -buffer -bar -bang -nargs=* Console :Bundle<bang> console <args>" |
+        \ endif
 augroup END
 
-" }}}1
-" Bopen {{{1
+" Section: Bopen
 
 function! s:Open(cmd,gem,lcd)
   if a:gem ==# '' && a:lcd
@@ -635,8 +648,7 @@ call s:command("-bar -bang -nargs=? -complete=customlist,s:OpenComplete Bvsplit 
 call s:command("-bar -bang -nargs=? -complete=customlist,s:OpenComplete Btabedit :execute s:Open('tabedit',<q-args>,<bang>1)")
 call s:command("-bar -bang -nargs=? -complete=customlist,s:OpenComplete Bpedit :execute s:Open('pedit',<q-args>,<bang>1)")
 
-" }}}1
-" Paths {{{1
+" Section: Paths
 
 function! s:build_path_option(paths,suffix) abort
   return join(map(copy(a:paths),'",".escape(s:shellslash(v:val."/".a:suffix),", ")'),'')
@@ -680,7 +692,5 @@ augroup bundler_path
   autocmd!
   autocmd User Bundler call s:buffer().alter_paths()
 augroup END
-
-" }}}1
 
 " vim:set sw=2 sts=2:

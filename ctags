@@ -71,3 +71,17 @@
 --regex-coffee=/((constructor|initialize):[ \t]*\()@(([A-Za-z][A-Za-z0-9_.]*)+)([ \t]*=[ \t]*[^,)]+)?(,[ \t]*@(([A-Za-z][A-Za-z0-9_.]*)+)([ \t]*=[ \t]*[^,)]+)?){7}/\8/f,field/
 --regex-coffee=/((constructor|initialize):[ \t]*\()@(([A-Za-z][A-Za-z0-9_.]*)+)([ \t]*=[ \t]*[^,)]+)?(,[ \t]*@(([A-Za-z][A-Za-z0-9_.]*)+)([ \t]*=[ \t]*[^,)]+)?){8}/\8/f,field/
 --regex-coffee=/((constructor|initialize):[ \t]*\()@(([A-Za-z][A-Za-z0-9_.]*)+)([ \t]*=[ \t]*[^,)]+)?(,[ \t]*@(([A-Za-z][A-Za-z0-9_.]*)+)([ \t]*=[ \t]*[^,)]+)?){9}/\8/f,field/
+
+--langdef=nim
+--langmap=nim:.nim
+--regex-nim=/([a-zA-Z0-9_$]+)\*?[ \t]*=[ \t]*object/\1/t,class/
+--regex-nim=/(w+)\*?[ \t]*=[ \t]*enum/\1/t,enum/
+--regex-nim=/([a-zA-Z0-9_$]+)\*?[ \t]*=[ \t]*tuple/\1/t,tuple/
+--regex-nim=/([a-zA-Z0-9_$]+)\*?[ \t]*=[ \t]*range/\1/t,subrange/
+--regex-nim=/([a-zA-Z0-9_$]+)\*?[ \t]*=[ \t]*proc/\1/t,proctype/
+--regex-nim=/proc[ \t]+([a-zA-Z0-9_$]+)/\1/f,procedure/
+--regex-nim=/method[ \t]+([a-zA-Z0-9_$]+)/\1/f,method/
+--regex-nim=/proc[ \t]+`([^`]+)`/\1/o,operator/
+--regex-nim=/template[ \t]+([a-zA-Z0-9_$]+)/\1/t,template/
+--regex-nim=/macro[ \t]+([a-zA-Z0-9_$]+)/\1/m,macro/
+

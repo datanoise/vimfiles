@@ -854,6 +854,7 @@ function! s:app_has(feature) dict
         \'test': 'test/',
         \'spec': 'spec/',
         \'bundler': 'Gemfile|gems.locked',
+        \'rails3': 'config/application.rb',
         \'cucumber': 'features/',
         \'turnip': 'spec/acceptance/',
         \'sass': 'public/stylesheets/sass/',
@@ -2252,7 +2253,7 @@ function! s:RailsFind()
   let ssext = ['css', 'css.*', 'scss', 'sass']
   let res = s:findfromview('stylesheet[_-]\%(link_tag\|path\|url\)\|\%(path\|url\)_to_stylesheet','\1')
   if res != ""
-    return rails#app().resolve_asset(res, ssest)."\npublic/stylesheets/".res.".css"
+    return rails#app().resolve_asset(res, ssext)."\npublic/stylesheets/".res.".css"
   endif
   if buffer.type_name('stylesheet')
     let res = s:findit('^\s*\*=\s*require\s*["'']\=\([^"'' ]*\)', '\1')
@@ -2437,34 +2438,6 @@ endfunction
 
 function! s:app_commands() dict abort
   let commands = {}
-
-  let commands.environment = [
-        \ {'pattern': 'config/environments/*.rb'},
-        \ {'pattern': 'config/application.rb'},
-        \ {'pattern': 'config/environment.rb'}]
-  let commands.helper = [{
-        \ 'pattern': 'app/helpers/*_helper.rb',
-        \ 'template': "module %SHelper\nend",
-        \ 'affinity': 'controller'}]
-  let commands.initializer = [
-        \ {'pattern': 'config/initializers/*.rb'},
-        \ {'pattern': 'config/routes.rb'}]
-  let commands.lib = [
-        \ {'pattern': 'lib/*.rb'},
-        \ {'pattern': 'Gemfile'}]
-  let commands.mailer = [
-        \ {'pattern': 'app/mailers/*.rb', 'template': "class %S < ActionMailer::Base\nend", 'affinity': 'controller'},
-        \ {'pattern': 'app/models/*.rb', 'template': "class %S < ActionMailer::Base\nend", 'affinity': 'controller', 'complete': 0}]
-  let commands.job = [{
-        \ 'pattern': 'app/jobs/*_job.rb',
-        \ 'template': "class %SJob < ActiveJob::Base\nend"}]
-  let commands.model = [{
-        \ 'pattern': 'app/models/*.rb',
-        \ 'template': "class %S\nend",
-        \ 'affinity': 'model'}]
-  let commands.task = [
-        \ {'pattern': 'lib/tasks/*.rake'},
-        \ {'pattern': 'Rakefile'}]
 
   let commands['unit test'] = map(filter([
         \ ['test', 'test/unit/*_test.rb', "require 'test_helper'\n\nclass %STest < ActiveSupport::TestCase\nend", 'model', 1],
@@ -2712,7 +2685,7 @@ function! s:define_navcommand(name, projection, ...) abort
           \ (prefix =~# 'D' ? '-range=0 ' : '') .
           \ '-complete=customlist,'.s:sid.'CommandList ' .
           \ prefix . name . ' :execute s:CommandEdit(' .
-          \ string((prefix =~# 'D' ? '<line1>' : '') . s:sub(prefix, '^R', '') . "<bang>") . ',' .
+          \ string((prefix =~# 'D' ? '<line1>' : '') . prefix . "<bang>") . ',' .
           \ string(a:name) . ',' . string(a:projection) . ',<f-args>)' .
           \ (a:0 ? '|' . a:1 : '')
   endfor
@@ -3129,15 +3102,16 @@ function! s:projection_pairs(options)
 endfunction
 
 function! s:r_warning(cmd) abort
-  if empty(a:cmd) && !exists('s:r_warning')
-    let s:r_warning = 1
-    return '|echohl WarningMsg|echomsg ":R navigation commands are deprecated. Use :E commands instead."|echohl None'
+  if a:cmd =~# 'R\|^$'
+    let old = s:sub(a:cmd, '^$', 'R')
+    let instead = s:sub(s:sub(a:cmd, '^R', ''), '^$', 'E')
+    return '|echohl WarningMsg|echomsg ":'.old.' navigation commands are deprecated. Use :'.instead.' commands instead."|echohl None'
   endif
   return ''
 endfunction
 
 function! s:readable_open_command(cmd, argument, name, projections) dict abort
-  let cmd = s:editcmdfor(a:cmd)
+  let cmd = s:editcmdfor(s:sub(a:cmd, '^R', ''))
   let djump = ''
   if a:argument =~ '[#!]\|:\d*\%(:in\)\=$'
     let djump = matchstr(a:argument,'!.*\|#\zs.*\|:\zs\d*\ze\%(:in\)\=$')
@@ -4573,10 +4547,39 @@ function! s:combine_projections(dest, src, ...) abort
   return a:dest
 endfunction
 
+let s:default_projections = {
+      \ 'config/environments/*.rb': {'type': 'environment'},
+      \ 'config/application.rb': {'type': 'environment'},
+      \ 'app/helpers/*_helper.rb': {
+      \   'type': 'helper',
+      \   'template': ["module {camelcase|capitalize|colons}Helper", "end"],
+      \   'affinity': 'controller'},
+      \ 'config/initializers/*.rb': {'type': 'initializer'},
+      \ 'config/routes.rb': {'type': 'initializer'},
+      \ 'app/jobs/*_job.rb': {
+      \   'type': 'job',
+      \   'template': "class {camelcase|capitalize|colons}Job < ActiveJob::Base\nend"},
+      \ 'lib/*.rb': {'type': 'lib'},
+      \ 'Gemfile': {'type': 'lib'},
+      \ 'gems.rb': {'type': 'lib'},
+      \ 'app/mailers/*.rb': {
+      \    'type': 'mailer',
+      \    'template': "class {camelcase|capitalize|colons} < ActionMailer::Base\nend",
+      \    'affinity': 'controller'},
+      \ 'app/models/*.rb': {
+      \    'type': 'model',
+      \    'template': "class %S\nend",
+      \    'affinity': 'model'},
+      \ 'lib/tasks/*.rake': {'type': 'task'},
+      \ 'Rakefile': {'type': 'task'}}
+
 let s:projections_for_gems = {}
 function! s:app_projections() dict abort
-  let dict = {}
-  call s:combine_projections(dict, get(g:, 'rails_projections', ''), {'check': 1})
+  let dict = deepcopy(s:default_projections)
+  if !self.has('rails3')
+    let dict['config/environment.rb'] = remove(dict, 'config/application.rb')
+  endif
+  call s:combine_projections(dict, get(g:, 'rails_projections', ''))
   for gem in keys(get(g:, 'rails_gem_projections', {}))
     if self.has_gem(gem)
       call s:combine_projections(dict, g:rails_gem_projections[gem])
@@ -4857,15 +4860,28 @@ function! rails#buffer_setup() abort
   let &l:makeprg = self.app().rake_command('static')
   let &l:errorformat .= ',chdir '.escape(self.app().path(), ',')
 
-  if self.type_name('test', 'spec', 'cucumber')
-    call self.setvar('dispatch', ':Runner')
-  elseif self.name() ==# 'Rakefile'
-    call self.setvar('dispatch', ':Rake --tasks')
-  elseif self.name() =~# '^\%(app\|config\|db\|lib\|log\|README\)'
-    call self.setvar('dispatch', ':Rake')
-  elseif self.name() =~# '^public'
-    call self.setvar('dispatch', ':Preview')
+  if exists(':Dispatch') == 2 && !exists('g:autoloaded_dispatch')
+    runtime! autoload/dispatch.vim
   endif
+  if exists('*dispatch#dir_opt')
+    let dir = dispatch#dir_opt(self.app().path())
+  endif
+
+  if self.name() =~# '^public'
+    call self.setvar('dispatch', ':Preview')
+  elseif self.type_name('test', 'spec', 'cucumber')
+    call self.setvar('dispatch', ':Runner')
+  elseif self.name() =~# '^\%(app\|config\|db\|lib\|log\|README\|Rakefile\)'
+    if exists('dir')
+      call self.setvar('dispatch',
+            \ dir . '-compiler=rails ' .
+            \ self.app().rake_command('static') .
+            \ ' `=rails#buffer(' . self['#'] . ').default_rake_task(v:lnum)`')
+    else
+      call self.setvar('dispatch', ':Rake')
+    endif
+  endif
+
   if empty(self.getvar('start'))
     call self.setvar('start', ':Server')
   endif

@@ -247,13 +247,13 @@ set clipboard+=unnamed
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
 " change the cursor shape based on the current mode
 if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app' && has('cursorshape')
-  " if exists('$TMUX')
-  "   let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>[3 q\<Esc>\\"
-  "   let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>[1 q\<Esc>\\"
-  " else
-  "   let &t_SI = "\<Esc>[3 q"
-  "   let &t_EI = "\<Esc>[1 q"
-  " endif
+  if exists('$TMUX')
+    let &t_SI = "\<Esc>[3 q"
+    let &t_EI = "\<Esc>[0 q"
+  else
+    let &t_SI = "\<Esc>]50;CursorShape=2\x7"
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+  endif
 endif
 if has('gui_running')
   au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs\ --no-gems
@@ -327,7 +327,7 @@ inoremap <silent> <Space> <C-R>=<SID>space_inside_curly()<CR>
 " inoremap <Tab> <C-p>
 inoremap <silent> <C-l> <C-\><C-O>:call search('[{("\[\]'')}]', 'Wc', line('.'))<CR><Right>
 inoremap jj <Esc>
-imap kk <C-O>A<Enter>
+" imap kk <C-O>A<Enter>
 nnoremap <F2> <C-w><C-w>
 inoremap <F2> <Esc><C-w><C-w>
 nnoremap <F4> :sil make %<CR><C-l>:cr<CR>
@@ -669,5 +669,6 @@ let g:xml_syntax_folding = 1 " enable folding in xml files
 let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
 let $RUBYOPT = '' " I don't want any surprises like 'noexec' gem
 let g:netrw_liststyle = 3
+let g:racer_cmd = 'racer'
 
 " }}}

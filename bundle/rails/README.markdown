@@ -17,9 +17,7 @@ features:
   `:help rails-navigation`
 
 * Enhanced syntax highlighting.  From `has_and_belongs_to_many` to
-  `distance_of_time_in_words`, it's here.  For easy completion of these
-  long method names, `'completefunc'` is set to enable syntax based
-  completion on CTRL-X CTRL-U.
+  `distance_of_time_in_words`, it's here.
 
 * Interface to rake.  Use `:Rake` to run the current test, spec, or
   feature.  Use `:.Rake` to do a focused run of just the method,
@@ -98,8 +96,9 @@ Rails application.
 
 > What Rails versions are supported?
 
-All of them.  A few features like syntax highlighting tend to reflect the
-latest version only.
+All of them, although you may notice a few minor breakages if you dip below
+3.0.  A few features like syntax highlighting tend to reflect the latest
+version only.
 
 > Didn't rails.vim used to handle indent settings?
 

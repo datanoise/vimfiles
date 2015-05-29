@@ -79,10 +79,10 @@ function! go#fmt#Format(withGoimport)
 
     " if it's something else than gofmt, we need to check the existing of that
     " binary. For example if it's goimports, let us check if it's installed,
-    " if not the user get's a warning via go#tool#BinPath()
+    " if not the user get's a warning via go#path#CheckBinPath()
     if fmt_command != "gofmt"
         " check if the user has installed goimports
-        let bin_path = go#tool#BinPath(fmt_command) 
+        let bin_path = go#path#CheckBinPath(fmt_command) 
         if empty(bin_path) 
             return 
         endif
@@ -110,14 +110,16 @@ function! go#fmt#Format(withGoimport)
         let default_srr = &srr
         set srr=>%s 
 
-        "delete everything first from the buffer
-        %delete _  
+        " delete any leftover before we replace the whole file. Suppose the
+        " file had 20 lines, but new output has 10 lines, only 1-10 are
+        " replaced with setline, remaining lines 11-20 won't get touched. So
+        " remove them.
+        if line('$') > len(splitted)
+            execute len(splitted) .',$delete'
+        endif
 
-        " replace with gofmted content
-        call append(0, splitted)
-
-        " delete last line that comes from the append call
-        $delete _  
+        " setline iterates over the list and replaces each line
+        call setline(1, splitted)
 
         " only clear quickfix if it was previously set, this prevents closing
         " other quickfixes

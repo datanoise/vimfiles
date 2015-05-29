@@ -74,6 +74,6 @@ function! airline#parts#filetype()
 endfunction
 
 function! airline#parts#ffenc()
-  return join(filter([&fenc, &ff], 'len(v:val) > 0'), '|')
+  return printf('%s%s', &fenc, strlen(&ff) > 0 ? '['.&ff.']' : '')
 endfunction
 

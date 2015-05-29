@@ -75,7 +75,7 @@ function! s:space_inside_curly()
   let l = getline('.')
   let c = col('.')
   if l[c-2] =~ '[{([]' && l[c-1] == s:alt_char(l[c-2])
-    return "\<Space>\<Space>\<C-O>h"
+    return "\<Space>\<Space>\<Left>"
   endif
   return "\<Space>"
 endfunction
@@ -247,13 +247,13 @@ set clipboard+=unnamed
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
 " change the cursor shape based on the current mode
 if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app' && has('cursorshape')
-  if exists('$TMUX')
-    let &t_SI = "\<Esc>[3 q"
-    let &t_EI = "\<Esc>[0 q"
-  else
-    let &t_SI = "\<Esc>]50;CursorShape=2\x7"
-    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-  endif
+  " if exists('$TMUX')
+  "   let &t_SI = "\<Esc>[3 q"
+  "   let &t_EI = "\<Esc>[0 q"
+  " else
+  "   let &t_SI = "\<Esc>]50;CursorShape=2\x7"
+  "   let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+  " endif
 endif
 if has('gui_running')
   au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs\ --no-gems

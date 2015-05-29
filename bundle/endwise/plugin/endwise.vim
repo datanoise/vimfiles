@@ -59,6 +59,10 @@ augroup endwise " {{{1
         \ let b:endwise_addition = 'end' |
         \ let b:endwise_words = 'function,if,for' |
         \ let b:endwise_syngroups = 'matlabStatement,matlabFunction,matlabConditional,matlabRepeat'
+  autocmd FileType htmldjango
+        \ let b:endwise_addition = '{% end& %}' |
+        \ let b:endwise_words = 'autoescape,block\(\s\+\S*\)\?,blocktrans,cache,comment,filter,for,if,ifchanged,ifequal,ifnotequal,language,spaceless,verbatim,with' |
+        \ let b:endwise_syngroups = 'djangoTagBlock,djangoStatement'
   autocmd FileType * call s:abbrev()
 augroup END " }}}1
 
@@ -93,7 +97,7 @@ if !exists('g:endwise_no_mappings')
     " imap <CR> <CR><Plug>DiscretionaryEnd
     imap <C-X><CR> <CR><Plug>AlwaysEnd
     " imap <CR>      <CR><Plug>DiscretionaryEnd
-    imap <silent> <CR> <C-R>=pumvisible() ? "\<lt>c-y>" : <SID>preproc()<CR><Plug>DiscretionaryEnd
+    imap <CR> <C-R>=pumvisible() ? "\<lt>c-y>" : <SID>preproc()<CR><Plug>DiscretionaryEnd
   endif
 endif
 

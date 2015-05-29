@@ -897,14 +897,12 @@ function! s:app_ruby_script_command(cmd) dict abort
   endif
 endfunction
 
-function! s:app_prepare_rails_command(cmd) dict abort
-  if self.has_path('.zeus.sock') && a:cmd =~# '^\%(console\|dbconsole\|destroy\|generate\|server\|runner\)\>'
-    return 'zeus '.a:cmd
-  elseif self.has_path('bin/rails')
+function! s:app_static_rails_command(cmd) dict abort
+  if self.has_path('bin/rails')
     let cmd = 'bin/rails '.a:cmd
   elseif self.has_path('script/rails')
     let cmd = 'script/rails '.a:cmd
-  elseif self.has_path('script/' . matchstr(a:cmd, '\w\+'))
+  elseif a:cmd =~# '^\S' && self.has_path('script/' . matchstr(a:cmd, '\S\+'))
     let cmd = 'script/'.a:cmd
   elseif self.has('bundler')
     return 'bundle exec rails ' . a:cmd
@@ -912,6 +910,13 @@ function! s:app_prepare_rails_command(cmd) dict abort
     return 'rails '.a:cmd
   endif
   return self.ruby_script_command(cmd)
+endfunction
+
+function! s:app_prepare_rails_command(cmd) dict abort
+  if self.has_path('.zeus.sock') && a:cmd =~# '^\%(console\|dbconsole\|destroy\|generate\|server\|runner\)\>'
+    return 'zeus '.a:cmd
+  endif
+  return self.static_rails_command(a:cmd)
 endfunction
 
 function! s:app_start_rails_command(cmd, ...) dict abort
@@ -967,7 +972,7 @@ function! s:app_eval(ruby,...) dict abort
   return v:shell_error == 0 ? results : def
 endfunction
 
-call s:add_methods('app', ['ruby_command','ruby_script_command','prepare_rails_command','execute_rails_command','start_rails_command','eval'])
+call s:add_methods('app', ['ruby_command','ruby_script_command','static_rails_command','prepare_rails_command','execute_rails_command','start_rails_command','eval'])
 
 " }}}1
 " Commands {{{1
@@ -2503,7 +2508,6 @@ endfunction
 
 function! s:BufProjectionCommands()
   call s:addfilecmds("view")
-  call s:addfilecmds("controller")
   call s:addfilecmds("migration")
   call s:addfilecmds("schema")
   call s:addfilecmds("layout")
@@ -2973,28 +2977,6 @@ function! s:layoutEdit(cmd,...)
     let file = "app/views/layouts/application.html.erb"
   endif
   return s:edit(a:cmd,s:sub(file,'^/',''))
-endfunction
-
-function! s:controllerEdit(cmd,...)
-  let suffix = '.rb'
-  let template = "class %S < ApplicationController\nend"
-  if a:0 == 0
-    let controller = s:controller(1)
-    if rails#buffer().type_name() =~# '^view\%(-layout\|-partial\)\@!'
-      let jump = '#'.expand('%:t:r')
-    else
-      let jump = ''
-    endif
-  else
-    let controller = matchstr(a:1, '[^#!]*')
-    let jump = matchstr(a:1, '[#!].*')
-  endif
-  if rails#app().has_file("app/controllers/".controller."_controller.rb") || !rails#app().has_file("app/controllers/".controller.".rb")
-    let template = "class %SController < ApplicationController\nend"
-    let suffix = "_controller".suffix
-  endif
-  return rails#buffer().open_command(a:cmd, controller . jump, 'controller',
-        \ [{'template': template, 'pattern': 'app/controllers/*'.suffix}])
 endfunction
 
 function! s:stylesheetEdit(cmd,...)
@@ -4550,6 +4532,10 @@ endfunction
 let s:default_projections = {
       \ 'config/environments/*.rb': {'type': 'environment'},
       \ 'config/application.rb': {'type': 'environment'},
+      \ 'app/controllers/*_controller.rb': {
+      \   'type': 'controller',
+      \   'template': ["module {camelcase|capitalize|colons}Controller < ApplicationController", "end"],
+      \   'affinity': 'controller'},
       \ 'app/helpers/*_helper.rb': {
       \   'type': 'helper',
       \   'template': ["module {camelcase|capitalize|colons}Helper", "end"],
@@ -4880,10 +4866,6 @@ function! rails#buffer_setup() abort
     else
       call self.setvar('dispatch', ':Rake')
     endif
-  endif
-
-  if empty(self.getvar('start'))
-    call self.setvar('start', ':Server')
   endif
 endfunction
 

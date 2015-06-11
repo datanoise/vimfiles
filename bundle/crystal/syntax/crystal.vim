@@ -270,8 +270,6 @@ syn match crystalLinkAttr "]" contained containedin=crystalLinkAttrRegion displa
 " Special Methods
 if !exists("crystal_no_special_methods")
   syn keyword crystalAccess    public protected private public_class_method private_class_method public_constant private_constant module_function abstract
-  " attr is a common variable name
-  syn match   crystalAttribute "\%(\%(^\|;\)\s*\)\@<=attr\>\(\s*[.=]\)\@!"
   syn keyword crystalAttribute getter setter property
   syn match   crystalControl   "\<\%(exit!\|\%(abort\|at_exit\|exit\|fork\|loop\|trap\)\>[?!]\@!\)"
   syn keyword crystalEval	    eval class_eval instance_eval module_eval

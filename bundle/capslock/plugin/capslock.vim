@@ -1,9 +1,9 @@
 " capslock.vim - Software caps lock
-" Maintainer:   Tim Pope
+" Maintainer:   Tim Pope <https://tpo.pe/>
 " Version:      1.1
 " GetLatestVimScripts: 1725 1 :AutoInstall: capslock.vim
 
-if (exists("g:loaded_capslock") && g:loaded_capslock) || v:version < 700 || &cp
+if exists("g:loaded_capslock") || v:version < 700 || &cp
   finish
 endif
 let g:loaded_capslock = 1
@@ -13,10 +13,11 @@ set cpo&vim
 
 " Code {{{1
 
-function! s:enable(mode,...)
-  if a:mode == 'i' && exists('##InsertCharPre')
+function! s:enable(mode, ...) abort
+  if a:mode == 'i'
     let b:capslock = 1 + a:0
-  else
+  endif
+  if a:mode == 'c' || !exists('##InsertCharPre')
     let i = char2nr('A')
     while i <= char2nr('Z')
         exe a:mode."noremap <buffer>" nr2char(i) nr2char(i+32)
@@ -24,13 +25,15 @@ function! s:enable(mode,...)
         let i = i + 1
     endwhile
   endif
+  let &l:readonly = &l:readonly
   return ''
 endfunction
 
-function! s:disable(mode)
-  if a:mode == 'i' && exists('##InsertCharPre')
+function! s:disable(mode) abort
+  if a:mode == 'i'
     unlet! b:capslock
-  else
+  endif
+  if a:mode == 'c' || !exists('##InsertCharPre')
     let i = char2nr('A')
     while i <= char2nr('Z')
       silent! exe a:mode."unmap <buffer>" nr2char(i)
@@ -38,10 +41,11 @@ function! s:disable(mode)
       let i = i + 1
     endwhile
   endif
+  let &l:readonly = &l:readonly
   return ''
 endfunction
 
-function! s:toggle(mode,...)
+function! s:toggle(mode, ...) abort
   if s:enabled(a:mode)
     return s:disable(a:mode)
   elseif a:0
@@ -51,7 +55,7 @@ function! s:toggle(mode,...)
   endif
 endfunction
 
-function! s:enabled(mode)
+function! s:enabled(mode) abort
   if a:mode == 'i' && exists('##InsertCharPre')
     return get(b:, 'capslock', 0)
   else
@@ -59,62 +63,45 @@ function! s:enabled(mode)
   endif
 endfunction
 
-function! s:exitcallback()
-  if s:enabled('i')
+function! s:exitcallback() abort
+  if s:enabled('i') == 1
     call s:disable('i')
   endif
 endfunction
 
-function! CapsLockStatusline()
-  if mode() == 'c' && s:enabled('c')
-    " This won't actually fire because the statusline is apparently not
-    " updated in command mode
-    return '[(caps)]'
-  elseif s:enabled('i')
-    return '[caps]'
-  else
-    return ''
-  endif
+function! CapsLockStatusline(...) abort
+  return s:enabled('i') ? (a:0 == 1 ? a:1 : '[Caps]') : ''
 endfunction
 
-function! CapsLockSTATUSLINE()
-  if mode() == 'c' && s:enabled('c')
-    return ',(CAPS)'
-  elseif s:enabled('i')
-    return ',CAPS'
-  else
-    return ''
-  endif
-endfunction
-
-if exists('##InsertCharPre')
-  augroup capslock
-    autocmd CursorHold  * call s:exitcallback()
-    autocmd InsertLeave * call s:exitcallback()
+augroup capslock
+  autocmd!
+  autocmd InsertLeave * call s:exitcallback()
+  if exists('##InsertCharPre')
     autocmd InsertCharPre *
           \ if s:enabled('i') |
           \   let v:char = v:char ==# tolower(v:char) ? toupper(v:char) : tolower(v:char) |
           \ endif
-  augroup END
-endif
+  endif
+augroup END
 
 " }}}1
 " Maps {{{1
 
-noremap  <silent> <Plug>CapsLockToggle  :<C-U>call <SID>toggle('i',1)<CR>
-noremap  <silent> <Plug>CapsLockEnable  :<C-U>call <SID>enable('i',1)<CR>
-noremap  <silent> <Plug>CapsLockDisable :<C-U>call <SID>disable('i')<CR>
+nnoremap <silent> <Plug>CapsLockToggle  :<C-U>call <SID>toggle('i',1)<CR>
+nnoremap <silent> <Plug>CapsLockEnable  :<C-U>call <SID>enable('i',1)<CR>
+nnoremap <silent> <Plug>CapsLockDisable :<C-U>call <SID>disable('i')<CR>
 inoremap <silent> <Plug>CapsLockToggle  <C-R>=<SID>toggle('i')<CR>
 inoremap <silent> <Plug>CapsLockEnable  <C-R>=<SID>enable('i')<CR>
 inoremap <silent> <Plug>CapsLockDisable <C-R>=<SID>disable('i')<CR>
 cnoremap <silent> <Plug>CapsLockToggle  <C-R>=<SID>toggle('c')<CR>
 cnoremap <silent> <Plug>CapsLockEnable  <C-R>=<SID>enable('c')<CR>
 cnoremap <silent> <Plug>CapsLockDisable <C-R>=<SID>disable('c')<CR>
-cnoremap <silent>  <SID>CapsLockDisable <C-R>=<SID>disable('c')<CR>
 
-if !hasmapto("<Plug>CapsLockToggle")
-  imap <C-G>c <Plug>CapsLockToggle
+if empty(mapcheck("<C-L>", "i"))
+  imap <C-L> <Plug>CapsLockToggle
 endif
+imap <C-G>c <Plug>CapsLockToggle
+nmap gC <Plug>CapsLockToggle
 
 " }}}1
 

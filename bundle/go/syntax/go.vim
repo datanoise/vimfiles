@@ -77,9 +77,9 @@ syn keyword     goDirective         package import
 syn keyword     goDeclaration       var const type
 syn keyword     goDeclType          struct interface
 
-hi def link     goDirective         Statement
-hi def link     goDeclaration       Keyword
-hi def link     goDeclType          Keyword
+hi def link     goDirective         Declare
+hi def link     goDeclaration       Declare
+hi def link     goDeclType          Declare
 
 " Keywords within functions
 syn keyword     goStatement         defer go goto return break continue fallthrough
@@ -147,7 +147,7 @@ hi def link     goEscapeError       Error
 syn cluster     goStringGroup       contains=goEscapeOctal,goEscapeC,goEscapeX,goEscapeU,goEscapeBigU,goEscapeError
 syn region      goString            start=+"+ skip=+\\\\\|\\"+ end=+"+ contains=@goStringGroup
 syn region      goRawString         start=+`+ end=+`+
-syn match       goFormatSpecifier   /%[#0\-\ \+\*]*[vTtbcdoqxXUeEfgGsp]/ contained containedin=goString
+syn match       goFormatSpecifier   /%[-#0 +]*\%(\*\|\d\+\)\=\%(\.\%(\*\|\d\+\)\)*[vTtbcdoqxXUeEfgGsp]/ contained containedin=goString
 
 hi def link     goString            String
 hi def link     goRawString         String

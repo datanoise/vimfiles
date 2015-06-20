@@ -14,8 +14,12 @@ let g:loaded_syntastic_crystal_crystal_checker = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
+if !exists('g:syntastic_crystal_compiler')
+  let g:syntastic_crystal_compiler = 'crystal'
+endif
+
 function! SyntaxCheckers_crystal_crystal_GetLocList() dict
-  let makeprg = self.makeprgBuild({ 'args': 'run --no-build --no-color' })
+  let makeprg = self.makeprgBuild({ 'exe': g:syntastic_crystal_compiler, 'args': 'run --no-build --no-color' })
 
   let errorformat =
     \ '%ESyntax error in line %l: %m,'.

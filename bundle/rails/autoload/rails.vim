@@ -123,7 +123,11 @@ function! s:app_path(...) dict
 endfunction
 
 function! s:app_has_path(path) dict
-  return getftime(self.path(a:path)) != -1
+  if a:path =~# '\%(^\|:\)[\/]'
+    return getftime(a:path) != -1
+  else
+    return getftime(self.path(a:path)) != -1
+  endif
 endfunction
 
 function! s:app_has_file(file) dict
@@ -902,7 +906,7 @@ function! s:app_static_rails_command(cmd) dict abort
     let cmd = 'bin/rails '.a:cmd
   elseif self.has_path('script/rails')
     let cmd = 'script/rails '.a:cmd
-  elseif a:cmd =~# '^\S' && self.has_path('script/' . matchstr(a:cmd, '\S\+'))
+  elseif !self.has('rails3')
     let cmd = 'script/'.a:cmd
   elseif self.has('bundler')
     return 'bundle exec rails ' . a:cmd
@@ -1677,9 +1681,9 @@ function! s:app_script_command(bang,...) dict
     let [mp, efm, cc] = [&l:mp, &l:efm, get(b:, 'current_compiler', '')]
     try
       compiler rails
-      let &l:makeprg = self.prepare_rails_command(str)
+      let &l:makeprg = self.prepare_rails_command('$*')
       let &l:errorformat .= ',chdir '.escape(self.path(), ',')
-      call s:make(a:bang, '')
+      call s:make(a:bang, str)
     finally
       let [&l:mp, &l:efm, b:current_compiler] = [mp, efm, cc]
       if empty(cc) | unlet! b:current_compiler | endif
@@ -2099,12 +2103,11 @@ function! s:Complete_cd(ArgLead, CmdLine, CursorPos)
   return filter(all,'s:startswith(v:val,a:ArgLead)')
 endfunction
 
-function! RailsIncludeexpr()
-  " Is this foolproof?
-  if mode() =~ '[iR]' || expand("<cfile>") != v:fname
-    return s:RailsIncludefind(v:fname)
+function! rails#includeexpr(fname) abort
+  if mode() =~# '[iR]' || expand('<cfile>') !=# a:fname
+    return s:RailsIncludefind(a:fname)
   else
-    return s:RailsIncludefind(v:fname,1)
+    return s:RailsIncludefind(a:fname, 1)
   endif
 endfunction
 
@@ -2151,6 +2154,11 @@ function! s:findfromview(func,repl)
   return s:findit('\s*\%(<%\)\==\=\s*\<\%('.a:func.'\)\s*(\=\s*[@:'."'".'"]\(\f\+\)\>['."'".'"]\=\s*\%(%>\s*\)\=',a:repl)
 endfunction
 
+function! s:findasset(path, ext, pre, post) abort
+  let asset = rails#app().resolve_asset(a:path, a:ext)
+  return len(asset) ? asset : rails#app().path(a:pre . a:path . a:post)
+endfunction
+
 function! s:RailsFind()
   if filereadable(expand("<cfile>"))
     return expand("<cfile>")
@@ -2163,10 +2171,12 @@ function! s:RailsFind()
   let ssext = ['css', 'css.*', 'scss', 'sass']
   if buffer.type_name('stylesheet')
     let res = s:findit('^\s*\*=\s*require\s*["'']\=\([^"'' ]*\)', '\1')
-    if res != ""|return rails#app().resolve_asset(res, ssext)."\napp/assets/stylesheets/".res.".css"|endif
+    if !empty(res)
+      return s:findasset(res, ssext, "app/assets/stylesheets/", ".css")
+    endif
     let res = s:findit('^\s*@import\s*\%(url(\)\=["'']\=\([^"'' ]*\)', '\1')
     if res != ""
-      let base = expand('%:h')
+      let base = expand('%:p:h')
       let rel = s:sub(res, '\ze[^/]*$', '_')
       for ext in ['css', 'css.scss', 'css.sass', 'scss', 'sass']
         for name in [res.'.'.ext, res.'.'.ext.'.erb', rel.'.'.ext, rel.'.'.ext.'.erb']
@@ -2186,7 +2196,9 @@ function! s:RailsFind()
   let jsext = ['js', 'js.*', 'jst', 'jst.*', 'coffee']
   if buffer.type_name('javascript')
     let res = s:findit('^\s*//=\s*require\s*["'']\=\([^"'' ]*\)', '\1')
-    if res != ""|return rails#app().resolve_asset(res, jsext)."\napp/assets/javascripts/".res.".js"|endif
+    if !empty(res)
+      return s:findasset(res, jsext, "app/assets/javascript/", ".js")
+    endif
     return expand("<cfile>")
   endif
 
@@ -2282,17 +2294,17 @@ function! s:RailsFind()
 
   let res = s:findfromview('image[_-]\%(\|path\|url\)\|\%(path\|url\)_to_image','\1')
   if res != ""
-    return rails#app().resolve_asset(res)."\npublic/images/".res
+    return s:findasset(res, [], 'public/images/', '')
   endif
 
   let res = s:findfromview('stylesheet[_-]\%(link_tag\|path\|url\)\|\%(path\|url\)_to_stylesheet','\1')
   if res != ""
-    return rails#app().resolve_asset(res, ssext)."\npublic/stylesheets/".res.".css"
+    return s:findasset(res, ssext, 'public/stylesheets/', '.css')
   endif
 
   let res = s:sub(s:findfromview('javascript_\%(include_tag\|path\|url\)\|\%(path\|url\)_to_javascript','\1'),'/defaults>','/application')
   if res != ""
-    return rails#app().resolve_asset(res, jsext)."\npublic/javascripts/".res.".js"
+    return s:findasset(res, jsext, 'public/javascripts/', '.js')
   endif
 
   if buffer.type_name('controller', 'mailer')
@@ -2326,9 +2338,17 @@ endfunction
 
 function! s:app_route_names() dict abort
   if self.cache.needs("named_routes")
+    let cd = exists('*haslocaldir') && haslocaldir() ? 'lcd' : 'cd'
+    let cwd = getcwd()
     let routes = {}
-    for line in split(system(self.rake_command().' routes'), "\n")
-      let matches = matchlist(line, '^ \+\(\w\+\) \+\(\u\+\) \+\(\S\+\) \+\(\w\+#\w\+\)')
+    try
+      execute cd fnameescape(rails#app().path())
+      let output = system(self.rake_command().' routes')
+    finally
+      execute cd fnameescape(cwd)
+    endtry
+    for line in split(output, "\n")
+      let matches = matchlist(line, '^ \+\(\l\w*\) \{-\}\(\u*\) \+\(\S\+\) \+\(\w\+#\w\+\)')
       if !empty(matches)
         let [_, name, method, path, handler; __] = matches
         let routes[name] = {'method': method, 'path': path, 'handler': handler}
@@ -2860,7 +2880,6 @@ let s:view_types = split('rhtml,erb,rxml,builder,rjs,haml',',')
 
 function! s:readable_resolve_view(name, ...) dict abort
   let name = a:name
-  let pre = 'app/views/'
   if name !~# '/'
     let controller = self.controller_name(1)
     let found = ''
@@ -2875,13 +2894,13 @@ function! s:readable_resolve_view(name, ...) dict abort
   if name =~# '/' && !self.app().has_path(fnamemodify('app/views/'.name, ':h'))
     return ''
   elseif name =~# '\.[[:alnum:]_+]\+\.\w\+$' || name =~# '\.\%('.join(s:view_types,'\|').'\)$'
-    return pre.name
+    return self.app().path('app/views/'.name)
   else
     for format in ['.'.self.format(a:0 ? a:1 : 0), '']
       let found = self.app().relglob('', 'app/views/'.name.format.'.*')
       call sort(found, s:function('s:dotcmp'))
       if !empty(found)
-        return found[0]
+        return self.app().path(found[0])
       endif
     endfor
   endif
@@ -2908,9 +2927,9 @@ function! s:app_resolve_asset(name, ...) dict abort
   let path = join(map(paths, 'escape(v:val, " ,")'), ',')
   let exact = findfile(a:name, path)
   if !empty(exact)
-    return exact
+    return fnamemodify(exact, ':p')
   endif
-  if a:0
+  if a:0 && !empty(a:1)
     for candidate in map(split(globpath(path, a:name . '.*'), "\n"), 'fnamemodify(v:val, ":p")')
       for ext in a:1
         let pat = '[\\/]'.s:gsub(s:gsub(a:name.'.'.ext, '\.', '\\.'), '\*', '.*') . '\%(\.erb\)\=$'
@@ -2926,7 +2945,7 @@ endfunction
 call s:add_methods('readable', ['resolve_view', 'resolve_layout'])
 call s:add_methods('app', ['resolve_asset'])
 
-function! s:findview(name)
+function! s:findview(name) abort
   return rails#buffer().resolve_view(a:name, line('.'))
 endfunction
 
@@ -3180,7 +3199,7 @@ function! s:findedit(cmd,files,...) abort
   if len(files) == 1
     let file = files[0]
   else
-    let file = get(filter(copy(files),'rails#app().has_file(s:sub(v:val,"#.*|:\\d*$",""))'),0,get(files,0,''))
+    let file = get(filter(copy(files),'rails#app().has_path(s:sub(v:val,"#.*|:\\d*$",""))'),0,get(files,0,''))
   endif
   if file =~ '[#!]\|:\d*\%(:in\)\=$'
     let djump = matchstr(file,'!.*\|#\zs.*\|:\zs\d*\ze\%(:in\)\=$')
@@ -3837,6 +3856,7 @@ function! rails#buffer_syntax()
       if buffer.type_name('db-migration','db-schema')
         syn keyword rubyRailsMigrationMethod create_table change_table drop_table rename_table create_join_table drop_join_table
         syn keyword rubyRailsMigrationMethod add_column rename_column change_column change_column_default change_column_null remove_column remove_columns
+        syn keyword rubyRailsMigrationMethod add_foreign_key remove_foreign_key
         syn keyword rubyRailsMigrationMethod add_timestamps remove_timestamps
         syn keyword rubyRailsMigrationMethod add_reference remove_reference add_belongs_to remove_belongs_to
         syn keyword rubyRailsMigrationMethod add_index remove_index rename_index
@@ -4794,7 +4814,7 @@ function! rails#buffer_setup() abort
   if stridx(&tags,rp.'/tags') == -1
     let &l:tags = rp . '/tags,' . rp . '/tmp/tags,' . &tags
   endif
-  call self.setvar('&includeexpr','RailsIncludeexpr()')
+  call self.setvar('&includeexpr','rails#includeexpr(v:fname)')
   call self.setvar('&suffixesadd', s:sub(self.getvar('&suffixesadd'),'^$','.rb'))
   let ft = self.getvar('&filetype')
   if ft =~# '^ruby\>'

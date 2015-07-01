@@ -146,15 +146,22 @@ let b:undo_ftplugin = "setl fo< inc< inex< sua< def< com< cms< path< tags< kp<"
       \."| if exists('&ofu') && has('ruby') | setl ofu< | endif"
       \."| if has('balloon_eval') && exists('+bexpr') | setl bexpr< | endif"
 
-function! s:silmap(mode, map) abort
+function! s:map(mode, flags, map) abort
   let from = matchstr(a:map, '\S\+')
-  if empty(maparg(from, a:mode))
-    exe a:mode.'noremap <silent><buffer><script>' a:map
-    let b:undo_ftplugin .= '| '.a:mode.'unmap <buffer> '.from
+  if empty(mapcheck(from, a:mode))
+    exe a:mode.'map' '<buffer>'.(a:0 ? a:1 : '') a:map
+    let b:undo_ftplugin .= '|sil! '.a:mode.'unmap <buffer> '.from
   endif
 endfunction
 
+cmap <buffer><script><expr> <Plug><cword> substitute(RubyCursorIdentifier(),'^$',"\022\027",'')
+cmap <buffer><script><expr> <Plug><cfile> substitute(RubyCursorFile(),'^$',"\022\006",'')
+let b:undo_ftplugin .= "| sil! cunmap <buffer> <Plug><cword>| sil! cunmap <buffer> <Plug><cfile>"
+
 if !exists("g:no_plugin_maps") && !exists("g:no_ruby_maps")
+  nmap <buffer><script> <SID>:  :<C-U>
+  nmap <buffer><script> <SID>c: :<C-U><C-R>=v:count ? v:count : ''<CR>
+
   nnoremap <silent> <buffer> [m :<C-U>call <SID>searchsyn('\<def\>','rubyDefine','b','n')<CR>
   nnoremap <silent> <buffer> ]m :<C-U>call <SID>searchsyn('\<def\>','rubyDefine','','n')<CR>
   nnoremap <silent> <buffer> [M :<C-U>call <SID>searchsyn('\<end\>','rubyDefine','b','n')<CR>
@@ -197,33 +204,24 @@ if !exists("g:no_plugin_maps") && !exists("g:no_ruby_maps")
           \."| sil! exe 'xunmap <buffer> iM' | sil! exe 'xunmap <buffer> aM'"
   endif
 
-  cnoremap <buffer> <SID>foldopen <Bar>if &foldopen =~# 'tag'<Bar>exe 'norm! zv'<Bar>endif
-  call s:silmap('n', '<C-]>       :<C-U>exe  v:count1."tag <C-R>=RubyCursorIdentifier()<CR>"<SID>foldopen<CR>')
-  call s:silmap('n', 'g<C-]>      :<C-U>exe         "tjump <C-R>=RubyCursorIdentifier()<CR>"<SID>foldopen<CR>')
-  call s:silmap('n', 'g]          :<C-U>exe       "tselect <C-R>=RubyCursorIdentifier()<CR>"<SID>foldopen<CR>')
-  call s:silmap('n', '<C-W>]      :<C-U>exe v:count1."stag <C-R>=RubyCursorIdentifier()<CR>"<SID>foldopen<CR>')
-  call s:silmap('n', '<C-W><C-]>  :<C-U>exe v:count1."stag <C-R>=RubyCursorIdentifier()<CR>"<SID>foldopen<CR>')
-  call s:silmap('n', '<C-W>g<C-]> :<C-U>exe        "stjump <C-R>=RubyCursorIdentifier()<CR>"<SID>foldopen<CR>')
-  call s:silmap('n', '<C-W>g]     :<C-U>exe      "stselect <C-R>=RubyCursorIdentifier()<CR>"<SID>foldopen<CR>')
-  call s:silmap('n', '<C-W>}      :<C-U>exe          "ptag <C-R>=RubyCursorIdentifier()<CR>"<CR>')
-  call s:silmap('n', '<C-W>g}     :<C-U>exe        "ptjump <C-R>=RubyCursorIdentifier()<CR>"<CR>')
+  call s:map('c', '', '<C-R><C-W> <Plug><cword>')
+  call s:map('c', '', '<C-R><C-F> <Plug><cfile>')
 
-  " By using findfile() rather than gf's normal behavior, we prevent
-  " erroneously editing a directory.
-  call s:silmap('n', 'gf         :<C-U>exe <SID>gf(v:count1,"gf","edit")<CR>')
-  call s:silmap('n', '<C-W>f     :<C-U>exe <SID>gf(v:count1,"\<Lt>C-W>f","split")<CR>')
-  call s:silmap('n', '<C-W><C-F> :<C-U>exe <SID>gf(v:count1,"\<Lt>C-W>\<Lt>C-F>","split")<CR>')
-  call s:silmap('n', '<C-W>gf    :<C-U>exe <SID>gf(v:count1,"\<Lt>C-W>gf","tabedit")<CR>')
-endif
+  nmap <buffer><script><expr> <SID>tagzv &foldopen =~# 'tag' ? 'zv' : ''
+  call s:map('n', '<silent>', '<C-]>         <SID>c:tag <Plug><cword><CR><SID>tagzv')
+  call s:map('n', '<silent>', 'g<C-]>       <SID>:tjump <Plug><cword><CR><SID>tagzv')
+  call s:map('n', '<silent>', 'g]         <SID>:tselect <Plug><cword><CR><SID>tagzv')
+  call s:map('n', '<silent>', '<C-W>]       <SID>c:stag <Plug><cword><CR><SID>tagzv')
+  call s:map('n', '<silent>', '<C-W><C-]>   <SID>c:stag <Plug><cword><CR><SID>tagzv')
+  call s:map('n', '<silent>', '<C-W>g<C-]> <SID>:stjump <Plug><cword><CR><SID>tagzv')
+  call s:map('n', '<silent>', '<C-W>g]   <SID>:stselect <Plug><cword><CR><SID>tagzv')
+  call s:map('n', '<silent>', '<C-W>}       <SID>c:ptag <Plug><cword><CR>')
+  call s:map('n', '<silent>', '<C-W>g}     <SID>:ptjump <Plug><cword><CR>')
 
-if !exists('b:cfile_fn')
-  let b:cfile_fn = 'RubyCursorFile'
-  let b:undo_ftplugin = b:undo_ftplugin . '| unlet! b:cfile_fn'
-endif
-
-if !exists('b:cword_fn')
-  let b:cword_fn = 'RubyCursorIdentifier'
-  let b:undo_ftplugin = b:undo_ftplugin . '| unlet! b:cword_fn'
+  call s:map('n', '<silent>', 'gf           <SID>c:find <Plug><cfile><CR>')
+  call s:map('n', '<silent>', '<C-W>f      <SID>c:sfind <Plug><cfile><CR>')
+  call s:map('n', '<silent>', '<C-W><C-F>  <SID>c:sfind <Plug><cfile><CR>')
+  call s:map('n', '<silent>', '<C-W>gf   <SID>c:tabfind <Plug><cfile><CR>')
 endif
 
 let &cpo = s:cpo_save
@@ -352,38 +350,37 @@ function! RubyCursorIdentifier() abort
 endfunction
 
 function! RubyCursorFile() abort
-  let cfile = expand('<cfile>')
-  let ext = getline('.') =~# '^\s*load\>' ? '' : '.rb'
-  if getline('.') =~# '^\s*require_relative\s*\(["'']\).*\1\s*$'
-    return expand('%:p:h') . '/' . matchstr(getline('.'),'\(["'']\)\zs.\{-\}\ze\1') . '.rb'
-  elseif getline('.') =~# '^\s*\%(require[( ]\|load[( ]\|autoload[( ]:\w\+,\)\s*\%(::\)\=File\.expand_path(\(["'']\)\.\./.*\1,\s*__FILE__)\s*$'
-    let target = matchstr(getline('.'),'\(["'']\)\.\./\zs.\{-\}\ze\1')
-    return expand('%:p:h') . '/' . target . ext
-  elseif getline('.') =~# '^\s*\%(require \|load \|autoload :\w\+,\)\s*\(["'']\).*\1\s*$'
-    return matchstr(getline('.'),'\(["'']\)\zs.\{-\}\ze\1') . ext
-  elseif s:synname() ==# 'rubyConstant'
-    let cfile = substitute(cfile,'\.\w\+$','','')
+  let isfname = &isfname
+  try
+    set isfname+=:
+    let cfile = expand('<cfile>')
+  finally
+    let isfname = &isfname
+  endtry
+  let pre = matchstr(strpart(getline('.'), 0, col('.')-1), '.*\f\@<!')
+  let post = matchstr(strpart(getline('.'), col('.')), '\f\@!.*')
+  let ext = getline('.') =~# '^\s*\%(require\|autoload\)\>' ? '.rb' : ''
+  if s:synname() ==# 'rubyConstant'
+    let cfile = substitute(cfile,'\.\w\+[?!=]\=$','','')
     let cfile = substitute(cfile,'::','/','g')
     let cfile = substitute(cfile,'\(\u\+\)\(\u\l\)','\1_\2', 'g')
     let cfile = substitute(cfile,'\(\l\|\d\)\(\u\)','\1_\2', 'g')
     return tolower(cfile) . '.rb'
+  elseif getline('.') =~# '^\s*require_relative\s*\(["'']\).*\1\s*$'
+    let cfile = expand('%:p:h') . '/' . matchstr(getline('.'),'\(["'']\)\zs.\{-\}\ze\1') . '.rb'
+  elseif getline('.') =~# '^\s*\%(require[( ]\|load[( ]\|autoload[( ]:\w\+,\)\s*\%(::\)\=File\.expand_path(\(["'']\)\.\./.*\1,\s*__FILE__)\s*$'
+    let target = matchstr(getline('.'),'\(["'']\)\.\.\zs/.\{-\}\ze\1')
+    let cfile = expand('%:p:h') . target . ext
+  elseif getline('.') =~# '^\s*\%(require \|load \|autoload :\w\+,\)\s*\(["'']\).*\1\s*$'
+    return fnameescape(matchstr(getline('.'),'\(["'']\)\zs.\{-\}\ze\1') . ext)
+  elseif pre.post =~# '\<File.expand_path[( ].*[''"]\{2\}, *__FILE__\>' && cfile =~# '^\.\.'
+    let cfile = expand('%:p:h') . strpart(cfile, 2)
   else
-    return cfile
+    return substitute(cfile, '\C\v^(.*):(\d+)%(:in)=$', '+\2 \1', '')
   endif
-endfunction
-
-function! s:gf(count,map,edit) abort
-  let target = RubyCursorFile()
-  if target =~# '/$'
-    let found = finddir(target, &path, a:count)
-  else
-    let found = findfile(target, &path, a:count)
-  endif
-  if found ==# ''
-    return 'norm! '.a:count.a:map
-  else
-    return a:edit.' '.fnameescape(found)
-  endif
+  let cwdpat = '^\M' . substitute(getcwd(), '[\/]', '\\[\\/]', 'g').'\ze\[\/]'
+  let cfile = substitute(cfile, cwdpat, '.', '')
+  return fnameescape(cfile)
 endfunction
 
 "

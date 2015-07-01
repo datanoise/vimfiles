@@ -77,9 +77,9 @@ syn keyword     goDirective         package import
 syn keyword     goDeclaration       var const type
 syn keyword     goDeclType          struct interface
 
-hi def link     goDirective         Declare
-hi def link     goDeclaration       Declare
-hi def link     goDeclType          Declare
+hi def link     goDirective         Define
+hi def link     goDeclaration       Define
+hi def link     goDeclType          Define
 
 " Keywords within functions
 syn keyword     goStatement         defer go goto return break continue fallthrough

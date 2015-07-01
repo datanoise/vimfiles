@@ -579,6 +579,9 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_coffee_lint_options = '-f ~/.coffeelint.json'
 let g:syntastic_error_symbol='✗'
 let g:syntastic_warning_symbol='⚠'
+let g:syntastic_go_checkers = ["gofmt"]
+let g:syntastic_enable_elixir_checker = 1
+let g:syntastic_elixir_checkers = ['elixir']
 
 " A settings {{{2
 let g:alternateExtensions_h = "c,cpp,cxx,cc,CC,m,mm"
@@ -670,6 +673,5 @@ let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
 let $RUBYOPT = '' " I don't want any surprises like 'noexec' gem
 let g:netrw_liststyle = 3
 let g:racer_cmd = 'racer'
-let g:syntastic_crystal_compiler = '~/Rep/crystal/bin/crystal'
 
 " }}}

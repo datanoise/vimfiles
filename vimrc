@@ -576,6 +576,7 @@ let g:syntastic_stl_format          = '[ERR:%F(%t)]'
 let g:syntastic_javascript_jsl_conf = "~/.jsl.conf"
 let g:syntastic_echo_current_error  = 1
 let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_coffee_checkers = ['coffeelint']
 let g:syntastic_coffee_lint_options = '-f ~/.coffeelint.json'
 let g:syntastic_error_symbol='✗'
 let g:syntastic_warning_symbol='⚠'

@@ -3213,7 +3213,6 @@ function! s:Alternate(cmd,line1,line2,count,...) abort
       let file = rails#buffer().alternate(a:count)
     endif
     let has_path = !empty(file) && rails#app().has_path(file)
-    let g:confirm = histget(':', -1)
     let confirm = &confirm || (histget(':', -1) =~# '\%(^\||\)\s*conf\%[irm]\>')
     if confirm && !a:count && !has_path
       let projected = rails#buffer().projected_with_raw('alternate')
@@ -3237,7 +3236,7 @@ function! s:Alternate(cmd,line1,line2,count,...) abort
       call s:error("No alternate file defined")
       return ''
     else
-      return s:find(a:cmd, './' . file)
+      return s:find(a:cmd, rails#app().path(file))
     endif
   endif
 endfunction

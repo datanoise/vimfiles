@@ -155,6 +155,7 @@ textobj-line-bugs	textobj-line.txt	/*textobj-line-bugs*
 textobj-line-changelog	textobj-line.txt	/*textobj-line-changelog*
 textobj-line-changelog-0.0.0	textobj-line.txt	/*textobj-line-changelog-0.0.0*
 textobj-line-changelog-0.0.1	textobj-line.txt	/*textobj-line-changelog-0.0.1*
+textobj-line-changelog-0.0.2	textobj-line.txt	/*textobj-line-changelog-0.0.2*
 textobj-line-contents	textobj-line.txt	/*textobj-line-contents*
 textobj-line-default-key-mappings	textobj-line.txt	/*textobj-line-default-key-mappings*
 textobj-line-interface	textobj-line.txt	/*textobj-line-interface*

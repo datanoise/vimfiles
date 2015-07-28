@@ -1,12 +1,3 @@
-" Vim indent file
-" Language:		Crystal
-" Maintainer:		Nikolai Weibull <now at bitwi.se>
-" URL:			https://github.com/vim-ruby/vim-ruby
-" Release Coordinator:	Doug Kearns <dougkearns@gmail.com>
-
-" 0. Initialization {{{1
-" =================
-
 " Only load this indent file when no other was loaded.
 if exists("b:did_indent")
   finish
@@ -56,30 +47,34 @@ let s:skip_expr =
 
 " Regex used for words that, at the start of a line, add a level of indent.
 let s:crystal_indent_keywords =
-      \ '^\s*\zs\<\%(module\|class\|struct\|enum\|if\|for' .
-      \   '\|while\|until\|else\|elsif\|case\|when\|unless\|begin\|ensure\|rescue\|macro' .
-      \   '\|\%(public\|protected\|private\)\=\s*def\):\@!\>' .
+      \ '^\s*\zs\<\%(module\|class\|struct\|enum\|if\|for\|macro' .
+      \ '\|while\|until\|else\|elsif\|case\|when\|unless\|begin\|ensure\|rescue\|lib' .
+      \ '\|\%(public\|protected\|private\)\=\s*def\):\@!\>' .
       \ '\|\%([=,*/%+-]\|<<\|>>\|:\s\)\s*\zs' .
-      \    '\<\%(if\|for\|while\|until\|case\|unless\|begin\):\@!\>'
+      \ '\<\%(if\|for\|while\|until\|case\|unless\|begin\):\@!\>' .
+      \ '\|{%\s*\<\%(if\|for\|while\|until\|lib\|case\|unless\|begin\|else\|elsif\|when\)'
 
 " Regex used for words that, at the start of a line, remove a level of indent.
 let s:crystal_deindent_keywords =
-      \ '^\s*\zs\<\%(ensure\|else\|rescue\|elsif\|when\|end\):\@!\>'
+      \ '^\s*\zs\<\%(ensure\|else\|rescue\|elsif\|when\|end\):\@!\>' .
+      \ '\|{%\s*\<\%(ensure\|else\|rescue\|elsif\|when\|end\)\>'
 
 " Regex that defines the start-match for the 'end' keyword.
-"let s:end_start_regex = '\%(^\|[^.]\)\<\%(module\|class\|def\|if\|for\|while\|until\|case\|unless\|begin\|do\)\>'
 " TODO: the do here should be restricted somewhat (only at end of line)?
 let s:end_start_regex =
+      \ '{%\s*\<\%(if\|for\|while\|until\|unless\|begin\|lib\)\>\|' .
       \ '\C\%(^\s*\|[=,*/%+\-|;{]\|<<\|>>\|:\s\)\s*\zs' .
-      \ '\<\%(module\|class\|struct\|enum\|if\|for\|while\|until\|case\|unless\|begin\|macro' .
-      \   '\|\%(public\|protected\|private\)\=\s*def\):\@!\>' .
+      \ '\<\%(module\|class\|enum\|struct\|macro\|if\|for\|while\|until\|case\|unless\|begin\|lib' .
+      \ '\|\%(public\|protected\|private\)\=\s*def\):\@!\>' .
       \ '\|\%(^\|[^.:@$]\)\@<=\<do:\@!\>'
 
 " Regex that defines the middle-match for the 'end' keyword.
-let s:end_middle_regex = '\<\%(ensure\|else\|\%(\%(^\|;\)\s*\)\@<=\<rescue:\@!\>\|when\|elsif\):\@!\>'
+let s:end_middle_regex =
+      \ '{%\s*\<\%(ensure\|else\|when\|elsif\)\>\s*%}\|' .
+      \ '\<\%(ensure\|else\|\%(\%(^\|;\)\s*\)\@<=\<rescue:\@!\>\|when\|elsif\):\@!\>'
 
 " Regex that defines the end-match for the 'end' keyword.
-let s:end_end_regex = '\%(^\|[^.:@$]\)\@<=\<end:\@!\>'
+let s:end_end_regex = '\%(^\|[^.:@$]\)\@<=\<end:\@!\>\|{%\s*\<\%(end\)\>'
 
 " Expression used for searchpair() call for finding match for 'end' keyword.
 let s:end_skip_expr = s:skip_expr .
@@ -351,7 +346,7 @@ function! s:FindContainingClass()
 
   while searchpair(s:end_start_regex, s:end_middle_regex, s:end_end_regex, 'bW',
         \ s:end_skip_expr) > 0
-    if expand('<cword>') =~# '\<class\|module\|struct\|enum\>'
+    if expand('<cword>') =~# '\<class\|module\>'
       let found_lnum = line('.')
       call setpos('.', saved_position)
       return found_lnum
@@ -418,7 +413,7 @@ function GetCrystalIndent(...)
       if line[col-1]==')' && col('.') != col('$') - 1
         let ind = virtcol('.') - 1
       else
-	let ind = indent(line('.'))
+        let ind = indent(s:GetMSL(line('.')))
       endif
     endif
     return ind

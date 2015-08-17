@@ -521,6 +521,22 @@ let g:tagbar_type_scala = {
         \ 'case class' : 'r'
     \ },
 \ }
+let g:tagbar_type_elixir = {
+    \ 'ctagstype' : 'elixir',
+    \ 'kinds'     : [
+        \ 'f:functions',
+        \ 'c:callbacks',
+        \ 'd:delegates',
+        \ 'e:exceptions',
+        \ 'i:implementations',
+        \ 'a:macros',
+        \ 'o:operators',
+        \ 'm:modules',
+        \ 'p:protocols',
+        \ 'r:records'
+    \ ],
+    \ 'sro' : "."
+\ }
 
 " NERD_tree settings {{{2
 let g:NERDTreeQuitOnOpen  = 1 " Close NERDTree when a file is opened

@@ -82,6 +82,7 @@ let s:types = {
 	\ 'vim'    : '%svim%svim%savf',
 	\ 'yacc'   : '%syacc%syacc%sl',
 	\ 'coffee' : '%scoffee%scoffee%sm',
+	\ 'elixir' : '%selixir%selixir%sf',
 	\ 'crystal': '%scrystal%scrystal%sf'
 	\ }
 

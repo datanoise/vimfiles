@@ -2,7 +2,7 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-09-17.
-" @Last Change: 2015-06-19.
+" @Last Change: 2015-08-11.
 " @Revision:    1760
 
 " call tlog#Log('Load: '. expand('<sfile>')) " vimtlib-sfile
@@ -421,6 +421,7 @@ call tcomment#DefineType('erlang',           '%%%% %s'          )
 call tcomment#DefineType('eruby',            '<%%# %s'          )
 call tcomment#DefineType('esmtprc',          '# %s'             )
 call tcomment#DefineType('expect',           '# %s'             )
+call tcomment#DefineType('fish',             '# %s'             )
 call tcomment#DefineType('form',             {'commentstring': '* %s', 'col': 1})
 call tcomment#DefineType('fstab',            '# %s'             )
 call tcomment#DefineType('gitconfig',        '# %s'             )
@@ -451,7 +452,7 @@ call tcomment#DefineType('ini',              '; %s'             ) " php ini (/et
 call tcomment#DefineType('io',               '// %s'            )
 call tcomment#DefineType('jade',             '// %s'            )
 call tcomment#DefineType('jasmine',          '# %s'             )
-call tcomment#DefineType('java',             tcomment#GetLineC())
+call tcomment#DefineType('java',             tcomment#GetLineC('// %s'))
 call tcomment#DefineType('java_block',       g:tcommentBlockC   )
 call tcomment#DefineType('java_doc_block',   g:tcommentBlockC2  )
 call tcomment#DefineType('java_inline',      g:tcommentInlineC  )
@@ -514,6 +515,7 @@ call tcomment#DefineType('rc',               '// %s'            )
 call tcomment#DefineType('readline',         '# %s'             )
 call tcomment#DefineType('remind',           {'commentstring_rx': '\[;#] %s', 'commentstring': '# %s'})
 call tcomment#DefineType('resolv',           '# %s'             )
+call tcomment#DefineType('robot', {'col': 1, 'commentstring': '# %s'})
 call tcomment#DefineType('robots',           '# %s'             )
 call tcomment#DefineType('rust',             tcomment#GetLineC('// %s'))
 call tcomment#DefineType('rust_block',       g:tcommentBlockC   )
@@ -806,7 +808,9 @@ function! tcomment#Comment(beg, end, ...)
     endif
     " TLogVAR comment_anyway, comment_mode, mode_extra, comment_do
     " " echom "DBG" string(s:cdef)
-    " let cbeg = get(s:cdef, 'col', cbeg)
+    if comment_do ==# 'c'
+        let cbeg = get(s:cdef, 'col', cbeg)
+    endif
     " TLogVAR cbeg
     " go
     " TLogVAR comment_mode

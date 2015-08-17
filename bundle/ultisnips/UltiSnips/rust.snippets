@@ -18,6 +18,12 @@ fn ${1:function_name}(${2})${3/..*/ -> /}${3} {
 }
 endsnippet
 
+snippet pfn "A public function, optionally with arguments and return type."
+pub fn ${1:function_name}(${2})${3/..*/ -> /}${3} {
+	${VISUAL}${0}
+}
+endsnippet
+
 snippet arg "Function Arguments" i
 ${1:a}: ${2:T}${3:, arg}
 endsnippet
@@ -33,15 +39,15 @@ ${1:move }|${2}| {
 endsnippet
 
 snippet pri "print!(..)" b
-print!("${1}"${2});
+print!("${1}"${2/..*/, /}${2});
 endsnippet
 
-snippet pln "println!(..)" i
-println!("${1}"${2});
+snippet pln "println!(..)" b
+println!("${1}"${2/..*/, /}${2});
 endsnippet
 
 snippet fmt "format!(..)"
-format!("${1}"${2});
+format!("${1}"${2/..*/, /}${2});
 endsnippet
 
 snippet macro "macro_rules!" b
@@ -59,7 +65,7 @@ mod ${1:`!p snip.rv = snip.basename.lower() or "name"`} {
 endsnippet
 
 snippet for "for .. in .." b
-for ${1:i} in ${2:${3:0us}..${4:10}} {
+for ${1:i} in ${2} {
 	${VISUAL}${0}
 }
 endsnippet
@@ -95,16 +101,6 @@ snippet impl "Struct/Trait implementation" b
 impl ${1:Type/Trait}${2: for ${3:Type}} {
 	${0}
 }
-endsnippet
-
-snippet main "main function" b
-fn main() {
-	${0}
-}
-endsnippet
-
-snippet feat "feature" b
-#![feature(${0})]
 endsnippet
 
 # vim:ft=snippets:

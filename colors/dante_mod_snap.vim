@@ -24,7 +24,7 @@ elseif has("gui_running") || (&t_Co == 256 && (&term ==# "xterm" || &term =~# "^
     CSAHi Pl94afd7001c008700N term=NONE cterm=NONE ctermbg=34 ctermfg=148 gui=NONE guibg=#008700 guifg=#afd700
     CSAHi Pl7587d7ff18005f87N term=NONE cterm=NONE ctermbg=31 ctermfg=153 gui=NONE guibg=#005f87 guifg=#87d7ff
     CSAHi Pl94afd700ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=148 gui=NONE guibg=#444444 guifg=#afd700
-    CSAHi elixirSymbol term=NONE cterm=NONE ctermbg=bg ctermfg=210 gui=NONE guibg=bg guifg=#ff6050
+    CSAHi elixirAtom term=NONE cterm=NONE ctermbg=bg ctermfg=210 gui=NONE guibg=bg guifg=#ff6050
     CSAHi EasyMotionTargetDefault term=NONE cterm=bold ctermbg=bg ctermfg=196 gui=bold guibg=bg guifg=#ff0000
     CSAHi EasyMotionShadeDefault term=NONE cterm=NONE ctermbg=bg ctermfg=240 gui=NONE guibg=bg guifg=#585858
     CSAHi Pl62875fd7e7ffffffN term=NONE cterm=NONE ctermbg=231 ctermfg=140 gui=NONE guibg=#ffffff guifg=#875fd7
@@ -170,7 +170,7 @@ elseif has("gui_running") || (&t_Co == 256 && (&term ==# "xterm" || &term =~# "^
     CSAHi Pl94afd7001c008700N term=NONE cterm=NONE ctermbg=34 ctermfg=190 gui=NONE guibg=#008700 guifg=#afd700
     CSAHi Pl7587d7ff18005f87N term=NONE cterm=NONE ctermbg=31 ctermfg=159 gui=NONE guibg=#005f87 guifg=#87d7ff
     CSAHi Pl94afd700ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=190 gui=NONE guibg=#444444 guifg=#afd700
-    CSAHi elixirSymbol term=NONE cterm=NONE ctermbg=bg ctermfg=210 gui=NONE guibg=bg guifg=#ff6050
+    CSAHi elixirAtom term=NONE cterm=NONE ctermbg=bg ctermfg=210 gui=NONE guibg=bg guifg=#ff6050
     CSAHi EasyMotionTargetDefault term=NONE cterm=bold ctermbg=bg ctermfg=196 gui=bold guibg=bg guifg=#ff0000
     CSAHi EasyMotionShadeDefault term=NONE cterm=NONE ctermbg=bg ctermfg=240 gui=NONE guibg=bg guifg=#585858
     CSAHi Pl62875fd7e7ffffffN term=NONE cterm=NONE ctermbg=255 ctermfg=141 gui=NONE guibg=#ffffff guifg=#875fd7
@@ -316,7 +316,7 @@ elseif has("gui_running") || &t_Co == 256
     CSAHi Pl94afd7001c008700N term=NONE cterm=NONE ctermbg=28 ctermfg=148 gui=NONE guibg=#008700 guifg=#afd700
     CSAHi Pl7587d7ff18005f87N term=NONE cterm=NONE ctermbg=24 ctermfg=117 gui=NONE guibg=#005f87 guifg=#87d7ff
     CSAHi Pl94afd700ee444444N term=NONE cterm=NONE ctermbg=238 ctermfg=148 gui=NONE guibg=#444444 guifg=#afd700
-    CSAHi elixirSymbol term=NONE cterm=NONE ctermbg=bg ctermfg=203 gui=NONE guibg=bg guifg=#ff6050
+    CSAHi elixirAtom term=NONE cterm=NONE ctermbg=bg ctermfg=203 gui=NONE guibg=bg guifg=#ff6050
     CSAHi EasyMotionTargetDefault term=NONE cterm=bold ctermbg=bg ctermfg=196 gui=bold guibg=bg guifg=#ff0000
     CSAHi EasyMotionShadeDefault term=NONE cterm=NONE ctermbg=bg ctermfg=240 gui=NONE guibg=bg guifg=#585858
     CSAHi Pl62875fd7e7ffffffN term=NONE cterm=NONE ctermbg=231 ctermfg=98 gui=NONE guibg=#ffffff guifg=#875fd7
@@ -462,7 +462,7 @@ elseif has("gui_running") || &t_Co == 88
     CSAHi Pl94afd7001c008700N term=NONE cterm=NONE ctermbg=20 ctermfg=56 gui=NONE guibg=#008700 guifg=#afd700
     CSAHi Pl7587d7ff18005f87N term=NONE cterm=NONE ctermbg=21 ctermfg=43 gui=NONE guibg=#005f87 guifg=#87d7ff
     CSAHi Pl94afd700ee444444N term=NONE cterm=NONE ctermbg=80 ctermfg=56 gui=NONE guibg=#444444 guifg=#afd700
-    CSAHi elixirSymbol term=NONE cterm=NONE ctermbg=bg ctermfg=69 gui=NONE guibg=bg guifg=#ff6050
+    CSAHi elixirAtom term=NONE cterm=NONE ctermbg=bg ctermfg=69 gui=NONE guibg=bg guifg=#ff6050
     CSAHi EasyMotionTargetDefault term=NONE cterm=bold ctermbg=bg ctermfg=64 gui=bold guibg=bg guifg=#ff0000
     CSAHi EasyMotionShadeDefault term=NONE cterm=NONE ctermbg=bg ctermfg=81 gui=NONE guibg=bg guifg=#585858
     CSAHi Pl62875fd7e7ffffffN term=NONE cterm=NONE ctermbg=79 ctermfg=38 gui=NONE guibg=#ffffff guifg=#875fd7

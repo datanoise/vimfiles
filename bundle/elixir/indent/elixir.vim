@@ -12,6 +12,7 @@ setlocal nosmartindent
 
 setlocal indentexpr=GetElixirIndent()
 setlocal indentkeys+=0=end,0=else,0=match,0=elsif,0=catch,0=after,0=rescue
+setlocal indentkeys+=0},0),0]
 
 if exists("*GetElixirIndent")
   finish
@@ -41,7 +42,7 @@ function! GetElixirIndent()
     return 0
   endif
 
-  if getline(v:lnum) =~ '^\s*[)}\]]'
+  if getline(v:lnum) =~ '^\s*[)}\]]' && getline(lnum) !~ '[({\[]\s*$'
     " this line closed a block
     let ind -= &sw
   endif

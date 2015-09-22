@@ -115,6 +115,18 @@ function! GetElixirIndent()
     if current_line =~ s:arrow
       let ind += &sw
     endif
+
+    if last_line =~ ',\s*$'
+      let comma_last_pos = search('\(,\s*\)\@<!$', 'bWn')
+      if comma_last_pos == 0
+        let comma_last_pos += 1
+      endif
+      let ind = indent(comma_last_pos) + &sw
+    else
+      if getline(prevnonblank(lnum - 1)) =~ ',\s*$'
+        let ind = indent(lnum) - &sw
+      endif
+    endif
   endif
 
   return ind

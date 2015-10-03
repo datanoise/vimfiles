@@ -2946,7 +2946,7 @@ function! s:viewEdit(cmd, ...) abort
     endif
     return s:edit(a:cmd, file.djump)
   else
-    return s:open(a:cmd, view)
+    return s:open(a:cmd, 'app/views/'.view)
   endif
 endfunction
 
@@ -4502,6 +4502,7 @@ let s:default_projections = {
       \  "*.yml": {"alternate": ["{}.example.yml", "{}.yml"]},
       \  "*.yml.example": {"alternate": "{}.yml"},
       \  "Gemfile": {"alternate": "Gemfile.lock", "type": "lib"},
+      \  "Gemfile.lock": {"alternate": "Gemfile"},
       \  "README": {"alternate": "config/database.yml"},
       \  "README.*": {"alternate": "config/database.yml"},
       \  "Rakefile": {"type": "task"},
@@ -4553,6 +4554,7 @@ let s:default_projections = {
       \    "type": "initializer"
       \  },
       \  "gems.rb": {"alternate": "gems.locked", "type": "lib"},
+      \  "gems.locked": {"alternate": "gems.rb"},
       \  "lib/*.rb": {"type": "lib"},
       \  "lib/tasks/*.rake": {"type": "task"}
       \}

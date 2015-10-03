@@ -220,7 +220,7 @@ endfunction
 
 augroup fugitive
   autocmd!
-  autocmd BufNewFile,BufReadPost * call fugitive#detect(expand('<amatch>:p'))
+  autocmd BufNewFile,BufReadPost * call fugitive#detect(expand('%:p'))
   autocmd FileType           netrw call fugitive#detect(expand('%:p'))
   autocmd User NERDTreeInit,NERDTreeNewRoot call fugitive#detect(b:NERDTreeRoot.path.str())
   autocmd VimEnter * if expand('<amatch>')==''|call fugitive#detect(getcwd())|endif
@@ -404,6 +404,11 @@ function! s:repo_superglob(base) dict abort
     if a:base !~# '^/'
       let heads = ["HEAD","ORIG_HEAD","FETCH_HEAD","MERGE_HEAD"]
       let heads += sort(split(s:repo().git_chomp("rev-parse","--symbolic","--branches","--tags","--remotes"),"\n"))
+      " Add any stashes.
+      if filereadable(s:repo().dir('refs/stash'))
+        let heads += ["stash"]
+        let heads += sort(split(s:repo().git_chomp("stash","list","--pretty=format:%gd"),"\n"))
+      endif
       call filter(heads,'v:val[ 0 : strlen(a:base)-1 ] ==# a:base')
       let results += heads
     endif
@@ -2070,15 +2075,17 @@ function! s:BlameJump(suffix) abort
   if winnr > 0
     exe bufnr.'bdelete'
   endif
-  execute 'Gblame '.args
-  execute lnum
-  let delta = line('.') - line('w0') - offset
-  if delta > 0
-    execute 'normal! '.delta."\<C-E>"
-  elseif delta < 0
-    execute 'normal! '.(-delta)."\<C-Y>"
+  if exists(':Gblame')
+    execute 'Gblame '.args
+    execute lnum
+    let delta = line('.') - line('w0') - offset
+    if delta > 0
+      execute 'normal! '.delta."\<C-E>"
+    elseif delta < 0
+      execute 'normal! '.(-delta)."\<C-Y>"
+    endif
+    syncbind
   endif
-  syncbind
   return ''
 endfunction
 
@@ -2391,11 +2398,15 @@ function! s:ReplaceCmd(cmd,...) abort
         let prefix = 'env GIT_INDEX_FILE='.s:shellesc(a:1).' '
       endif
     endif
+    let redir = ' > '.tmp
+    if &shellpipe =~ '2>&1'
+      let redir .= ' 2>&1'
+    endif
     if s:winshell()
       let cmd_escape_char = &shellxquote == '(' ?  '^' : '^^^'
-      call system('cmd /c "'.prefix.s:gsub(a:cmd,'[<>]', cmd_escape_char.'&').' > '.tmp.'"')
+      call system('cmd /c "'.prefix.s:gsub(a:cmd,'[<>]', cmd_escape_char.'&').redir.'"')
     else
-      call system(' ('.prefix.a:cmd.' > '.tmp.') ')
+      call system(' ('.prefix.a:cmd.redir.') ')
     endif
   finally
     if exists('old_index')

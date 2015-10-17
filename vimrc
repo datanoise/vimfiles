@@ -673,5 +673,6 @@ let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
 let $RUBYOPT = '' " I don't want any surprises like 'noexec' gem
 let g:netrw_liststyle = 3
 let g:racer_cmd = 'racer'
+let g:tcommentGuessFileType_eelixir = 'html'
 
 " }}}

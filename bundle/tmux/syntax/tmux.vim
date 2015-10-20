@@ -61,7 +61,7 @@ syn keyword tmuxOptsSet mouse-select-pane message-limit quiet escape-time
 syn keyword tmuxOptsSet pane-active-border-bg pane-active-border-fg
 syn keyword tmuxOptsSet pane-border-bg pane-border-fg mouse-select-window
 syn keyword tmuxOptsSet display-panes-active-colour alternate-screen
-syn keyword tmuxOptsSet detach-on-destroy pane-base-index
+syn keyword tmuxOptsSet detach-on-destroy pane-base-index renumber-windows
 syn keyword tmuxOptsSet mouse-utf8 mouse
 
 syn keyword tmuxOptsSetw monitor-activity aggressive-resize force-width

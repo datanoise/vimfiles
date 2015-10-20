@@ -204,7 +204,7 @@ set imsearch=0
 au ColorScheme * hi! link ColorColumn StatusLine
 set bg=dark
 set noshowmode
-colo dante_mod_snap
+colo dante_mod_snap2
 " colo solarized
 if exists('&mc')
   au BufNew,BufRead * set mc=81
@@ -539,11 +539,12 @@ let g:tagbar_type_elixir = {
 \ }
 
 " NERD_tree settings {{{2
-let g:NERDTreeQuitOnOpen  = 1 " Close NERDTree when a file is opened
-let g:NERDTreeHijackNetrw = 0
-let g:NERDTreeIgnore      = ['\.o$', '\~$', '\.class$']
-let g:NERDTreeMinimalUI   = 0
-let g:NERDTreeDirArrows   = 1
+let g:NERDTreeQuitOnOpen        = 1 " Close NERDTree when a file is opened
+let g:NERDTreeHijackNetrw       = 0
+let g:NERDTreeIgnore            = ['\.o$', '\~$', '\.class$']
+let g:NERDTreeMinimalUI         = 0
+let g:NERDTreeDirArrows         = 1
+let g:NERDTreeRespectWildIgnore = 1
 nnoremap <silent> <leader>f  :exec 'NERDTree' . expand('%:p:h')<CR>
 
 " rubycomplete plugin settings {{{2

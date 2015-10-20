@@ -14,11 +14,11 @@ endif
 let g:colors_name = "dante_mod"
 
 " General colors
-hi Normal   ctermfg=gray guifg=peachpuff3 guibg=#141414
-hi Conceal  ctermfg=gray guifg=#252525 guibg=#141414
+hi Normal   ctermfg=gray guifg=peachpuff3 guibg=black
+hi Conceal  ctermfg=gray guifg=#252525 guibg=black
 hi Directory    term=bold ctermfg=blue guifg=royalblue
 hi ErrorMsg term=standout ctermfg=white ctermbg=red guifg=white guibg=red3
-hi NonText  term=bold ctermfg=darkgray guibg=#141414 guifg=gray20
+hi NonText  term=bold ctermfg=darkgray guibg=black guifg=gray20
 hi SpecialKey   term=bold ctermfg=darkgray guifg=gray30
 hi LineNr   term=underline ctermfg=darkgray guifg=ivory4 guibg=gray4
 hi IncSearch    term=reverse cterm=reverse gui=reverse,bold guifg=darkgoldenrod2
@@ -34,11 +34,11 @@ hi Folded   term=standout ctermfg=blue ctermbg=darkgray guifg=royalblue1 guibg=#
 hi FoldColumn   term=standout ctermfg=blue ctermbg=gray guifg=royalblue3 guibg=black
 hi DiffAdd      guifg=#ffffff       guibg=#126493       gui=NONE
             \   ctermfg=white       ctermbg=darkblue    cterm=NONE
-hi DiffChange   guifg=royalblue4       guibg=#141414       gui=NONE
+hi DiffChange   guifg=royalblue4       guibg=black       gui=NONE
             \   ctermfg=black       ctermbg=darkmagenta cterm=NONE
 hi DiffDelete   guifg=#000000       guibg=#000000       gui=NONE
             \   ctermfg=black       ctermbg=red         cterm=NONE
-hi DiffText     guifg=#976398       guibg=#141414       gui=NONE
+hi DiffText     guifg=#976398       guibg=black       gui=NONE
             \   ctermfg=white       ctermbg=green       cterm=NONE
 hi Cursor   guifg=bg guibg=fg
 hi lCursor  guifg=bg guibg=fg

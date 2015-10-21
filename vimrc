@@ -4,7 +4,7 @@
 " ------------------------------------------------------------------------------
 runtime! macros/matchit.vim
 set nocompatible      " We're running Vim, not Vi!
-let g:pathogen_disabled = ['bundler']
+let g:pathogen_disabled = ['bundler', 'ultisnips']
 if $GOPATH == ""
   call add(g:pathogen_disabled, "go")
 endif
@@ -597,18 +597,20 @@ let g:ctrlp_buftag_types = {
       \ 'rust'   : '--language-force=Rust --Rust-types=fti',
       \ 'scala'  : '--language-force=scala --scala-types=ctTm'
       \  }
-" if executable('ag')
-"   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-"   let g:ctrlp_user_command =
-"     \ 'ag %s --files-with-matches -g "" --ignore "\.git$\|\.hg$\|\.svn$"'
-"
-"   " ag is fast enough that CtrlP doesn't need to cache
-"   let g:ctrlp_use_caching = 0
-" else
+if executable('ag') && !exists("&macmeta")
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let s:ignored = ['.git', '.hg', '.svn', '.gif', '.jpg', '.jpeg', '.png']
+  let s:ignored_pattern = join(map(s:ignored, '"\\" . v:val . "$\\|"'), "")
+  let g:ctrlp_user_command =
+    \ 'ag %s --files-with-matches -g "" --ignore "' . s:ignored_pattern . '"'
+
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
+else
   " Fall back to using git ls-files if Ag is not available
   let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$'
   let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others']
-" endif
+endif
 
 nnoremap <silent> <leader>m :CtrlPCurWD<CR>
 nnoremap <silent> <leader>r :CtrlPRoot<CR>
@@ -662,9 +664,30 @@ let g:go_snippet_engine = ''
 
 " airline settings {{{2
 let g:airline_theme='serene'
-let g:airline#extensions#whitespace#enabled=0
-" let g:airline#extensions#tagbar#enabled=0
-let g:airline_extensions = ['branch', 'tabline']
+let g:airline#extensions#whitespace#enabled = 0
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_idx_mode = 1
+let g:airline#extensions#tabline#formatter = 'unique_tail'
+nmap <leader>1 <Plug>AirlineSelectTab1
+nmap <leader>2 <Plug>AirlineSelectTab2
+nmap <leader>3 <Plug>AirlineSelectTab3
+nmap <leader>4 <Plug>AirlineSelectTab4
+nmap <leader>5 <Plug>AirlineSelectTab5
+nmap <leader>6 <Plug>AirlineSelectTab6
+nmap <leader>7 <Plug>AirlineSelectTab7
+nmap <leader>8 <Plug>AirlineSelectTab8
+nmap <leader>9 <Plug>AirlineSelectTab9
+" let g:airline_powerline_fonts=1
+" if !exists('g:airline_symbols')
+"   let g:airline_symbols = {}
+" endif
+" let g:airline_left_sep = '⮀'
+" let g:airline_left_alt_sep = '⮁'
+" let g:airline_right_sep = '⮂'
+" let g:airline_right_alt_sep = '⮃'
+" let g:airline_symbols.branch = '⭠'
+" let g:airline_symbols.readonly = '⭤'
+" let g:airline_symbols.linenr = '⭡'
 
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"

@@ -664,6 +664,7 @@ let g:go_snippet_engine = ''
 let g:airline_theme='serene'
 let g:airline#extensions#whitespace#enabled=0
 " let g:airline#extensions#tagbar#enabled=0
+let g:airline_extensions = ['branch', 'tabline']
 
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"

@@ -214,6 +214,7 @@ function! s:crend(always)
   else
     let endpat = '\w\@<!'.substitute('\w\+', '.*', b:endwise_addition, '').'\w\@!'
   endif
+  " elixir gets out of sync so we try to sync here
   call synID(1,1,1)
   if a:always
     return y

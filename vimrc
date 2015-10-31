@@ -659,6 +659,8 @@ let g:UltiSnipsSnippetDirectories = ['UltiSnips']
 " go settings {{{2
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
+let g:go_highlight_functions=0
+let g:go_highlight_methods=1
 let g:go_auto_type_info = 0
 let g:go_snippet_engine = ''
 
@@ -677,17 +679,6 @@ nmap <silent> <leader>6 <Plug>AirlineSelectTab6
 nmap <silent> <leader>7 <Plug>AirlineSelectTab7
 nmap <silent> <leader>8 <Plug>AirlineSelectTab8
 nmap <silent> <leader>9 <Plug>AirlineSelectTab9
-" let g:airline_powerline_fonts=1
-" if !exists('g:airline_symbols')
-"   let g:airline_symbols = {}
-" endif
-" let g:airline_left_sep = '⮀'
-" let g:airline_left_alt_sep = '⮁'
-" let g:airline_right_sep = '⮂'
-" let g:airline_right_alt_sep = '⮃'
-" let g:airline_symbols.branch = '⭠'
-" let g:airline_symbols.readonly = '⭤'
-" let g:airline_symbols.linenr = '⭡'
 
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"

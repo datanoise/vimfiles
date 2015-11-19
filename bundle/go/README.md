@@ -26,7 +26,7 @@ disabled/enabled easily.
 * Change or display `GOPATH` with `:GoPath`
 * Create a coverage profile and display annotated source code in browser to see
   which functions are covered with `:GoCoverage`
-* Call `gometalinter`, which is a tool that invokes all possible linters
+* Call `gometalinter` with `:GoMetaLinter`, which invokes all possible linters
   (golint, vet, errcheck, deadcode, etc..) and shows the warnings/errors
 * Lint your code with `:GoLint`
 * Run your code through `:GoVet` to catch static errors
@@ -199,6 +199,14 @@ let g:go_bin_path = expand("~/.gotools")
 let g:go_bin_path = "/home/fatih/.mypath"      "or give absolute path
 ```
 
+## Using with Syntastic
+Sometimes when using both `vim-go` and `syntastic` Vim will start lagging while saving and opening
+files. The following fixes this:
+
+```vim
+let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
+```
 
 ## More info
 

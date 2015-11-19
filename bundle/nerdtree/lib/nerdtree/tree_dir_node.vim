@@ -9,7 +9,7 @@ let g:NERDTreeDirNode = s:TreeDirNode
 "FUNCTION: TreeDirNode.AbsoluteTreeRoot(){{{1
 "class method that returns the highest cached ancestor of the current root
 function! s:TreeDirNode.AbsoluteTreeRoot()
-    let currentNode = b:NERDTreeRoot
+    let currentNode = b:NERDTree.root
     while currentNode.parent != {}
         let currentNode = currentNode.parent
     endwhile
@@ -171,6 +171,12 @@ function! s:TreeDirNode.getChildIndex(path)
     return -1
 endfunction
 
+"FUNCTION: TreeDirNode.getDirChildren() {{{1
+"Get all children that are directories
+function! s:TreeDirNode.getDirChildren()
+    return filter(self.children, 'v:val.path.isDirectory == 1')
+endfunction
+
 "FUNCTION: TreeDirNode.GetSelected() {{{1
 "Returns the current node if it is a dir node, or else returns the current
 "nodes parent
@@ -244,13 +250,9 @@ function! s:TreeDirNode._initChildren(silent)
     for i in files
 
         "filter out the .. and . directories
-        "Note: we must match .. AND ../ cos sometimes the globpath returns
+        "Note: we must match .. AND ../ since sometimes the globpath returns
         "../ for path with strange chars (eg $)
-"        if i !~# '\/\.\.\/\?$' && i !~# '\/\.\/\?$'
-"
-        " Regular expression is too expensive. Use simply string comparison
-        " instead
-        if i[len(i)-3:2] != ".." && i[len(i)-2:2] != ".." && 
+        if i[len(i)-3:2] != ".." && i[len(i)-2:2] != ".." &&
          \ i[len(i)-2:1] != "." && i[len(i)-1] != "."
             "put the next file in a new node and attach it
             try
@@ -356,7 +358,7 @@ endfunction
 "FUNCTION: TreeDirNode._openInNewTab() {{{1
 function! s:TreeDirNode._openInNewTab()
     tabnew
-    call g:NERDTreeCreator.CreatePrimary(self.path.str())
+    call g:NERDTreeCreator.CreateTabTree(self.path.str())
 endfunction
 
 "FUNCTION: TreeDirNode.openRecursively() {{{1
@@ -464,7 +466,10 @@ endfunction
 "FUNCTION: TreeDirNode.reveal(path) {{{1
 "reveal the given path, i.e. cache and open all treenodes needed to display it
 "in the UI
-function! s:TreeDirNode.reveal(path)
+"Returns the revealed node
+function! s:TreeDirNode.reveal(path, ...)
+    let opts = a:0 ? a:1 : {}
+
     if !a:path.isUnder(self.path)
         throw "NERDTree.InvalidArgumentsError: " . a:path.str() . " should be under " . self.path.str()
     endif
@@ -473,9 +478,10 @@ function! s:TreeDirNode.reveal(path)
 
     if self.path.equals(a:path.getParent())
         let n = self.findNode(a:path)
-        call b:NERDTree.render()
-        call n.putCursorHere(1,0)
-        return
+        if has_key(opts, "open")
+            call n.open()
+        endif
+        return n
     endif
 
     let p = a:path
@@ -484,7 +490,7 @@ function! s:TreeDirNode.reveal(path)
     endwhile
 
     let n = self.findNode(p)
-    call n.reveal(a:path)
+    return n.reveal(a:path, opts)
 endfunction
 
 "FUNCTION: TreeDirNode.removeChild(treenode) {{{1

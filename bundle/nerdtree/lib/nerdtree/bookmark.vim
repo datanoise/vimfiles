@@ -87,6 +87,7 @@ function! s:Bookmark.CacheBookmarks(silent)
 
                 let name = substitute(i, '^\(.\{-}\) .*$', '\1', '')
                 let path = substitute(i, '^.\{-} \(.*\)$', '\1', '')
+                let path = fnamemodify(path, ':p')
 
                 try
                     let bookmark = s:Bookmark.New(name, g:NERDTreePath.New(path))
@@ -146,7 +147,7 @@ endfunction
 " searchFromAbsoluteRoot: specifies whether we should search from the current
 " tree root, or the highest cached node
 function! s:Bookmark.getNode(searchFromAbsoluteRoot)
-    let searchRoot = a:searchFromAbsoluteRoot ? g:NERDTreeDirNode.AbsoluteTreeRoot() : b:NERDTreeRoot
+    let searchRoot = a:searchFromAbsoluteRoot ? g:NERDTreeDirNode.AbsoluteTreeRoot() : b:NERDTree.root
     let targetNode = searchRoot.findNode(self.path)
     if empty(targetNode)
         throw "NERDTree.BookmarkedNodeNotFoundError: no node was found for bookmark: " . self.name
@@ -274,9 +275,7 @@ function! s:Bookmark.toRoot()
         catch /^NERDTree.BookmarkedNodeNotFoundError/
             let targetNode = g:NERDTreeFileNode.New(s:Bookmark.BookmarkFor(self.name).path)
         endtry
-        call targetNode.makeRoot()
-        call b:NERDTree.render()
-        call targetNode.putCursorHere(0, 0)
+        call b:NERDTree.changeRoot(targetNode)
     endif
 endfunction
 
@@ -304,7 +303,7 @@ endfunction
 function! s:Bookmark.Write()
     let bookmarkStrings = []
     for i in s:Bookmark.Bookmarks()
-        call add(bookmarkStrings, i.name . ' ' . i.path.str())
+        call add(bookmarkStrings, i.name . ' ' . fnamemodify(i.path.str(), ':~'))
     endfor
 
     "add a blank line before the invalid ones

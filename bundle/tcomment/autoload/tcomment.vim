@@ -2,8 +2,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-09-17.
-" @Last Change: 2015-11-12.
-" @Revision:    1792
+" @Last Change: 2015-12-15.
+" @Revision:    1817
 
 " call tlog#Log('Load: '. expand('<sfile>')) " vimtlib-sfile
 
@@ -422,6 +422,7 @@ call tcomment#DefineType('dustjs',           '{! %s !}'         )
 call tcomment#DefineType('dylan',            '// %s'            )
 call tcomment#DefineType('eiffel',           '-- %s'            )
 call tcomment#DefineType('elixir',           '# %s'             )
+call tcomment#DefineType('elm',              '-- %s'            )
 call tcomment#DefineType('erlang',           '%%%% %s'          )
 call tcomment#DefineType('eruby',            '<%%# %s'          )
 call tcomment#DefineType('esmtprc',          '# %s'             )
@@ -1371,7 +1372,7 @@ function! s:GetCommentDefinition(beg, end, comment_mode, ...)
             endif
             return s:GuessCustomCommentString(filetype, a:comment_mode, cms)
         else
-            let [use_guess_ft, altFiletype] = s:AltFiletype(ft)
+            let [use_guess_ft, altFiletype] = s:AltFiletype(ft, cdef)
             " TLogVAR use_guess_ft, altFiletype
             if use_guess_ft
                 return s:GuessFileType(a:beg, a:end, a:comment_mode, filetype, altFiletype)
@@ -1470,7 +1471,8 @@ function! s:CommentDef(beg, end, checkRx, comment_mode, cbeg, cend)
     else
         if get(s:cdef, 'mixedindent', 1)
             let mdrx = '\V'. s:StartColRx(a:comment_mode, a:cbeg) .'\s\*'
-            let mdrx .= s:StartColRx(a:comment_mode, a:cbeg + 1, 0) .'\s\*'
+            let cbeg1 = a:comment_mode =~? 'i' ? a:cbeg : a:cbeg + 1
+            let mdrx .= s:StartColRx(a:comment_mode, cbeg1, 0) .'\s\*'
         else
             let mdrx = '\V'. s:StartColRx(a:comment_mode, a:cbeg) .'\s\*'
         endif
@@ -1779,7 +1781,7 @@ function! s:Filetype(...) "{{{3
 endf
 
 
-function! s:AltFiletype(filetype) "{{{3
+function! s:AltFiletype(filetype, cdef) "{{{3
     let filetype = empty(a:filetype) ? &filetype : a:filetype
     " TLogVAR a:filetype, filetype
     if g:tcommentGuessFileType || (exists('g:tcommentGuessFileType_'. filetype) 
@@ -1796,7 +1798,12 @@ function! s:AltFiletype(filetype) "{{{3
         " TLogVAR 1, altFiletype
         return [1, altFiletype]
     elseif filetype =~ '^.\{-}\..\+$'
+        " Unfortunately the handling of "sub-filetypes" isn't 
+        " consistent. Some use MAJOR.MINOR, others use MINOR.MAJOR.
         let altFiletype = s:Filetype(filetype, 1)
+        if altFiletype == a:filetype
+            let altFiletype = s:Filetype(filetype, 0)
+        endif
         " TLogVAR 2, altFiletype
         return [1, altFiletype]
     else
@@ -1955,19 +1962,23 @@ function! s:AddModeExtra(comment_mode, extra, beg, end) "{{{3
     else
         let extra = substitute(a:extra, '\C[IR]', '', 'g')
     endif
-    let comment_mode = a:comment_mode
-    if extra =~# 'B'
-        let comment_mode = substitute(comment_mode, '\c[gir]', '', 'g')
+    if empty(extra)
+        return a:comment_mode
+    else
+        let comment_mode = a:comment_mode
+        if extra =~# 'B'
+            let comment_mode = substitute(comment_mode, '\c[gir]', '', 'g')
+        endif
+        if extra =~# '[IR]'
+            let comment_mode = substitute(comment_mode, '\c[gb]', '', 'g')
+        endif
+        if extra =~# '[BLIRK]' && comment_mode =~# 'G'
+            let comment_mode = substitute(comment_mode, '\c[G]', '', 'g')
+        endif
+        let rv = substitute(comment_mode, '\c['. extra .']', '', 'g') . extra
+        " TLogVAR a:comment_mode, a:extra, comment_mode, extra, rv
+        return rv
     endif
-    if extra =~# '[IR]'
-        let comment_mode = substitute(comment_mode, '\c[gb]', '', 'g')
-    endif
-    if extra =~# '[BLIRK]' && comment_mode =~# 'G'
-        let comment_mode = substitute(comment_mode, '\c[G]', '', 'g')
-    endif
-    let rv = comment_mode . extra
-    " TLogVAR a:comment_mode, a:extra, comment_mode, extra, rv
-    return rv
 endf
 
 

@@ -16,15 +16,10 @@ augroup endwise " {{{1
         \ let b:endwise_words = 'function,do,then' |
         \ let b:endwise_pattern = '^\s*\zs\%(\%(local\s\+\)\=function\)\>\%(.*\<end\>\)\@!\|\<\%(then\|do\)\ze\s*$' |
         \ let b:endwise_syngroups = 'luaFunction,luaStatement,luaCond'
-  " autocmd FileType elixir
-  "       \ let b:endwise_addition = 'end' |
-  "       \ let b:endwise_words = 'do,fn' |
-  "       \ let b:endwise_pattern = '.*[^.:@$]\zs\<\%(do\(:\)\@!\|fn\)\>\ze\%(.*[^.:@$]\<end\>\)\@!' |
-  "       \ let b:endwise_syngroups = 'elixirKeyword'
   autocmd FileType elixir
         \ let b:endwise_addition = 'end' |
         \ let b:endwise_words = 'do,fn' |
-        \ let b:endwise_pattern = '.*[^.:@$]\zs\<\%(do\(:\)\@!\|fn\)\>\ze' |
+        \ let b:endwise_pattern = '.*[^.:@$]\zs\<\%(do\(:\)\@!\|fn\)\>\ze\%(.*[^.:@$]\<end\>\)\@!' |
         \ let b:endwise_syngroups = 'elixirKeyword'
   autocmd FileType ruby
         \ let b:endwise_addition = 'end' |
@@ -50,7 +45,7 @@ augroup endwise " {{{1
         \ let b:endwise_addition = '\=submatch(0)=="augroup" ? submatch(0) . " END" : "end" . submatch(0)' |
         \ let b:endwise_words = 'fu,fun,func,function,wh,while,if,for,try,au,augroup' |
         \ let b:endwise_syngroups = 'vimFuncKey,vimNotFunc,vimCommand,vimAugroupKey'
-  autocmd FileType c,cpp,xdefaults
+  autocmd FileType c,cpp,xdefaults,haskell
         \ let b:endwise_addition = '#endif' |
         \ let b:endwise_words = 'if,ifdef,ifndef' |
         \ let b:endwise_pattern = '^\s*#\%(if\|ifdef\|ifndef\)\>' |
@@ -123,7 +118,7 @@ if !exists('g:endwise_no_mappings')
     " imap <CR> <CR><Plug>DiscretionaryEnd
     imap <C-X><CR> <CR><Plug>AlwaysEnd
     " imap <CR>      <CR><Plug>DiscretionaryEnd
-    imap <silent> <CR> <C-R>=pumvisible() ? "\<lt>c-y>" : <SID>preproc()<CR><Plug>DiscretionaryEnd
+    imap <CR> <C-R>=pumvisible() ? "\<lt>c-y>" : <SID>preproc()<CR><Plug>DiscretionaryEnd
   endif
   autocmd endwise CmdwinEnter * call s:teardownMappings()
 endif
@@ -214,8 +209,6 @@ function! s:crend(always)
   else
     let endpat = '\w\@<!'.substitute('\w\+', '.*', b:endwise_addition, '').'\w\@!'
   endif
-  " elixir gets out of sync so we try to sync here
-  call synID(1,1,1)
   if a:always
     return y
   elseif col <= 0 || synIDattr(synID(lnum,col,1),'name') !~ '^'.synpat.'$'

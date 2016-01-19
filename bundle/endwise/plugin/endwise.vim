@@ -19,8 +19,8 @@ augroup endwise " {{{1
   autocmd FileType elixir
         \ let b:endwise_addition = 'end' |
         \ let b:endwise_words = 'do,fn' |
-        \ let b:endwise_pattern = '.*[^.:@$]\zs\<\%(do\(:\)\@!\|fn\)\>\ze\%(.*[^.:@$]\<end\>\)\@!' |
-        \ let b:endwise_syngroups = 'elixirKeyword'
+        \ let b:endwise_pattern = '.*[^.:@$]\zs\<\%(do\(:\)\@!\|fn\)\>\ze' |
+        \ let b:endwise_syngroups = 'elixirBlockDefinition,elixirKeyword'
   autocmd FileType ruby
         \ let b:endwise_addition = 'end' |
         \ let b:endwise_words = 'module,class,def,if,unless,case,while,until,begin,do' |
@@ -118,7 +118,7 @@ if !exists('g:endwise_no_mappings')
     " imap <CR> <CR><Plug>DiscretionaryEnd
     imap <C-X><CR> <CR><Plug>AlwaysEnd
     " imap <CR>      <CR><Plug>DiscretionaryEnd
-    imap <CR> <C-R>=pumvisible() ? "\<lt>c-y>" : <SID>preproc()<CR><Plug>DiscretionaryEnd
+    imap <silent> <CR> <C-R>=pumvisible() ? "\<lt>c-y>" : <SID>preproc()<CR><Plug>DiscretionaryEnd
   endif
   autocmd endwise CmdwinEnter * call s:teardownMappings()
 endif

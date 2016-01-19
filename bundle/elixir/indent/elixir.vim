@@ -12,7 +12,7 @@ setlocal nosmartindent
 
 setlocal indentexpr=GetElixirIndent()
 setlocal indentkeys+=0=end,0=else,0=match,0=elsif,0=catch,0=after,0=rescue
-setlocal indentkeys+=0},0),0]
+setlocal indentkeys+=0},0),0],0\|>
 
 if exists("*GetElixirIndent")
   finish
@@ -30,7 +30,7 @@ let s:symbols_end  = '\]\|}'
 let s:arrow        = '^.*->$'
 let s:pipeline     = '^\s*|>.*$'
 
-let s:indent_keywords   = '\<\%(' . s:block_start . '\|' . s:block_middle . '\)$' . '\|' . s:arrow
+let s:indent_keywords   = '\<:\@<!\%(' . s:block_start . '\|' . s:block_middle . '\)$' . '\|' . s:arrow
 let s:deindent_keywords = '^\s*\<\%(' . s:block_end . '\|' . s:block_middle . '\)\>' . '\|' . s:arrow
 
 function! GetElixirIndent()
@@ -87,10 +87,12 @@ function! GetElixirIndent()
     " if line starts with pipeline
     " and last line is an attribution
     " indents pipeline in same level as attribution
-    elseif current_line =~ s:pipeline &&
-          \ last_line =~ '^[^=]\+=.\+$'
+    " elseif current_line =~ s:pipeline &&
+    "       \ last_line =~ '^[^=]\+=.\+$'
+    elseif current_line =~ s:pipeline
       let b:old_ind = ind
-      let ind = float2nr(matchend(last_line, '=\s*[^ ]') / &sw) * &sw
+      " let ind = float2nr(matchend(last_line, '=\s*[^ ]') / &sw) * &sw
+      let ind += &sw
     endif
 
     " if last line starts with pipeline
@@ -102,7 +104,7 @@ function! GetElixirIndent()
     endif
 
     if current_line =~ s:deindent_keywords
-      let bslnum = searchpair( '\<\%(' . s:block_start . '\):\@!\>',
+      let bslnum = searchpair( '\<:\@<!\%(' . s:block_start . '\):\@!\>',
             \ '\<\%(' . s:block_middle . '\):\@!\>\zs',
             \ '\<:\@<!' . s:block_end . '\>\zs',
             \ 'nbW',
@@ -114,18 +116,6 @@ function! GetElixirIndent()
     " indent case statements '->'
     if current_line =~ s:arrow
       let ind += &sw
-    endif
-
-    if last_line =~ ',\s*$'
-      let comma_last_pos = search('\(,\s*\)\@<!$', 'bWn')
-      if comma_last_pos == 0
-        let comma_last_pos += 1
-      endif
-      let ind = indent(comma_last_pos) + &sw
-    else
-      if getline(prevnonblank(lnum - 1)) =~ ',\s*$'
-        let ind = indent(lnum) - &sw
-      endif
     endif
   endif
 

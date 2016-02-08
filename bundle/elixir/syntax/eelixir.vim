@@ -42,10 +42,11 @@ endif
 
 syn include @elixirTop syntax/elixir.vim
 
-syn cluster eelixirRegions contains=eelixirBlock,eelixirExpression,eelixirComment
+syn keyword eelixirKeyword contained do end
+syn cluster eelixirRegions contains=eelixirExpression,eelixirComment
 
-exe 'syn region  eelixirExpression matchgroup=eelixirDelimiter start="<%"  end="%\@<!%>" contains=@elixirTop  containedin=ALLBUT,@eelixirRegions keepend'
-exe 'syn region  eelixirExpression matchgroup=eelixirDelimiter start="<%=" end="%\@<!%>" contains=@elixirTop  containedin=ALLBUT,@eelixirRegions keepend'
+exe 'syn region  eelixirExpression matchgroup=eelixirDelimiter start="<%"  end="%\@<!%>" contains=eelixirKeyword,@elixirTop  containedin=ALLBUT,@eelixirRegions keepend'
+exe 'syn region  eelixirExpression matchgroup=eelixirDelimiter start="<%=" end="%\@<!%>" contains=eelixirKeyword,@elixirTop  containedin=ALLBUT,@eelixirRegions keepend'
 exe 'syn region  eelixirQuote      matchgroup=eelixirDelimiter start="<%%" end="%\@<!%>" contains=@elixirTop  containedin=ALLBUT,@eelixirRegions keepend'
 exe 'syn region  eelixirComment    matchgroup=eelixirDelimiter start="<%#" end="%\@<!%>" contains=elixirTodo,@Spell containedin=ALLBUT,@eelixirRegions keepend'
 
@@ -53,6 +54,7 @@ exe 'syn region  eelixirComment    matchgroup=eelixirDelimiter start="<%#" end="
 
 hi def link eelixirDelimiter PreProc
 hi def link eelixirComment   Comment
+hi def link eelixirKeyword   Keyword
 
 let b:current_syntax = 'eelixir'
 

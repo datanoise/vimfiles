@@ -268,7 +268,7 @@ au FileType xml setlocal foldmethod=syntax
 " go settings
 au FileType go setlocal tabstop=4
 au FileType go setlocal shiftwidth=4
-au FileType go setlocal nolist
+au FileType go,godoc setlocal nolist
 au FileType go setlocal noexpandtab
 " ignore target directory for cargo projects
 au VimEnter *

@@ -30,8 +30,8 @@ let s:symbols_end  = '\]\|}'
 let s:arrow        = '^.*->$'
 let s:pipeline     = '^\s*|>.*$'
 
-let s:indent_keywords   = '\<:\@<!\%(' . s:block_start . '\|' . s:block_middle . '\)$' . '\|' . s:arrow
-let s:deindent_keywords = '^\s*\<\%(' . s:block_end . '\|' . s:block_middle . '\)\>' . '\|' . s:arrow
+let s:indent_keywords   = '\<:\@<!\%(' . s:block_start . '\|' . s:block_middle . '\)$'
+let s:deindent_keywords = '^\s*\<\%(' . s:block_end . '\|' . s:block_middle . '\)\>'
 
 function! GetElixirIndent()
   let lnum = prevnonblank(v:lnum - 1)
@@ -51,8 +51,8 @@ function! GetElixirIndent()
   " Vim is making some mess on parsing the syntax of 'end', it is being
   " recognized as 'elixirString' when should be recognized as 'elixirBlock'.
   " This forces vim to sync the syntax.
-  call synID(v:lnum, 1, 1)
-  syntax sync fromstart
+  " call synID(v:lnum, 1, 1)
+  " syntax sync fromstart
 
   if synIDattr(synID(v:lnum, 1, 1), "name") !~ s:skip_syntax
     let current_line = getline(v:lnum)

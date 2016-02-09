@@ -12,7 +12,7 @@ setlocal nosmartindent
 
 setlocal indentexpr=GetElixirIndent()
 setlocal indentkeys+=0=end,0=else,0=match,0=elsif,0=catch,0=after,0=rescue
-setlocal indentkeys+=0},0),0],0\|>
+setlocal indentkeys+=0},0),0],0=\|>,->
 
 if exists("*GetElixirIndent")
   finish
@@ -27,11 +27,11 @@ let s:block_start  = 'do\|fn'
 let s:block_middle = 'else\|match\|elsif\|catch\|after\|rescue'
 let s:block_end    = 'end'
 let s:symbols_end  = '\]\|}'
-let s:arrow        = '^.*->$'
+let s:arrow        = '\(fn\s\+\)\@<!->$'
 let s:pipeline     = '^\s*|>.*$'
 
-let s:indent_keywords   = '\<:\@<!\%(' . s:block_start . '\|' . s:block_middle . '\)$'
-let s:deindent_keywords = '^\s*\<\%(' . s:block_end . '\|' . s:block_middle . '\)\>'
+let s:indent_keywords   = '\<:\@<!\%(' . s:block_start . '\|' . s:block_middle . '\)$' . '\|' . s:arrow
+let s:deindent_keywords = '^\s*\<\%(' . s:block_end . '\|' . s:block_middle . '\)\>' . '\|' . s:arrow
 
 function! GetElixirIndent()
   let lnum = prevnonblank(v:lnum - 1)
@@ -41,18 +41,6 @@ function! GetElixirIndent()
   if lnum == 0
     return 0
   endif
-
-  if getline(v:lnum) =~ '^\s*[)}\]]' && getline(lnum) !~ '[({\[]\s*$'
-    " this line closed a block
-    let ind -= &sw
-  endif
-  " TODO: Remove these 2 lines
-  " I don't know why, but for the test on spec/indent/lists_spec.rb:24.
-  " Vim is making some mess on parsing the syntax of 'end', it is being
-  " recognized as 'elixirString' when should be recognized as 'elixirBlock'.
-  " This forces vim to sync the syntax.
-  " call synID(v:lnum, 1, 1)
-  " syntax sync fromstart
 
   if synIDattr(synID(v:lnum, 1, 1), "name") !~ s:skip_syntax
     let current_line = getline(v:lnum)
@@ -111,6 +99,8 @@ function! GetElixirIndent()
             \ s:block_skip )
 
       let ind = indent(bslnum)
+    elseif last_line =~ 'fn\s\+->$'
+      let ind += &sw
     endif
 
     " indent case statements '->'

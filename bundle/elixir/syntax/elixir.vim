@@ -93,21 +93,21 @@ syn region elixirArguments start="(" end=")" contained contains=elixirOperator,e
 
 syn match elixirDelimEscape "\\[(<{\[)>}\]/\"'|]" transparent display contained contains=NONE
 
-syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u\z(/\|\"\|'\||\)" end="\z1" skip="\\\\\|\\\z1" contains=elixirDelimEscape fold
-syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u{"                end="}"   skip="\\\\\|\\}"   contains=elixirDelimEscape fold
-syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u<"                end=">"   skip="\\\\\|\\>"   contains=elixirDelimEscape fold
-syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u\["               end="\]"  skip="\\\\\|\\\]"  contains=elixirDelimEscape fold
-syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u("                end=")"   skip="\\\\\|\\)"   contains=elixirDelimEscape fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u\z(/\|\"\|'\||\)" end="\z1\a*" skip="\\\\\|\\\z1" contains=elixirDelimEscape fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u{"                end="}\a*"   skip="\\\\\|\\}"   contains=elixirDelimEscape fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u<"                end=">\a*"   skip="\\\\\|\\>"   contains=elixirDelimEscape fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u\["               end="\]\a*"  skip="\\\\\|\\\]"  contains=elixirDelimEscape fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u("                end=")\a*"   skip="\\\\\|\\)"   contains=elixirDelimEscape fold
 
-syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l\z(/\|\"\|'\||\)" end="\z1" skip="\\\\\|\\\z1"                                                              fold
-syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l{"                end="}"   skip="\\\\\|\\}"   contains=@elixirStringContained,elixirRegexEscapePunctuation fold
-syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l<"                end=">"   skip="\\\\\|\\>"   contains=@elixirStringContained,elixirRegexEscapePunctuation fold
-syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l\["               end="\]"  skip="\\\\\|\\\]"  contains=@elixirStringContained,elixirRegexEscapePunctuation fold
-syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l("                end=")"   skip="\\\\\|\\)"   contains=@elixirStringContained,elixirRegexEscapePunctuation fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l\z(/\|\"\|'\||\)" end="\z1\a*" skip="\\\\\|\\\z1"                                                              fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l{"                end="}\a*"   skip="\\\\\|\\}"   contains=@elixirStringContained,elixirRegexEscapePunctuation fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l<"                end=">\a*"   skip="\\\\\|\\>"   contains=@elixirStringContained,elixirRegexEscapePunctuation fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l\["               end="\]\a*"  skip="\\\\\|\\\]"  contains=@elixirStringContained,elixirRegexEscapePunctuation fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l("                end=")\a*"   skip="\\\\\|\\)"   contains=@elixirStringContained,elixirRegexEscapePunctuation fold
 
 " Sigils surrounded with docString
-syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\a\z("""\)+ end=+^\s*\zs\z1+ skip=+\\"+ fold
-syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\a\z('''\)+ end=+^\s*\zs\z1+ skip=+\\'+ fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\a\z("""\)+ end=+^\s*\zs\z1\a*+ skip=+\\"+ fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\a\z('''\)+ end=+^\s*\zs\z1\a*+ skip=+\\'+ fold
 
 " Defines
 syn keyword elixirDefine              def            nextgroup=elixirFunctionDeclaration    skipwhite skipnl

@@ -30,7 +30,7 @@ let s:symbols_end  = '\]\|}'
 let s:arrow        = '\(fn\s\+\)\@<!->$'
 let s:pipeline     = '^\s*|>.*$'
 
-let s:indent_keywords   = '\<:\@<!\%(' . s:block_start . '\|' . s:block_middle . '\)$' . '\|' . s:arrow
+let s:indent_keywords   = '\<:\@<!\%(' . s:block_start . '\|' . s:block_middle . '\)$' . '\|' . s:arrow . '\|,\s*$\|||\s*$\|&&\s*$\|=\s*$'
 let s:deindent_keywords = '^\s*\<\%(' . s:block_end . '\|' . s:block_middle . '\)\>' . '\|' . s:arrow
 
 function! GetElixirIndent()
@@ -75,12 +75,12 @@ function! GetElixirIndent()
     " if line starts with pipeline
     " and last line is an attribution
     " indents pipeline in same level as attribution
-    " elseif current_line =~ s:pipeline &&
-    "       \ last_line =~ '^[^=]\+=.\+$'
-    elseif current_line =~ s:pipeline
+    elseif current_line =~ s:pipeline &&
+          \ last_line =~ '^[^=]\+=.\+$'
+    " elseif current_line =~ s:pipeline
       let b:old_ind = ind
-      " let ind = float2nr(matchend(last_line, '=\s*[^ ]') / &sw) * &sw
-      let ind += &sw
+      let ind = float2nr(matchend(last_line, '=\s*[^ ]') / &sw) * &sw
+      " let ind += &sw
     endif
 
     " if last line starts with pipeline

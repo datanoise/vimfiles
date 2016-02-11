@@ -11,7 +11,7 @@ syn match elixirComment '#.*' contains=elixirTodo,@Spell
 syn keyword elixirTodo FIXME NOTE TODO OPTIMIZE XXX HACK contained
 
 syn keyword elixirKeyword case when cond for if unless try receive send
-syn keyword elixirKeyword exit raise throw after rescue catch else
+syn keyword elixirKeyword exit raise throw after rescue catch else with
 syn keyword elixirKeyword quote unquote super spawn spawn_link spawn_monitor
 
 " Functions used on guards

@@ -27,11 +27,12 @@ let s:block_start  = 'do\|fn'
 let s:block_middle = 'else\|match\|elsif\|catch\|after\|rescue'
 let s:block_end    = 'end'
 let s:symbols_end  = '\]\|}'
-let s:arrow        = '\(fn\s\+\)\@<!->$'
-let s:pipeline     = '^\s*|>.*$'
+let s:arrow        = '\s*->$'
 
-let s:indent_keywords   = '\<:\@<!\%(' . s:block_start . '\|' . s:block_middle . '\)$' . '\|' . s:arrow . '\|,\s*$\|||\s*$\|&&\s*$\|=\s*$'
-let s:deindent_keywords = '^\s*\<\%(' . s:block_end . '\|' . s:block_middle . '\)\>' . '\|' . s:arrow
+let s:indent_keywords   = '\<:\@<!\%(' . s:block_start . '\|' . s:block_middle . '\)$' . '\|=\s*$'
+let s:deindent_keywords = '^\s*\<\%(' . s:block_end . '\|' . s:block_middle . '\)\>'
+
+let s:partial_indent = ',\s*$\|||\s*$\|&&\s*$'
 
 function! GetElixirIndent()
   let lnum = prevnonblank(v:lnum - 1)
@@ -64,31 +65,23 @@ function! GetElixirIndent()
     if last_line =~ s:indent_keywords
       let ind += &sw
     endif
+    if last_line =~ s:partial_indent
 
-    " if line starts with pipeline
-    " and last line contains pipeline(s)
-    " align them
-    if last_line =~ '|>.*$' &&
-          \ current_line =~ s:pipeline
-      let ind = float2nr(match(last_line, '|>') / &sw) * &sw
+      let pre_last_line = getline(prevnonblank(lnum-1))
+      if pre_last_line !~ s:partial_indent
+        if last_line =~ '^\s*with\>'
+          return ind + 5
+        endif
+        return ind + &sw
+      endif
 
-    " if line starts with pipeline
-    " and last line is an attribution
-    " indents pipeline in same level as attribution
-    elseif current_line =~ s:pipeline &&
-          \ last_line =~ '^[^=]\+=.\+$'
-    " elseif current_line =~ s:pipeline
-      let b:old_ind = ind
-      let ind = float2nr(matchend(last_line, '=\s*[^ ]') / &sw) * &sw
-      " let ind += &sw
-    endif
+      if current_line =~ '^\s*\(do\|else\):'
+        let with_line =  search('^\s*with\>', 'bnW')
+        if with_line > 0
+          return indent(with_line) + &sw
+        endif
+      endif
 
-    " if last line starts with pipeline
-    " and current line doesn't start with pipeline
-    " returns the indentation before the pipeline
-    if last_line =~ s:pipeline &&
-          \ current_line !~ s:pipeline
-      let ind = b:old_ind
     endif
 
     if current_line =~ s:deindent_keywords
@@ -98,14 +91,17 @@ function! GetElixirIndent()
             \ 'nbW',
             \ s:block_skip )
 
-      let ind = indent(bslnum)
-    elseif last_line =~ 'fn\s\+->$'
-      let ind += &sw
+      return indent(bslnum)
     endif
-
-    " indent case statements '->'
-    if current_line =~ s:arrow
-      let ind += &sw
+    "
+    " indent case/cond statements '->'
+    if current_line =~ s:arrow && current_line !~ '\<fn\>'
+      let bline = search('^\s*\<\(cond\|case\)\>', 'bnW')
+      if bline > 0
+        return indent(bline) + &sw
+      end
+    elseif last_line =~ s:arrow " && last_line !~ '\<fn\>'
+      return ind + &sw
     endif
   endif
 

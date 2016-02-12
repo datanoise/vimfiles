@@ -48,8 +48,10 @@ if !b:eruby_nest_level
 endif
 
 if exists("b:eruby_subtype") && b:eruby_subtype != ''
+  let main_syntax = b:eruby_subtype
   exe "runtime! syntax/".b:eruby_subtype.".vim"
   unlet! b:current_syntax
+  let main_syntax = 'eruby'
 endif
 syn include @rubyTop syntax/ruby.vim
 
@@ -67,7 +69,7 @@ hi def link erubyComment		Comment
 
 let b:current_syntax = 'eruby'
 
-if main_syntax == 'eruby'
+if exists('main_syntax') && main_syntax == 'eruby'
   unlet main_syntax
 endif
 

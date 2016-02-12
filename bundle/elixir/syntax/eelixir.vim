@@ -36,8 +36,10 @@ if !exists("b:eelixir_subtype")
 endif
 
 if exists("b:eelixir_subtype") && b:eelixir_subtype != ''
+  let main_syntax = b:eelixir_subtype
   exe "runtime! syntax/".b:eelixir_subtype.".vim"
   unlet! b:current_syntax
+  let main_syntax = 'eelixir'
 endif
 
 syn include @elixirTop syntax/elixir.vim
@@ -45,10 +47,10 @@ syn include @elixirTop syntax/elixir.vim
 syn keyword eelixirKeyword contained do end
 syn cluster eelixirRegions contains=eelixirExpression,eelixirComment
 
-exe 'syn region  eelixirExpression matchgroup=eelixirDelimiter start="<%"  end="%\@<!%>" contains=eelixirKeyword,@elixirTop  containedin=ALLBUT,@eelixirRegions keepend'
-exe 'syn region  eelixirExpression matchgroup=eelixirDelimiter start="<%=" end="%\@<!%>" contains=eelixirKeyword,@elixirTop  containedin=ALLBUT,@eelixirRegions keepend'
-exe 'syn region  eelixirQuote      matchgroup=eelixirDelimiter start="<%%" end="%\@<!%>" contains=@elixirTop  containedin=ALLBUT,@eelixirRegions keepend'
-exe 'syn region  eelixirComment    matchgroup=eelixirDelimiter start="<%#" end="%\@<!%>" contains=elixirTodo,@Spell containedin=ALLBUT,@eelixirRegions keepend'
+syn region  eelixirExpression matchgroup=eelixirDelimiter start="<%"  end="%\@<!%>" contains=eelixirKeyword,@elixirTop  containedin=ALLBUT,@eelixirRegions keepend
+syn region  eelixirExpression matchgroup=eelixirDelimiter start="<%=" end="%\@<!%>" contains=eelixirKeyword,@elixirTop  containedin=ALLBUT,@eelixirRegions keepend
+syn region  eelixirQuote      matchgroup=eelixirDelimiter start="<%%" end="%\@<!%>" contains=@elixirTop  containedin=ALLBUT,@eelixirRegions keepend
+syn region  eelixirComment    matchgroup=eelixirDelimiter start="<%#" end="%\@<!%>" contains=elixirTodo,@Spell containedin=ALLBUT,@eelixirRegions keepend
 
 " Define the default highlighting.
 
@@ -58,6 +60,6 @@ hi def link eelixirKeyword   Keyword
 
 let b:current_syntax = 'eelixir'
 
-if main_syntax == 'eelixir'
+if exists('main_syntax') && main_syntax == 'eelixir'
   unlet main_syntax
 endif

@@ -72,7 +72,7 @@ function! GetElixirIndent()
         if last_line =~ '^\s*with\>'
           return ind + 5
         endif
-        return ind + &sw
+        return ind
       endif
 
       if current_line =~ '^\s*\(do\|else\):'

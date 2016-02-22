@@ -22,8 +22,6 @@ syn keyword elixirKeyword contained is_record is_reference is_tuple is_exception
 syn keyword elixirKeyword contained abs bit_size byte_size div elem hd length
 syn keyword elixirKeyword contained map_size node rem round tl trunc tuple_size
 
-syn match elixirGuard '.*when.*' contains=ALLBUT,@elixirNotTop
-
 syn keyword elixirInclude import require alias use
 
 syn keyword elixirSelf self

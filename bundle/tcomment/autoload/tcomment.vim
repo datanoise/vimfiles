@@ -2,8 +2,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-09-17.
-" @Last Change: 2015-12-15.
-" @Revision:    1817
+" @Last Change: 2016-02-22.
+" @Revision:    1820
 
 " call tlog#Log('Load: '. expand('<sfile>')) " vimtlib-sfile
 
@@ -471,6 +471,7 @@ call tcomment#DefineType('jsx_inline',      '{/* %s */}')
 call tcomment#DefineType('jinja',           '{# %s #}'     )
 call tcomment#DefineType('jinja_block',     "{%% comment %%}%s{%% endcomment %%}\n ")
 call tcomment#DefineType('jproperties',      '# %s'             )
+call tcomment#DefineType('jq',               '# %s'             )
 call tcomment#DefineType('lilypond',         '%% %s'            )
 call tcomment#DefineType('lisp',             '; %s'             )
 call tcomment#DefineType('liquid',           g:tcommentInlineXML)
@@ -826,7 +827,7 @@ function! tcomment#Comment(beg, end, ...)
     endif
     " TLogVAR comment_anyway, comment_mode, mode_extra, comment_do
     " " echom "DBG" string(s:cdef)
-    if comment_do ==# 'c'
+    if comment_do ==# 'c' && comment_mode !~# 'I'
         let cbeg = get(s:cdef, 'col', cbeg)
     endif
     " TLogVAR cbeg

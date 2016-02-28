@@ -4,7 +4,7 @@
 " ------------------------------------------------------------------------------
 runtime! macros/matchit.vim
 set nocompatible      " We're running Vim, not Vi!
-let g:pathogen_disabled = ['bundler', 'ultisnips']
+let g:pathogen_disabled = []
 if $GOPATH == ""
   call add(g:pathogen_disabled, "go")
 endif

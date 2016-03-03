@@ -1134,7 +1134,7 @@ if 1
 endif
 
 hi VertSplit   guifg=#CCCCCC       guibg=#202020       gui=none
-            \   ctermfg=16       ctermbg=234    cterm=reverse
+            \   ctermfg=16       ctermbg=253    cterm=reverse
 hi link rubySymbol Symbol
 hi link elixirAtom  Symbol
 hi link jsObjectKey Symbol

@@ -204,7 +204,7 @@ set imsearch=0
 au ColorScheme * hi! link ColorColumn StatusLine
 set bg=dark
 set noshowmode
-colo dante_mod_snap2
+colo dante_mod_snap
 " colo solarized
 if exists('&mc')
   au BufNew,BufRead * set mc=81
@@ -684,10 +684,11 @@ nmap <silent> <leader>9 <Plug>AirlineSelectTab9
 let g:dbext_default_history_file = $HOME."/.dbext_history"
 let g:CSApprox_verbose_level = 0 " to shut it up
 let c_comment_strings = 1 " I like highlighting strings inside C comments
-let g:xml_syntax_folding = 1 " enable folding in xml files
+" let g:xml_syntax_folding = 1 " enable folding in xml files
 let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
 let g:netrw_liststyle = 3
 let g:racer_cmd = 'racer'
 let g:tcommentGuessFileType_eelixir = 'html'
+let g:jsx_ext_required = 0
 
 " }}}

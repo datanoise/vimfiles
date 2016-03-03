@@ -85,6 +85,7 @@ hi Error    term=reverse ctermfg=gray ctermbg=red guifg=gray guibg=red3
 hi Todo     term=standout ctermfg=black ctermbg=yellow gui=bold guifg=gray10 guibg=yellow4
 hi Underlined   term=underline cterm=underline ctermfg=darkblue gui=underline guifg=slateblue
 hi Number   term=underline ctermfg=darkred guifg=red2
+hi Symbol guifg=#ff6050 guibg=NONE gui=NONE
 " syntax hi links
 hi link String      Constant
 hi link Character   Constant
@@ -112,7 +113,8 @@ hi link Delimiter   Special
 hi link SpecialComment  Special
 hi link Debug       Special
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-hi rubySymbol guifg=#ff6050 guibg=NONE gui=NONE
-hi elixirAtom guifg=#ff6050 guibg=NONE gui=NONE
+hi link rubySymbol Symbol
+hi link elixirAtom  Symbol
+hi link jsObjectKey Symbol
 hi link htmlLink Normal
 hi link htmlItalic Normal

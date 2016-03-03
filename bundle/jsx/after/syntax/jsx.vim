@@ -14,7 +14,17 @@ if exists('b:current_syntax')
   let s:current_syntax=b:current_syntax
   unlet b:current_syntax
 endif
+
+if exists("g:xml_syntax_folding")
+  let s:save_xml_syntax_folding = g:xml_syntax_folding
+  unlet g:xml_syntax_folding
+endif
 syn include @XMLSyntax syntax/xml.vim
+
+if exists("s:save_xml_syntax_folding")
+  let g:xml_syntax_folding = s:save_xml_syntax_folding
+  unlet s:save_xml_syntax_folding
+endif
 if exists('s:current_syntax')
   let b:current_syntax=s:current_syntax
 endif

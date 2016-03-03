@@ -173,7 +173,8 @@ set listchars+=extends:>,precedes:<
 if version >= 700
   set listchars+=nbsp:+
 endif
-set fillchars=vert:\ 
+" set fillchars=vert:\ 
+set fillchars=vert:·
 au FileType help      setlocal nolist
 au FileType qf        setlocal nolist
 au FileType gitcommit setlocal nolist

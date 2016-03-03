@@ -1133,6 +1133,8 @@ if 1
     delcommand CSAHi
 endif
 
+hi VertSplit   guifg=#CCCCCC       guibg=#202020       gui=none
+            \   ctermfg=16       ctermbg=234    cterm=reverse
 hi link rubySymbol Symbol
 hi link elixirAtom  Symbol
 hi link jsObjectKey Symbol

@@ -668,7 +668,7 @@ let g:go_snippet_engine = ''
 " airline settings {{{2
 let g:airline_theme='serene'
 let g:airline#extensions#whitespace#enabled = 0
-let g:airline#extensions#tabline#enabled = 0
+let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 nmap <silent> <leader>1 <Plug>AirlineSelectTab1

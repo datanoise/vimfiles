@@ -596,8 +596,14 @@ let g:ctrlp_mruf_exclude = '\.git\|\/var\/folders\|' . substitute($VIMRUNTIME, '
 let g:ctrlp_buftag_types = {
       \ 'go'     : '--language-force=Go --Go-types=fvt',
       \ 'rust'   : '--language-force=Rust --Rust-types=fti',
-      \ 'scala'  : '--language-force=scala --scala-types=ctTm'
+      \ 'scala'  : '--language-force=scala --scala-types=ctTm',
+      \ 'coffee' : '--language-force=coffee --coffee-types=m',
+      \ 'elixir' : '--language-force=elixir --elixir-types=facdmpr',
+      \ 'crystal': '--language-force=crystal --crystal-types=f'
       \  }
+if executable('crystal-tags')
+  cal extend(g:ctrlp_buftag_types, { 'crystal': { 'args': '-f - -N --fields nK', 'bin': 'crystal-tags' } })
+en
 if executable('ag') && !exists("&macmeta")
   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
   let s:ignored = ['.git', '.hg', '.svn', '.gif', '.jpg', '.jpeg', '.png']

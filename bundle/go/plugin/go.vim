@@ -11,14 +11,14 @@ let s:packages = [
             \ "github.com/nsf/gocode",
             \ "github.com/alecthomas/gometalinter", 
             \ "golang.org/x/tools/cmd/goimports",
-            \ "github.com/rogpeppe/godef",
-            \ "golang.org/x/tools/cmd/oracle",
+            \ "golang.org/x/tools/cmd/guru",
             \ "golang.org/x/tools/cmd/gorename",
             \ "github.com/golang/lint/golint",
             \ "github.com/kisielk/errcheck",
             \ "github.com/jstemmer/gotags",
             \ "github.com/klauspost/asmfmt/cmd/asmfmt",
             \ "github.com/fatih/motion",
+            \ "github.com/zmb3/gogetdoc",
             \ ]
 
 " These commands are available on any filetypes

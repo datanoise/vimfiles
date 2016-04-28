@@ -1,13 +1,3 @@
-if go#vimproc#has_vimproc()
-	let s:vim_system = get(g:, 'gocomplete#system_function', 'vimproc#system2')
-else
-	let s:vim_system = get(g:, 'gocomplete#system_function', 'system')
-endif
-
-fu! s:system(str, ...)
-	return call(s:vim_system, [a:str] + a:000)
-endf
-
 let s:go_stack = []
 let s:go_stack_level = 0
 
@@ -20,11 +10,17 @@ function! go#def#Jump(mode)
 	let old_gopath = $GOPATH
 	let $GOPATH = go#path#Detect()
 
-	let fname = fnamemodify(expand("%"), ':p:gs?\\?/?')
-	let command = printf("%s definition %s:#%s", bin_path, shellescape(fname), go#util#OffsetCursor())
+	let flags = ""
+	if exists('g:go_guru_tags')
+		let tags = get(g:, 'go_guru_tags')
+		let flags = printf(" -tags %s", tags)
+	endif
 
-	let out = s:system(command)
-	if !v:shell_error == 0
+	let fname = fnamemodify(expand("%"), ':p:gs?\\?/?')
+	let command = printf("%s %s definition %s:#%s", bin_path, flags, shellescape(fname), go#util#OffsetCursor())
+
+	let out = go#util#System(command)
+	if go#util#ShellError() != 0
 		call go#util#EchoError(out)
 		return
 	endif
@@ -68,7 +64,7 @@ function! s:jump_to_declaration(out, mode)
 
 	" jump to existing buffer if, 1. we have enabled it, 2. the buffer is loaded
 	" and 3. there is buffer window number we switch to
-	if get(g:, 'go_def_use_buffer', 0) && bufloaded(filename) != 0 && bufwinnr(filename) != -1
+	if get(g:, 'go_def_reuse_buffer', 0) && bufloaded(filename) != 0 && bufwinnr(filename) != -1
 		" jumpt to existing buffer if it exists
 		execute bufwinnr(filename) . 'wincmd w'
 	elseif a:mode == "tab"

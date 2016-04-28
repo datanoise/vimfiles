@@ -1,8 +1,25 @@
 let s:toggle = 0
 
 " Buffer creates a new cover profile with 'go test -coverprofile' and changes
+" the current buffers highlighting to show covered and uncovered sections of
+" the code. If run again it clears the annotation.
+function! go#coverage#BufferToggle(bang, ...)
+    if s:toggle
+        call go#coverage#Clear()
+        return
+    endif
+
+    if a:0 == 0
+        return call(function('go#coverage#Buffer'), [a:bang])
+    endif
+
+    return call(function('go#coverage#Buffer'), [a:bang] + a:000)
+endfunction
+
+" Buffer creates a new cover profile with 'go test -coverprofile' and changes
 " teh current buffers highlighting to show covered and uncovered sections of
-" the code. If run again it clears the annotation
+" the code. Calling it again reruns the tests and shows the last updated
+" coverage.
 function! go#coverage#Buffer(bang, ...)
     " we use matchaddpos() which was introduce with 7.4.330, be sure we have
     " it: http://ftp.vim.org/vim/patches/7.4/7.4.330
@@ -11,13 +28,8 @@ function! go#coverage#Buffer(bang, ...)
         return -1
     endif
 
-    if s:toggle
-        call go#coverage#Clear()
-        return
-    endif
-
     let s:toggle = 1
-    let l:tmpname=tempname()
+    let l:tmpname = tempname()
     let args = [a:bang, 0, "-coverprofile", l:tmpname]
 
     if a:0
@@ -42,7 +54,7 @@ function! go#coverage#Buffer(bang, ...)
         return
     endif
 
-    if !v:shell_error
+    if go#util#ShellError() == 0
         call go#coverage#overlay(l:tmpname)
     endif
 
@@ -66,7 +78,7 @@ endfunction
 " Browser creates a new cover profile with 'go test -coverprofile' and opens
 " a new HTML coverage page from that profile in a new browser
 function! go#coverage#Browser(bang, ...)
-    let l:tmpname=tempname()
+    let l:tmpname = tempname()
     let args = [a:bang, 0, "-coverprofile", l:tmpname]
 
     if a:0
@@ -78,7 +90,7 @@ function! go#coverage#Browser(bang, ...)
         let s:coverage_browser_handler_jobs[id] = l:tmpname
         return
     endif
-    if !v:shell_error
+    if go#util#ShellError() == 0
         let openHTML = 'go tool cover -html='.l:tmpname
         call go#tool#ExecuteInDir(openHTML)
     endif

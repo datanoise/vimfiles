@@ -8,20 +8,27 @@ FEATURES:
 IMPROVEMENTS:
 
 * Invoking `:GoRename` now reloads all files to reflect new changes automatically [gh-855]
+* Calling `:GoTestCompile` does not create any temporary binary file anymore [gh-879]
 * Enable passing the `-tags` flag to `:GoDef`. Now you can pass build tags to `:GoDef` via `:GoGuruTags` or `g:go_guru_tags`
 * Internal refactoring to use custom `system()` function that wraps both the standard `system()` call and `vimproc`. Now all system calls will take advantage and will use `vimproc` if installed. [gh-801]
 * Completion enables now `gocode`'s `autobuild` and `propose-builtins` flags automatically. With these settings packages will be automatically build to get the freshest completion candidates and builtin keywords will be showed as well. By defaults these settings are enabled. Settings can be disabled/enabled via `g:go_gocode_autobuild` and `g:go_gocode_propose_builtins`. [gh-815]
 * Added new `http.HandlerFunc` snippets with `hf` and `hhf` shortcuts [gh-816]
 * Added new `Example` and `Benchmark` snippets with `example` and `benchmark` shortcuts [gh-836]
 * Search tool binaries first in `GOBIN` and then in `PATH` as most of vim-go users installs it to `GOBIN` mostly [gh-823]
+* Improve `guru` based commands by providing automatically detected GOPATHS, such as `gb`, `godep` to be used if possible [gh-861]
+* Add `<Plug>(go-imports)` mapping to make it assignable to other keys [gh-878]
 
 BUG FIXES:
 * Fix `(go-freevars)` plug mapping to work as in visual mode instead of noncompatible normal mode [gh-832]
 * Commands based on guru now shows a more meaningful error message instead of just showing the exit status (-1)
 * Fix `:GoCoverage` accidently enabling syntax highlighting for users who don't use syntax (i.e syntax off) [gh-827]
+* Fix `:GoCoverage` colors to work for xterm as well [gh-863]
 * Fix commenting out block of texts for Go templates (filetype gothtmltmpl) [gh-813]
 * Fix `:GoImplements` failing because of an empty scope definition. Now we default to current package to make it usable.
 * Fix `:GoPlay` posting to non HTTPS url. [gh-847]
+* Fix escaping the filenames for lint and motion commands [gh-862]
+* Fix escaping the filename to `:GoDef` completely for tcsh [gh-868]
+* Fix showing SUCCESS for `go test` related commands if no test files are available [gh-859]
 
 
 

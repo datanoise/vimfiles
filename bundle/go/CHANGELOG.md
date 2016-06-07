@@ -1,9 +1,11 @@
-## 1.7 (unreleased)
+## 1.7 (June 7, 2016)
 
 FEATURES:
 
 * New **`:GoImpl`** command that generates method stubs for implementing an interface. Checkout the [demo](https://twitter.com/fatih/status/729991365581545472) to see how it works. [gh-846]
+* `godef` support is added back as an optional setting.  By default `:GoDef` still uses `guru`, but can be changed to `godef` by adding the option: `let g:go_def_mode = 'godef'` [gh-888]
 * New `<C-w><C-]>` and `<C-w>]>` shortcuts to split current window and jumpt to the identifier under cursor. [gh-838]
+* New syntax setting" `go:go_highlight_fields` that highlights struct field references [gh-854]
 
 IMPROVEMENTS:
 
@@ -17,6 +19,10 @@ IMPROVEMENTS:
 * Search tool binaries first in `GOBIN` and then in `PATH` as most of vim-go users installs it to `GOBIN` mostly [gh-823]
 * Improve `guru` based commands by providing automatically detected GOPATHS, such as `gb`, `godep` to be used if possible [gh-861]
 * Add `<Plug>(go-imports)` mapping to make it assignable to other keys [gh-878]
+* Increase compatibility with tcsh [gh-869]
+* Improve `:GoInstallBinaries` for GOPATH's which don't have packages that work well with `go get -u`. We have a new `g:go_get_update` setting to disable it. By default it's enabled. [gh-883]
+
+
 
 BUG FIXES:
 * Fix `(go-freevars)` plug mapping to work as in visual mode instead of noncompatible normal mode [gh-832]

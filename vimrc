@@ -657,7 +657,7 @@ endif
 " supertab settings {{{2
 let g:SuperTabCrMapping = 0
 " au FileType go call SuperTabSetDefaultCompletionType("<c-x><c-o>")
-au FileType go call SuperTabSetDefaultCompletionType("context")
+au FileType go,rust call SuperTabSetDefaultCompletionType("context")
 
 " ultisnips settings {{{2
 let g:UltiSnipsSnippetDirectories = ['UltiSnips']

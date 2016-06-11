@@ -538,6 +538,31 @@ let g:tagbar_type_elixir = {
     \ ],
     \ 'sro' : "."
 \ }
+let g:tagbar_type_rust = {
+    \ 'ctagstype' : 'rust',
+    \ 'kinds'     : [
+        \ 'f:functions',
+        \ 'T:types',
+        \ 'g:enums',
+        \ 's:structures',
+        \ 'm:modules',
+        \ 'c:constants',
+        \ 't:traits',
+        \ 'i:impls',
+        \ 'd:macros',
+    \ ],
+    \ 'sro' : ".",
+    \ 'kind2scope' : {
+        \ 'i' : 'impl',
+        \ 'm' : 'module',
+        \ 't' : 'trait'
+    \ },
+    \ 'scope2kind' : {
+        \ 'impl' : 'i',
+        \ 'module' : 'm',
+        \ 'trait' : 't',
+    \ },
+\ }
 
 " NERD_tree settings {{{2
 let g:NERDTreeQuitOnOpen        = 1 " Close NERDTree when a file is opened
@@ -595,7 +620,6 @@ let g:ctrlp_mruf_exclude = '\.git\|\/var\/folders\|' . substitute($VIMRUNTIME, '
 " let g:ctrlp_custom_ignore = 'tmp'
 let g:ctrlp_buftag_types = {
       \ 'go'     : '--language-force=Go --Go-types=fvt',
-      \ 'rust'   : '--language-force=Rust --Rust-types=fti',
       \ 'scala'  : '--language-force=scala --scala-types=ctTm',
       \ 'coffee' : '--language-force=coffee --coffee-types=m',
       \ 'elixir' : '--language-force=elixir --elixir-types=facdmpr',

@@ -127,6 +127,7 @@ fu! s:exectags(cmd)
 	if &sh =~ 'cmd\.exe'
 		let [sxq, &sxq, shcf, &shcf] = [&sxq, '"', &shcf, '/s /c']
 	en
+	echomsg a:cmd
 	let output = system(a:cmd)
 	if &sh =~ 'cmd\.exe'
 		let [&sxq, &shcf] = [sxq, shcf]

@@ -647,6 +647,8 @@ nnoremap <silent> <leader>m :CtrlPCurWD<CR>
 nnoremap <silent> <leader>r :CtrlPRoot<CR>
 nnoremap <silent> <leader>l :CtrlPBuffer<CR>
 nnoremap <silent> <leader>t :CtrlPBufTag<CR>
+au FileType go nnoremap <silent> <buffer> <leader>t :GoDecls<CR>
+au FileType go nnoremap <silent> <buffer> <leader>gt :GoDeclsDir<CR>
 nnoremap <silent> <leader>e :CtrlPMRUFiles<CR>
 nnoremap <silent> <leader>x :CtrlPMixed<CR>
 nnoremap <silent> <leader>cc :ClearCtrlPCache<CR>

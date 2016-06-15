@@ -669,17 +669,6 @@ nnoremap <silent> <leader>ks :CtrlPSearchHistory<CR>
 nnoremap <silent> <leader>kr :CtrlPRegister<CR>
 nnoremap <silent> <leader>km :CtrlPMark<CR>
 
-" smartinput settings {{{2
-if exists('g:loaded_smartinput')
-  call smartinput#map_to_trigger('i', '<Bar>', '<Bar>', '<Bar>')
-  call smartinput#define_rule({
-  \   'at': '\({\|\<do\>\)\s*\%#',
-  \   'char': '<Bar>',
-  \   'input': '<Bar><Bar><Left>',
-  \   'filetype': ['ruby'],
-  \ })
-endif
-
 " supertab settings {{{2
 let g:SuperTabCrMapping = 0
 " au FileType go call SuperTabSetDefaultCompletionType("<c-x><c-o>")

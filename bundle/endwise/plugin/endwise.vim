@@ -136,52 +136,26 @@ function! s:mysearchpair(beginpat,endpat,synpat)
 endfunction
 
 function! s:preproc()
-  " play nicely with plugins
-  if exists('g:loaded_smartinput') && g:loaded_smartinput
-        \ || exists("g:loaded_AutoClose") && g:loaded_AutoClose
-        \  || exists('g:autoclose_loaded') && g:autoclose_loaded
-    let c = getline('.')[col('.')-1]
-    if c == ']'
-      let b = '['
-    elseif c == '}'
-      let b = '{'
-    elseif c == ')'
-      let b = '('
-    endif
-    if c =~ '[}\]\)]' && getline(line('.')-1) =~ b.'$'
-      return "\<C-O>==O"
-    endif
-  else
-    let line = getline('.')
-    let c = line[strlen(line)-1]
-    if c =~ '[{\[\(]'
-      if c == '['
-        let b = ']'
-      elseif c == '('
-        let b = ')'
-      elseif c == '{'
-        let b = '}'
-      else
-        return "\<CR>"
-      endif
-      return "\<CR>".b."\<C-O>O"
+  let line = getline('.')
+  " let c = line[strlen(line)-1]
+  let c = line[col('.')-2]
+  let x = line[col('.')-1]
+  if c =~ '[{\[\(]'
+    if c == '['
+      let b = ']'
+    elseif c == '('
+      let b = ')'
+    elseif c == '{'
+      let b = '}'
     else
       return "\<CR>"
     endif
-    " let line = getline(line('.')-1)
-    " let c = line[strlen(line)-1]
-    " if c =~ '[{\[\(]'
-    "   if c == '['
-    "     let b = ']'
-    "   elseif c == '('
-    "     let b = ')'
-    "   elseif c == '{'
-    "     let b = '}'
-    "   else
-    "     return ""
-    "   endif
-    "   return b."\<C-O>O"
-    " endif
+    if x == b
+      let b = ""
+    endif
+    return "\<CR>".b."\<C-O>O"
+  else
+    return "\<CR>"
   endif
 
 endfunction

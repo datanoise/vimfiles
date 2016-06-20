@@ -366,13 +366,14 @@ au FileType coffee nnoremap <buffer> <F3> :CoffeeCompile<CR>
 au FileType coffee vnoremap <buffer> <F3> :CoffeeCompile<CR>
 au FileType coffee nnoremap <buffer> <F4> :CoffeeRun<CR>
 au FileType coffee nnoremap <buffer> <F5> :CoffeeMake<CR><CR>
-au FileType cucumber nnoremap <buffer> <F4> :!cucumber %<CR>
-au FileType cucumber nnoremap <buffer> <F5> ^:exe '!cucumber ' . expand('%') . ':' . search('^\s*Scenario:','bnW')<CR>
-au FileType cucumber inoremap <buffer> \| \|<Esc>:Tab /\|<CR>A
 au FileType help,godoc nnoremap <silent> <buffer> q :bd<CR>
 au FileType netrw nnoremap <silent> <buffer> qq :bw<CR>
 au FileType vim  nnoremap <silent> <buffer> K :h <c-r>=expand('<cword>')<CR><CR>
-au FileType go  nnoremap <silent> <buffer> K :GoDoc<CR>
+au FileType go nnoremap <silent> <buffer> K :GoDoc<CR>
+au FileType go nmap <silent> <buffer> <leader>gi <Plug>(go-import)
+au FileType go nmap <silent> <buffer> <leader>gI <Plug>(go-imports)
+au FileType go nmap <silent> <buffer> <leader>gd <Plug>(go-def)
+au FileType go nmap <silent> <buffer> <leader>gk <Plug>(go-doc-tab)
 au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F4> :!rspec --format doc -c %<CR>|endif
 au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F5> :exe '!rspec --format doc -c ' . expand('%') . ':' . line('.')<CR>|else|nnoremap <buffer> <F5> :!ruby %<CR>|endif
 au FileType ruby,puppet inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "
@@ -684,6 +685,9 @@ let g:go_highlight_functions=0
 let g:go_highlight_methods=1
 let g:go_auto_type_info = 0
 let g:go_snippet_engine = ''
+let g:go_def_mode = 'godef'
+let g:go_highlight_array_whitespace_error=0
+let g:go_highlight_chan_whitespace_error=0
 
 " airline settings {{{2
 let g:airline_theme='serene'

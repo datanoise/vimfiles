@@ -173,26 +173,7 @@ syntax match swiftMultiwordKeywords "indirect case"
 " highlight at the same time
 syntax region swiftEscapedReservedWord start="`" end="`" oneline
 
-syntax keyword swiftAttributes
-      \ @assignment
-      \ @autoclosure
-      \ @available
-      \ @convention
-      \ @exported
-      \ @IBAction
-      \ @IBDesignable
-      \ @IBInspectable
-      \ @IBOutlet
-      \ @noescape
-      \ @nonobjc
-      \ @noreturn
-      \ @NSApplicationMain
-      \ @NSCopying
-      \ @NSManaged
-      \ @objc
-      \ @testable
-      \ @UIApplicationMain
-      \ @warn_unused_result
+syntax match swiftAttributes "@\w\+"
 
 syntax keyword swiftConditionStatement #available
 

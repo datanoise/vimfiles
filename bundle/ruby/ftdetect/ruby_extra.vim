@@ -60,5 +60,4 @@ au BufNewFile,BufRead [tT]horfile,*.thor	call s:setf('ruby')
 " Vagrant
 au BufNewFile,BufRead [vV]agrantfile		call s:setf('ruby')
 
-au BufNewFile,BufRead *.prawn			call s:setf('ruby')
 " vim: nowrap sw=2 sts=2 ts=8 noet fdm=marker:

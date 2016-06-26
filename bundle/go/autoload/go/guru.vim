@@ -287,7 +287,7 @@ endfunction
 
 function! go#guru#SameIds(selected)
   let result = go#guru#What(a:selected)
-  if has_key(out, 'err')
+  if has_key(result.out, 'err')
     call go#util#EchoError(out.err)
     return
   endif

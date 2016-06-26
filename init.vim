@@ -20,6 +20,7 @@ syntax on             " Enable syntax highlighting
 filetype on           " Enable filetype detection
 filetype indent on    " Enable filetype-specific indenting
 filetype plugin on    " Enable filetype-specific plugins
+
 "
 " Section: Functions {{{1
 " ------------------------------------------------------------------------------
@@ -276,8 +277,6 @@ au VimEnter *
       \   set wildignore+=target |
       \ endif
 
-au BufReadPost quickfix nmap <silent> <buffer> q :call <SID>close_quick_fix()<CR>
-au BufReadPre,BufNewFile *.{iphone,ipad}.erb let b:eruby_subtype = 'html'
 au BufReadPost fugitive://* set bufhidden=delete
 au VimResized * wincmd =
 "}}}
@@ -382,6 +381,7 @@ au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer>
 au FileType ruby,puppet inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "
 au FileType php  nnoremap <buffer> <F5> :!php %<CR>
 au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
+au BufReadPost quickfix nmap <silent> <buffer> q :call <SID>close_quick_fix()<CR>
 if has("cscope")
   au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
   au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
@@ -587,7 +587,7 @@ let g:syntastic_mode_map = { 'mode': 'active',
       \  'active_filetypes':  [],
       \  'passive_filetypes': ['cpp', 'c', 'scss', 'puppet', 'html', 'cucumber', 'java']
       \  }
-let g:syntastic_auto_loc_list       = 2
+let g:syntastic_auto_loc_list       = 0
 let g:syntastic_enable_signs        = 1
 let g:syntastic_stl_format          = '[ERR:%F(%t)]'
 let g:syntastic_javascript_jsl_conf = "~/.jsl.conf"

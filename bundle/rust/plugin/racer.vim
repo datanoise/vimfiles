@@ -294,8 +294,8 @@ function! s:Init()
           \ :call <SID>RacerShowDocumentation()<CR>
     if !exists('g:racer_no_default_keymappings')
       nmap <buffer> gd <Plug>RacerGoToDefinitionDrect
-      nmap <buffer> gs <Plug>RacerGoToDefinitionSplit
-      nmap <buffer> gv <Plug>RacerGoToDefinitionVSplit
+      nmap <buffer> gsl <Plug>RacerGoToDefinitionSplit
+      nmap <buffer> gsv <Plug>RacerGoToDefinitionVSplit
       nmap <buffer> K  <Plug>RacerShowDocumentation
     endif
 endfunction

@@ -180,7 +180,7 @@ au FileType gitcommit setlocal nolist
 " }}}
 " wild options {{{2
 set wildmenu
-set wildmode=full
+set wildmode=longest:full
 set wildignore=*.o,*.bundle,*.png,*.jpg,*.gif,*.class,*.log,*.beam,*.a,*.rlib
 set showcmd
 " the above doesn't always work. the following enforces it
@@ -296,8 +296,9 @@ nnoremap <silent> <leader>h :set hlsearch!<CR>
 nnoremap <silent> <C-l> :noh<CR><C-l>
 nnoremap <silent> \l :setlocal list!<CR>
 nnoremap <silent> \n :set nu!<CR>
-nnoremap <silent> \s :let g:syn_name_status =
-      \ exists('g:syn_name_status') ? (g:syn_name_status + 1) % 2 : 1<CR>
+" nnoremap <silent> \s :let g:syn_name_status =
+"       \ exists('g:syn_name_status') ? (g:syn_name_status + 1) % 2 : 1<CR>
+nnoremap <silent> \s :SynName<CR>
 " indented paste
 nnoremap <silent> <leader>p p`]=`[
 nnoremap <silent> <leader>P P=`]
@@ -359,7 +360,9 @@ xnoremap <silent> # :<C-u>call <SID>VSetSearch()<CR>?<C-R>=@/<CR><CR>
 nnoremap <silent> <leader>ss :SplitjoinSplit<CR>
 nnoremap <silent> <leader>sj :SplitjoinJoin<CR>
 nnoremap <silent> <leader>sc :SyntasticCheck<CR>
-
+" better tab handling in wild menu mode
+set wildcharm=<C-Z>
+cnoremap <expr> <Tab> wildmenumode() ? "\<Right>" : "\<C-Z>"
 
 " file type bindings {{{2
 au FileType coffee nnoremap <buffer> <F3> :CoffeeCompile<CR>

@@ -8,9 +8,6 @@ let g:pathogen_disabled = []
 if $GOPATH == ""
   call add(g:pathogen_disabled, "go")
 endif
-if !has('python')
-  call add(g:pathogen_disabled, "ultisnips")
-endif
 if $TERM != "" && $TERM != 'xterm-256color' && $TERM != 'screen-256color'
   call add(g:pathogen_disabled, 'airline')
 endif

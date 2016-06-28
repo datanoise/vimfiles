@@ -184,8 +184,6 @@ set wildmenu
 set wildmode=longest:full
 set wildignore=*.o,*.bundle,*.png,*.jpg,*.gif,*.class,*.log,*.beam,*.a,*.rlib
 set showcmd
-" the above doesn't always work. the following enforces it
-au VimEnter * set showcmd
 " }}}
 " mouse options {{{2
 set mousehide
@@ -214,7 +212,9 @@ set scrolloff=5      " keep at least 5 lines above/below
 set sidescrolloff=5  " keep at least 5 lines left/right
 set autoread         " disable annoying confirmations
 set hidden
-set lazyredraw
+if !has('nvim')
+  set lazyredraw
+endif
 set title
 set backspace=indent,eol,start
 " set number
@@ -247,15 +247,15 @@ set completeopt=menu,longest
 set clipboard+=unnamed
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
 " change the cursor shape based on the current mode
-if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app' && has('cursorshape')
-  " if exists('$TMUX')
-  "   let &t_SI = "\<Esc>[3 q"
-  "   let &t_EI = "\<Esc>[0 q"
-  " else
-  "   let &t_SI = "\<Esc>]50;CursorShape=2\x7"
-  "   let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-  " endif
-endif
+" if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app' && has('cursorshape')
+"   if exists('$TMUX')
+"     let &t_SI = "\<Esc>[3 q"
+"     let &t_EI = "\<Esc>[0 q"
+"   else
+"     let &t_SI = "\<Esc>]50;CursorShape=2\x7"
+"     let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+"   endif
+" endif
 if has('gui_running')
   au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs\ --no-gems
 else

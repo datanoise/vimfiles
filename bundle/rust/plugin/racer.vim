@@ -233,7 +233,11 @@ function! s:RacerJumpToLocation(filename, linenum, colnum)
         " Record jump mark
         normal! m`
         if a:filename != bufname('%')
-            exec 'keepjumps e ' . fnameescape(a:filename)
+            try
+                exec 'keepjumps e ' . fnameescape(a:filename)
+            catch /^Vim\%((\a\+)\)\=:E37/
+                " When the buffer is not saved, E37 is thrown.  We can ignore it.
+            endtry
         endif
         call cursor(a:linenum, a:colnum+1)
         " Center definition on screen
@@ -294,8 +298,8 @@ function! s:Init()
           \ :call <SID>RacerShowDocumentation()<CR>
     if !exists('g:racer_no_default_keymappings')
       nmap <buffer> gd <Plug>RacerGoToDefinitionDrect
-      nmap <buffer> gsl <Plug>RacerGoToDefinitionSplit
-      nmap <buffer> gsv <Plug>RacerGoToDefinitionVSplit
+      nmap <buffer> gsS <Plug>RacerGoToDefinitionSplit
+      nmap <buffer> gsV <Plug>RacerGoToDefinitionVSplit
       nmap <buffer> K  <Plug>RacerShowDocumentation
     endif
 endfunction

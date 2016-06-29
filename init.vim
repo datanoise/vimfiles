@@ -202,7 +202,8 @@ set bg=dark
 set noshowmode
 " colo datanoise
 colo datanoise
-if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app' && has('termguicolors')
+if !has('gui_running') && has('termguicolors')
+      \ && ($TERM_PROGRAM == 'iTerm.app' || exists('$TMUX'))
   set termguicolors
 endif
 if exists('&mc')
@@ -245,17 +246,16 @@ if executable('ack') && !exists('g:ackprg')
 endif
 set completeopt=menu,longest
 set clipboard+=unnamed
-let g:filetype_m = 'objc' " always open *.m files with objc filetype
 " change the cursor shape based on the current mode
-" if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app' && has('cursorshape')
-"   if exists('$TMUX')
-"     let &t_SI = "\<Esc>[3 q"
-"     let &t_EI = "\<Esc>[0 q"
-"   else
-"     let &t_SI = "\<Esc>]50;CursorShape=2\x7"
-"     let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-"   endif
-" endif
+if !has('gui_running') && has('cursorshape') && $TERM_PROGRAM == 'iTerm.app'
+  if exists('$TMUX')
+    let &t_SI = "\<Esc>[3 q"
+    let &t_EI = "\<Esc>[0 q"
+  else
+    let &t_SI = "\<Esc>]50;CursorShape=2\x7"
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+  endif
+endif
 if has('gui_running')
   au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs\ --no-gems
 else
@@ -269,7 +269,7 @@ au FileType xml setlocal foldmethod=syntax
 " go settings
 au FileType go setlocal tabstop=4
 au FileType go setlocal shiftwidth=4
-au FileType go,godoc setlocal nolist
+au FileType go,godoc,netrw setlocal nolist
 au FileType go setlocal noexpandtab
 " ignore target directory for cargo projects
 au VimEnter *
@@ -691,12 +691,12 @@ let g:go_def_mode = 'godef'
 
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
 let g:go_highlight_array_whitespace_error = 0
 let g:go_highlight_chan_whitespace_error = 0
-let g:go_highlight_fields = 0
 let g:go_highlight_types = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_fields = 0
 
 " airline settings {{{2
 let g:airline_theme='datanoise'
@@ -724,5 +724,6 @@ let g:netrw_liststyle = 3
 let g:racer_cmd = 'racer'
 let g:tcommentGuessFileType_eelixir = 'html'
 let g:jsx_ext_required = 0
+let g:filetype_m = 'objc' " always open *.m files with objc filetype
 
 " }}}

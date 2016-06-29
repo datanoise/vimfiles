@@ -383,6 +383,8 @@ inoremap <silent> <C-l> <C-\><C-O>:call search('[{("\[\]'')}]', 'Wc', line('.'))
 " imap kk <C-O>A<Enter>
 nnoremap <F2> <C-w><C-w>
 inoremap <F2> <Esc><C-w><C-w>
+nnoremap <Tab> <C-w><C-w>
+inoremap <S-Tab> <Esc><C-w><C-w>
 nnoremap <F4> :sil make %<CR><C-l>:cr<CR>
 nnoremap [F :exe ':Ag ' . expand('<cword>')<CR><CR>
 nnoremap ]F :exe ':Ag ' . matchstr(getline('.'), '\%'.virtcol('.').'v\w*')<CR><CR>

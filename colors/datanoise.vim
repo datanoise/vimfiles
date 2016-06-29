@@ -18,6 +18,7 @@ hi Normal   ctermfg=gray guifg=peachpuff3 guibg=black
 hi Conceal  ctermfg=gray guifg=#252525 guibg=black
 hi Directory    term=bold ctermfg=blue guifg=royalblue
 hi ErrorMsg term=standout ctermfg=white ctermbg=red guifg=white guibg=red3
+hi SpellBad term=standout ctermfg=red guifg=red3
 hi NonText  term=bold ctermfg=darkgray guibg=black guifg=gray20
 hi SpecialKey   term=bold ctermfg=darkgray guifg=gray30
 hi LineNr   term=underline ctermfg=darkgray guifg=ivory4 guibg=gray4
@@ -94,7 +95,6 @@ hi link Number      Constant
 hi link Boolean     Constant
 hi link Float       Number
 hi link Function    Identifier
-hi link Number      Constant
 hi link Conditional Statement
 hi link Repeat      Statement
 hi link Label       Statement
@@ -121,3 +121,5 @@ hi link htmlLink Normal
 hi link htmlItalic Normal
 hi link goDirective Define
 hi link goDeclaration Define
+hi link goField Identifier
+hi link goMethod Function

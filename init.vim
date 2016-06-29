@@ -685,18 +685,18 @@ let g:UltiSnipsSnippetDirectories = ['UltiSnips']
 " let g:UltiSnipsJumpForwardTrigger="<tab>"
 
 " go settings {{{2
-let g:go_highlight_space_tab_error = 0
-let g:go_highlight_trailing_whitespace_error = 0
-let g:go_highlight_functions = 0
-let g:go_highlight_methods = 1
 let g:go_auto_type_info = 0
 let g:go_snippet_engine = ''
 let g:go_def_mode = 'godef'
+
+let g:go_highlight_space_tab_error = 0
+let g:go_highlight_trailing_whitespace_error = 0
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
 let g:go_highlight_array_whitespace_error = 0
 let g:go_highlight_chan_whitespace_error = 0
-" the following settings are super slow
-let g:go_highlight_interfaces = 0
-let g:go_highlight_structs = 0
+let g:go_highlight_fields = 1
+let g:go_highlight_types = 1
 
 " airline settings {{{2
 let g:airline_theme='datanoise'

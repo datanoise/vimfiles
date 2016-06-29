@@ -1,5 +1,5 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" File: "dante_mod.vim"
+" File: "datanoise.vim"
 " Created: "Thu, 23 May 2002 00:12:20 -0300 (caciano)"
 " Updated: "Sat, 24 Aug 2002 14:04:21 -0300 (caciano)"
 " Modified By: Kent Sibilev
@@ -11,7 +11,7 @@ hi clear
 if exists("syntax on")
     syntax reset
 endif
-let g:colors_name = "dante_mod"
+let g:colors_name = "datanoise"
 
 " General colors
 hi Normal   ctermfg=gray guifg=peachpuff3 guibg=black
@@ -29,7 +29,7 @@ hi MoreMsg  term=bold ctermfg=green gui=bold guifg=olivedrab1
 hi ModeMsg  term=bold cterm=bold gui=bold
 hi Question term=standout ctermfg=green gui=bold guifg=olivedrab1
 hi WarningMsg   term=standout ctermfg=red gui=bold guifg=red3
-hi WildMenu term=standout ctermfg=black ctermbg=yellow guifg=black guibg=gold2
+hi WildMenu term=standout ctermfg=black ctermbg=yellow guifg=yellow guibg=black
 hi Folded   term=standout ctermfg=blue ctermbg=darkgray guifg=royalblue1 guibg=#050505
 hi FoldColumn   term=standout ctermfg=blue ctermbg=gray guifg=royalblue3 guibg=black
 hi DiffAdd      guifg=#ffffff       guibg=#126493       gui=NONE
@@ -73,7 +73,8 @@ hi PmenuSel     guifg=#000000       guibg=#cae682       gui=NONE
             \   ctermfg=NONE        ctermbg=NONE        cterm=NONE
 
 " syntax hi colors
-hi Comment  term=bold ctermfg=darkcyan guifg=cyan4
+" hi Comment  term=bold ctermfg=darkcyan guifg=cyan4
+hi Comment  term=bold ctermfg=darkcyan guifg=#8b8989
 hi PreProc  term=underline ctermfg=darkblue guifg=dodgerblue4
 hi Constant term=underline ctermfg=darkred guifg=firebrick3
 hi Type     term=underline ctermfg=darkgreen gui=none guifg=chartreuse3
@@ -118,3 +119,5 @@ hi link elixirAtom  Symbol
 hi link jsObjectKey Symbol
 hi link htmlLink Normal
 hi link htmlItalic Normal
+hi link goDirective Define
+hi link goDeclaration Define

@@ -200,8 +200,11 @@ set imsearch=0
 au ColorScheme * hi! link ColorColumn StatusLine
 set bg=dark
 set noshowmode
-colo dante_mod_snap
-" colo solarized
+" colo datanoise
+colo datanoise
+if !has('gui_running')
+  set termguicolors
+endif
 if exists('&mc')
   au BufNew,BufRead * set mc=81
 endif
@@ -401,6 +404,7 @@ au FileType ruby iabbrev <buffer> rb! #!<C-R>=substitute(system('which ruby'),'\
 " display name of the syntax ID at the cursor
 command! SynName :echo SynName()
 command! -bang -nargs=1 -complete=file QFilter call s:FilterQuickfixList(<bang>0, <q-args>)
+au FileType markdown command! -nargs=0 -complete=file -buffer Preview :!markdown % | bcat
 cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
 cabbr ack Ack
 cabbr ag Ag
@@ -683,16 +687,19 @@ let g:UltiSnipsSnippetDirectories = ['UltiSnips']
 " go settings {{{2
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
-let g:go_highlight_functions=0
-let g:go_highlight_methods=1
+let g:go_highlight_functions = 0
+let g:go_highlight_methods = 1
 let g:go_auto_type_info = 0
 let g:go_snippet_engine = ''
 let g:go_def_mode = 'godef'
-let g:go_highlight_array_whitespace_error=0
-let g:go_highlight_chan_whitespace_error=0
+let g:go_highlight_array_whitespace_error = 0
+let g:go_highlight_chan_whitespace_error = 0
+" the following settings are super slow
+let g:go_highlight_interfaces = 0
+let g:go_highlight_structs = 0
 
 " airline settings {{{2
-let g:airline_theme='serene'
+let g:airline_theme='datanoise'
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#tabline#enabled = 0
 let g:airline#extensions#tabline#buffer_idx_mode = 1

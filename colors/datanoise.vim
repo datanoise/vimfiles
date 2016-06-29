@@ -32,7 +32,7 @@ hi Question term=standout ctermfg=green gui=bold guifg=olivedrab1
 hi WarningMsg   term=standout ctermfg=red gui=bold guifg=red3
 hi WildMenu term=standout ctermfg=black ctermbg=yellow guifg=yellow guibg=black
 hi Folded   term=standout ctermfg=blue ctermbg=darkgray guifg=royalblue1 guibg=#050505
-hi FoldColumn   term=standout ctermfg=blue ctermbg=gray guifg=royalblue3 guibg=black
+hi FoldColumn   term=standout ctermfg=blue ctermbg=black guifg=royalblue3 guibg=black
 hi DiffAdd      guifg=#ffffff       guibg=#126493       gui=NONE
             \   ctermfg=white       ctermbg=darkblue    cterm=NONE
 hi DiffChange   guifg=royalblue4       guibg=black       gui=NONE

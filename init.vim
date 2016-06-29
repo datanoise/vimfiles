@@ -202,7 +202,7 @@ set bg=dark
 set noshowmode
 " colo datanoise
 colo datanoise
-if !has('gui_running')
+if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app' && has('termguicolors')
   set termguicolors
 endif
 if exists('&mc')
@@ -317,7 +317,7 @@ nnoremap <silent> <leader>q :Bclose<CR>
 au CmdwinEnter * nmap <buffer> <leader>q :q<CR>
 au CmdwinEnter * nmap <buffer> q :q<CR>
 nnoremap <silent> <leader>Q :bd<CR>
-nnoremap [s [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
+nnoremap [S [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
 nnoremap <leader>a :let align = input("Align to: ")<Bar>exe ":Tab /" . align<CR>
 " inoremap {<CR> {<CR>}<Esc>O
 " inoremap [<CR> [<CR>]<Esc>O
@@ -695,7 +695,7 @@ let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_array_whitespace_error = 0
 let g:go_highlight_chan_whitespace_error = 0
-let g:go_highlight_fields = 1
+let g:go_highlight_fields = 0
 let g:go_highlight_types = 1
 
 " airline settings {{{2

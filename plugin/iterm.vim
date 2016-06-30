@@ -2,6 +2,7 @@ if exists("g:loaded_iterm")
   finish
 endif
 let g:loaded_iterm = 1
+
 " change the cursor shape based on the current mode
 " unfortunately, any mappings in the insert mode that change mode
 " will cause annoying cursor flickering. so disabling it for now.
@@ -14,9 +15,8 @@ if 0 && !has('gui_running') && has('cursorshape') && $TERM_PROGRAM == 'iTerm.app
     let &t_EI = "\<Esc>]50;CursorShape=0\x7"
   endif
 endif
+
 " allow iTerm to report FocusGained FocusLost events
-" unfortunately, this leaving the window in tmux will
-" trigger monitor activity on it.
 if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app'
   let s:enable_focus_reporting = "\<Esc>[?1004h"
   let s:disable_focus_reporting = "\<Esc>[?1004l"
@@ -63,4 +63,38 @@ if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app'
 
   cnoremap <silent> <f24> <c-\>e<SID>DoCmdFocusLost()<cr>
   cnoremap <silent> <f25> <c-\>e<SID>DoCmdFocusGained()<cr>
+
+  " if we run in tmux, focus events will trigger monitor-activity when
+  " leaving the active window. I find this quite annoying, so instead we
+  " disable this option in tmux for the current window and restore it upon
+  " the exit from Vim.
+  if exists("$TMUX")
+    let s:g_monitor_activity = 0
+    let s:w_monitor_activity = 0
+    let s:w_monitor_activity_unset = 0
+
+    let s:w_monitor_activity_val = system("tmux showw -v monitor-activity")
+    if s:w_monitor_activity_val =~ "on"
+      let s:w_monitor_activity = 1
+    endif
+    if s:w_monitor_activity_val == ""
+      let s:w_monitor_activity_unset = 1
+    endif
+    if system("tmux showw -gv monitor-activity") =~ "on"
+      let s:g_monitor_activity = 1
+    endif
+
+    if s:g_monitor_activity || s:w_monitor_activity
+      call system("tmux setw monitor-activity off")
+    endif
+
+    au VimLeave *
+          \ if s:g_monitor_activity || s:w_monitor_activity |
+          \   if s:w_monitor_activity_unset |
+          \     call system("tmux setw -u monitor-activity") |
+          \   elseif s:w_monitor_activity |
+          \     call system("tmux setw monitor-activity off") |
+          \   endif |
+          \ endif
+  endif
 endif

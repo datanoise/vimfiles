@@ -127,9 +127,9 @@ set wrapscan
 " status line options {{{2
 set laststatus=2
 set statusline=%m%<%.99f\ (%{GetCurDir()})\ %h%w%r%y
-set statusline+=\ %{fugitive#statusline()}
+set statusline+=\ %{exists('*fugitive#statusline')?fugitive#statusline():''}
 set statusline+=%{SynNameStatus()}
-" set statusline+=\ %#errormsg#%{SyntasticStatuslineFlag()}%*
+set statusline+=\ %#errormsg#%{exists('*SyntasticStatuslineFlag')?SyntasticStatuslineFlag():''}%*
 set statusline+=%=
 set statusline+=\ %-16(\ %l,%c-%v\ %)%P
 set statusline^=%{exists('*CapsLockStatusline')?CapsLockStatusline():''}
@@ -285,8 +285,8 @@ nnoremap <silent> <leader>h :set hlsearch!<CR>
 nnoremap <silent> <C-l> :noh<CR><C-l>
 nnoremap <silent> \l :setlocal list!<CR>
 nnoremap <silent> \n :set nu!<CR>
-" nnoremap <silent> \s :let g:syn_name_status =
-"       \ exists('g:syn_name_status') ? (g:syn_name_status + 1) % 2 : 1<CR>
+nnoremap <silent> \S :let g:syn_name_status =
+      \ exists('g:syn_name_status') ? (g:syn_name_status + 1) % 2 : 1<CR>
 nnoremap <silent> \s :SynName<CR>
 " indented paste
 nnoremap <silent> <leader>p p`]=`[

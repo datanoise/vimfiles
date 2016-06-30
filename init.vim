@@ -172,9 +172,6 @@ if version >= 700
   set listchars+=nbsp:+
 endif
 set fillchars=vert:⏐
-au FileType help      setlocal nolist
-au FileType qf        setlocal nolist
-au FileType gitcommit setlocal nolist
 " }}}
 " wild options {{{2
 set wildmenu
@@ -256,10 +253,10 @@ au FileType ruby if has('balloonexpr') | setlocal balloonexpr& | endif
 au FileType scala,ruby,go exe 'compiler '. expand('<amatch>')
 au FileType rust compiler rustc
 au FileType xml setlocal foldmethod=syntax
+au FileType go,godoc,netrw,help,qf,gitcommit setlocal nolist
 " go settings
 au FileType go setlocal tabstop=4
 au FileType go setlocal shiftwidth=4
-au FileType go,godoc,netrw setlocal nolist
 au FileType go setlocal noexpandtab
 " ignore target directory for cargo projects
 au VimEnter *
@@ -314,7 +311,6 @@ nnoremap <leader>a :let align = input("Align to: ")<Bar>exe ":Tab /" . align<CR>
 " inoremap {<Space> {}<Esc>i<Space><Space><Esc>i
 " inoremap [<Space> []<Esc>i<Space><Space><Esc>i
 inoremap <silent> <Space> <C-R>=<SID>space_inside_curly()<CR>
-" inoremap <Tab> <C-p>
 inoremap <silent> <C-l> <C-\><C-O>:call search('[{("\[\]'')}]', 'Wc', line('.'))<CR><Right>
 " inoremap jj <Esc>
 " imap kk <C-O>A<Enter>
@@ -434,21 +430,6 @@ let g:tagbar_autoclose = 1
 let g:tagbar_autofocus = 1
 let g:tagbar_sort = 0
 nnoremap <silent> \[  :TagbarToggle<CR>
-" if executable('coffeetags')
-"   let g:tagbar_type_coffee = {
-"         \ 'ctagsbin' : 'coffeetags',
-"         \ 'ctagsargs' : '',
-"         \ 'kinds' : [
-"           \ 'f:functions',
-"           \ 'o:object',
-"         \ ],
-"         \ 'sro' : ".",
-"         \ 'kind2scope' : {
-"           \ 'f' : 'object',
-"           \ 'o' : 'object',
-"         \ }
-"   \ }
-" endif
 let g:tagbar_type_coffee = {
       \ 'ctagstype' : 'coffee',
       \ 'kinds' : [
@@ -671,10 +652,6 @@ nnoremap <silent> <leader>km :CtrlPMark<CR>
 let g:SuperTabCrMapping = 0
 " au FileType go call SuperTabSetDefaultCompletionType("<c-x><c-o>")
 au FileType go,rust call SuperTabSetDefaultCompletionType("context")
-
-" ultisnips settings {{{2
-let g:UltiSnipsSnippetDirectories = ['UltiSnips']
-" let g:UltiSnipsJumpForwardTrigger="<tab>"
 
 " go settings {{{2
 let g:go_auto_type_info = 0

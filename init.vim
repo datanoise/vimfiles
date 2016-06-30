@@ -459,7 +459,7 @@ au FileType ruby iabbrev <buffer> rb! #!<C-R>=substitute(system('which ruby'),'\
 " display name of the syntax ID at the cursor
 command! SynName :echo SynName()
 command! -bang -nargs=1 -complete=file QFilter call s:FilterQuickfixList(<bang>0, <q-args>)
-au FileType markdown command! -nargs=0 -complete=file -buffer Preview :!markdown % | bcat
+au FileType markdown command! -nargs=0 -complete=file -buffer Preview :exe "sil !markdown " . expand('%') ."| bcat" | :redraw!
 cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
 cabbr ack Ack
 cabbr ag Ag

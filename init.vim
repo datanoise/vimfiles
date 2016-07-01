@@ -371,7 +371,7 @@ au FileType php  nnoremap <buffer> <F5> :!php %<CR>
 au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
 au BufReadPost quickfix nmap <silent> <buffer> q :call <SID>close_quick_fix()<CR>
 au BufReadPost quickfix noremap <silent> <buffer> <CR> <CR>:call <SID>close_quick_fix()<CR>
-au BufReadPost quickfix noremap <silent> <buffer> <C-j> <CR>
+au BufReadPost quickfix noremap <silent> <buffer> <C-x> <CR>
 if has("cscope")
   au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
   au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>

@@ -571,8 +571,8 @@ nmap <silent> <leader>8 <Plug>AirlineSelectTab8
 nmap <silent> <leader>9 <Plug>AirlineSelectTab9
 
 " expand-region settings {{{2
-xmap N <plug>(expand_region_expand)
-xmap M <Plug>(expand_region_shrink)
+xmap n <plug>(expand_region_expand)
+xmap m <Plug>(expand_region_shrink)
 let g:expand_region_text_objects = get(g:, 'expand_region_text_objects', {
       \ 'i"'  :0,
       \ 'i''' :0,

@@ -242,7 +242,7 @@ if executable('ack') && !exists('g:ackprg')
 endif
 set completeopt=menu,longest
 set clipboard+=unnamed
-au FocusGained * :checktime
+au FocusGained * :sil! checktime
 if has('gui_running')
   au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs\ --no-gems
 else

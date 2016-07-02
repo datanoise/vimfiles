@@ -40,7 +40,7 @@ let s:IA2 = [ '#999999' , '#262626' , 239 , 235 , '' ]
 let s:IA3 = [ '#999999' , '#303030' , 239 , 236 , '' ]
 let g:airline#themes#datanoise#palette.inactive = airline#themes#generate_color_map(s:IA1, s:IA2, s:IA3)
 let g:airline#themes#datanoise#palette.inactive_modified = {
-      \ 'airline_c': [ '#875faf' , '' , 97 , '' , '' ] ,
+      \ 'airline_c': [ '#875faf' , '#303030' , 97 , '' , '' ] ,
       \ }
 
 if !get(g:, 'loaded_ctrlp', 0)

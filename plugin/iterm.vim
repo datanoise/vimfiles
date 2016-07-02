@@ -73,20 +73,53 @@ if !has('gui_running') && $TERM_PROGRAM == 'iTerm.app'
     let s:w_monitor_activity = 0
     let s:w_monitor_activity_unset = 0
 
-    let s:w_monitor_activity_val = system("tmux showw -v monitor-activity")
-    if s:w_monitor_activity_val =~ "on"
-      let s:w_monitor_activity = 1
-    endif
-    if s:w_monitor_activity_val == ""
-      let s:w_monitor_activity_unset = 1
-    endif
-    if system("tmux showw -gv monitor-activity") =~ "on"
-      let s:g_monitor_activity = 1
-    endif
+    if !exists('*job_start')
+      let s:w_monitor_activity_val = system("tmux showw -v monitor-activity")
+      if s:w_monitor_activity_val =~ "on"
+        let s:w_monitor_activity = 1
+      endif
+      if s:w_monitor_activity_val == ""
+        let s:w_monitor_activity_unset = 1
+      endif
+      if system("tmux showw -gv monitor-activity") =~ "on"
+        let s:g_monitor_activity = 1
+      endif
 
-    if s:g_monitor_activity || s:w_monitor_activity
-      call system("tmux setw monitor-activity off")
-    endif
+      if s:g_monitor_activity || s:w_monitor_activity
+        call system("tmux setw monitor-activity off")
+      endif
+    else
+      func! s:read_all_channel(channel)
+        let buf = []
+        while ch_status(a:channel) == 'buffered'
+          call add(buf, ch_read(a:channel))
+        endwhile
+        return join(buf)
+      endfunc
+
+      func! s:on_w_monitor(channel)
+        let result = s:read_all_channel(a:channel)
+        if result =~ "on"
+          let s:w_monitor_activity = 1
+        endif
+        if result == ""
+          let s:w_monitor_activity_unset = 1
+        endif
+        call job_start("tmux showw -gv monitor-activity", {'close_cb': function('s:on_g_monitor')})
+      endfunc
+
+      func! s:on_g_monitor(channel)
+        let result = s:read_all_channel(a:channel)
+        if result =~ "on"
+          let s:g_monitor_activity = 1
+        endif
+
+        if s:g_monitor_activity || s:w_monitor_activity
+          call job_start("tmux setw monitor-activity off")
+        endif
+      endfunc
+      call job_start("tmux showw -v monitor-activity", {'close_cb': function('s:on_w_monitor')})
+    end
 
     au VimLeave *
           \ if s:g_monitor_activity || s:w_monitor_activity |

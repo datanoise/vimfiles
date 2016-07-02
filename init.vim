@@ -340,7 +340,7 @@ au FileType coffee vnoremap <buffer> <F3> :CoffeeCompile<CR>
 au FileType coffee nnoremap <buffer> <F4> :CoffeeRun<CR>
 au FileType coffee nnoremap <buffer> <F5> :CoffeeMake<CR><CR>
 au FileType help,godoc nnoremap <silent> <buffer> q :bd<CR>
-au FileType netrw nnoremap <silent> <buffer> qq :bw<CR>
+au FileType netrw nnoremap <silent> <buffer> <Esc> :bw<CR>
 au FileType go nnoremap <silent> <buffer> K :GoDoc<CR>
 au FileType go nmap <silent> <buffer> <leader>gi <Plug>(go-import)
 au FileType go nmap <silent> <buffer> <leader>gI <Plug>(go-imports)

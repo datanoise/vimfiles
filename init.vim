@@ -27,19 +27,6 @@ function! GetCurDir()
   return result
 endfunction
 
-function! SynName()
-  return synIDattr(synID(line('.'), col('.'), 0), 'name')
-endfunction
-
-function! SynNameStatus()
-  let syn_name = SynName()
-  if exists('g:syn_name_status') && g:syn_name_status && syn_name != ''
-    return ' {'.syn_name.'}'
-  else
-    return ''
-  endif
-endfunction
-
 function! s:close_quick_fix()
   ccl | lcl
 endfunction
@@ -128,7 +115,6 @@ set wrapscan
 set laststatus=2
 set statusline=%m%<%.99f\ (%{GetCurDir()})\ %h%w%r%y
 set statusline+=\ %{exists('*fugitive#statusline')?fugitive#statusline():''}
-set statusline+=%{SynNameStatus()}
 set statusline+=\ %#errormsg#%{exists('*SyntasticStatuslineFlag')?SyntasticStatuslineFlag():''}%*
 set statusline+=%=
 set statusline+=\ %-16(\ %l,%c-%v\ %)%P
@@ -282,9 +268,6 @@ nnoremap <silent> <leader>h :set hlsearch!<CR>
 nnoremap <silent> <C-l> :noh<CR><C-l>
 nnoremap <silent> \l :setlocal list!<CR>
 nnoremap <silent> \n :set nu!<CR>
-nnoremap <silent> \S :let g:syn_name_status =
-      \ exists('g:syn_name_status') ? (g:syn_name_status + 1) % 2 : 1<CR>
-nnoremap <silent> \s :SynName<CR>
 " indented paste
 nnoremap <silent> <leader>p p`]=`[
 nnoremap <silent> <leader>P P=`]
@@ -389,8 +372,6 @@ endif
 " NOTE: that doesn't work in MacVim gui mode if sudo requests a password!!!
 command! -bar -nargs=0 SudoW   :exe "write !sudo tee % >/dev/null"|silent edit!
 au FileType ruby iabbrev <buffer> rb! #!<C-R>=substitute(system('which ruby'),'\n$','','')<CR><C-R>=Eatchar('\s')<CR>
-" display name of the syntax ID at the cursor
-command! SynName :echo SynName()
 command! -bang -nargs=1 -complete=file QFilter call s:FilterQuickfixList(<bang>0, <q-args>)
 au FileType markdown command! -nargs=0 -complete=file -buffer Preview :exe "sil !markdown " . expand('%') ."| bcat" | :redraw!
 cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>

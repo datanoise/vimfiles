@@ -340,7 +340,6 @@ au FileType coffee vnoremap <buffer> <F3> :CoffeeCompile<CR>
 au FileType coffee nnoremap <buffer> <F4> :CoffeeRun<CR>
 au FileType coffee nnoremap <buffer> <F5> :CoffeeMake<CR><CR>
 au FileType help,godoc nnoremap <silent> <buffer> q :bd<CR>
-au FileType netrw nnoremap <silent> <buffer> <Esc> :bw<CR>
 au FileType go nnoremap <silent> <buffer> K :GoDoc<CR>
 au FileType go nmap <silent> <buffer> <leader>gi <Plug>(go-import)
 au FileType go nmap <silent> <buffer> <leader>gI <Plug>(go-imports)
@@ -549,6 +548,12 @@ nmap <silent> <leader>6 <Plug>AirlineSelectTab6
 nmap <silent> <leader>7 <Plug>AirlineSelectTab7
 nmap <silent> <leader>8 <Plug>AirlineSelectTab8
 nmap <silent> <leader>9 <Plug>AirlineSelectTab9
+" if !exists('g:airline_symbols')
+"   let g:airline_symbols = {}
+" endif
+" let g:airline_symbols.branch = '⭠'
+" let g:airline_symbols.readonly = '⭤'
+" let g:airline_symbols.linenr = '⭡'
 
 " expand-region settings {{{2
 xmap n <plug>(expand_region_expand)
@@ -570,7 +575,7 @@ let g:CSApprox_verbose_level = 0 " to shut it up
 let c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:xml_syntax_folding = 1 " enable folding in xml files
 let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
-let g:netrw_liststyle = 3
+" let g:netrw_liststyle = 3
 let g:racer_cmd = 'racer'
 let g:tcommentGuessFileType_eelixir = 'html'
 let g:jsx_ext_required = 0

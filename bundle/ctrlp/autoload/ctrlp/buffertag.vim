@@ -59,6 +59,7 @@ let s:types = {
 	\ 'erlang' : '%serlang%serlang%sdrmf',
 	\ 'expect' : '%stcl%stcl%scfp',
 	\ 'fortran': '%sfortran%sfortran%spbceiklmntvfs',
+	\ 'go'     : '%sgo%sgo%sfctv',
 	\ 'html'   : '%shtml%shtml%saf',
 	\ 'java'   : '%sjava%sjava%spcifm',
 	\ 'javascript': '%sjavascript%sjavascript%sf',
@@ -127,7 +128,6 @@ fu! s:exectags(cmd)
 	if &sh =~ 'cmd\.exe'
 		let [sxq, &sxq, shcf, &shcf] = [&sxq, '"', &shcf, '/s /c']
 	en
-	echomsg a:cmd
 	let output = system(a:cmd)
 	if &sh =~ 'cmd\.exe'
 		let [&sxq, &shcf] = [sxq, shcf]

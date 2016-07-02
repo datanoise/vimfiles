@@ -341,7 +341,6 @@ au FileType coffee nnoremap <buffer> <F4> :CoffeeRun<CR>
 au FileType coffee nnoremap <buffer> <F5> :CoffeeMake<CR><CR>
 au FileType help,godoc nnoremap <silent> <buffer> q :bd<CR>
 au FileType netrw nnoremap <silent> <buffer> qq :bw<CR>
-au FileType vim  nnoremap <silent> <buffer> K :h <c-r>=expand('<cword>')<CR><CR>
 au FileType go nnoremap <silent> <buffer> K :GoDoc<CR>
 au FileType go nmap <silent> <buffer> <leader>gi <Plug>(go-import)
 au FileType go nmap <silent> <buffer> <leader>gI <Plug>(go-imports)

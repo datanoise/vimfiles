@@ -353,6 +353,8 @@ au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
 au BufReadPost quickfix nmap <silent> <buffer> q :call <SID>close_quick_fix()<CR>
 au BufReadPost quickfix noremap <silent> <buffer> <CR> <CR>:call <SID>close_quick_fix()<CR>
 au BufReadPost quickfix noremap <silent> <buffer> <C-x> <CR>
+nnoremap <silent> <C-h> :SidewaysLeft<CR>
+nnoremap <silent> <C-l> :SidewaysRight<CR>
 if has("cscope")
   au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
   au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>

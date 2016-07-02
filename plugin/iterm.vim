@@ -7,13 +7,8 @@ let g:loaded_iterm = 1
 " unfortunately, any mappings in the insert mode that change mode
 " will cause annoying cursor flickering. so disabling it for now.
 if 0 && !has('gui_running') && has('cursorshape') && $TERM_PROGRAM == 'iTerm.app'
-  if exists('$TMUX')
-    let &t_SI = "\<Esc>[3 q"
-    let &t_EI = "\<Esc>[0 q"
-  else
-    let &t_SI = "\<Esc>]50;CursorShape=2\x7"
-    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-  endif
+  let &t_SI = "\<Esc>[3 q"
+  let &t_EI = "\<Esc>[0 q"
 endif
 
 " allow iTerm to report FocusGained FocusLost events

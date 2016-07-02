@@ -538,7 +538,7 @@ let g:go_highlight_fields = 0
 " airline settings {{{2
 let g:airline_theme='datanoise'
 let g:airline#extensions#whitespace#enabled = 0
-let g:airline#extensions#tabline#enabled = 0
+let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 nmap <silent> <leader>1 <Plug>AirlineSelectTab1
@@ -550,12 +550,6 @@ nmap <silent> <leader>6 <Plug>AirlineSelectTab6
 nmap <silent> <leader>7 <Plug>AirlineSelectTab7
 nmap <silent> <leader>8 <Plug>AirlineSelectTab8
 nmap <silent> <leader>9 <Plug>AirlineSelectTab9
-" if !exists('g:airline_symbols')
-"   let g:airline_symbols = {}
-" endif
-" let g:airline_symbols.branch = '⭠'
-" let g:airline_symbols.readonly = '⭤'
-" let g:airline_symbols.linenr = '⭡'
 
 " expand-region settings {{{2
 xmap n <plug>(expand_region_expand)

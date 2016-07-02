@@ -8,7 +8,7 @@ let s:termsep = 234
 let s:N1 = [ '#00dfff' , s:guibg , 45  , s:termbg ]
 let s:N2 = [ '#ff5f00' , s:guibg , 202 , s:termbg ]
 " let s:N3 = [ '#767676' , s:guibg , 7   , s:termbg ]
-let s:N3 = [ '#cccccc' , s:guibg , 7   , s:termbg ]
+let s:N3 = [ '#999999' , s:guibg , 7   , s:termbg ]
 
 let g:airline#themes#datanoise#palette.normal = airline#themes#generate_color_map(s:N1, s:N2, s:N3)
 let g:airline#themes#datanoise#palette.normal_modified = {
@@ -47,7 +47,6 @@ if !get(g:, 'loaded_ctrlp', 0)
   finish
 endif
 let g:airline#themes#datanoise#palette.ctrlp = airline#extensions#ctrlp#generate_color_map(
-      \ [ '#d7d7ff' , '#5f00af' , 189 , 55  , ''     ],
-      \ [ '#ffffff' , '#875fd7' , 231 , 98  , ''     ],
-      \ [ '#5f00af' , '#ffffff' , 55  , 231 , 'bold' ])
-
+      \ [ '#999999' , s:guibg , 253 , s:termbg  , ''     ] ,
+      \ [ '#999999' , s:guibg , 253 , s:termbg  , ''     ] ,
+      \ [ '#00dfff' , s:guibg , 253 , s:termbg  , 'bold' ] )

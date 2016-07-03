@@ -46,15 +46,12 @@ hi lCursor  guifg=bg guibg=fg
 hi CursorLine   guifg=NONE          guibg=#1b1b1b       gui=NONE
             \   ctermfg=NONE        ctermbg=NONE        cterm=NONE
 hi! link CursorLine CursorLine
-" hi StatusLine   term=reverse cterm=reverse gui=reverse guifg=gray60
-" hi StatusLineNC term=reverse cterm=reverse gui=reverse guifg=gray40
 hi StatusLine   guifg=#CCCCCC       guibg=#202020       gui=none
             \   ctermfg=white       ctermbg=darkgray    cterm=NONE
 hi StatusLineNC guifg=black         guibg=#202020       gui=NONE
             \   ctermfg=blue        ctermbg=darkgray    cterm=NONE
 hi SignColumn   guifg=#c8bcb9       guibg=#202020       gui=none
             \   ctermfg=lightgray   ctermbg=darkgray    cterm=NONE
-" hi VertSplit    term=reverse cterm=reverse gui=bold,reverse guifg=gray40
 hi VertSplit   guifg=#CCCCCC       guibg=#202020       gui=none
             \   ctermfg=white       ctermbg=darkgray    cterm=NONE
 hi Title    term=bold ctermfg=magenta gui=bold guifg=aquamarine
@@ -74,7 +71,6 @@ hi PmenuSel     guifg=#000000       guibg=#cae682       gui=NONE
             \   ctermfg=NONE        ctermbg=NONE        cterm=NONE
 
 " syntax hi colors
-" hi Comment  term=bold ctermfg=darkcyan guifg=cyan4
 hi Comment  term=bold ctermfg=darkcyan guifg=#8b8989
 hi PreProc  term=underline ctermfg=darkblue guifg=dodgerblue4
 hi Constant term=underline ctermfg=darkred guifg=firebrick3
@@ -113,13 +109,3 @@ hi link SpecialChar Special
 hi link Delimiter   Special
 hi link SpecialComment  Special
 hi link Debug       Special
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-hi link rubySymbol Symbol
-hi link elixirAtom  Symbol
-hi link jsObjectKey Symbol
-hi link htmlLink Normal
-hi link htmlItalic Normal
-hi link goDirective Define
-hi link goDeclaration Define
-hi link goField Identifier
-hi link goMethod Function

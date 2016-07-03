@@ -1,0 +1,2 @@
+hi link jsObjectKey Symbol
+

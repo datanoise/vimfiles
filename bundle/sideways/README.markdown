@@ -41,6 +41,16 @@ If you experiment with this example, you'll find that you can move the entire
 second list around, as long as the cursor is on one of the inner brackets. The
 plugin takes into consideration nested structures.
 
+It also works for multiline lists. Try experimenting with this example:
+
+``` html
+<div class="example"
+     style="color: red;"
+     something="other">
+  Example
+</div>
+```
+
 It's highly recommended to map the two main commands to convenient keys. For
 example, mapping them to `<c-h>` and `<c-l>` would look like this:
 ``` vim
@@ -53,14 +63,14 @@ The plugin also provides the commands `:SidewaysJumpLeft` and
 
 Other things that sideways works for:
 
-**Lists in CSS declarations**:
-``` css
-border-radius: 20px 0 0 20px;
-```
-
-**Single-line CSS declarations**:
+**CSS declarations**:
 ``` css
 a { color: #fff; background: blue; text-decoration: underline; }
+```
+
+**Lists within CSS declarations**:
+``` css
+border-radius: 20px 0 0 20px;
 ```
 
 **HTML attributes**:

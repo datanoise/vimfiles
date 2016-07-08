@@ -534,11 +534,12 @@ let g:go_highlight_types = 1
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_fields = 0
+let g:go_highlight_operators = 0
 
 " airline settings {{{2
 let g:airline_theme='datanoise'
 let g:airline#extensions#whitespace#enabled = 0
-let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#enabled = 0
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 nmap <silent> <leader>1 <Plug>AirlineSelectTab1

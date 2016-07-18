@@ -11,7 +11,8 @@ filetype plugin on    " Enable filetype-specific plugins
 set nocompatible      " We're running Vim, not Vi!
 
 " Section: Plugins {{{1
-silent! if plug#begin('~/.vim/plugged')
+silent! if plug#begin('~/.vim/bundle')
+  Plug 'tpope/vim-repeat'
   Plug 'tpope/vim-capslock'
   Plug 'tpope/vim-dispatch'
   Plug 'tpope/vim-fugitive'
@@ -27,6 +28,7 @@ silent! if plug#begin('~/.vim/plugged')
   Plug 'tpope/vim-markdown'
   Plug 'tpope/vim-unimpaired'
   Plug 'tpope/vim-haml'
+  Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
 
   Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
   Plug 'scrooloose/syntastic'
@@ -53,7 +55,6 @@ silent! if plug#begin('~/.vim/plugged')
     Plug 'fatih/vim-go'
   endif
   Plug 'terryma/vim-expand-region'
-  Plug 'tomtom/tcomment_vim'
   Plug 'pangloss/vim-javascript'
   Plug 'godlygeek/tabular'
   Plug 'majutsushi/tagbar'
@@ -76,6 +77,8 @@ silent! if plug#begin('~/.vim/plugged')
   Plug 'datanoise/vim-elixir'
   Plug 'datanoise/vim-crystal'
   Plug 'datanoise/vim-llvm'
+  Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
+  Plug 'Yggdroot/indentLine', { 'on': 'IndentLinesEnable' }
 
   if $TERM == "" || $TERM == 'xterm-256color' || $TERM == 'screen-256color'
     Plug 'vim-airline/vim-airline'
@@ -420,6 +423,11 @@ nnoremap <silent> <leader>sc :SyntasticCheck<CR>
 " better tab handling in wild menu mode
 set wildcharm=<C-Z>
 cnoremap <expr> <Tab> wildmenumode() ? "\<Right>" : "\<C-Z>"
+map  gc  <Plug>Commentary
+nmap gcc <Plug>CommentaryLine
+
+let g:undotree_WindowLayout = 2
+nnoremap U :UndotreeToggle<CR>
 
 " file type bindings {{{2
 au FileType coffee nnoremap <buffer> <F3> :CoffeeCompile<CR>

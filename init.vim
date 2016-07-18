@@ -673,10 +673,6 @@ xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
 
-" tcomment settings {{{2
-let g:tcommentGuessFileType_eelixir = 'html'
-let g:tcommentTextObjectInlineComment = ''
-
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"
 let g:CSApprox_verbose_level = 0 " to shut it up

@@ -353,8 +353,8 @@ au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
 au BufReadPost quickfix nmap <silent> <buffer> q :call <SID>close_quick_fix()<CR>
 au BufReadPost quickfix noremap <silent> <buffer> <CR> <CR>:call <SID>close_quick_fix()<CR>
 au BufReadPost quickfix noremap <silent> <buffer> <C-x> <CR>
-nnoremap <silent> <leader>< :SidewaysLeft<CR>
-nnoremap <silent> <leader>> :SidewaysRight<CR>
+nnoremap <silent> <leader>< :<C-u>SidewaysLeft<CR>
+nnoremap <silent> <leader>> :<C-u>SidewaysRight<CR>
 if has("cscope")
   au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
   au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
@@ -566,6 +566,16 @@ let g:expand_region_text_objects = get(g:, 'expand_region_text_objects', {
       \ 'ie'  :0,
       \})
 
+" easy-align settings {{{2
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+
+" tcomment settings {{{2
+let g:tcommentGuessFileType_eelixir = 'html'
+let g:tcommentTextObjectInlineComment = ''
+
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"
 let g:CSApprox_verbose_level = 0 " to shut it up
@@ -574,8 +584,8 @@ let g:xml_syntax_folding = 1 " enable folding in xml files
 let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
 " let g:netrw_liststyle = 3
 let g:racer_cmd = 'racer'
-let g:tcommentGuessFileType_eelixir = 'html'
 let g:jsx_ext_required = 0
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
+
 
 " }}}

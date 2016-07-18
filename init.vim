@@ -42,7 +42,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign'] }
   Plug 'junegunn/goyo.vim'
   Plug 'junegunn/limelight.vim'
-  Plug 'junegunn/gv.vim'
+  Plug 'junegunn/gv.vim', { 'on': 'GV' }
 
   Plug 'AndrewRadev/splitjoin.vim'
   Plug 'AndrewRadev/sideways.vim'

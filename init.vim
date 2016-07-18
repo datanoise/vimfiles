@@ -3,20 +3,107 @@
 " Section: Global Setting {{{1
 " ------------------------------------------------------------------------------
 runtime! macros/matchit.vim
-set nocompatible      " We're running Vim, not Vi!
-let g:pathogen_disabled = []
-if $GOPATH == ""
-  call add(g:pathogen_disabled, "go")
-endif
-if $TERM != "" && $TERM != 'xterm-256color' && $TERM != 'screen-256color'
-  call add(g:pathogen_disabled, 'airline')
-endif
-call pathogen#infect('bundle/{}')
-call pathogen#helptags()
 syntax on             " Enable syntax highlighting
 filetype on           " Enable filetype detection
 filetype indent on    " Enable filetype-specific indenting
 filetype plugin on    " Enable filetype-specific plugins
+
+set nocompatible      " We're running Vim, not Vi!
+
+" Section: Plugins {{{1
+silent! if plug#begin('~/.vim/plugged')
+  Plug 'tpope/vim-capslock'
+  Plug 'tpope/vim-dispatch'
+  Plug 'tpope/vim-fugitive'
+  Plug 'tpope/vim-rake'
+  Plug 'tpope/vim-ragtag'
+  Plug 'tpope/vim-rails'
+  Plug 'tpope/vim-scriptease'
+  Plug 'tpope/vim-tbone'
+  Plug 'tpope/vim-sleuth'
+  Plug 'tpope/vim-surround'
+  Plug 'tpope/vim-vinegar', { 'for': 'netrw' }
+  Plug 'tpope/vim-git'
+  Plug 'tpope/vim-markdown'
+  Plug 'tpope/vim-unimpaired'
+  Plug 'tpope/vim-haml'
+
+  Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+  Plug 'scrooloose/syntastic'
+
+  Plug 'vim-scripts/a.vim'
+  Plug 'vim-scripts/ag.vim'
+  Plug 'vim-scripts/bufexplorer.zip'
+  Plug 'vim-scripts/nginx.vim'
+  Plug 'vim-scripts/ColorSchemeMenuMaker'
+
+  Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign'] }
+  Plug 'junegunn/goyo.vim'
+  Plug 'junegunn/limelight.vim'
+  Plug 'junegunn/gv.vim'
+
+  Plug 'AndrewRadev/splitjoin.vim'
+  Plug 'AndrewRadev/sideways.vim'
+  Plug 'datanoise/switch.vim'
+
+  Plug 'mileszs/ack.vim'
+  Plug 'kchmck/vim-coffee-script'
+  Plug 'Raimondi/delimitMate'
+  if $GOPATH != ""
+    Plug 'fatih/vim-go'
+  endif
+  Plug 'terryma/vim-expand-region'
+  Plug 'tomtom/tcomment_vim'
+  Plug 'pangloss/vim-javascript'
+  Plug 'godlygeek/tabular'
+  Plug 'majutsushi/tagbar'
+  Plug 'vim-ruby/vim-ruby'
+  Plug 'rust-lang/rust.vim'
+  Plug 'racer-rust/vim-racer'
+  Plug 'keith/swift.vim'
+  Plug 'ervandew/supertab'
+  Plug 'tmux-plugins/vim-tmux'
+  Plug 'cespare/vim-toml'
+  Plug 'digitaltoad/vim-pug'
+  Plug 'ekalinin/Dockerfile.vim'
+  Plug 'hallison/vim-rdoc'
+  Plug 'groenewege/vim-less'
+  Plug 'jneen/ragel.vim'
+  Plug 'mxw/vim-jsx'
+  Plug 'leshill/vim-json'
+  Plug 'ajf/puppet-vim'
+  Plug 'othree/html5.vim'
+  Plug 'datanoise/vim-elixir'
+  Plug 'datanoise/vim-crystal'
+  Plug 'datanoise/vim-llvm'
+
+  if $TERM == "" || $TERM == 'xterm-256color' || $TERM == 'screen-256color'
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
+  endif
+
+  Plug 'ctrlpvim/ctrlp.vim'
+  Plug 'ompugao/ctrlp-history'
+  Plug 'mattn/ctrlp-mark'
+  Plug 'mattn/ctrlp-register'
+  Plug 'kaneshin/ctrlp-tabbed'
+
+  Plug 'kana/vim-textobj-user'
+  Plug 'kana/vim-textobj-line'
+  Plug 'kana/vim-textobj-function'
+  Plug 'kana/vim-textobj-indent'
+  Plug 'kana/vim-textobj-entire'
+  Plug 'kana/vim-textobj-fold'
+  Plug 'kana/vim-textobj-diff'
+  Plug 'kana/vim-textobj-lastpat'
+  Plug 'kana/vim-textobj-syntax'
+  Plug 'kana/vim-textobj-datetime'
+  Plug 'datanoise/vim-textobj-quoted'
+  Plug 'nelstrom/vim-textobj-rubyblock'
+  Plug 'thinca/vim-textobj-between'
+
+  call plug#end()
+endif
 
 "
 " Section: Functions {{{1
@@ -353,8 +440,14 @@ au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
 au BufReadPost quickfix nmap <silent> <buffer> q :call <SID>close_quick_fix()<CR>
 au BufReadPost quickfix noremap <silent> <buffer> <CR> <CR>:call <SID>close_quick_fix()<CR>
 au BufReadPost quickfix noremap <silent> <buffer> <C-x> <CR>
-nnoremap <silent> <leader>< :<C-u>SidewaysLeft<CR>
-nnoremap <silent> <leader>> :<C-u>SidewaysRight<CR>
+if has_key(g:plugs, 'sideways.vim')
+  nnoremap <silent> <leader>< :<C-u>SidewaysLeft<CR>
+  nnoremap <silent> <leader>> :<C-u>SidewaysRight<CR>
+endif
+if has_key(g:plugs, 'vim-surround')
+  xmap s   <Plug>VSurround
+  xmap gs  <Plug>VgSurround
+endif
 if has("cscope")
   au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
   au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>

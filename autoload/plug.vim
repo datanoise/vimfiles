@@ -593,11 +593,11 @@ function! s:syntax()
   syn match plugNumber /[0-9]\+[0-9.]*/ contained
   syn match plugBracket /[[\]]/ contained
   syn match plugX /x/ contained
-  syn match plugDash /^-/
+  syn match plugDash /^-/ nextgroup=plugName,plugMessage skipwhite
   syn match plugPlus /^+/
   syn match plugStar /^*/
-  syn match plugMessage /\(^- \)\@<=.*/
-  syn match plugName /\(^- \)\@<=[^ ]*:/
+  syn match plugName /\(\w\|[-.]\)\+:/ contained
+  " syn match plugMessage /[^:]*/ contained
   syn match plugSha /\%(: \)\@<=[0-9a-f]\{4,}$/
   syn match plugTag /(tag: [^)]\+)/
   syn match plugInstall /\(^+ \)\@<=[^:]*/

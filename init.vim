@@ -87,18 +87,21 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-bclose',         { 'on': 'Bclose' }
   Plug 'mbbill/undotree',              { 'on': 'UndotreeToggle' }
   Plug 'Yggdroot/indentLine',          { 'on': 'IndentLinesEnable' }
+  Plug 'airblade/vim-gitgutter',       { 'on': ['GitGutterToggle', 'GitGutterEnable'] }
 
   if $TERM == "" || $TERM == 'xterm-256color' || $TERM == 'screen-256color'
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
   endif
 
+  " ctrlp
   Plug 'ctrlpvim/ctrlp.vim'
   Plug 'ompugao/ctrlp-history'
   Plug 'mattn/ctrlp-mark'
   Plug 'mattn/ctrlp-register'
   Plug 'kaneshin/ctrlp-tabbed'
 
+  " text objects
   Plug 'kana/vim-textobj-user'
   Plug 'kana/vim-textobj-line'
   Plug 'kana/vim-textobj-function'
@@ -687,10 +690,19 @@ let g:expand_region_text_objects = get(g:, 'expand_region_text_objects', {
       \})
 
 " easy-align settings {{{2
-" Start interactive EasyAlign in visual mode (e.g. vipga)
-xmap ga <Plug>(EasyAlign)
-" Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
+if has_key(g:plugs, 'vim-easy-align')
+  " Start interactive EasyAlign in visual mode (e.g. vipga)
+  xmap ga <Plug>(EasyAlign)
+  " Start interactive EasyAlign for a motion/text object (e.g. gaip)
+  nmap ga <Plug>(EasyAlign)
+endif
+
+" gitgutter settings {{{2
+if has_key(g:plugs, 'vim-gitgutter')
+  let g:gitgutter_sign_column_always = 1
+  let g:gitgutter_enabled = 0
+  nnoremap <leader>gg :GitGutterToggle<CR>
+endif
 
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"

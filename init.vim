@@ -79,6 +79,11 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-elixir'
   Plug 'datanoise/vim-crystal'
   Plug 'datanoise/vim-llvm'
+  Plug 'datanoise/vim-indexed-search'
+  Plug 'datanoise/vim-cmdline-complete'
+  Plug 'datanoise/vim-localvimrc'
+  Plug 'datanoise/vim-searchfold'
+  Plug 'datanoise/vim-bclose'
   Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
   Plug 'Yggdroot/indentLine', { 'on': 'IndentLinesEnable' }
 
@@ -459,6 +464,7 @@ if has_key(g:plugs, 'vim-surround')
   xmap s   <Plug>VSurround
   xmap gs  <Plug>VgSurround
 endif
+
 if has("cscope")
   au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
   au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>

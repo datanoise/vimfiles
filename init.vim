@@ -683,6 +683,6 @@ let g:rgbtxt = expand('~/.vim/bundle/csmm/rgb.txt')
 let g:racer_cmd = 'racer'
 let g:jsx_ext_required = 0
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
-
+let g:plug_window = 'enew'
 
 " }}}

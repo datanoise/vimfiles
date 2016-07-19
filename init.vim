@@ -75,6 +75,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'leshill/vim-json'
   Plug 'ajf/puppet-vim'
   Plug 'othree/html5.vim'
+  Plug 'flazz/vim-colorschemes'
   Plug 'datanoise/vim-elixir'
   Plug 'datanoise/vim-crystal'
   Plug 'datanoise/vim-llvm'

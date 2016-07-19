@@ -23,7 +23,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-tbone'
   Plug 'tpope/vim-sleuth'
   Plug 'tpope/vim-surround'
-  Plug 'tpope/vim-vinegar', { 'for': 'netrw' }
+  Plug 'tpope/vim-vinegar'
   Plug 'tpope/vim-git'
   Plug 'tpope/vim-markdown'
   Plug 'tpope/vim-unimpaired'

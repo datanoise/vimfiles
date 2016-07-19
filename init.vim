@@ -58,7 +58,6 @@ silent! if plug#begin('~/.vim/bundle')
   endif
   Plug 'terryma/vim-expand-region'
   Plug 'pangloss/vim-javascript'
-  Plug 'godlygeek/tabular', { 'on': 'Tabularize' }
   Plug 'majutsushi/tagbar'
   Plug 'vim-ruby/vim-ruby'
   Plug 'rust-lang/rust.vim'
@@ -79,13 +78,14 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-elixir'
   Plug 'datanoise/vim-crystal'
   Plug 'datanoise/vim-llvm'
-  Plug 'datanoise/vim-indexed-search'
-  Plug 'datanoise/vim-cmdline-complete'
   Plug 'datanoise/vim-localvimrc'
-  Plug 'datanoise/vim-searchfold'
-  Plug 'datanoise/vim-bclose'
-  Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
-  Plug 'Yggdroot/indentLine', { 'on': 'IndentLinesEnable' }
+  Plug 'godlygeek/tabular',              { 'on': 'Tabularize' }
+  Plug 'datanoise/vim-cmdline-complete', { 'on': ['<Plug>CmdlineCompleteBackward', '<Plug>CmdlineCompleteForward'] }
+  Plug 'datanoise/vim-indexed-search',   { 'on': 'ShowSearchIndex' }
+  Plug 'datanoise/vim-searchfold',       { 'on': '<Plug>SearchFoldNormal' }
+  Plug 'datanoise/vim-bclose',           { 'on': 'Bclose' }
+  Plug 'mbbill/undotree',                { 'on': 'UndotreeToggle' }
+  Plug 'Yggdroot/indentLine',            { 'on': 'IndentLinesEnable' }
 
   if $TERM == "" || $TERM == 'xterm-256color' || $TERM == 'screen-256color'
     Plug 'vim-airline/vim-airline'
@@ -433,6 +433,12 @@ cnoremap <expr> <Tab> wildmenumode() ? "\<Right>" : "\<C-Z>"
 map  gc  <Plug>Commentary
 nmap gcc <Plug>CommentaryLine
 nnoremap <silent> <leader>be :BufExplorer<CR>
+nmap <Leader>z <Plug>SearchFoldNormal
+
+if has_key(g:plugs, 'vim-cmdline-complete')
+  cmap <unique> <silent> <c-p> <Plug>CmdlineCompleteBackward
+  cmap <unique> <silent> <c-n> <Plug>CmdlineCompleteForward
+endif
 
 let g:undotree_WindowLayout = 2
 nnoremap U :UndotreeToggle<CR>

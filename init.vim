@@ -35,13 +35,15 @@ silent! if plug#begin('~/.vim/bundle')
 
   Plug 'vim-scripts/a.vim'
   Plug 'vim-scripts/ag.vim'
-  Plug 'vim-scripts/bufexplorer.zip'
+  Plug 'vim-scripts/bufexplorer.zip', { 'on': 'BufExplorer' }
   Plug 'vim-scripts/nginx.vim'
-  Plug 'vim-scripts/ColorSchemeMenuMaker'
+  if has('gui')
+    Plug 'vim-scripts/ColorSchemeMenuMaker'
+  endif
 
   Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign'] }
   Plug 'junegunn/goyo.vim'
-  Plug 'junegunn/limelight.vim'
+  Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
   Plug 'junegunn/gv.vim', { 'on': 'GV' }
 
   Plug 'AndrewRadev/splitjoin.vim'
@@ -56,7 +58,7 @@ silent! if plug#begin('~/.vim/bundle')
   endif
   Plug 'terryma/vim-expand-region'
   Plug 'pangloss/vim-javascript'
-  Plug 'godlygeek/tabular'
+  Plug 'godlygeek/tabular', { 'on': 'Tabularize' }
   Plug 'majutsushi/tagbar'
   Plug 'vim-ruby/vim-ruby'
   Plug 'rust-lang/rust.vim'
@@ -425,6 +427,7 @@ set wildcharm=<C-Z>
 cnoremap <expr> <Tab> wildmenumode() ? "\<Right>" : "\<C-Z>"
 map  gc  <Plug>Commentary
 nmap gcc <Plug>CommentaryLine
+nnoremap <silent> <leader>be :BufExplorer<CR>
 
 let g:undotree_WindowLayout = 2
 nnoremap U :UndotreeToggle<CR>

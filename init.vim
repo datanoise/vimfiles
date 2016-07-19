@@ -79,13 +79,13 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-crystal'
   Plug 'datanoise/vim-llvm'
   Plug 'datanoise/vim-localvimrc'
-  Plug 'godlygeek/tabular',              { 'on': 'Tabularize' }
-  Plug 'datanoise/vim-cmdline-complete', { 'on': ['<Plug>CmdlineCompleteBackward', '<Plug>CmdlineCompleteForward'] }
-  Plug 'datanoise/vim-indexed-search',   { 'on': 'ShowSearchIndex' }
-  Plug 'datanoise/vim-searchfold',       { 'on': '<Plug>SearchFoldNormal' }
-  Plug 'datanoise/vim-bclose',           { 'on': 'Bclose' }
-  Plug 'mbbill/undotree',                { 'on': 'UndotreeToggle' }
-  Plug 'Yggdroot/indentLine',            { 'on': 'IndentLinesEnable' }
+  Plug 'datanoise/vim-cmdline-complete'
+  Plug 'godlygeek/tabular',            { 'on': 'Tabularize' }
+  Plug 'datanoise/vim-indexed-search', { 'on': 'ShowSearchIndex' }
+  Plug 'datanoise/vim-searchfold',     { 'on': '<Plug>SearchFoldNormal' }
+  Plug 'datanoise/vim-bclose',         { 'on': 'Bclose' }
+  Plug 'mbbill/undotree',              { 'on': 'UndotreeToggle' }
+  Plug 'Yggdroot/indentLine',          { 'on': 'IndentLinesEnable' }
 
   if $TERM == "" || $TERM == 'xterm-256color' || $TERM == 'screen-256color'
     Plug 'vim-airline/vim-airline'
@@ -430,18 +430,29 @@ nnoremap <silent> <leader>sc :SyntasticCheck<CR>
 " better tab handling in wild menu mode
 set wildcharm=<C-Z>
 cnoremap <expr> <Tab> wildmenumode() ? "\<Right>" : "\<C-Z>"
-map  gc  <Plug>Commentary
-nmap gcc <Plug>CommentaryLine
-nnoremap <silent> <leader>be :BufExplorer<CR>
-nmap <Leader>z <Plug>SearchFoldNormal
 
-if has_key(g:plugs, 'vim-cmdline-complete')
-  cmap <unique> <silent> <c-p> <Plug>CmdlineCompleteBackward
-  cmap <unique> <silent> <c-n> <Plug>CmdlineCompleteForward
+if has_key(g:plugs, 'vim-commentary')
+  map  gc  <Plug>Commentary
+  nmap gcc <Plug>CommentaryLine
+end
+if has_key(g:plugs, 'bufexplorer.zip')
+  nnoremap <silent> <leader>be :BufExplorer<CR>
+end
+if has_key(g:plugs, 'searchfold')
+  nmap <Leader>z <Plug>SearchFoldNormal
 endif
-
-let g:undotree_WindowLayout = 2
-nnoremap U :UndotreeToggle<CR>
+if has_key(g:plugs, 'sideways.vim')
+  nnoremap <silent> <leader>< :<C-u>SidewaysLeft<CR>
+  nnoremap <silent> <leader>> :<C-u>SidewaysRight<CR>
+endif
+if has_key(g:plugs, 'vim-surround')
+  xmap s   <Plug>VSurround
+  xmap gs  <Plug>VgSurround
+endif
+if has_key(g:plugs, 'undotree')
+  let g:undotree_WindowLayout = 2
+  nnoremap U :UndotreeToggle<CR>
+endif
 
 " file type bindings {{{2
 au FileType coffee nnoremap <buffer> <F3> :CoffeeCompile<CR>
@@ -462,14 +473,6 @@ au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
 au BufReadPost quickfix nmap <silent> <buffer> q :call <SID>close_quick_fix()<CR>
 au BufReadPost quickfix noremap <silent> <buffer> <CR> <CR>:call <SID>close_quick_fix()<CR>
 au BufReadPost quickfix noremap <silent> <buffer> <C-x> <CR>
-if has_key(g:plugs, 'sideways.vim')
-  nnoremap <silent> <leader>< :<C-u>SidewaysLeft<CR>
-  nnoremap <silent> <leader>> :<C-u>SidewaysRight<CR>
-endif
-if has_key(g:plugs, 'vim-surround')
-  xmap s   <Plug>VSurround
-  xmap gs  <Plug>VgSurround
-endif
 
 if has("cscope")
   au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>

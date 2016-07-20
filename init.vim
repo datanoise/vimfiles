@@ -37,9 +37,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'vim-scripts/ag.vim'
   Plug 'vim-scripts/bufexplorer.zip', { 'on': 'BufExplorer' }
   Plug 'vim-scripts/nginx.vim'
-  if has('gui')
-    Plug 'vim-scripts/ColorSchemeMenuMaker'
-  endif
 
   Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign'] }
   Plug 'junegunn/goyo.vim'
@@ -56,7 +53,6 @@ silent! if plug#begin('~/.vim/bundle')
   if $GOPATH != ""
     Plug 'fatih/vim-go'
   endif
-  Plug 'terryma/vim-expand-region'
   Plug 'pangloss/vim-javascript'
   Plug 'majutsushi/tagbar'
   Plug 'vim-ruby/vim-ruby'
@@ -76,6 +72,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'ajf/puppet-vim'
   Plug 'othree/html5.vim'
   Plug 'flazz/vim-colorschemes'
+  Plug 'ap/vim-css-color'
   Plug 'datanoise/vim-elixir'
   Plug 'datanoise/vim-crystal'
   Plug 'datanoise/vim-llvm'
@@ -88,6 +85,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'mbbill/undotree',              { 'on': 'UndotreeToggle' }
   Plug 'Yggdroot/indentLine',          { 'on': 'IndentLinesEnable' }
   Plug 'airblade/vim-gitgutter',       { 'on': ['GitGutterToggle', 'GitGutterEnable'] }
+  Plug 'gcmt/wildfire.vim',            { 'on': ['<Plug>(wildfire-fuel)', '<Plug>(wildfire-water)'] }
 
   if $TERM == "" || $TERM == 'xterm-256color' || $TERM == 'screen-256color'
     Plug 'vim-airline/vim-airline'
@@ -675,19 +673,11 @@ nmap <silent> <leader>7 <Plug>AirlineSelectTab7
 nmap <silent> <leader>8 <Plug>AirlineSelectTab8
 nmap <silent> <leader>9 <Plug>AirlineSelectTab9
 
-" expand-region settings {{{2
-xmap n <plug>(expand_region_expand)
-xmap m <Plug>(expand_region_shrink)
-let g:expand_region_text_objects = get(g:, 'expand_region_text_objects', {
-      \ 'i"'  :0,
-      \ 'i''' :0,
-      \ 'i]'  :1,
-      \ 'ib'  :1,
-      \ 'iB'  :1,
-      \ 'il'  :0,
-      \ 'ip'  :0,
-      \ 'ie'  :0,
-      \})
+" wildfire settings {{{2
+nmap <silent> <Enter> <Plug>(wildfire-fuel)
+vmap <silent> <Enter> <Plug>(wildfire-fuel)
+vmap <silent> <BS> <Plug>(wildfire-water)
+let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "il", "ip", "ii", "it"]
 
 " easy-align settings {{{2
 if has_key(g:plugs, 'vim-easy-align')

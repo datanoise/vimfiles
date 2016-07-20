@@ -83,7 +83,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-cmdline-complete'
   Plug 'godlygeek/tabular',            { 'on': 'Tabularize' }
   Plug 'datanoise/vim-indexed-search', { 'on': 'ShowSearchIndex' }
-  Plug 'datanoise/vim-searchfold',     { 'on': '<Plug>SearchFoldNormal' }
+  Plug 'vim-scripts/searchfold.vim',   { 'on': '<Plug>SearchFoldNormal' }
   Plug 'datanoise/vim-bclose',         { 'on': 'Bclose' }
   Plug 'mbbill/undotree',              { 'on': 'UndotreeToggle' }
   Plug 'Yggdroot/indentLine',          { 'on': 'IndentLinesEnable' }

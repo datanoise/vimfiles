@@ -47,12 +47,54 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'AndrewRadev/sideways.vim'
   Plug 'datanoise/switch.vim'
 
-  Plug 'mileszs/ack.vim'
-  Plug 'kchmck/vim-coffee-script'
-  Plug 'Raimondi/delimitMate'
+  " ctrlp
+  Plug 'ctrlpvim/ctrlp.vim'
+  Plug 'ompugao/ctrlp-history'
+  Plug 'mattn/ctrlp-mark'
+  Plug 'mattn/ctrlp-register'
+  Plug 'kaneshin/ctrlp-tabbed'
+
+  " text objects
+  Plug 'kana/vim-textobj-user'
+  Plug 'kana/vim-textobj-line'
+  Plug 'kana/vim-textobj-function'
+  Plug 'kana/vim-textobj-indent'
+  Plug 'kana/vim-textobj-entire'
+  Plug 'kana/vim-textobj-fold'
+  Plug 'kana/vim-textobj-diff'
+  Plug 'kana/vim-textobj-lastpat'
+  Plug 'kana/vim-textobj-syntax'
+  Plug 'kana/vim-textobj-datetime'
+  Plug 'datanoise/vim-textobj-quoted'
+  Plug 'nelstrom/vim-textobj-rubyblock'
+  Plug 'thinca/vim-textobj-between'
+
+  " text mode
+  Plug 'reedes/vim-pencil',      { 'for': ['text', 'markdown', 'mkd'] }
+  Plug 'reedes/vim-litecorrect', { 'for': ['text', 'markdown', 'mkd'] }
+
+  " airline
+  if $TERM == "" || $TERM == 'xterm-256color' || $TERM == 'screen-256color'
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
+  endif
+
   if $GOPATH != ""
     Plug 'fatih/vim-go'
   endif
+
+  Plug 'godlygeek/tabular',            { 'on': 'Tabularize' }
+  Plug 'datanoise/vim-indexed-search', { 'on': 'ShowSearchIndex' }
+  Plug 'vim-scripts/searchfold.vim',   { 'on': '<Plug>SearchFoldNormal' }
+  Plug 'datanoise/vim-bclose',         { 'on': 'Bclose' }
+  Plug 'mbbill/undotree',              { 'on': 'UndotreeToggle' }
+  Plug 'Yggdroot/indentLine',          { 'on': 'IndentLinesEnable' }
+  Plug 'airblade/vim-gitgutter',       { 'on': ['GitGutterToggle', 'GitGutterEnable'] }
+  Plug 'gcmt/wildfire.vim',            { 'on': ['<Plug>(wildfire-fuel)', '<Plug>(wildfire-water)'] }
+
+  Plug 'mileszs/ack.vim'
+  Plug 'kchmck/vim-coffee-script'
+  Plug 'Raimondi/delimitMate'
   Plug 'pangloss/vim-javascript'
   Plug 'majutsushi/tagbar'
   Plug 'vim-ruby/vim-ruby'
@@ -78,44 +120,8 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-llvm'
   Plug 'datanoise/vim-localvimrc'
   Plug 'datanoise/vim-cmdline-complete'
-  Plug 'godlygeek/tabular',            { 'on': 'Tabularize' }
-  Plug 'datanoise/vim-indexed-search', { 'on': 'ShowSearchIndex' }
-  Plug 'vim-scripts/searchfold.vim',   { 'on': '<Plug>SearchFoldNormal' }
-  Plug 'datanoise/vim-bclose',         { 'on': 'Bclose' }
-  Plug 'mbbill/undotree',              { 'on': 'UndotreeToggle' }
-  Plug 'Yggdroot/indentLine',          { 'on': 'IndentLinesEnable' }
-  Plug 'airblade/vim-gitgutter',       { 'on': ['GitGutterToggle', 'GitGutterEnable'] }
-  Plug 'gcmt/wildfire.vim',            { 'on': ['<Plug>(wildfire-fuel)', '<Plug>(wildfire-water)'] }
+  Plug 'rhysd/conflict-marker.vim'
 
-  if $TERM == "" || $TERM == 'xterm-256color' || $TERM == 'screen-256color'
-    Plug 'vim-airline/vim-airline'
-    Plug 'vim-airline/vim-airline-themes'
-  endif
-
-  " ctrlp
-  Plug 'ctrlpvim/ctrlp.vim'
-  Plug 'ompugao/ctrlp-history'
-  Plug 'mattn/ctrlp-mark'
-  Plug 'mattn/ctrlp-register'
-  Plug 'kaneshin/ctrlp-tabbed'
-
-  " text objects
-  Plug 'kana/vim-textobj-user'
-  Plug 'kana/vim-textobj-line'
-  Plug 'kana/vim-textobj-function'
-  Plug 'kana/vim-textobj-indent'
-  Plug 'kana/vim-textobj-entire'
-  Plug 'kana/vim-textobj-fold'
-  Plug 'kana/vim-textobj-diff'
-  Plug 'kana/vim-textobj-lastpat'
-  Plug 'kana/vim-textobj-syntax'
-  Plug 'kana/vim-textobj-datetime'
-  Plug 'datanoise/vim-textobj-quoted'
-  Plug 'nelstrom/vim-textobj-rubyblock'
-  Plug 'thinca/vim-textobj-between'
-
-  Plug 'reedes/vim-pencil',      { 'for': ['text', 'markdown', 'mkd'] }
-  Plug 'reedes/vim-litecorrect', { 'for': ['text', 'markdown', 'mkd'] }
   call plug#end()
 endif
 

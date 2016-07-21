@@ -114,6 +114,8 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'nelstrom/vim-textobj-rubyblock'
   Plug 'thinca/vim-textobj-between'
 
+  Plug 'reedes/vim-pencil',      { 'for': ['text', 'markdown', 'mkd'] }
+  Plug 'reedes/vim-litecorrect', { 'for': ['text', 'markdown', 'mkd'] }
   call plug#end()
 endif
 
@@ -145,33 +147,14 @@ function! Eatchar(pat)
    return (c =~ a:pat) ? '' : c
 endfunction
 
-function! s:alt_char(c)
-  if a:c == '{'
-    return '}'
-  elseif a:c == '['
-    return ']'
-  elseif a:c == '('
-    return ')'
-  endif
-endfunction
-
-function! s:space_inside_curly()
-  let l = getline('.')
-  let c = col('.')
-  if l[c-2] =~ '[{([]' && l[c-1] == s:alt_char(l[c-2])
-    return "\<Space>\<Space>\<Left>"
-  endif
-  return "\<Space>"
-endfunction
-
-function! s:VSetSearch()
+function! s:vset_search()
   let tmp = @s
   norm! gv"sy
   let @/ = '\V' . substitute(escape(@s, '/\'), '\n', '\\n', 'g')
   let @s = tmp
 endfunction
 
-function! s:FilterQuickfixList(bang, pattern)
+function! s:filter_quickfix(bang, pattern)
   let cmp = a:bang ? '!~#' : '=~#'
   call setqflist(filter(getqflist(), "bufname(v:val['bufnr']) " . cmp . " a:pattern"))
 endfunction
@@ -392,7 +375,7 @@ nnoremap <leader>a :let align = input("Align to: ")<Bar>exe ":Tab /" . align<CR>
 " inoremap [<CR> [<CR>]<Esc>O
 " inoremap {<Space> {}<Esc>i<Space><Space><Esc>i
 " inoremap [<Space> []<Esc>i<Space><Space><Esc>i
-inoremap <silent> <Space> <C-R>=<SID>space_inside_curly()<CR>
+" inoremap <silent> <Space> <C-R>=<SID>space_inside_curly()<CR>
 inoremap <silent> <C-l> <C-\><C-O>:call search('[{("\[\]'')}]', 'Wc', line('.'))<CR><Right>
 " inoremap jj <Esc>
 " imap kk <C-O>A<Enter>
@@ -423,8 +406,8 @@ nnoremap <silent> <leader>gs :Gstatus<CR>
 nnoremap <silent> <leader>gh :Git push<CR>
 nnoremap <silent> <leader>gl :Git pull<CR>
 " quick search in visual mode
-xnoremap <silent> * :<C-u>call <SID>VSetSearch()<CR>/<C-R>=@/<CR><CR>
-xnoremap <silent> # :<C-u>call <SID>VSetSearch()<CR>?<C-R>=@/<CR><CR>
+xnoremap <silent> * :<C-u>call <SID>vset_search()<CR>/<C-R>=@/<CR><CR>
+xnoremap <silent> # :<C-u>call <SID>vset_search()<CR>?<C-R>=@/<CR><CR>
 " split join mappings
 nnoremap <silent> <leader>ss :SplitjoinSplit<CR>
 nnoremap <silent> <leader>sj :SplitjoinJoin<CR>
@@ -493,7 +476,7 @@ endif
 " NOTE: that doesn't work in MacVim gui mode if sudo requests a password!!!
 command! -bar -nargs=0 SudoW   :exe "write !sudo tee % >/dev/null"|silent edit!
 au FileType ruby iabbrev <buffer> rb! #!<C-R>=substitute(system('which ruby'),'\n$','','')<CR><C-R>=Eatchar('\s')<CR>
-command! -bang -nargs=1 -complete=file QFilter call s:FilterQuickfixList(<bang>0, <q-args>)
+command! -bang -nargs=1 -complete=file QFilter call s:filter_quickfix(<bang>0, <q-args>)
 au FileType markdown command! -nargs=0 -complete=file -buffer Preview :exe "sil !markdown " . expand('%') ."| bcat" | :redraw!
 cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
 cabbr ack Ack
@@ -694,6 +677,15 @@ if has_key(g:plugs, 'vim-gitgutter')
   nnoremap <leader>gg :GitGutterToggle<CR>
 endif
 
+" text settings {{{2
+augroup text
+  autocmd!
+  autocmd FileType markdown,mkd,text
+        \ call pencil#init() |
+        \ call litecorrect#init() |
+        \ let g:airline_section_x = '%{PencilMode()}'
+augroup END
+
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"
 let c_comment_strings = 1 " I like highlighting strings inside C comments
@@ -702,5 +694,6 @@ let g:racer_cmd = 'racer'
 let g:jsx_ext_required = 0
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
 let g:plug_window = 'enew'
+let delimitMate_expand_space = 1
 
 " }}}

@@ -377,11 +377,6 @@ au CmdwinEnter * nmap <buffer> q :q<CR>
 nnoremap <silent> <leader>Q :bd<CR>
 nnoremap [S [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
 nnoremap <leader>a :let align = input("Align to: ")<Bar>exe ":Tab /" . align<CR>
-" inoremap {<CR> {<CR>}<Esc>O
-" inoremap [<CR> [<CR>]<Esc>O
-" inoremap {<Space> {}<Esc>i<Space><Space><Esc>i
-" inoremap [<Space> []<Esc>i<Space><Space><Esc>i
-" inoremap <silent> <Space> <C-R>=<SID>space_inside_curly()<CR>
 inoremap <silent> <C-l> <C-\><C-O>:call search('[{("\[\]'')}]', 'Wc', line('.'))<CR><Right>
 " inoremap jj <Esc>
 " imap kk <C-O>A<Enter>

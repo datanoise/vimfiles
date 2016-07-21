@@ -25,18 +25,14 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-surround'
   Plug 'tpope/vim-vinegar'
   Plug 'tpope/vim-git'
-  Plug 'tpope/vim-markdown'
   Plug 'tpope/vim-unimpaired'
-  Plug 'tpope/vim-haml'
   Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
 
   Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
   Plug 'scrooloose/syntastic'
 
-  Plug 'vim-scripts/a.vim'
   Plug 'vim-scripts/ag.vim'
   Plug 'vim-scripts/bufexplorer.zip', { 'on': 'BufExplorer' }
-  Plug 'vim-scripts/nginx.vim'
 
   Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign'] }
   Plug 'junegunn/goyo.vim'
@@ -46,6 +42,30 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'AndrewRadev/splitjoin.vim'
   Plug 'AndrewRadev/sideways.vim'
   Plug 'datanoise/switch.vim'
+
+  " file types
+  Plug 'othree/html5.vim'
+  Plug 'tpope/vim-markdown'
+  Plug 'tpope/vim-haml',           { 'for': ['haml', 'sass', 'scss'] }
+  Plug 'vim-ruby/vim-ruby',        { 'for': 'ruby' }
+  Plug 'rust-lang/rust.vim',       { 'for': 'rust' }
+  Plug 'keith/swift.vim',          { 'for': 'swift' }
+  Plug 'vim-scripts/nginx.vim',    { 'for': 'nginx' }
+  Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
+  Plug 'pangloss/vim-javascript',  { 'for': 'javascript' }
+  Plug 'mxw/vim-jsx',              { 'for': 'javascript' }
+  Plug 'tmux-plugins/vim-tmux',    { 'for': 'tmux' }
+  Plug 'digitaltoad/vim-pug',      { 'for': ['pug', 'jade'] }
+  Plug 'ekalinin/Dockerfile.vim',  { 'for': 'Dockerfile' }
+  Plug 'hallison/vim-rdoc',        { 'for': 'rdoc' }
+  Plug 'groenewege/vim-less',      { 'for': 'less' }
+  Plug 'jneen/ragel.vim',          { 'for': 'ragel' }
+  Plug 'leshill/vim-json',         { 'for': 'json' }
+  Plug 'ajf/puppet-vim',           { 'for': 'puppet' }
+  Plug 'cespare/vim-toml',         { 'for': 'toml' }
+  Plug 'datanoise/vim-elixir',     { 'for': ['elixir', 'eelixir'] }
+  Plug 'datanoise/vim-crystal',    { 'for': ['crystal', 'html'] }
+  Plug 'datanoise/vim-llvm',       { 'for': 'llvm' }
 
   " ctrlp
   Plug 'ctrlpvim/ctrlp.vim'
@@ -80,7 +100,7 @@ silent! if plug#begin('~/.vim/bundle')
   endif
 
   if $GOPATH != ""
-    Plug 'fatih/vim-go'
+    Plug 'fatih/vim-go', { 'for': ['go', 'godefstack', 'gohtmltmpl', 'gotexttmpl', 'vimgo'] }
   endif
 
   Plug 'godlygeek/tabular',            { 'on': 'Tabularize' }
@@ -93,31 +113,12 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'gcmt/wildfire.vim',            { 'on': ['<Plug>(wildfire-fuel)', '<Plug>(wildfire-water)'] }
 
   Plug 'mileszs/ack.vim'
-  Plug 'kchmck/vim-coffee-script'
   Plug 'Raimondi/delimitMate'
-  Plug 'pangloss/vim-javascript'
   Plug 'majutsushi/tagbar'
-  Plug 'vim-ruby/vim-ruby'
-  Plug 'rust-lang/rust.vim'
-  Plug 'racer-rust/vim-racer'
-  Plug 'keith/swift.vim'
+  Plug 'racer-rust/vim-racer', { 'for': 'rust' }
   Plug 'ervandew/supertab'
-  Plug 'tmux-plugins/vim-tmux'
-  Plug 'cespare/vim-toml'
-  Plug 'digitaltoad/vim-pug'
-  Plug 'ekalinin/Dockerfile.vim'
-  Plug 'hallison/vim-rdoc'
-  Plug 'groenewege/vim-less'
-  Plug 'jneen/ragel.vim'
-  Plug 'mxw/vim-jsx'
-  Plug 'leshill/vim-json'
-  Plug 'ajf/puppet-vim'
-  Plug 'othree/html5.vim'
   Plug 'flazz/vim-colorschemes'
   Plug 'ap/vim-css-color'
-  Plug 'datanoise/vim-elixir'
-  Plug 'datanoise/vim-crystal'
-  Plug 'datanoise/vim-llvm'
   Plug 'datanoise/vim-localvimrc'
   Plug 'datanoise/vim-cmdline-complete'
   Plug 'rhysd/conflict-marker.vim'

@@ -321,7 +321,7 @@ au FileType ruby if has('balloonexpr') | setlocal balloonexpr& | endif
 au FileType scala,ruby,go exe 'compiler '. expand('<amatch>')
 au FileType rust compiler rustc
 au FileType xml setlocal foldmethod=syntax
-au FileType go,godoc,netrw,help,qf,gitcommit setlocal nolist
+au FileType go,godoc,netrw,help,qf,gitcommit,GV setlocal nolist
 " go settings
 au FileType go setlocal tabstop=4
 au FileType go setlocal shiftwidth=4

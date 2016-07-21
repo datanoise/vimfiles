@@ -28,7 +28,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-unimpaired'
   Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
 
-  Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+  Plug 'scrooloose/nerdtree',  { 'on': 'NERDTreeToggle' }
   Plug 'scrooloose/syntastic'
 
   Plug 'vim-scripts/ag.vim'
@@ -36,8 +36,8 @@ silent! if plug#begin('~/.vim/bundle')
 
   Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign'] }
   Plug 'junegunn/goyo.vim'
-  Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
-  Plug 'junegunn/gv.vim', { 'on': 'GV' }
+  Plug 'junegunn/limelight.vim',  { 'on': 'Limelight' }
+  Plug 'junegunn/gv.vim',         { 'on': 'GV' }
 
   Plug 'AndrewRadev/splitjoin.vim'
   Plug 'AndrewRadev/sideways.vim'

@@ -382,7 +382,6 @@ inoremap <silent> <C-l> <C-\><C-O>:call search('[{("\[\]'')}]', 'Wc', line('.'))
 " imap kk <C-O>A<Enter>
 nnoremap <F2> <C-w><C-w>
 inoremap <F2> <Esc><C-w><C-w>
-nnoremap <Tab> <C-w><C-w>
 inoremap <S-Tab> <Esc><C-w><C-w>
 nnoremap <F4> :sil make %<CR><C-l>:cr<CR>
 nnoremap [F :exe ':Ag ' . expand('<cword>')<CR><CR>
@@ -395,14 +394,6 @@ if has('mac')
   nnoremap <silent> <D-]> :bnext<CR>
 endif
 nnoremap <silent> <leader>ct :!ctags --extra=+f -R *<CR><CR>
-cnoremap <M-q> qa!
-cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h'). '/' : '%%'
-" xterm mappings
-cnoremap <M-q> qa!
-cnoremap <C-a> <Home>
-cnoremap <C-e> <End>
-cnoremap <C-b> <Left>
-cnoremap <C-f> <Right>
 " insert modeline
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
 " fugitive commands
@@ -417,9 +408,21 @@ xnoremap <silent> # :<C-u>call <SID>vset_search()<CR>?<C-R>=@/<CR><CR>
 nnoremap <silent> <leader>ss :SplitjoinSplit<CR>
 nnoremap <silent> <leader>sj :SplitjoinJoin<CR>
 nnoremap <silent> <leader>sc :SyntasticCheck<CR>
-" better tab handling in wild menu mode
+
+" some handful command-mode bindings
+cnoremap <M-q> qa!
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
+cnoremap <C-b> <Left>
+cnoremap <C-f> <Right>
+cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h'). '/' : '%%'
+" better <Tab> handling in wild menu mode
 set wildcharm=<C-Z>
 cnoremap <expr> <Tab> wildmenumode() ? "\<Right>" : "\<C-Z>"
+" abbreviations
+cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
+cabbr ack Ack
+cabbr ag Ag
 
 if has_key(g:plugs, 'vim-commentary')
   map  gc  <Plug>Commentary
@@ -476,18 +479,13 @@ if has("cscope")
 endif
 
 
-" Section: Commands && Abbrivations {{{1
+" Section: Commands {{{1
 " ------------------------------------------------------------------------------
 " NOTE: that doesn't work in MacVim gui mode if sudo requests a password!!!
 command! -bar -nargs=0 SudoW   :exe "write !sudo tee % >/dev/null"|silent edit!
 au FileType ruby iabbrev <buffer> rb! #!<C-R>=substitute(system('which ruby'),'\n$','','')<CR><C-R>=Eatchar('\s')<CR>
 command! -bang -nargs=1 -complete=file QFilter call s:filter_quickfix(<bang>0, <q-args>)
 au FileType markdown command! -nargs=0 -complete=file -buffer Preview :exe "sil !markdown " . expand('%') ."| bcat" | :redraw!
-cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
-cabbr ack Ack
-cabbr ag Ag
-iabbr THen Then
-iabbr WHen When
 " borrowed from tpope's plugin
 augroup shebang_chmod
   au!

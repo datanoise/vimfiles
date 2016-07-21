@@ -397,8 +397,17 @@ endif
 nnoremap <silent> <leader>ct :!ctags --extra=+f -R *<CR><CR>
 cnoremap <M-q> qa!
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h'). '/' : '%%'
-" this one for xterm
-cnoremap q  qa!
+" xterm mappings
+execute "set <M-q>=\eq"
+cnoremap <M-q> qa!
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
+cnoremap <C-b> <Left>
+cnoremap <C-f> <Right>
+execute "set <f20>=\eb"
+cnoremap <f20> <S-Left>
+execute "set <f21>=\ef"
+cnoremap <f21> <S-Right>
 " insert modeline
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
 " fugitive commands

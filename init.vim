@@ -406,8 +406,13 @@ cnoremap <C-b> <Left>
 cnoremap <C-f> <Right>
 execute "set <f20>=\eb"
 cnoremap <f20> <S-Left>
+inoremap <f20> <S-Left>
+inoremap <f20> <S-Left>
+xnoremap <f20> <S-Left>
 execute "set <f21>=\ef"
 cnoremap <f21> <S-Right>
+inoremap <f21> <S-Right>
+xnoremap <f21> <S-Right>
 " insert modeline
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
 " fugitive commands

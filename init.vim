@@ -422,6 +422,8 @@ cnoremap <expr> <Tab> wildmenumode() ? "\<Right>" : "\<C-Z>"
 cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
 cabbr ack Ack
 cabbr ag Ag
+cabbr pu PlugUpdate
+cabbr pi PlugInstall
 
 if has_key(g:plugs, 'vim-commentary')
   map  gc  <Plug>Commentary

@@ -373,8 +373,6 @@ nnoremap Y y$
 nnoremap z- 1z=
 nnoremap L :
 nnoremap <silent> <leader>q :Bclose<CR>
-au CmdwinEnter * nmap <buffer> <leader>q :q<CR>
-au CmdwinEnter * nmap <buffer> q :q<CR>
 nnoremap <silent> <leader>Q :bd<CR>
 nnoremap [S [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
 nnoremap <leader>a :let align = input("Align to: ")<Bar>exe ":Tab /" . align<CR>
@@ -467,6 +465,9 @@ au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
 au BufReadPost quickfix nmap <silent> <buffer> q :call <SID>close_quick_fix()<CR>
 au BufReadPost quickfix noremap <silent> <buffer> <CR> <CR>:call <SID>close_quick_fix()<CR>
 au BufReadPost quickfix noremap <silent> <buffer> <C-x> <CR>
+
+au CmdwinEnter * nmap <buffer> <leader>q :q<CR>
+au CmdwinEnter * nmap <buffer> q :q<CR>
 
 if has("cscope")
   au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
@@ -661,10 +662,14 @@ nmap <silent> <leader>8 <Plug>AirlineSelectTab8
 nmap <silent> <leader>9 <Plug>AirlineSelectTab9
 
 " wildfire settings {{{2
-nmap <silent> <Enter> <Plug>(wildfire-fuel)
-vmap <silent> <Enter> <Plug>(wildfire-fuel)
-vmap <silent> <BS> <Plug>(wildfire-water)
-let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "il", "ip", "ii", "it"]
+if has_key(g:plugs, 'wildfire.vim')
+  " this needed to avoid wildfire key bindings
+  au CmdwinEnter * nmap <buffer> <Enter> <C-m>
+  nmap <silent> <Enter> <Plug>(wildfire-fuel)
+  vmap <silent> <Enter> <Plug>(wildfire-fuel)
+  vmap <silent> <BS>    <Plug>(wildfire-water)
+  let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "il", "ip", "ii", "it"]
+endif
 
 " easy-align settings {{{2
 if has_key(g:plugs, 'vim-easy-align')

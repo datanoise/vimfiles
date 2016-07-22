@@ -16,7 +16,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-capslock'
   Plug 'tpope/vim-dispatch'
   Plug 'tpope/vim-fugitive'
-  Plug 'tpope/vim-rake'
   Plug 'tpope/vim-ragtag'
   Plug 'tpope/vim-rails'
   Plug 'tpope/vim-scriptease'
@@ -66,6 +65,10 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-elixir',     { 'for': ['elixir', 'eelixir'] }
   Plug 'datanoise/vim-crystal',    { 'for': ['crystal', 'html'] }
   Plug 'datanoise/vim-llvm',       { 'for': 'llvm' }
+  if $GOPATH != ""
+    " do not use lazy loading, cause it disables template function
+    Plug 'fatih/vim-go'
+  endif
 
   " ctrlp
   Plug 'ctrlpvim/ctrlp.vim'
@@ -99,10 +102,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'vim-airline/vim-airline-themes'
   endif
 
-  if $GOPATH != ""
-    Plug 'fatih/vim-go', { 'for': ['go', 'godefstack', 'gohtmltmpl', 'gotexttmpl', 'vimgo'] }
-  endif
-
   Plug 'godlygeek/tabular',            { 'on': 'Tabularize' }
   Plug 'datanoise/vim-indexed-search', { 'on': 'ShowSearchIndex' }
   Plug 'vim-scripts/searchfold.vim',   { 'on': '<Plug>SearchFoldNormal' }
@@ -122,6 +121,9 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-localvimrc'
   Plug 'datanoise/vim-cmdline-complete'
   Plug 'rhysd/conflict-marker.vim'
+
+  Plug 'SirVer/ultisnips'
+  Plug 'honza/vim-snippets'
 
   call plug#end()
 endif
@@ -632,9 +634,13 @@ let g:SuperTabCrMapping = 0
 " au FileType go call SuperTabSetDefaultCompletionType("<c-x><c-o>")
 au FileType go,rust call SuperTabSetDefaultCompletionType("context")
 
+" ultisnips settings {{{2
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<c-b>"
+
 " go settings {{{2
 let g:go_auto_type_info = 0
-let g:go_snippet_engine = ''
 let g:go_def_mode = 'godef'
 
 let g:go_highlight_space_tab_error = 0

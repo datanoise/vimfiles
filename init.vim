@@ -130,11 +130,6 @@ silent! if plug#begin('~/.vim/bundle')
   call plug#end()
 endif
 
-" fzf plugin
-if isdirectory('/usr/local/opt/fzf')
-  set rtp+=/usr/local/opt/fzf
-endif
-
 "
 " Section: Functions {{{1
 " ------------------------------------------------------------------------------
@@ -712,6 +707,13 @@ augroup text
         \ call litecorrect#init() |
         \ let g:airline_section_x = '%{PencilMode()}'
 augroup END
+
+" fzf plugin {{{2
+if isdirectory('/usr/local/opt/fzf')
+  set rtp+=/usr/local/opt/fzf
+  nnoremap <leader>F :FZF<CR>
+endif
+
 
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"

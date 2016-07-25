@@ -76,6 +76,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'mattn/ctrlp-mark'
   Plug 'mattn/ctrlp-register'
   Plug 'kaneshin/ctrlp-tabbed'
+  Plug 'tacahiroy/ctrlp-funky'
 
   " text objects
   Plug 'kana/vim-textobj-user'
@@ -102,6 +103,10 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'vim-airline/vim-airline-themes'
   endif
 
+  " ultisnips
+  Plug 'SirVer/ultisnips'
+  Plug 'honza/vim-snippets'
+
   Plug 'godlygeek/tabular',            { 'on': 'Tabularize' }
   Plug 'datanoise/vim-indexed-search', { 'on': 'ShowSearchIndex' }
   Plug 'vim-scripts/searchfold.vim',   { 'on': '<Plug>SearchFoldNormal' }
@@ -122,10 +127,12 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-cmdline-complete'
   Plug 'rhysd/conflict-marker.vim'
 
-  Plug 'SirVer/ultisnips'
-  Plug 'honza/vim-snippets'
-
   call plug#end()
+endif
+
+" fzf plugin
+if isdirectory('/usr/local/opt/fzf')
+  set rtp+=/usr/local/opt/fzf
 endif
 
 "
@@ -629,6 +636,9 @@ nnoremap <silent> <leader>ks :CtrlPSearchHistory<CR>
 nnoremap <silent> <leader>kr :CtrlPRegister<CR>
 nnoremap <silent> <leader>km :CtrlPMark<CR>
 
+nnoremap <silent> <leader>ky :CtrlPFunky<CR>
+let g:ctrlp_funky_syntax_highlight = 1
+
 " supertab settings {{{2
 let g:SuperTabCrMapping = 0
 " au FileType go call SuperTabSetDefaultCompletionType("<c-x><c-o>")
@@ -636,8 +646,8 @@ au FileType go,rust call SuperTabSetDefaultCompletionType("context")
 
 " ultisnips settings {{{2
 let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<c-b>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 " go settings {{{2
 let g:go_auto_type_info = 0

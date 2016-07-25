@@ -8,7 +8,9 @@ if has('gui_running') || $TERM_PROGRAM != 'iTerm.app'
 endif
 
 " some handful mappings
-execute "set <M-q>=\eq"
+if !has('nvim')
+  execute "set <M-q>=\eq"
+endif
 execute "set <S-Left>=\eb"
 execute "set <S-Right>=\ef"
 

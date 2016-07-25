@@ -708,12 +708,15 @@ augroup text
         \ let g:airline_section_x = '%{PencilMode()}'
 augroup END
 
-" fzf plugin {{{2
+" fzf plugin & settings {{{2
 if isdirectory('/usr/local/opt/fzf')
   set rtp+=/usr/local/opt/fzf
   nnoremap <leader>F :FZF<CR>
 endif
 
+" vim-plug settings {{{2
+let g:plug_window = 'tabnew'
+let g:plug_pwindow = 'vertical rightbelow new'
 
 " Misc settings {{{2
 let g:dbext_default_history_file = $HOME."/.dbext_history"
@@ -722,7 +725,6 @@ let g:xml_syntax_folding = 1 " enable folding in xml files
 let g:racer_cmd = 'racer'
 let g:jsx_ext_required = 0
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
-let g:plug_window = 'enew'
 let delimitMate_expand_space = 1
 
 " }}}

@@ -92,6 +92,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-textobj-quoted'
   Plug 'nelstrom/vim-textobj-rubyblock'
   Plug 'thinca/vim-textobj-between'
+  Plug 'lucapette/vim-textobj-underscore'
 
   " text mode
   Plug 'reedes/vim-pencil',      { 'for': ['text', 'markdown', 'mkd'] }
@@ -741,6 +742,13 @@ endif
 let g:plug_window = 'tabnew'
 " let g:plug_pwindow = 'vertical rightbelow new'
 let g:plug_pwindow = 'below new'
+
+" textobj-between settings {{{2
+let g:textobj_between_no_default_key_mappings = 1
+xmap ac  <Plug>(textobj-between-a)
+omap ac  <Plug>(textobj-between-a)
+xmap ic  <Plug>(textobj-between-i)
+omap ic  <Plug>(textobj-between-i)
 
 " Misc settings {{{2
 let c_comment_strings = 1 " I like highlighting strings inside C comments

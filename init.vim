@@ -276,10 +276,14 @@ set imsearch=0
 au ColorScheme * hi! link ColorColumn StatusLine
 set bg=dark
 set noshowmode
-colo datanoise
-if !has('gui_running') && has('termguicolors')
-      \ && ($TERM_PROGRAM == 'iTerm.app' || exists('$TMUX'))
-  set termguicolors
+if has('nvim')
+  colo ir_black
+else
+  colo datanoise
+  if !has('gui_running') && has('termguicolors')
+        \ && ($TERM_PROGRAM == 'iTerm.app' || exists('$TMUX'))
+    set termguicolors
+  endif
 endif
 if exists('&mc')
   au BufNew,BufRead * set mc=81

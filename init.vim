@@ -743,7 +743,6 @@ let g:plug_window = 'tabnew'
 let g:plug_pwindow = 'below new'
 
 " Misc settings {{{2
-let g:dbext_default_history_file = $HOME."/.dbext_history"
 let c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:xml_syntax_folding = 1 " enable folding in xml files
 let g:racer_cmd = 'racer'

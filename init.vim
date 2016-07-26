@@ -277,7 +277,7 @@ au ColorScheme * hi! link ColorColumn StatusLine
 set bg=dark
 set noshowmode
 if has('nvim')
-  colo ir_black
+  colo molokai
 else
   colo datanoise
   if !has('gui_running') && has('termguicolors')

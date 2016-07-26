@@ -38,9 +38,9 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'junegunn/limelight.vim',  { 'on': 'Limelight' }
   Plug 'junegunn/gv.vim',         { 'on': 'GV' }
 
-  Plug 'AndrewRadev/splitjoin.vim'
-  Plug 'AndrewRadev/sideways.vim'
-  Plug 'datanoise/switch.vim'
+  Plug 'AndrewRadev/splitjoin.vim', { 'on': ['SplitjoinJoin', 'SplitjoinSplit'] }
+  Plug 'AndrewRadev/sideways.vim',  { 'on': ['SidewaysLeft', 'SidewaysRight'] }
+  Plug 'datanoise/switch.vim',      { 'on': 'Switch' }
 
   " file types
   Plug 'othree/html5.vim'
@@ -411,9 +411,6 @@ nnoremap <silent> <leader>gl :Git pull<CR>
 " quick search in visual mode
 xnoremap <silent> * :<C-u>call <SID>vset_search()<CR>/<C-R>=@/<CR><CR>
 xnoremap <silent> # :<C-u>call <SID>vset_search()<CR>?<C-R>=@/<CR><CR>
-" split join mappings
-nnoremap <silent> <leader>ss :SplitjoinSplit<CR>
-nnoremap <silent> <leader>sj :SplitjoinJoin<CR>
 nnoremap <silent> <leader>sc :SyntasticCheck<CR>
 
 " some handful command-mode bindings
@@ -432,29 +429,6 @@ cabbr ack Ack
 cabbr ag Ag
 cabbr pu PlugUpdate
 cabbr pi PlugInstall
-
-if has_key(g:plugs, 'vim-commentary')
-  map  gc  <Plug>Commentary
-  nmap gcc <Plug>CommentaryLine
-end
-if has_key(g:plugs, 'bufexplorer.zip')
-  nnoremap <silent> <leader>be :BufExplorer<CR>
-end
-if has_key(g:plugs, 'searchfold')
-  nmap <Leader>z <Plug>SearchFoldNormal
-endif
-if has_key(g:plugs, 'sideways.vim')
-  nnoremap <silent> <leader>< :<C-u>SidewaysLeft<CR>
-  nnoremap <silent> <leader>> :<C-u>SidewaysRight<CR>
-endif
-if has_key(g:plugs, 'vim-surround')
-  xmap s   <Plug>VSurround
-  xmap gs  <Plug>VgSurround
-endif
-if has_key(g:plugs, 'undotree')
-  let g:undotree_WindowLayout = 2
-  nnoremap U :UndotreeToggle<CR>
-endif
 
 " file type bindings {{{2
 au FileType coffee nnoremap <buffer> <F3> :CoffeeCompile<CR>
@@ -701,6 +675,51 @@ if has_key(g:plugs, 'vim-gitgutter')
   let g:gitgutter_sign_column_always = 1
   let g:gitgutter_enabled = 0
   nnoremap <leader>gg :GitGutterToggle<CR>
+endif
+
+" splitjoin settings {{{2
+if has_key(g:plugs, "splitjoin.vim")
+  nnoremap <silent> <leader>ss :SplitjoinSplit<CR>
+  nnoremap <silent> <leader>sj :SplitjoinJoin<CR>
+endif
+
+" vim-commentary settings {{{2
+if has_key(g:plugs, 'vim-commentary')
+  map  gc  <Plug>Commentary
+  nmap gcc <Plug>CommentaryLine
+end
+
+" bufexplorer settings {{{2
+if has_key(g:plugs, 'bufexplorer.zip')
+  nnoremap <silent> <leader>be :BufExplorer<CR>
+end
+
+" searchfold settings {{{2
+if has_key(g:plugs, 'searchfold')
+  nmap <Leader>z <Plug>SearchFoldNormal
+endif
+
+" sideways.vim settings {{{2
+if has_key(g:plugs, 'sideways.vim')
+  nnoremap <silent> <leader>< :<C-u>SidewaysLeft<CR>
+  nnoremap <silent> <leader>> :<C-u>SidewaysRight<CR>
+endif
+
+" vim-surround settings {{{2
+if has_key(g:plugs, 'vim-surround')
+  xmap s   <Plug>VSurround
+  xmap gs  <Plug>VgSurround
+endif
+
+" undotree settings {{{2
+if has_key(g:plugs, 'undotree')
+  let g:undotree_WindowLayout = 2
+  nnoremap U :UndotreeToggle<CR>
+endif
+
+" switch.vim settings {{{2
+if has_key(g:plugs, 'switch.vim')
+  nnoremap <silent> gs :Switch<CR>
 endif
 
 " text settings {{{2

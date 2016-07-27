@@ -45,8 +45,8 @@ silent! if plug#begin('~/.vim/bundle')
   " file types
   Plug 'othree/html5.vim'
   Plug 'tpope/vim-markdown'
+  Plug 'vim-ruby/vim-ruby'
   Plug 'tpope/vim-haml',           { 'for': ['haml', 'sass', 'scss'] }
-  Plug 'vim-ruby/vim-ruby',        { 'for': 'ruby' }
   Plug 'rust-lang/rust.vim',       { 'for': 'rust' }
   Plug 'keith/swift.vim',          { 'for': 'swift' }
   Plug 'vim-scripts/nginx.vim',    { 'for': 'nginx' }

@@ -35,7 +35,7 @@ function s:DoCmdFocusLost()
   let cmd = getcmdline()
   let pos = getcmdpos()
 
-  silent doautocmd FocusLost %
+  silent doautocmd <nomodeline> FocusLost %
 
   call setcmdpos(pos)
   return cmd
@@ -45,7 +45,7 @@ function s:DoCmdFocusGained()
   let cmd = getcmdline()
   let pos = getcmdpos()
 
-  silent doautocmd FocusGained %
+  silent doautocmd <nomodeline> FocusGained %
 
   call setcmdpos(pos)
   return cmd
@@ -54,17 +54,17 @@ endfunction
 execute "set <f24>=\<Esc>[O"
 execute "set <f25>=\<Esc>[I"
 
-nnoremap <silent> <f24> :silent doautocmd FocusLost %<cr>
-nnoremap <silent> <f25> :silent doautocmd FocusGained %<cr>
+nnoremap <silent> <f24> :silent doautocmd <nomodeline> FocusLost %<cr>
+nnoremap <silent> <f25> :silent doautocmd <nomodeline> FocusGained %<cr>
 
-onoremap <silent> <f24> <esc>:silent doautocmd FocusLost %<cr>
-onoremap <silent> <f25> <esc>:silent doautocmd FocusGained %<cr>
+onoremap <silent> <f24> <esc>:silent doautocmd <nomodeline> FocusLost %<cr>
+onoremap <silent> <f25> <esc>:silent doautocmd <nomodeline> FocusGained %<cr>
 
-vnoremap <silent> <f24> <esc>:silent doautocmd FocusLost %<cr>gv
-vnoremap <silent> <f25> <esc>:silent doautocmd FocusGained %<cr>gv
+vnoremap <silent> <f24> <esc>:silent doautocmd <nomodeline> FocusLost %<cr>gv
+vnoremap <silent> <f25> <esc>:silent doautocmd <nomodeline> FocusGained %<cr>gv
 
-inoremap <silent> <f24> <c-\><c-o>:silent doautocmd FocusLost %<cr>
-inoremap <silent> <f25> <c-\><c-o>:silent doautocmd FocusGained %<cr>
+inoremap <silent> <f24> <c-\><c-o>:silent doautocmd <nomodeline> FocusLost %<cr>
+inoremap <silent> <f25> <c-\><c-o>:silent doautocmd <nomodeline> FocusGained %<cr>
 
 cnoremap <silent> <f24> <c-\>e<SID>DoCmdFocusLost()<cr>
 cnoremap <silent> <f25> <c-\>e<SID>DoCmdFocusGained()<cr>

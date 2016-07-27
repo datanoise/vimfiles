@@ -732,11 +732,11 @@ augroup text
         \ let g:airline_section_x = '%{PencilMode()}'
 augroup END
 
-" " fzf plugin & settings {{{2
-" if isdirectory('/usr/local/opt/fzf')
-"   set rtp+=/usr/local/opt/fzf
-"   nnoremap <leader>F :FZF<CR>
-" endif
+" fzf plugin & settings {{{2
+if isdirectory('/usr/local/opt/fzf')
+  set rtp+=/usr/local/opt/fzf
+  nnoremap <leader>F :FZF<CR>
+endif
 
 " vim-plug settings {{{2
 let g:plug_window = 'tabnew'

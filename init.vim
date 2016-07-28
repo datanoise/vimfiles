@@ -47,7 +47,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-markdown'
   " no point to lazy load vim-ruby since it already comes with the standard
   " distribution
-  Plug 'vim-ruby/vim-ruby'
+  Plug 'datanoise/vim-ruby'
   Plug 'tpope/vim-haml',           { 'for': ['haml', 'sass', 'scss'] }
   Plug 'rust-lang/rust.vim',       { 'for': 'rust' }
   Plug 'keith/swift.vim',          { 'for': 'swift' }

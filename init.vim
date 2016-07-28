@@ -284,8 +284,11 @@ if has('nvim')
 else
   colo datanoise
   if !has('gui_running') && has('termguicolors')
-        \ && ($TERM_PROGRAM == 'iTerm.app' || exists('$TMUX'))
     set termguicolors
+    if $TERM == "screen-256color"
+      exec "set t_8f=\e[38;2;%lu;%lu;%lum"
+      exec "set t_8b=\e[48;2;%lu;%lu;%lum"
+    endif
   endif
 endif
 if exists('&mc')

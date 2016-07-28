@@ -45,6 +45,8 @@ silent! if plug#begin('~/.vim/bundle')
   " file types
   Plug 'othree/html5.vim'
   Plug 'tpope/vim-markdown'
+  " no point to lazy load vim-ruby since it already comes with the standard
+  " distribution
   Plug 'vim-ruby/vim-ruby'
   Plug 'tpope/vim-haml',           { 'for': ['haml', 'sass', 'scss'] }
   Plug 'rust-lang/rust.vim',       { 'for': 'rust' }

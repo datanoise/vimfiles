@@ -10,9 +10,12 @@ endif
 " some handful mappings
 if !has('nvim')
   execute "set <M-q>=\eq"
+  execute "set <M-t>=\et"
+  execute "set <Home>=\ea"
+  execute "set <End>=\ee"
+  execute "set <S-Left>=\eb"
+  execute "set <S-Right>=\ef"
 endif
-execute "set <S-Left>=\eb"
-execute "set <S-Right>=\ef"
 
 " change the cursor shape based on the current mode
 " unfortunately, any mappings in the insert mode that change mode

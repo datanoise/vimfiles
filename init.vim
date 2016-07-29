@@ -743,6 +743,9 @@ augroup END
 if isdirectory('/usr/local/opt/fzf')
   set rtp+=/usr/local/opt/fzf
   nnoremap <leader>F :FZF<CR>
+  cabbr fzf FZF
+  execute "cnoremap <M-t> FZF "
+  execute "nnoremap <M-t> :FZF "
 endif
 
 " vim-plug settings {{{2

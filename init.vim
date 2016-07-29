@@ -45,9 +45,10 @@ silent! if plug#begin('~/.vim/bundle')
   " file types
   Plug 'othree/html5.vim'
   Plug 'tpope/vim-markdown'
-  " no point to lazy load vim-ruby since it already comes with the standard
-  " distribution
   Plug 'datanoise/vim-ruby'
+  " lazy loading for filetypes makes sense only for those that are not
+  " included in the standard Vim distribution. Otherwise, Vim will load them
+  " anyway, possibly very old version.
   Plug 'tpope/vim-haml',           { 'for': ['haml', 'sass', 'scss'] }
   Plug 'rust-lang/rust.vim',       { 'for': 'rust' }
   Plug 'keith/swift.vim',          { 'for': 'swift' }
@@ -61,7 +62,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'hallison/vim-rdoc',        { 'for': 'rdoc' }
   Plug 'groenewege/vim-less',      { 'for': 'less' }
   Plug 'jneen/ragel.vim',          { 'for': 'ragel' }
-  Plug 'leshill/vim-json',         { 'for': 'json' }
   Plug 'ajf/puppet-vim',           { 'for': 'puppet' }
   Plug 'cespare/vim-toml',         { 'for': 'toml' }
   Plug 'datanoise/vim-elixir',     { 'for': ['elixir', 'eelixir'] }
@@ -732,9 +732,11 @@ endif
 augroup text
   autocmd!
   autocmd FileType markdown,mkd,text
-        \ call pencil#init() |
-        \ call litecorrect#init() |
-        \ let g:airline_section_x = '%{PencilMode()}'
+        \ if exists("*pencil#init") && exists("*litecorrect#init") |
+        \   call pencil#init() |
+        \   call litecorrect#init() |
+        \   let g:airline_section_x = '%{PencilMode()}' |
+        \ endif
 augroup END
 
 " fzf plugin & settings {{{2

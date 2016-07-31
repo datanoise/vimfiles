@@ -347,6 +347,7 @@ au FileType go,godoc,netrw,help,qf,gitcommit,GV setlocal nolist
 au FileType go setlocal tabstop=4
 au FileType go setlocal shiftwidth=4
 au FileType go setlocal noexpandtab
+au FileType gitcommit setlocal spell
 " ignore target directory for cargo projects
 au VimEnter *
       \ if filereadable('Cargo.toml') |
@@ -725,6 +726,7 @@ augroup text
         \   sil! call pencil#init() |
         \   sil! call litecorrect#init() |
         \   let g:airline_section_x = '%{PencilMode()}' |
+        \   setlocal spell
 augroup END
 
 " fzf plugin & settings {{{2

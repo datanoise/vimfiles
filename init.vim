@@ -640,8 +640,8 @@ let g:go_highlight_chan_whitespace_error = 0
 let g:go_highlight_types = 1
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
-let g:go_highlight_fields = 0
-let g:go_highlight_operators = 0
+let g:go_highlight_fields = 1
+let g:go_highlight_operators = 1
 
 " airline settings {{{2
 let g:airline_theme='datanoise'

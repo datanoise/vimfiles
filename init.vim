@@ -117,7 +117,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'mbbill/undotree',              { 'on': 'UndotreeToggle' }
   Plug 'Yggdroot/indentLine',          { 'on': 'IndentLinesEnable' }
   Plug 'airblade/vim-gitgutter',       { 'on': ['GitGutterToggle', 'GitGutterEnable'] }
-  Plug 'gcmt/wildfire.vim',            { 'on': ['<Plug>(wildfire-fuel)', '<Plug>(wildfire-water)'] }
 
   Plug 'mileszs/ack.vim'
   Plug 'Raimondi/delimitMate'
@@ -307,6 +306,7 @@ set backspace=indent,eol,start
 if exists("&macmeta")
   set macmeta " on Mac use Option key as Meta
 endif
+set belloff=all
 set vb t_vb= " no visual bell or beep, damn it
 " that makes it work on Windows too
 if has("win32")
@@ -441,7 +441,8 @@ au FileType coffee nnoremap <buffer> <F3> :CoffeeCompile<CR>
 au FileType coffee vnoremap <buffer> <F3> :CoffeeCompile<CR>
 au FileType coffee nnoremap <buffer> <F4> :CoffeeRun<CR>
 au FileType coffee nnoremap <buffer> <F5> :CoffeeMake<CR><CR>
-au FileType help,godoc nnoremap <silent> <buffer> q :bd<CR>
+au FileType godoc nnoremap <silent> <buffer> q :bd<CR>
+au FileType help nnoremap <silent> <buffer> q :helpclose<CR>
 au FileType go nnoremap <silent> <buffer> K :GoDoc<CR>
 au FileType go nmap <silent> <buffer> <leader>gi <Plug>(go-import)
 au FileType go nmap <silent> <buffer> <leader>gI <Plug>(go-imports)
@@ -453,7 +454,6 @@ au FileType ruby,puppet inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>
 au FileType php  nnoremap <buffer> <F5> :!php %<CR>
 au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
 au FileType qf nmap <silent> <buffer> q :call <SID>close_quick_fix()<CR>
-au FileType qf noremap <silent> <buffer> <CR> <CR>:call <SID>close_quick_fix()<CR>
 
 au CmdwinEnter * nmap <buffer> <leader>q :q<CR>
 au CmdwinEnter * nmap <buffer> q :q<CR>
@@ -658,16 +658,6 @@ nmap <silent> <leader>7 <Plug>AirlineSelectTab7
 nmap <silent> <leader>8 <Plug>AirlineSelectTab8
 nmap <silent> <leader>9 <Plug>AirlineSelectTab9
 
-" wildfire settings {{{2
-if has_key(g:plugs, 'wildfire.vim')
-  " this needed to avoid wildfire key bindings
-  au CmdwinEnter * nmap <buffer> <Enter> <C-m>
-  nmap <silent> <Enter> <Plug>(wildfire-fuel)
-  vmap <silent> <Enter> <Plug>(wildfire-fuel)
-  vmap <silent> <BS>    <Plug>(wildfire-water)
-  let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "il", "ip", "ii", "it"]
-endif
-
 " easy-align settings {{{2
 if has_key(g:plugs, 'vim-easy-align')
   " Start interactive EasyAlign in visual mode (e.g. vipga)
@@ -732,11 +722,9 @@ endif
 augroup text
   autocmd!
   autocmd FileType markdown,mkd,text
-        \ if exists("*pencil#init") && exists("*litecorrect#init") |
-        \   call pencil#init() |
-        \   call litecorrect#init() |
+        \   sil! call pencil#init() |
+        \   sil! call litecorrect#init() |
         \   let g:airline_section_x = '%{PencilMode()}' |
-        \ endif
 augroup END
 
 " fzf plugin & settings {{{2

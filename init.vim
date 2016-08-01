@@ -40,7 +40,8 @@ silent! if plug#begin('~/.vim/bundle')
 
   Plug 'AndrewRadev/splitjoin.vim', { 'on': ['SplitjoinJoin', 'SplitjoinSplit'] }
   Plug 'AndrewRadev/sideways.vim',  { 'on': ['SidewaysLeft', 'SidewaysRight'] }
-  Plug 'datanoise/switch.vim',      { 'on': 'Switch' }
+  Plug 'datanoise/switch.vim',      { 'on': 'Switch',
+        \ 'for': ['ruby', 'eruby', 'php', 'haml', 'slim', 'cpp', 'javascript', 'coffee', 'clojure', 'scala'] }
 
   " file types
   Plug 'othree/html5.vim'
@@ -714,7 +715,7 @@ endif
 " undotree settings {{{2
 if has_key(g:plugs, 'undotree')
   let g:undotree_WindowLayout = 2
-  nnoremap U :UndotreeToggle<CR>
+  nnoremap <silent> U :UndotreeToggle<CR>
 endif
 
 " switch.vim settings {{{2
@@ -728,7 +729,6 @@ augroup text
   autocmd FileType markdown,mkd,text
         \   sil! call pencil#init() |
         \   sil! call litecorrect#init() |
-        \   " let g:airline_section_x = '%{PencilMode()}' |
         \   setlocal spell
 augroup END
 

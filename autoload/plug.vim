@@ -710,6 +710,16 @@ function! s:finish_bindings()
   nnoremap <silent> <buffer> [[ :silent! call <SID>section('b')<cr>
 endfunction
 
+function! s:quit_window()
+  if b:plug_preview==1
+    pc
+  endif
+  bd
+  if exists(":AirlineRefresh")
+    :AirlineRefresh
+  end
+endfunction
+
 function! s:prepare(...)
   if empty(getcwd())
     throw 'Invalid current working directory. Cannot proceed.'
@@ -727,7 +737,8 @@ function! s:prepare(...)
   endif
 
   call s:new_window()
-  nnoremap <silent> <buffer> q  :if b:plug_preview==1<bar>pc<bar>endif<bar>bd<cr>
+  " nnoremap <silent> <buffer> q  :if b:plug_preview==1<bar>pc<bar>endif<bar>bd<cr>
+  nnoremap <silent> <buffer> q :call <SID>quit_window()<cr>
   if a:0 == 0
     call s:finish_bindings()
   endif

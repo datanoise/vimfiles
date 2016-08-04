@@ -271,8 +271,7 @@ set foldmethod=marker
 set foldlevel=99 " always expand folds
 " }}}
 " input method options {{{2
-" set keymap=russian-jcukenwin
-set keymap=russian-jcuken
+set keymap=russian-jcukenwin
 set iminsert=0
 set imsearch=0
 set spelllang=ru_yo,en_us
@@ -351,6 +350,7 @@ au FileType go setlocal tabstop=4
 au FileType go setlocal shiftwidth=4
 au FileType go setlocal noexpandtab
 au FileType gitcommit setlocal spell
+au FileType help setlocal nospell iskeyword+=_
 " ignore target directory for cargo projects
 au VimEnter *
       \ if filereadable('Cargo.toml') |
@@ -583,7 +583,7 @@ if executable('ag') && !exists("&macmeta")
   let s:ignored = ['.git', '.hg', '.svn', '.gif', '.jpg', '.jpeg', '.png']
   let s:ignored_pattern = join(map(s:ignored, '"\\" . v:val . "$\\|"'), "")
   let g:ctrlp_user_command =
-    \ 'ag %s --files-with-matches -g "" --ignore "' . s:ignored_pattern . '"'
+    \ 'ag %s --files-with-matches -g "" --nocolor --ignore "' . s:ignored_pattern . '"'
 
   " ag is fast enough that CtrlP doesn't need to cache
   let g:ctrlp_use_caching = 0
@@ -751,6 +751,10 @@ xmap ac  <Plug>(textobj-between-a)
 omap ac  <Plug>(textobj-between-a)
 xmap ic  <Plug>(textobj-between-i)
 omap ic  <Plug>(textobj-between-i)
+
+" vim-cmdline-complete settings {{{2
+cmap <silent> <c-x><c-p> <Plug>CmdlineCompleteBackward
+cmap <silent> <c-x><c-n> <Plug>CmdlineCompleteForward
 
 " Misc settings {{{2
 let c_comment_strings = 1 " I like highlighting strings inside C comments

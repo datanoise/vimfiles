@@ -74,7 +74,7 @@ silent! if plug#begin('~/.vim/bundle')
   endif
 
   " ctrlp
-  Plug 'ctrlpvim/ctrlp.vim'
+  Plug 'datanoise/ctrlp.vim'
   Plug 'ompugao/ctrlp-history'
   Plug 'mattn/ctrlp-mark'
   Plug 'mattn/ctrlp-register'

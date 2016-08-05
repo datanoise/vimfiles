@@ -76,7 +76,7 @@ hi PreProc  term=underline ctermfg=darkblue guifg=dodgerblue4
 hi Constant term=underline ctermfg=darkred guifg=firebrick3
 hi Type     term=underline ctermfg=darkgreen gui=none guifg=chartreuse3
 hi Statement    term=bold ctermfg=darkyellow gui=none guifg=gold3
-hi Operator     term=bold ctermfg=magenta gui=none guifg=chocolate
+hi Operator     term=bold ctermfg=magenta gui=none guifg=LawnGreen
 hi Identifier   term=underline ctermfg=darkgreen guifg=darkolivegreen4
 hi Ignore   term=bold ctermfg=darkgray guifg=gray45
 hi Special  term=underline ctermfg=brown guifg=sienna

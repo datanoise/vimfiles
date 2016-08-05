@@ -1,19 +1,40 @@
-" toggles the quickfix window.
-command! -bang -nargs=? QFix call QFixToggle(<bang>0)
-function! QFixToggle(forced)
-  if exists("g:qfix_win") && a:forced == 0
+function! s:buf_opened(name)
+  redir => buffers
+  silent ls
+  redir END
+
+  for buf in split(buffers, '\n')
+    if match(buf, "[" . a:name . "\\]") > -1
+      return 1
+    endif
+  endfor
+  return 0
+endfunction
+
+function! s:qfix_toggle()
+  if s:buf_opened("Quickfix List")
     cclose
   else
-    execute "copen " . g:jah_Quickfix_Win_Height
+    copen
   endif
 endfunction
 
-" used to track the quickfix window
-augroup QFixToggle
- autocmd!
- autocmd BufWinEnter quickfix let g:qfix_win = bufnr("$")
- autocmd BufWinLeave * if exists("g:qfix_win") && expand("<abuf>") == g:qfix_win | unlet! g:qfix_win | endif
-augroup END
+function! s:loclist_toggle()
+  if s:buf_opened("Location List")
+    lclose
+  else
+    if empty(getloclist('.'))
+      echomsg "No location list"
+    else
+      lopen
+    endif
+  endif
+endfunction
 
-let g:jah_Quickfix_Win_Height = 10
+" toggles the quickfix window
+command! -nargs=? QFix call <SID>qfix_toggle()
+" toggles the location list window
+command! -nargs=? LocList call <SID>loclist_toggle()
+
 nnoremap <silent> \] :QFix<CR>
+nnoremap <silent> \[ :LocList<CR>

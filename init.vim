@@ -97,10 +97,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'thinca/vim-textobj-between'
   Plug 'lucapette/vim-textobj-underscore'
 
-  " text mode
-  Plug 'reedes/vim-pencil',      { 'for': ['text', 'markdown', 'mkd'] }
-  Plug 'reedes/vim-litecorrect', { 'for': ['text', 'markdown', 'mkd'] }
-
   " airline
   if $TERM == "" || $TERM == 'xterm-256color' || $TERM == 'screen-256color'
     Plug 'vim-airline/vim-airline'
@@ -342,12 +338,12 @@ au FileType scala,ruby,go exe 'compiler '. expand('<amatch>')
 au FileType rust compiler rustc
 au FileType xml setlocal foldmethod=syntax
 au FileType go,godoc,netrw,help,qf,gitcommit,GV setlocal nolist
+au FileType gitcommit,markdown,mkd,text setlocal spell
+au FileType help setlocal nospell iskeyword+=_
 " go settings
 au FileType go setlocal tabstop=4
 au FileType go setlocal shiftwidth=4
 au FileType go setlocal noexpandtab
-au FileType gitcommit setlocal spell
-au FileType help setlocal nospell iskeyword+=_
 " ignore target directory for cargo projects
 au VimEnter *
       \ if filereadable('Cargo.toml') |
@@ -720,17 +716,8 @@ if has_key(g:plugs, 'switch.vim')
   nnoremap <silent> gs :Switch<CR>
 endif
 
-" text settings {{{2
-augroup text
-  autocmd!
-  autocmd FileType markdown,mkd,text
-        \   sil! call pencil#init() |
-        \   sil! call litecorrect#init() |
-        \   setlocal spell
-augroup END
-
 " fzf plugin & settings {{{2
-if isdirectory('/usr/local/opt/fzf')
+if !has('gui_running') && isdirectory('/usr/local/opt/fzf')
   set rtp+=/usr/local/opt/fzf
   nnoremap <leader>F :FZF<CR>
   cabbr fzf FZF

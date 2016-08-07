@@ -645,7 +645,7 @@ let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#tabline#enabled = 0
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline_section_y = '%k' " display the current keymap
+let g:airline_detect_iminsert=1
 nmap <silent> <leader>1 <Plug>AirlineSelectTab1
 nmap <silent> <leader>2 <Plug>AirlineSelectTab2
 nmap <silent> <leader>3 <Plug>AirlineSelectTab3

@@ -48,7 +48,7 @@ hi CursorLine   guifg=NONE          guibg=#1b1b1b       gui=NONE
 hi! link CursorLine CursorLine
 hi StatusLine   guifg=#CCCCCC       guibg=#202020       gui=none
             \   ctermfg=white       ctermbg=darkgray    cterm=NONE
-hi StatusLineNC guifg=black         guibg=#202020       gui=NONE
+hi StatusLineNC guifg=#666666         guibg=#202020       gui=NONE
             \   ctermfg=blue        ctermbg=darkgray    cterm=NONE
 hi SignColumn   guifg=#c8bcb9       guibg=#202020       gui=none
             \   ctermfg=lightgray   ctermbg=darkgray    cterm=NONE

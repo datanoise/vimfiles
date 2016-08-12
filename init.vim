@@ -138,10 +138,6 @@ function! GetCurDir()
   return result
 endfunction
 
-function! s:close_quick_fix()
-  ccl | lcl
-endfunction
-
 function! s:switch_prev_buf()
   let prev = bufname("#")
   if prev != '__InputList__' && bufloaded(prev) != 0
@@ -450,7 +446,7 @@ au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer>
 au FileType ruby,puppet inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "
 au FileType php  nnoremap <buffer> <F5> :!php %<CR>
 au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
-au FileType qf nmap <silent> <buffer> q :call <SID>close_quick_fix()<CR>
+au FileType qf nmap <silent> <buffer> q :q<CR>
 
 au CmdwinEnter * nmap <buffer> <leader>q :q<CR>
 au CmdwinEnter * nmap <buffer> q :q<CR>

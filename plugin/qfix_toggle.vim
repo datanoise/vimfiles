@@ -1,18 +1,15 @@
-function! s:buf_opened(name)
-  redir => buffers
-  silent ls
-  redir END
+function! s:qfix_opened()
+  let qf_options = getqflist({'winid': 1})
+  return has_key(qf_options, 'winid')
+endfunction
 
-  for buf in split(buffers, '\n')
-    if match(buf, "[" . a:name . "\\]") > -1
-      return 1
-    endif
-  endfor
-  return 0
+function! s:loclist_opened()
+  let ll_options = getloclist(bufwinid('.'), {'winid': 1})
+  return has_key(ll_options, 'winid')
 endfunction
 
 function! s:qfix_toggle()
-  if s:buf_opened("Quickfix List")
+  if s:qfix_opened()
     cclose
   else
     copen
@@ -20,7 +17,7 @@ function! s:qfix_toggle()
 endfunction
 
 function! s:loclist_toggle()
-  if s:buf_opened("Location List")
+  if s:loclist_opened()
     lclose
   else
     if empty(getloclist('.'))

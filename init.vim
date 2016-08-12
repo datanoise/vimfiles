@@ -249,7 +249,7 @@ set listchars+=extends:>,precedes:<
 if version >= 700
   set listchars+=nbsp:+
 endif
-set fillchars=vert:\|
+set fillchars+=vert:\|
 " }}}
 " wild options {{{2
 set wildmenu

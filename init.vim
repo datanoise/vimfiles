@@ -46,7 +46,7 @@ silent! if plug#begin('~/.vim/bundle')
   " file types
   Plug 'othree/html5.vim'
   Plug 'tpope/vim-markdown'
-  Plug 'datanoise/vim-ruby'
+  Plug 'vim-ruby/vim-ruby'
   " lazy loading for filetypes makes sense only for those that are not
   " included in the standard Vim distribution. Otherwise, Vim will load them
   " anyway, possibly very old version.

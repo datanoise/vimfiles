@@ -132,12 +132,6 @@ endif
 "
 " Section: Functions {{{1
 " ------------------------------------------------------------------------------
-function! GetCurDir()
-  let result = substitute(getcwd(), '^'.$HOME, '~', '')
-  let result = substitute(result, '^.\+\ze.\{20,}', '<', '')
-  return result
-endfunction
-
 function! s:switch_prev_buf()
   let prev = bufname("#")
   if prev != '__InputList__' && bufloaded(prev) != 0
@@ -163,6 +157,13 @@ endfunction
 function! s:filter_quickfix(bang, pattern)
   let cmp = a:bang ? '!~#' : '=~#'
   call setqflist(filter(getqflist(), "bufname(v:val['bufnr']) " . cmp . " a:pattern"))
+endfunction
+
+function! GitBranch()
+  if exists('*fugitive#statusline')
+    let branch = fugitive#statusline()
+    return substitute(branch, 'Git(\(.*\))', '\1', '')
+  endif
 endfunction
 
 " Section: Options {{{1
@@ -201,12 +202,12 @@ set wrapscan
 " }}}
 " status line options {{{2
 set laststatus=2
-set statusline=%m%<%.99f\ (%{GetCurDir()})\ %h%w%r%y
-set statusline+=\ %{exists('*fugitive#statusline')?fugitive#statusline():''}
+set statusline=%m%<%.99f\ %h%w%r%y
+set statusline+=%{exists('*CapsLockStatusline')?'\ '.CapsLockStatusline():''}
+set statusline+=\ %{GitBranch()}
 set statusline+=\ %#errormsg#%{exists('*SyntasticStatuslineFlag')?SyntasticStatuslineFlag():''}%*
 set statusline+=%=
 set statusline+=\ %-16(\ %l,%c-%v\ %)%P
-set statusline^=%{exists('*CapsLockStatusline')?CapsLockStatusline():''}
 " }}}
 " cscope settings {{{2
 if has('cscope')
@@ -271,7 +272,6 @@ set spelllang=ru_yo,en_us
 " uncategorized options {{{2
 au ColorScheme * hi! link ColorColumn StatusLine
 set bg=dark
-set noshowmode
 if has('nvim')
   colo molokai
 else
@@ -637,21 +637,24 @@ let g:go_highlight_fields = 1
 let g:go_highlight_operators = 0
 
 " airline settings {{{2
-let g:airline_theme='datanoise'
-let g:airline#extensions#whitespace#enabled = 0
-let g:airline#extensions#tabline#enabled = 0
-let g:airline#extensions#tabline#buffer_idx_mode = 1
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline_detect_iminsert=1
-nmap <silent> <leader>1 <Plug>AirlineSelectTab1
-nmap <silent> <leader>2 <Plug>AirlineSelectTab2
-nmap <silent> <leader>3 <Plug>AirlineSelectTab3
-nmap <silent> <leader>4 <Plug>AirlineSelectTab4
-nmap <silent> <leader>5 <Plug>AirlineSelectTab5
-nmap <silent> <leader>6 <Plug>AirlineSelectTab6
-nmap <silent> <leader>7 <Plug>AirlineSelectTab7
-nmap <silent> <leader>8 <Plug>AirlineSelectTab8
-nmap <silent> <leader>9 <Plug>AirlineSelectTab9
+if has_key(g:plugs, 'vim-airline')
+  set noshowmode
+  let g:airline_theme='datanoise'
+  let g:airline#extensions#whitespace#enabled = 0
+  let g:airline#extensions#tabline#enabled = 0
+  let g:airline#extensions#tabline#buffer_idx_mode = 1
+  let g:airline#extensions#tabline#formatter = 'unique_tail'
+  let g:airline_detect_iminsert=1
+  nmap <silent> <leader>1 <Plug>AirlineSelectTab1
+  nmap <silent> <leader>2 <Plug>AirlineSelectTab2
+  nmap <silent> <leader>3 <Plug>AirlineSelectTab3
+  nmap <silent> <leader>4 <Plug>AirlineSelectTab4
+  nmap <silent> <leader>5 <Plug>AirlineSelectTab5
+  nmap <silent> <leader>6 <Plug>AirlineSelectTab6
+  nmap <silent> <leader>7 <Plug>AirlineSelectTab7
+  nmap <silent> <leader>8 <Plug>AirlineSelectTab8
+  nmap <silent> <leader>9 <Plug>AirlineSelectTab9
+endif
 
 " easy-align settings {{{2
 if has_key(g:plugs, 'vim-easy-align')

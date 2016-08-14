@@ -254,7 +254,7 @@ function! plug#end()
 
   for [map, names] in items(lod.map)
     for [mode, map_prefix, key_prefix] in
-          \ [['i', '<C-O>', ''], ['n', '', ''], ['v', '', 'gv'], ['o', '', ''], ['c', '', '']]
+          \ [['i', '<C-O>', ''], ['n', '', ''], ['v', '', 'gv'], ['o', '', '']]
       execute printf(
       \ '%snoremap <silent> %s %s:<C-U>call <SID>lod_map(%s, %s, "%s")<CR>',
       \ mode, map, map_prefix, string(map), string(names), key_prefix)
@@ -601,11 +601,11 @@ function! s:syntax()
   syn match plugNumber /[0-9]\+[0-9.]*/ contained
   syn match plugBracket /[[\]]/ contained
   syn match plugX /x/ contained
-  syn match plugDash /^-/ nextgroup=plugName,plugMessage skipwhite
+  syn match plugDash /^-/
   syn match plugPlus /^+/
   syn match plugStar /^*/
-  syn match plugName /\(\w\|[-.]\)\+:/ contained
-  " syn match plugMessage /[^:]*/ contained
+  syn match plugMessage /\(^- \)\@<=.*/
+  syn match plugName /\(^- \)\@<=[^ ]*:/
   syn match plugSha /\%(: \)\@<=[0-9a-f]\{4,}$/
   syn match plugTag /(tag: [^)]\+)/
   syn match plugInstall /\(^+ \)\@<=[^:]*/
@@ -710,16 +710,6 @@ function! s:finish_bindings()
   nnoremap <silent> <buffer> [[ :silent! call <SID>section('b')<cr>
 endfunction
 
-function! s:quit_window()
-  if b:plug_preview==1
-    pc
-  endif
-  bd
-  if exists(":AirlineRefresh")
-    :AirlineRefresh
-  end
-endfunction
-
 function! s:prepare(...)
   if empty(getcwd())
     throw 'Invalid current working directory. Cannot proceed.'
@@ -737,8 +727,7 @@ function! s:prepare(...)
   endif
 
   call s:new_window()
-  " nnoremap <silent> <buffer> q  :if b:plug_preview==1<bar>pc<bar>endif<bar>bd<cr>
-  nnoremap <silent> <buffer> q :call <SID>quit_window()<cr>
+  nnoremap <silent> <buffer> q  :if b:plug_preview==1<bar>pc<bar>endif<bar>bd<cr>
   if a:0 == 0
     call s:finish_bindings()
   endif
@@ -1055,14 +1044,14 @@ function! s:update_finish()
         call s:log4(name, 'Updating submodules. This may take a while.')
         let out .= s:bang('git submodule update --init --recursive 2>&1', spec.dir)
       endif
-      let msg = printf('%s %s: %s', v:shell_error ? 'x': '-', name, s:lastline(out))
+      let msg = s:format_message(v:shell_error ? 'x': '-', name, out)
       if v:shell_error
         call add(s:update.errors, name)
         call s:regress_bar()
         silent execute pos 'd _'
         call append(4, msg) | 4
       elseif !empty(out)
-        call setline(pos, msg)
+        call setline(pos, msg[0])
       endif
       redraw
     endfor

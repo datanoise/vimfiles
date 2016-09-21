@@ -70,7 +70,8 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-llvm',       { 'for': 'llvm' }
   if $GOPATH != ""
     " do not use lazy loading, cause it disables template function
-    Plug 'fatih/vim-go'
+    " Plug 'fatih/vim-go'
+    Plug 'datanoise/vim-go'
   endif
 
   " ctrlp
@@ -202,7 +203,7 @@ set wrapscan
 " }}}
 " status line options {{{2
 set laststatus=2
-set statusline=%m%<%.99f\ %h%w%r%y
+set statusline=%m%<%.99f%q\ %h%w%r%y
 set statusline+=%{exists('*CapsLockStatusline')?'\ '.CapsLockStatusline():''}
 set statusline+=\ %{GitBranch()}
 set statusline+=\ %#errormsg#%{exists('*SyntasticStatuslineFlag')?SyntasticStatuslineFlag():''}%*
@@ -641,6 +642,7 @@ if has_key(g:plugs, 'vim-airline')
   set noshowmode
   let g:airline_theme='datanoise'
   let g:airline#extensions#whitespace#enabled = 0
+  let g:airline#extensions#tagbar#enabled = 1
   let g:airline#extensions#tabline#enabled = 0
   let g:airline#extensions#tabline#buffer_idx_mode = 1
   let g:airline#extensions#tabline#formatter = 'unique_tail'

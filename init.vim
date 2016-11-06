@@ -317,10 +317,6 @@ set complete-=t
 " do not display :intro screen at startup
 set shortmess+=I
 set nofsync " don't spin my disk
-if executable('ack') && !exists('g:ackprg')
-  " always use ack for faster searching
-  set grepprg=ack\ -a\ --ignore-dir=log\ --ignore-dir=tmp\ $*\\\|grep\ -v\ '^tags'
-endif
 set completeopt=menu,longest
 set clipboard+=unnamed
 au FocusGained * :sil! checktime

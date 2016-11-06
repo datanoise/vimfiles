@@ -738,10 +738,6 @@ omap ac  <Plug>(textobj-between-a)
 xmap ic  <Plug>(textobj-between-i)
 omap ic  <Plug>(textobj-between-i)
 
-" vim-cmdline-complete settings {{{2
-cmap <silent> <c-x><c-p> <Plug>CmdlineCompleteBackward
-cmap <silent> <c-x><c-n> <Plug>CmdlineCompleteForward
-
 " Misc settings {{{2
 let c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:xml_syntax_folding = 1 " enable folding in xml files

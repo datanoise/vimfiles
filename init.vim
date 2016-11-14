@@ -28,7 +28,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
 
   Plug 'scrooloose/nerdtree',  { 'on': 'NERDTreeToggle' }
-  Plug 'scrooloose/syntastic'
+  Plug 'vim-syntastic/syntastic'
 
   Plug 'vim-scripts/ag.vim'
   Plug 'vim-scripts/bufexplorer.zip', { 'on': 'BufExplorer' }

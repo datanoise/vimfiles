@@ -4,7 +4,7 @@ function! s:qfix_opened()
 endfunction
 
 function! s:loclist_opened()
-  let ll_options = getloclist(bufwinid('.'), {'winid': 1})
+  let ll_options = getloclist(bufwinid(''), {'winid': 1})
   return has_key(ll_options, 'winid')
 endfunction
 

@@ -70,8 +70,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-llvm',       { 'for': 'llvm' }
   if $GOPATH != ""
     " do not use lazy loading, cause it disables template function
-    " Plug 'fatih/vim-go'
-    Plug 'datanoise/vim-go'
+    Plug 'fatih/vim-go'
   endif
 
   " ctrlp

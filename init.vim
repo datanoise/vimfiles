@@ -332,6 +332,7 @@ au FileType xml setlocal foldmethod=syntax
 au FileType go,godoc,netrw,help,qf,gitcommit,GV setlocal nolist
 au FileType gitcommit,markdown,mkd,text setlocal spell
 au FileType help setlocal nospell iskeyword+=_
+au BufNewFile,BufRead *.prawn set ft=ruby
 " go settings
 au FileType go setlocal tabstop=4
 au FileType go setlocal shiftwidth=4

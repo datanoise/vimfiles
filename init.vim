@@ -55,9 +55,9 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'keith/swift.vim',          { 'for': 'swift' }
   Plug 'vim-scripts/nginx.vim',    { 'for': 'nginx' }
   Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
-  Plug 'pangloss/vim-javascript',  { 'for': 'javascript' }
+  Plug 'pangloss/vim-javascript',  { 'for': ['javascript', 'vue'] }
   Plug 'mxw/vim-jsx',              { 'for': 'javascript' }
-  Plug 'posva/vim-vue',            { 'for': 'javascript' }
+  Plug 'datanoise/vim-vue',        { 'for': ['javascript', 'vue'] }
   Plug 'tmux-plugins/vim-tmux',    { 'for': 'tmux' }
   Plug 'digitaltoad/vim-pug',      { 'for': ['pug', 'jade'] }
   Plug 'ekalinin/Dockerfile.vim',  { 'for': 'Dockerfile' }

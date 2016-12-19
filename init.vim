@@ -171,9 +171,11 @@ function! s:tagInsert()
   if !has_key(g:plugs, 'vim-ragtag')
     return '>'
   elseif getline('.')[col('.')-2] == '>' && getline('.')[col('.')-1] == '<'
+    call feedkeys("\<C-g>u") " create new undo sequence
     call feedkeys("\<CR>\<ESC>O", 'n')
     return ""
-  elseif search('<', 'bn', line('.')) != 0
+  elseif search('<', 'bn', line('.')) != 0 && searchpair('<', '', '>', 'bW') > 0
+    call feedkeys("\<C-g>u") " create new undo sequence
     call feedkeys('></', 'n')
     call feedkeys("\<Plug>ragtagHtmlComplete")
     call feedkeys("\<ESC>F<i", 'n')
@@ -429,6 +431,7 @@ xnoremap <silent> * :<C-u>call <SID>vset_search()<CR>/<C-R>=@/<CR><CR>
 xnoremap <silent> # :<C-u>call <SID>vset_search()<CR>?<C-R>=@/<CR><CR>
 nnoremap <silent> <leader>sc :SyntasticCheck<CR>
 
+nmap Q :qa!
 " some handful command-mode bindings
 cnoremap <M-q> qa!
 cnoremap <C-a> <Home>
@@ -466,8 +469,8 @@ au FileType php  nnoremap <buffer> <F5> :!php %<CR>
 au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
 au FileType qf nmap <silent> <buffer> q :q<CR>
 
-au FileType xml,html,vue let b:delimitMate_matchpairs = "(:),[:],{:}"
-au FileType xml,html,vue imap <silent> <buffer> <expr> > <SID>tagInsert()
+au FileType xml,html,vue,eruby let b:delimitMate_matchpairs = "(:),[:],{:}"
+au FileType xml,html,vue,eruby imap <silent> <buffer> <expr> > <SID>tagInsert()
 
 au CmdwinEnter * nmap <buffer> <leader>q :q<CR>
 au CmdwinEnter * nmap <buffer> q :q<CR>

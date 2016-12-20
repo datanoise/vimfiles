@@ -56,7 +56,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'vim-scripts/nginx.vim',    { 'for': 'nginx' }
   Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
   Plug 'pangloss/vim-javascript',  { 'for': ['javascript', 'vue'] }
-  Plug 'mxw/vim-jsx',              { 'for': 'javascript' }
+  Plug 'MaxMEllon/vim-jsx-pretty', { 'for': 'javascript' }
   Plug 'datanoise/vim-vue',        { 'for': ['javascript', 'vue'] }
   Plug 'tmux-plugins/vim-tmux',    { 'for': 'tmux' }
   Plug 'digitaltoad/vim-pug',      { 'for': ['pug', 'jade'] }
@@ -468,6 +468,7 @@ au FileType ruby,puppet inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>
 au FileType php  nnoremap <buffer> <F5> :!php %<CR>
 au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
 au FileType qf nmap <silent> <buffer> q :q<CR>
+au FileType javascript.jsx let b:syntastic_checkers = ["javascript/eslint"]
 
 au FileType xml,html,vue,eruby let b:delimitMate_matchpairs = "(:),[:],{:}"
 au FileType xml,html,vue,eruby imap <silent> <buffer> <expr> > <SID>tagInsert()
@@ -764,7 +765,7 @@ omap ic  <Plug>(textobj-between-i)
 let c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:xml_syntax_folding = 1 " enable folding in xml files
 let g:racer_cmd = 'racer'
-let g:jsx_ext_required = 0
+let g:vim_jsx_pretty_colorful_config = 1
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
 let delimitMate_expand_space = 1
 

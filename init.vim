@@ -55,8 +55,8 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'keith/swift.vim',          { 'for': 'swift' }
   Plug 'vim-scripts/nginx.vim',    { 'for': 'nginx' }
   Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
-  Plug 'pangloss/vim-javascript',  { 'for': ['javascript', 'vue'] }
-  Plug 'MaxMEllon/vim-jsx-pretty', { 'for': 'javascript' }
+  Plug 'pangloss/vim-javascript'  ",  { 'for': ['javascript', 'vue'] }
+  Plug 'datanoise/vim-jsx-pretty' ", { 'for': 'javascript' }
   Plug 'datanoise/vim-vue',        { 'for': ['javascript', 'vue'] }
   Plug 'tmux-plugins/vim-tmux',    { 'for': 'tmux' }
   Plug 'digitaltoad/vim-pug',      { 'for': ['pug', 'jade'] }
@@ -468,7 +468,7 @@ au FileType ruby,puppet inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>
 au FileType php  nnoremap <buffer> <F5> :!php %<CR>
 au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
 au FileType qf nmap <silent> <buffer> q :q<CR>
-au FileType javascript.jsx let b:syntastic_checkers = ["javascript/eslint"]
+au FileType javascript let b:syntastic_checkers = ["javascript/eslint"]
 
 au FileType xml,html,vue,eruby let b:delimitMate_matchpairs = "(:),[:],{:}"
 au FileType xml,html,vue,eruby imap <silent> <buffer> <expr> > <SID>tagInsert()

@@ -28,7 +28,8 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
 
   Plug 'scrooloose/nerdtree',  { 'on': 'NERDTreeToggle' }
-  Plug 'vim-syntastic/syntastic'
+  " Plug 'vim-syntastic/syntastic'
+  Plug 'neomake/neomake'
 
   Plug 'vim-scripts/ag.vim'
   Plug 'vim-scripts/bufexplorer.zip', { 'on': 'BufExplorer' }
@@ -431,7 +432,6 @@ xnoremap <silent> * :<C-u>call <SID>vset_search()<CR>/<C-R>=@/<CR><CR>
 xnoremap <silent> # :<C-u>call <SID>vset_search()<CR>?<C-R>=@/<CR><CR>
 nnoremap <silent> <leader>sc :SyntasticCheck<CR>
 
-nmap Q :qa!
 " some handful command-mode bindings
 cnoremap <M-q> qa!
 cnoremap <C-a> <Home>
@@ -562,6 +562,14 @@ let g:syntastic_warning_symbol='⚠'
 let g:syntastic_go_checkers = ["gofmt"]
 let g:syntastic_enable_elixir_checker = 0
 let g:syntastic_elixir_checkers = ['elixir']
+
+" neomake settings {{{2
+autocmd! BufWritePost * Neomake
+let g:neomake_javascript_enabled_makers = ['eslint']
+let g:neomake_warning_sign = {
+      \ 'text': '⚠',
+      \ 'texthl': 'todo',
+      \ }
 
 " A settings {{{2
 let g:alternateExtensions_h = "c,cpp,cxx,cc,CC,m,mm"

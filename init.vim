@@ -32,7 +32,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'neomake/neomake'
 
   Plug 'vim-scripts/ag.vim'
-  Plug 'vim-scripts/bufexplorer.zip', { 'on': 'BufExplorer' }
+  Plug 'vim-scripts/bufexplorer.zip'
 
   Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign'] }
   Plug 'junegunn/goyo.vim'

@@ -31,9 +31,6 @@ silent! if plug#begin('~/.vim/bundle')
   " Plug 'vim-syntastic/syntastic'
   Plug 'neomake/neomake'
 
-  Plug 'vim-scripts/ag.vim'
-  Plug 'vim-scripts/bufexplorer.zip'
-
   Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign'] }
   Plug 'junegunn/goyo.vim'
   Plug 'junegunn/limelight.vim',  { 'on': 'Limelight' }
@@ -67,6 +64,8 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'jneen/ragel.vim',          { 'for': 'ragel' }
   Plug 'ajf/puppet-vim',           { 'for': 'puppet' }
   Plug 'cespare/vim-toml',         { 'for': 'toml' }
+  Plug 'vim-scripts/ag.vim'
+  Plug 'datanoise/bufexplorer'
   Plug 'datanoise/vim-elixir',     { 'for': ['elixir', 'eelixir'] }
   Plug 'datanoise/vim-crystal',    { 'for': ['crystal', 'html'] }
   Plug 'datanoise/vim-llvm',       { 'for': 'llvm' }

@@ -186,6 +186,11 @@ function! s:tagInsert()
   endif
 endfunction
 
+function! s:enableTagInsert()
+  let b:delimitMate_matchpairs = "(:),[:],{:}"
+  imap <silent> <buffer> <expr> > <SID>tagInsert()
+endfunction
+
 " Section: Options {{{1
 " ------------------------------------------------------------------------------
 " tab options {{{2
@@ -470,8 +475,11 @@ au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
 au FileType qf nmap <silent> <buffer> q :q<CR>
 au FileType javascript let b:syntastic_checkers = ["javascript/eslint"]
 
-au FileType xml,html,vue,eruby let b:delimitMate_matchpairs = "(:),[:],{:}"
-au FileType xml,html,vue,eruby imap <silent> <buffer> <expr> > <SID>tagInsert()
+au FileType xml,html,vue,eruby call s:enableTagInsert()
+au FileType javascript
+      \ if b:current_syntax == 'javascript.jsx' |
+      \   call s:enableTagInsert() |
+      \ endif
 
 au CmdwinEnter * nmap <buffer> <leader>q :q<CR>
 au CmdwinEnter * nmap <buffer> q :q<CR>

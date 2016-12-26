@@ -168,18 +168,26 @@ function! GitBranch()
 endfunction
 
 function! s:tagInsert()
+  let line = getline('.')
+  let col = col('.')
+
   if !has_key(g:plugs, 'vim-ragtag')
     return '>'
-  elseif getline('.')[col('.')-2] == '>' && getline('.')[col('.')-1] == '<'
+
+  elseif line[col-2] == '>' && line[col-1] == '<'
     call feedkeys("\<C-g>u") " create new undo sequence
     call feedkeys("\<CR>\<ESC>O", 'n')
     return ""
-  elseif search('<', 'bn', line('.')) != 0 && searchpair('<', '', '>', 'bW') > 0
+
+  elseif search('</\@!', 'bn', line('.')) != 0
+        \ && searchpair('</\@!', '', '>', 'bW') > 0
+        \ && line[col-2] != '/'
     call feedkeys("\<C-g>u") " create new undo sequence
     call feedkeys('></', 'n')
     call feedkeys("\<Plug>ragtagHtmlComplete")
     call feedkeys("\<ESC>F<i", 'n')
     return ""
+
   else
     return '>'
   endif

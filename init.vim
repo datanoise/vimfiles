@@ -167,7 +167,7 @@ function! GitBranch()
   endif
 endfunction
 
-function! s:tagInsert()
+function! s:tagComplete()
   let line = getline('.')
   let col = col('.')
 
@@ -193,9 +193,9 @@ function! s:tagInsert()
   endif
 endfunction
 
-function! s:enableTagInsert()
+function! s:enableTagComplete()
   let b:delimitMate_matchpairs = "(:),[:],{:}"
-  imap <silent> <buffer> <expr> > <SID>tagInsert()
+  imap <silent> <buffer> <expr> > <SID>tagComplete()
 endfunction
 
 " Section: Options {{{1
@@ -482,10 +482,10 @@ au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
 au FileType qf nmap <silent> <buffer> q :q<CR>
 au FileType javascript let b:syntastic_checkers = ["javascript/eslint"]
 
-au FileType xml,html,vue,eruby call s:enableTagInsert()
+au FileType xml,html,vue,eruby call s:enableTagComplete()
 au FileType javascript
       \ if b:current_syntax == 'javascript.jsx' |
-      \   call s:enableTagInsert() |
+      \   call s:enableTagComplete() |
       \ endif
 
 au CmdwinEnter * nmap <buffer> <leader>q :q<CR>
@@ -686,7 +686,8 @@ let g:go_highlight_operators = 0
 " airline settings {{{2
 if has_key(g:plugs, 'vim-airline')
   set noshowmode
-  let g:airline_theme='datanoise'
+  let g:airline_theme = has('nvim') ? 'serene' : 'datanoise'
+
   let g:airline#extensions#whitespace#enabled = 0
   let g:airline#extensions#tagbar#enabled = 1
   let g:airline#extensions#tabline#enabled = 0

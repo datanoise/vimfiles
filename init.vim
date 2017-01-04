@@ -304,16 +304,12 @@ set spelllang=ru_yo,en_us
 " uncategorized options {{{2
 au ColorScheme * hi! link ColorColumn StatusLine
 set bg=dark
-if has('nvim')
-  colo molokai
-else
-  colo datanoise
-  if !has('gui_running') && has('termguicolors')
-    set termguicolors
-    if $TERM == "screen-256color"
-      exec "set t_8f=\e[38;2;%lu;%lu;%lum"
-      exec "set t_8b=\e[48;2;%lu;%lu;%lum"
-    endif
+colo datanoise
+if !has('gui_running') && has('termguicolors')
+  set termguicolors
+  if $TERM == "screen-256color"
+    exec "set t_8f=\e[38;2;%lu;%lu;%lum"
+    exec "set t_8b=\e[48;2;%lu;%lu;%lum"
   endif
 endif
 set scrolloff=5      " keep at least 5 lines above/below

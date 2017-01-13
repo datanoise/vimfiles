@@ -75,7 +75,7 @@ silent! if plug#begin('~/.vim/bundle')
   endif
 
   " ctrlp
-  Plug 'datanoise/ctrlp.vim'
+  Plug 'ctrlpvim/ctrlp.vim'
   Plug 'ompugao/ctrlp-history'
   Plug 'mattn/ctrlp-mark'
   Plug 'mattn/ctrlp-register'
@@ -577,6 +577,8 @@ let g:syntastic_elixir_checkers = ['elixir']
 " neomake settings {{{2
 autocmd! BufWritePost * Neomake
 let g:neomake_javascript_enabled_makers = ['eslint']
+let g:neomake_rust_enabled_makers = []
+autocmd! BufWritePost *.rs Neomake! cargo
 let g:neomake_warning_sign = {
       \ 'text': '⚠',
       \ 'texthl': 'todo',
@@ -788,5 +790,6 @@ let g:racer_cmd = 'racer'
 let g:vim_jsx_pretty_colorful_config = 1
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
 let delimitMate_expand_space = 1
+let delimitMate_matchpairs = "(:),[:],{:}"
 
 " }}}

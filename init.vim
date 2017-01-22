@@ -575,10 +575,10 @@ let g:syntastic_enable_elixir_checker = 0
 let g:syntastic_elixir_checkers = ['elixir']
 
 " neomake settings {{{2
-autocmd! BufWritePost * Neomake
+autocmd! BufWritePost * silent Neomake
 let g:neomake_javascript_enabled_makers = ['eslint']
 let g:neomake_rust_enabled_makers = []
-autocmd! BufWritePost *.rs Neomake! cargo
+autocmd! BufWritePost *.rs silent Neomake! clippy
 let g:neomake_warning_sign = {
       \ 'text': '⚠',
       \ 'texthl': 'todo',

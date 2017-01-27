@@ -465,11 +465,14 @@ au FileType coffee nnoremap <buffer> <F5> :CoffeeMake<CR><CR>
 au FileType godoc nnoremap <silent> <buffer> q :bd<CR>
 au FileType help nnoremap <silent> <buffer> q :helpclose<CR>
 au FileType go nnoremap <silent> <buffer> K :GoDoc<CR>
-au FileType go nmap <silent> <buffer> <leader>goi <Plug>(go-import)
-au FileType go nmap <silent> <buffer> <leader>goI <Plug>(go-imports)
-au FileType go nmap <silent> <buffer> <leader>god <Plug>(go-def)
-au FileType go nmap <silent> <buffer> <leader>gok <Plug>(go-doc-tab)
-au FileType go nmap <silent> <buffer> <leader>gos <Plug>(go-info)
+au FileType go
+      \ nmap <silent> <buffer> <leader>goi <Plug>(go-import) |
+      \ nmap <silent> <buffer> <leader>goI <Plug>(go-imports) |
+      \ nmap <silent> <buffer> <leader>god <Plug>(go-def) |
+      \ nmap <silent> <buffer> <leader>gok <Plug>(go-doc-tab) |
+      \ nmap <silent> <buffer> <leader>gos <Plug>(go-info) |
+      \ imap <silent> <buffer> <C-g>i <Esc><Plug>(go-import)a|
+      \ cabbr <buffer> gi GoImport
 au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F4> :!rspec --format doc -c %<CR>|endif
 au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F5> :exe '!rspec --format doc -c ' . expand('%') . ':' . line('.')<CR>|else|nnoremap <buffer> <F5> :!ruby %<CR>|endif
 au FileType ruby,puppet inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "

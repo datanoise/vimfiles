@@ -28,8 +28,8 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
 
   Plug 'scrooloose/nerdtree',  { 'on': 'NERDTreeToggle' }
-  " Plug 'vim-syntastic/syntastic'
-  Plug 'neomake/neomake'
+  Plug 'vim-syntastic/syntastic'
+  " Plug 'neomake/neomake'
 
   Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign'] }
   Plug 'junegunn/goyo.vim'
@@ -578,14 +578,16 @@ let g:syntastic_enable_elixir_checker = 0
 let g:syntastic_elixir_checkers = ['elixir']
 
 " neomake settings {{{2
-autocmd! BufWritePost * silent Neomake
-let g:neomake_javascript_enabled_makers = ['eslint']
-let g:neomake_rust_enabled_makers = []
-autocmd! BufWritePost *.rs silent Neomake! clippy
-let g:neomake_warning_sign = {
-      \ 'text': '⚠',
-      \ 'texthl': 'todo',
-      \ }
+if has_key(g:plugs, 'neomake')
+  autocmd! BufWritePost * silent Neomake
+  let g:neomake_javascript_enabled_makers = ['eslint']
+  let g:neomake_rust_enabled_makers = []
+  autocmd! BufWritePost *.rs silent Neomake! clippy
+  let g:neomake_warning_sign = {
+        \ 'text': '⚠',
+        \ 'texthl': 'todo',
+        \ }
+endif
 
 " A settings {{{2
 let g:alternateExtensions_h = "c,cpp,cxx,cc,CC,m,mm"
@@ -673,6 +675,7 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 " vim-go settings {{{2
 let g:go_auto_type_info = 0
 let g:go_def_mode = 'godef'
+let g:go_fmt_command = "goimports"
 
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
@@ -683,11 +686,17 @@ let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_fields = 1
 let g:go_highlight_operators = 0
+augroup go_alt
+  autocmd!
+  autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
+  autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
+  autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
+augroup END
 
 " airline settings {{{2
 if has_key(g:plugs, 'vim-airline')
   set noshowmode
-  let g:airline_theme = has('nvim') ? 'serene' : 'datanoise'
+  let g:airline_theme = 'datanoise'
 
   let g:airline#extensions#whitespace#enabled = 0
   let g:airline#extensions#tagbar#enabled = 1

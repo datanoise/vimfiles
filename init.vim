@@ -113,7 +113,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'vim-scripts/searchfold.vim',   { 'on': '<Plug>SearchFoldNormal' }
   Plug 'datanoise/vim-bclose',         { 'on': 'Bclose' }
   Plug 'mbbill/undotree',              { 'on': 'UndotreeToggle' }
-  Plug 'Yggdroot/indentLine',          { 'on': 'IndentLinesEnable' }
   Plug 'airblade/vim-gitgutter',       { 'on': ['GitGutterToggle', 'GitGutterEnable'] }
 
   Plug 'mileszs/ack.vim'

@@ -373,6 +373,7 @@ au VimEnter *
 
 au BufReadPost fugitive://* set bufhidden=delete
 au VimResized * wincmd =
+au VimEnter :sil AirlineRefresh
 "}}}
 
 " Section: Keybindings {{{1

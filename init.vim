@@ -702,6 +702,7 @@ if has_key(g:plugs, 'vim-airline')
   let g:airline#extensions#tagbar#enabled = 1
   let g:airline#extensions#tabline#enabled = 0
   let g:airline#extensions#tabline#buffer_idx_mode = 1
+  let g:airline#extensions#keymap#enabled = 0
   let g:airline#extensions#tabline#formatter = 'unique_tail'
   let g:airline_detect_iminsert=1
   nmap <silent> <leader>1 <Plug>AirlineSelectTab1

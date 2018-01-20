@@ -1,6 +1,6 @@
 function! s:qfix_opened()
   let qf_options = getqflist({'winid': 1})
-  return has_key(qf_options, 'winid')
+  return has_key(qf_options, 'winid') && qf_options['winid'] > 0
 endfunction
 
 function! s:loclist_opened()

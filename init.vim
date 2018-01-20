@@ -282,7 +282,7 @@ set fillchars+=vert:\|
 " wild options {{{2
 set wildmenu
 set wildmode=longest:full
-set wildignore=*.o,*.bundle,*.png,*.jpg,*.gif,*.class,*.log,*.beam,*.a,*.rlib
+set wildignore=*.o,*.bundle,*.png,*.jpg,*.gif,*.class,*.log,*.beam,*.a,*.rlib,*.iml
 set showcmd
 " }}}
 " mouse options {{{2

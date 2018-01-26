@@ -50,6 +50,7 @@ silent! if plug#begin('~/.vim/bundle')
   " anyway, possibly very old version.
   Plug 'tpope/vim-haml',           { 'for': ['haml', 'sass', 'scss'] }
   Plug 'rust-lang/rust.vim',       { 'for': 'rust' }
+  Plug 'timonv/vim-cargo',         { 'for': 'cargo' }
   Plug 'keith/swift.vim',          { 'for': 'swift' }
   Plug 'vim-scripts/nginx.vim',    { 'for': 'nginx' }
   Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
@@ -374,6 +375,18 @@ au VimEnter *
 au BufReadPost fugitive://* set bufhidden=delete
 au VimResized * wincmd =
 au VimEnter :sil AirlineRefresh
+
+" terminal settings
+tnoremap <Esc> <C-\><C-n>
+tmap <F2> <C-\><C-n><F2>
+if has('nvim')
+  au TermOpen * startinsert
+endif
+
+if has('nvim')
+  let $VISUAL = 'nvr -cc split --remote-wait'
+endif
+
 "}}}
 
 " Section: Keybindings {{{1

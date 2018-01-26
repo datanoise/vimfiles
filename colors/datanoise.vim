@@ -80,7 +80,7 @@ hi Operator     term=bold ctermfg=magenta gui=none guifg=LawnGreen
 hi Identifier   term=underline ctermfg=darkgreen guifg=darkolivegreen4
 hi Ignore   term=bold ctermfg=darkgray guifg=gray45
 hi Special  term=underline ctermfg=brown guifg=sienna
-hi Error    term=reverse ctermfg=gray ctermbg=red guifg=gray guibg=red3
+hi Error    term=reverse ctermfg=gray ctermbg=red guifg=white guibg=red3
 hi Todo     term=standout ctermfg=black ctermbg=yellow gui=bold guifg=gray10 guibg=yellow4
 hi Underlined   term=underline cterm=underline ctermfg=darkblue gui=underline guifg=slateblue
 hi Number   term=underline ctermfg=darkred guifg=red2

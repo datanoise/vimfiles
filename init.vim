@@ -22,7 +22,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-tbone'
   Plug 'tpope/vim-sleuth'
   Plug 'tpope/vim-surround'
-  Plug 'tpope/vim-vinegar'
   Plug 'tpope/vim-git'
   Plug 'tpope/vim-unimpaired'
   Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
@@ -376,7 +375,7 @@ au VimResized * wincmd =
 au VimEnter :sil AirlineRefresh
 
 " terminal settings
-tnoremap <Esc> <C-\><C-n>
+" tnoremap <Esc> <C-\><C-n>
 tmap <F2> <C-\><C-n><F2>
 if has('nvim')
   au TermOpen * startinsert

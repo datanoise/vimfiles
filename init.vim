@@ -717,6 +717,7 @@ if has_key(g:plugs, 'vim-airline')
   let g:airline_theme = 'datanoise'
 
   let g:airline#extensions#whitespace#enabled = 0
+  let g:airline#extensions#fzf#enabled = 1
   let g:airline#extensions#tagbar#enabled = 1
   let g:airline#extensions#tabline#enabled = 0
   let g:airline#extensions#tabline#buffer_idx_mode = 1
@@ -798,7 +799,6 @@ endif
 if !has('gui_running') && isdirectory('/usr/local/opt/fzf')
   set rtp+=/usr/local/opt/fzf
   nnoremap <leader>F :FZF<CR>
-  cabbr fzf FZF
   execute "cnoremap <M-t> FZF "
   execute "nnoremap <M-t> :FZF "
 endif

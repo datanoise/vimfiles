@@ -1,4 +1,5 @@
 " -*- vim -*- vim:set ft=vim et sw=2 sts=2 fdc=3:
+scriptencoding utf8
 
 " Section: Global Setting {{{1
 " ------------------------------------------------------------------------------
@@ -8,13 +9,16 @@ filetype on           " Enable filetype detection
 filetype indent on    " Enable filetype-specific indenting
 filetype plugin on    " Enable filetype-specific plugins
 
-set nocompatible      " We're running Vim, not Vi!
+" set nocompatible      " We're running Vim, not Vi!
 
 " Section: Plugins {{{1
 silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-repeat'
   Plug 'tpope/vim-capslock'
   Plug 'tpope/vim-dispatch'
+  if has('nvim')
+    Plug 'datanoise/vim-dispatch-neovim'
+  endif
   Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-ragtag'
   Plug 'tpope/vim-rails'
@@ -24,11 +28,12 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-surround'
   Plug 'tpope/vim-git'
   Plug 'tpope/vim-unimpaired'
+  Plug 'tpope/vim-projectionist'
   Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
 
   Plug 'scrooloose/nerdtree',  { 'on': 'NERDTreeToggle' }
-  Plug 'vim-syntastic/syntastic'
-  " Plug 'neomake/neomake'
+  Plug 'w0rp/ale'
+  " Plug 'vim-syntastic/syntastic'
 
   Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign'] }
   Plug 'junegunn/goyo.vim'
@@ -68,7 +73,8 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-elixir',     { 'for': ['elixir', 'eelixir'] }
   Plug 'datanoise/vim-crystal',    { 'for': ['crystal', 'html'] }
   Plug 'datanoise/vim-llvm',       { 'for': 'llvm' }
-  if $GOPATH != ""
+  Plug 'Quramy/tsuquyomi',         { 'for': 'typescript' }
+  if $GOPATH !=# ''
     " do not use lazy loading, cause it disables template function
     Plug 'fatih/vim-go'
   endif
@@ -98,7 +104,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'lucapette/vim-textobj-underscore'
 
   " airline
-  if $TERM == "" || $TERM == 'xterm-256color' || $TERM == 'screen-256color'
+  if $TERM ==# '' || $TERM ==# 'xterm-256color' || $TERM ==# 'screen-256color'
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
   endif
@@ -125,6 +131,11 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-cmdline-complete'
   Plug 'rhysd/conflict-marker.vim'
 
+  if !has('gui_running') && isdirectory('/usr/local/opt/fzf')
+    Plug '/usr/local/opt/fzf'
+    Plug 'junegunn/fzf.vim'
+  end
+
   call plug#end()
 endif
 
@@ -132,8 +143,8 @@ endif
 " Section: Functions {{{1
 " ------------------------------------------------------------------------------
 function! s:switch_prev_buf()
-  let prev = bufname("#")
-  if prev != '__InputList__' && bufloaded(prev) != 0
+  let l:prev = bufname('#')
+  if l:prev !=# '__InputList__' && bufloaded(l:prev) != 0
     b#
   else
     " echo "No buffer to switch to"
@@ -142,49 +153,49 @@ function! s:switch_prev_buf()
 endfunction
 
 function! Eatchar(pat)
-   let c = nr2char(getchar(0))
-   return (c =~ a:pat) ? '' : c
+   let l:c = nr2char(getchar(0))
+   return (l:c =~ a:pat) ? '' : l:c
 endfunction
 
 function! s:vset_search()
-  let tmp = @s
+  let l:tmp = @s
   norm! gv"sy
   let @/ = '\V' . substitute(escape(@s, '/\'), '\n', '\\n', 'g')
-  let @s = tmp
+  let @s = l:tmp
 endfunction
 
 function! s:filter_quickfix(bang, pattern)
-  let cmp = a:bang ? '!~#' : '=~#'
-  call setqflist(filter(getqflist(), "bufname(v:val['bufnr']) " . cmp . " a:pattern"))
+  let l:cmp = a:bang ? '!~#' : '=~#'
+  call setqflist(filter(getqflist(), "bufname(v:val['bufnr']) " . l:cmp . ' a:pattern'))
 endfunction
 
 function! GitBranch()
   if exists('*fugitive#statusline')
-    let branch = fugitive#statusline()
-    return substitute(branch, 'Git(\(.*\))', '\1', '')
+    let l:branch = fugitive#statusline()
+    return substitute(l:branch, 'Git(\(.*\))', '\1', '')
   endif
 endfunction
 
 function! s:tagComplete()
-  let line = getline('.')
-  let col = col('.')
+  let l:line = getline('.')
+  let l:col = col('.')
 
   if !has_key(g:plugs, 'vim-ragtag')
     return '>'
 
-  elseif line[col-2] == '>' && line[col-1] == '<'
+  elseif l:line[l:col-2] ==# '>' && l:line[l:col-1] ==# '<'
     call feedkeys("\<C-g>u") " create new undo sequence
     call feedkeys("\<CR>\<ESC>O", 'n')
-    return ""
+    return ''
 
   elseif search('</\@!', 'bn', line('.')) != 0
         \ && searchpair('</\@!', '', '>', 'bW') > 0
-        \ && line[col-2] != '/'
+        \ && l:line[l:col-2] !=# '/'
     call feedkeys("\<C-g>u") " create new undo sequence
     call feedkeys('></', 'n')
     call feedkeys("\<Plug>ragtagHtmlComplete")
     call feedkeys("\<ESC>F<i", 'n')
-    return ""
+    return ''
 
   else
     return '>'
@@ -192,7 +203,7 @@ function! s:tagComplete()
 endfunction
 
 function! s:enableTagComplete()
-  let b:delimitMate_matchpairs = "(:),[:],{:}"
+  let b:delimitMate_matchpairs = '(:),[:],{:}'
   imap <silent> <buffer> <expr> > <SID>tagComplete()
 endfunction
 
@@ -208,7 +219,7 @@ set expandtab
 " }}}
 " backup options {{{2
 set nobackup
-if has("win32")
+if has('win32')
   set backupdir=c:/tmp
   set directory=c:/tmp
 else
@@ -242,17 +253,17 @@ set statusline+=\ %-16(\ %l,%c-%v\ %)%P
 " cscope settings {{{2
 if has('cscope')
   set cscopequickfix=s-,c-,d-,i-,t-,e-
-  set cst
-  set cspc=3
-  set nocsverb
+  set cscopetag
+  set cscopepathcomp=3
+  set nocscopeverbose
   " add any database in current directory
-  if filereadable("cscope.out")
+  if filereadable('cscope.out')
       cs add cscope.out
   " else add database pointed to by environment
-  elseif $CSCOPE_DB != ""
+  elseif $CSCOPE_DB !=# ''
       cs add $CSCOPE_DB
   endif
-  set csverb
+  set cscopeverbose
 endif " }}}
 " line breaks settings {{{2
 set linebreak
@@ -267,13 +278,13 @@ endif
 " }}}
 " invisible chars display options {{{2
 set list
-if has("win32")
+if has('win32')
   set listchars=tab:>-,trail:-
 else
   set listchars=tab:»·,trail:·
 endif
 set listchars+=extends:>,precedes:<
-if version >= 700
+if v:version >= 700
   set listchars+=nbsp:+
 endif
 set fillchars+=vert:\|
@@ -300,12 +311,15 @@ set imsearch=0
 set spelllang=ru_yo,en_us
 "}}}
 " uncategorized options {{{2
-au ColorScheme * hi! link ColorColumn StatusLine
-set bg=dark
+augroup ColorSchemeFix
+  au!
+  au ColorScheme * hi! link ColorColumn StatusLine
+augroup END
+set background=dark
 colo datanoise
 if !has('gui_running') && has('termguicolors')
   set termguicolors
-  if $TERM == "screen-256color"
+  if $TERM ==# 'screen-256color'
     exec "set t_8f=\e[38;2;%lu;%lu;%lum"
     exec "set t_8b=\e[48;2;%lu;%lu;%lum"
   endif
@@ -320,14 +334,17 @@ endif
 set title
 set backspace=indent,eol,start
 " set number
-if exists("&macmeta")
+if exists('&macmeta')
   set macmeta " on Mac use Option key as Meta
 endif
 set belloff=all
-set vb t_vb= " no visual bell or beep, damn it
+set visualbell t_vb= " no visual bell or beep, damn it
 " that makes it work on Windows too
-if has("win32")
-  au VimEnter * set vb t_vb=
+if has('win32')
+  augroup WinVisualBellFix
+    au!
+    au VimEnter * set vb t_vb=
+  augroup END
 endif
 if getcwd() != expand('~')
   set path+=*/** " allow :find searching subdirectories
@@ -344,41 +361,24 @@ set shortmess+=I
 set nofsync " don't spin my disk
 set completeopt=menu,longest
 set clipboard+=unnamed
-au FocusGained * :sil! checktime
-if has('gui_running')
-  au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs\ --no-gems
-else
-  au FileType ruby setlocal keywordprg=ri\ --no-gems
-end
-au FileType ruby setlocal completefunc=syntaxcomplete#Complete
-au FileType ruby if has('balloonexpr') | setlocal balloonexpr& | endif
-au FileType scala,ruby,go exe 'compiler '. expand('<amatch>')
-au FileType rust compiler rustc
-au FileType xml setlocal foldmethod=syntax
-au FileType go,godoc,netrw,help,qf,gitcommit,GV setlocal nolist
-au FileType gitcommit,markdown,mkd,text setlocal spell
-au FileType help setlocal nospell iskeyword+=_
-au BufNewFile,BufRead *.prawn set ft=ruby
-au BufNewFile,BufRead *.axlsx set ft=ruby
-" go settings
-au FileType go setlocal tabstop=4
-au FileType go setlocal shiftwidth=4
-au FileType go setlocal noexpandtab
-" ignore target directory for cargo projects
-au VimEnter *
-      \ if filereadable('Cargo.toml') |
-      \   set wildignore+=target |
-      \ endif
+augroup CheckFilesForUpdates
+  au!
+  au FocusGained * :sil! checktime
+augroup END
 
-au BufReadPost fugitive://* set bufhidden=delete
-au VimResized * wincmd =
-au VimEnter :sil AirlineRefresh
+augroup FugitiveAutoCleanup
+  au!
+  au BufReadPost fugitive://* set bufhidden=delete
+augroup END
 
 " terminal settings
 " tnoremap <Esc> <C-\><C-n>
 tmap <F2> <C-\><C-n><F2>
 if has('nvim')
-  au TermOpen * startinsert
+  augroup TermAutoInsert
+    au!
+    au TermOpen * startinsert
+  augroup END
 endif
 
 if has('nvim')
@@ -392,7 +392,7 @@ let $VIM_TERM = 'yes'
 
 " Section: Keybindings {{{1
 " ------------------------------------------------------------------------------
-let mapleader = ','
+let g:mapleader = ','
 nnoremap <leader>sv :source ~/.vimrc
 nnoremap <leader>sg :source ~/.gvimrc
 nnoremap \vv :e ~/.vimrc
@@ -471,51 +471,24 @@ cabbr ag Ag
 cabbr pu PlugUpdate
 cabbr pi PlugInstall
 
-" file type bindings {{{2
-au FileType coffee nnoremap <buffer> <F3> :CoffeeCompile<CR>
-au FileType coffee vnoremap <buffer> <F3> :CoffeeCompile<CR>
-au FileType coffee nnoremap <buffer> <F4> :CoffeeRun<CR>
-au FileType coffee nnoremap <buffer> <F5> :CoffeeMake<CR><CR>
-au FileType godoc nnoremap <silent> <buffer> q :bd<CR>
-au FileType help nnoremap <silent> <buffer> q :helpclose<CR>
-au FileType go nnoremap <silent> <buffer> K :GoDoc<CR>
-au FileType go
-      \ nmap <silent> <buffer> <leader>goi <Plug>(go-import) |
-      \ nmap <silent> <buffer> <leader>goI <Plug>(go-imports) |
-      \ nmap <silent> <buffer> <leader>god <Plug>(go-def) |
-      \ nmap <silent> <buffer> <leader>gok <Plug>(go-doc-tab) |
-      \ nmap <silent> <buffer> <leader>gos <Plug>(go-info) |
-      \ imap <silent> <buffer> <C-g>i <Esc><Plug>(go-import)a|
-      \ cabbr <buffer> gi GoImport
-au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F4> :!rspec --format doc -c %<CR>|endif
-au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F5> :exe '!rspec --format doc -c ' . expand('%') . ':' . line('.')<CR>|else|nnoremap <buffer> <F5> :!ruby %<CR>|endif
-au FileType ruby,puppet inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "
-au FileType php  nnoremap <buffer> <F5> :!php %<CR>
-au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
-au FileType qf nmap <silent> <buffer> q :q<CR>
-au FileType javascript let b:syntastic_checkers = ["javascript/eslint"]
+augroup CmdwinBindings
+  au!
+  au CmdwinEnter * nmap <buffer> <leader>q :q<CR>
+  au CmdwinEnter * nmap <buffer> q :q<CR>
+augroup END
 
-au FileType xml,html,vue,eruby call s:enableTagComplete()
-au FileType javascript
-      \ if b:current_syntax == 'javascript.jsx' |
-      \   call s:enableTagComplete() |
-      \ endif
-au FileType rust nmap <silent> gd <Plug>(rust-def)
-au FileType rust nmap <silent> K <Plug>(rust-doc)
-au FileType rustdoc nmap <silent> q :q<CR>
-
-au CmdwinEnter * nmap <buffer> <leader>q :q<CR>
-au CmdwinEnter * nmap <buffer> q :q<CR>
-
-if has("cscope")
-  au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
-  au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
-  au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR>
-  au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR>
-  au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR>
-  au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
-  au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-  au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+if has('cscope')
+  augroup CscopeCommands
+    au!
+    au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+    au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+    au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+    au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+    au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+    au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+    au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+    au FileType c,cpp,h,hpp nnoremap <buffer> <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+  augroup END
 endif
 
 
@@ -523,9 +496,7 @@ endif
 " ------------------------------------------------------------------------------
 " NOTE: that doesn't work in MacVim gui mode if sudo requests a password!!!
 command! -bar -nargs=0 SudoW   :exe "write !sudo tee % >/dev/null"|silent edit!
-au FileType ruby iabbrev <buffer> rb! #!<C-R>=substitute(system('which ruby'),'\n$','','')<CR><C-R>=Eatchar('\s')<CR>
 command! -bang -nargs=1 -complete=file QFilter call s:filter_quickfix(<bang>0, <q-args>)
-au FileType markdown command! -nargs=0 -complete=file -buffer Preview :exe "sil !markdown " . expand('%') ."| bcat" | :redraw!
 " borrowed from tpope's plugin
 augroup shebang_chmod
   au!
@@ -538,7 +509,7 @@ augroup shebang_chmod
         \   silent! execute '!chmod '.b:chmod_post.' "<afile>"' |
         \   unlet b:chmod_post |
         \ endif
-augroup end
+augroup END
 augroup auto_create_directory
   au!
   au BufWritePre *
@@ -547,7 +518,126 @@ augroup auto_create_directory
         \    call mkdir(d, 'p') |
         \  endif |
         \  unlet d
-augroup end
+augroup END
+
+" Section: Language settings {{{1
+" ------------------------------------------------------------------------------
+
+augroup CompilerSettings
+  au!
+  au FileType scala,ruby,go exe 'compiler '. expand('<amatch>')
+  au FileType rust compiler cargo
+augroup END
+
+augroup NoListSettings
+  au!
+  au FileType go,godoc,netrw,help,qf,gitcommit,GV setlocal nolist
+augroup END
+
+augroup SpellSettings
+  au!
+  au FileType gitcommit,markdown,mkd,text setlocal spell
+augroup END
+
+augroup TabCompletion
+  au!
+  au FileType xml,html,vue,eruby call s:enableTagComplete()
+augroup END
+
+augroup VimSettings
+  au!
+  au FileType help nnoremap <silent> <buffer> q :helpclose<CR>
+  au FileType qf nmap <silent> <buffer> q :q<CR>
+  au FileType help setlocal nospell iskeyword+=_
+  au VimResized * wincmd =
+  au VimEnter :sil AirlineRefresh
+augroup END
+
+augroup RubySettings
+  au!
+  au BufNewFile,BufRead *.prawn set ft=ruby
+  au BufNewFile,BufRead *.axlsx set ft=ruby
+  au FileType ruby setlocal completefunc=syntaxcomplete#Complete
+  au FileType ruby if has('balloonexpr') | setlocal balloonexpr& | endif
+  au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F4> :!rspec --format doc -c %<CR>|endif
+  au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F5> :exe '!rspec --format doc -c ' . expand('%') . ':' . line('.')<CR>|else|nnoremap <buffer> <F5> :!ruby %<CR>|endif
+  au FileType ruby iabbrev <buffer> rb! #!<C-R>=substitute(system('which ruby'),'\n$','','')<CR><C-R>=Eatchar('\s')<CR>
+  au FileType ruby inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "
+  if has('gui_running')
+    au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs\ --no-gems
+  else
+    au FileType ruby setlocal keywordprg=ri\ --no-gems
+  end
+augroup END
+
+augroup PuppetSettings
+  au!
+  au FileType puppet inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "
+augroup END
+
+augroup GoSettings
+  au!
+  au FileType go setlocal tabstop=4
+  au FileType go setlocal shiftwidth=4
+  au FileType go setlocal noexpandtab
+  au FileType go nnoremap <silent> <buffer> K :GoDoc<CR>
+  au FileType go nnoremap <silent> <buffer> <leader>t :GoDecls<CR>
+  au FileType go nnoremap <silent> <buffer> <leader>gt :GoDeclsDir<CR>
+  au FileType go
+        \ nmap <silent> <buffer> <leader>goi <Plug>(go-import) |
+        \ nmap <silent> <buffer> <leader>goI <Plug>(go-imports) |
+        \ nmap <silent> <buffer> <leader>god <Plug>(go-def) |
+        \ nmap <silent> <buffer> <leader>gok <Plug>(go-doc-tab) |
+        \ nmap <silent> <buffer> <leader>gos <Plug>(go-info) |
+        \ imap <silent> <buffer> <C-g>i <Esc><Plug>(go-import)a|
+        \ cabbr <buffer> gi GoImport
+  au FileType godoc nnoremap <silent> <buffer> q :bd<CR>
+augroup END
+
+augroup MarkdownSettings
+  au!
+  au FileType markdown command! -nargs=0 -complete=file -buffer Preview :exe "sil !markdown " . expand('%') ."| bcat" | :redraw!
+augroup END
+
+augroup CoffeeSettings
+  au!
+  au FileType coffee nnoremap <buffer> <F3> :CoffeeCompile<CR>
+  au FileType coffee vnoremap <buffer> <F3> :CoffeeCompile<CR>
+  au FileType coffee nnoremap <buffer> <F4> :CoffeeRun<CR>
+  au FileType coffee nnoremap <buffer> <F5> :CoffeeMake<CR><CR>
+augroup END
+
+augroup PhpSettings
+  au!
+  au FileType php  nnoremap <buffer> <F5> :!php %<CR>
+augroup END
+
+augroup JavascriptSettings
+  au!
+  au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
+  au FileType javascript let b:syntastic_checkers = ["javascript/eslint"]
+  au FileType javascript
+        \ if b:current_syntax == 'javascript.jsx' |
+        \   call s:enableTagComplete() |
+        \ endif
+augroup END
+
+augroup RustSettings
+  au!
+  au FileType rust nmap <silent> <buffer> gd <Plug>(rust-def)
+  au FileType rust nmap <silent> <buffer> K <Plug>(rust-doc)
+  au FileType rustdoc nmap <silent> q :q<CR>
+  " ignore target directory for cargo projects
+  au VimEnter *
+        \ if filereadable('Cargo.toml') |
+        \   set wildignore+=target |
+        \ endif
+augroup END
+
+augroup XmlSettings
+  au!
+  au FileType xml setlocal foldmethod=syntax
+augroup END
 
 " Section: Plugin settings {{{1
 " ------------------------------------------------------------------------------
@@ -583,7 +673,7 @@ let g:syntastic_mode_map = { 'mode': 'active',
 let g:syntastic_auto_loc_list       = 0
 let g:syntastic_enable_signs        = 1
 let g:syntastic_stl_format          = '[ERR:%F(%t)]'
-let g:syntastic_javascript_jsl_conf = "~/.jsl.conf"
+let g:syntastic_javascript_jsl_conf = '~/.jsl.conf'
 let g:syntastic_echo_current_error  = 1
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_coffee_checkers = ['coffeelint']
@@ -591,26 +681,14 @@ let g:syntastic_coffee_lint_options = '-f ~/.coffeelint.json'
 " let g:syntastic_rust_checkers = ['cargo']
 let g:syntastic_error_symbol='✗'
 let g:syntastic_warning_symbol='⚠'
-let g:syntastic_go_checkers = ["gofmt"]
+let g:syntastic_go_checkers = ['gofmt']
 let g:syntastic_enable_elixir_checker = 0
 let g:syntastic_elixir_checkers = ['elixir']
 
-" neomake settings {{{2
-if has_key(g:plugs, 'neomake')
-  autocmd! BufWritePost * silent Neomake
-  let g:neomake_javascript_enabled_makers = ['eslint']
-  let g:neomake_rust_enabled_makers = []
-  autocmd! BufWritePost *.rs silent Neomake! clippy
-  let g:neomake_warning_sign = {
-        \ 'text': '⚠',
-        \ 'texthl': 'todo',
-        \ }
-endif
-
 " A settings {{{2
-let g:alternateExtensions_h = "c,cpp,cxx,cc,CC,m,mm"
-let g:alternateExtensions_m = "h"
-let g:alternateExtensions_mm = "h"
+let g:alternateExtensions_h = 'c,cpp,cxx,cc,CC,m,mm'
+let g:alternateExtensions_m = 'h'
+let g:alternateExtensions_mm = 'h'
 
 " tabular settings {{{2
 nnoremap <silent> g= :Tabularize assignment<CR>
@@ -636,10 +714,10 @@ let g:ctrlp_buftag_types = {
 if executable('crystal-tags')
   cal extend(g:ctrlp_buftag_types, { 'crystal': { 'args': '-f - -N --fields nK', 'bin': 'crystal-tags' } })
 en
-if executable('ag') && !exists("&macmeta")
+if executable('ag') && !exists('&macmeta')
   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
   let s:ignored = ['.git', '.hg', '.svn', '.gif', '.jpg', '.jpeg', '.png']
-  let s:ignored_pattern = join(map(s:ignored, '"\\" . v:val . "$\\|"'), "")
+  let s:ignored_pattern = join(map(s:ignored, '"\\" . v:val . "$\\|"'), '')
   let g:ctrlp_user_command =
     \ 'ag %s --files-with-matches -g "" --nocolor --ignore "' . s:ignored_pattern . '"'
 
@@ -655,8 +733,6 @@ nnoremap <silent> <leader>m :CtrlPCurWD<CR>
 nnoremap <silent> <leader>r :CtrlPRoot<CR>
 nnoremap <silent> <leader>l :CtrlPBuffer<CR>
 nnoremap <silent> <leader>t :CtrlPBufTag<CR>
-au FileType go nnoremap <silent> <buffer> <leader>t :GoDecls<CR>
-au FileType go nnoremap <silent> <buffer> <leader>gt :GoDeclsDir<CR>
 nnoremap <silent> <leader>e :CtrlPMRUFiles<CR>
 nnoremap <silent> <leader>x :CtrlPMixed<CR>
 nnoremap <silent> <leader>cc :ClearCtrlPCache<CR>
@@ -682,18 +758,21 @@ let g:ctrlp_funky_syntax_highlight = 1
 
 " supertab settings {{{2
 let g:SuperTabCrMapping = 0
-" au FileType go call SuperTabSetDefaultCompletionType("<c-x><c-o>")
-au FileType go,rust call SuperTabSetDefaultCompletionType("context")
+augroup SuperTabSettings
+  au!
+  " au FileType go call SuperTabSetDefaultCompletionType("<c-x><c-o>")
+  au FileType go,rust call SuperTabSetDefaultCompletionType("context")
+augroup END
 
 " ultisnips settings {{{2
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+let g:UltiSnipsExpandTrigger='<tab>'
+let g:UltiSnipsJumpForwardTrigger='<c-b>'
+let g:UltiSnipsJumpBackwardTrigger='<c-z>'
 
 " vim-go settings {{{2
 let g:go_auto_type_info = 0
 let g:go_def_mode = 'godef'
-let g:go_fmt_command = "goimports"
+let g:go_fmt_command = 'goimports'
 
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
@@ -717,7 +796,7 @@ if has_key(g:plugs, 'vim-airline')
   let g:airline_theme = 'datanoise'
 
   let g:airline#extensions#whitespace#enabled = 0
-  let g:airline#extensions#fzf#enabled = 1
+  " let g:airline#extensions#fzf#enabled = 1
   let g:airline#extensions#tagbar#enabled = 1
   let g:airline#extensions#tabline#enabled = 0
   let g:airline#extensions#tabline#buffer_idx_mode = 1
@@ -751,7 +830,7 @@ if has_key(g:plugs, 'vim-gitgutter')
 endif
 
 " splitjoin settings {{{2
-if has_key(g:plugs, "splitjoin.vim")
+if has_key(g:plugs, 'splitjoin.vim')
   nnoremap <silent> <leader>ss :SplitjoinSplit<CR>
   nnoremap <silent> <leader>sj :SplitjoinJoin<CR>
 endif
@@ -797,10 +876,23 @@ endif
 
 " fzf plugin & settings {{{2
 if !has('gui_running') && isdirectory('/usr/local/opt/fzf')
-  set rtp+=/usr/local/opt/fzf
-  nnoremap <leader>F :FZF<CR>
-  execute "cnoremap <M-t> FZF "
-  execute "nnoremap <M-t> :FZF "
+  " set rtp+=/usr/local/opt/fzf
+  nnoremap <leader>F :Files<CR>
+  nnoremap <leader>T :BTag<CR>
+  nnoremap <leader>B :Buffers<CR>
+  execute 'cnoremap <M-t> FZF '
+  execute 'nnoremap <M-t> :FZF '
+
+  function! s:fzf_statusline()
+    hi! fzf1 ctermfg=darkyellow ctermbg=242 guifg=gold3 guibg=#202020 gui=none
+    hi! fzf2 ctermfg=23 ctermbg=242 guifg=#CCCCCC guibg=#202020 gui=none
+    hi! fzf3 ctermfg=237 ctermbg=242 guifg=#CCCCCC guibg=#202020 gui=none
+    setlocal statusline=%#fzf1#\ >\ %#fzf2#fz%#fzf3#f
+  endfunction
+  augroup Fzf
+    au! User FzfStatusLine call <SID>fzf_statusline()
+  augroup END
+
 endif
 
 " vim-plug settings {{{2
@@ -814,13 +906,21 @@ omap ac  <Plug>(textobj-between-a)
 xmap ic  <Plug>(textobj-between-i)
 omap ic  <Plug>(textobj-between-i)
 
+" ale settings {{{2
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_rust_cargo_use_check = 1
+let g:ale_linters = {
+      \ 'ruby': ['ruby'],
+      \ 'rust': ['rls', 'cargo', 'rustc']
+      \ }
+
 " Misc settings {{{2
-let c_comment_strings = 1 " I like highlighting strings inside C comments
+let g:c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:xml_syntax_folding = 1 " enable folding in xml files
 let g:racer_cmd = 'racer'
 let g:vim_jsx_pretty_colorful_config = 1
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
-let delimitMate_expand_space = 1
-let delimitMate_matchpairs = "(:),[:],{:}"
+let g:delimitMate_expand_space = 1
+let g:delimitMate_matchpairs = '(:),[:],{:}'
 
 " }}}

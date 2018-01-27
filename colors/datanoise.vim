@@ -8,10 +8,10 @@
 " Colorscheme Option:
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 hi clear
-if exists("syntax on")
+if exists('syntax on')
     syntax reset
 endif
-let g:colors_name = "datanoise"
+let g:colors_name = 'datanoise'
 
 " General colors
 hi Normal   ctermfg=gray guifg=peachpuff3 guibg=black
@@ -73,7 +73,8 @@ hi PmenuSel     guifg=#000000       guibg=#cae682       gui=NONE
 " syntax hi colors
 hi Comment  term=bold ctermfg=darkcyan guifg=#8b8989
 hi PreProc  term=underline ctermfg=darkblue guifg=dodgerblue4
-hi Constant term=underline ctermfg=darkred guifg=firebrick3
+" hi Constant term=underline ctermfg=darkred guifg=firebrick3
+hi Constant term=underline ctermfg=213 guifg=#bc6c9c
 hi Type     term=underline ctermfg=darkgreen gui=none guifg=chartreuse3
 hi Statement    term=bold ctermfg=darkyellow gui=none guifg=gold3
 hi Operator     term=bold ctermfg=magenta gui=none guifg=LawnGreen

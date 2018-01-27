@@ -824,7 +824,6 @@ endif
 
 " gitgutter settings {{{2
 if has_key(g:plugs, 'vim-gitgutter')
-  let g:gitgutter_sign_column_always = 1
   let g:gitgutter_enabled = 0
   nnoremap <leader>gg :GitGutterToggle<CR>
 endif
@@ -907,12 +906,18 @@ xmap ic  <Plug>(textobj-between-i)
 omap ic  <Plug>(textobj-between-i)
 
 " ale settings {{{2
+set signcolumn=yes
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_rust_cargo_use_check = 1
+let g:ale_rust_rls_toolchain = 'stable'
 let g:ale_linters = {
       \ 'ruby': ['ruby'],
-      \ 'rust': ['rls', 'cargo', 'rustc']
+      \ 'rust': ['cargo', 'rls']
       \ }
+" ale autocompletion is not ready for the prime time yet
+" let g:ale_completion_enabled = 1
+" let g:ale_completion_experimental_lsp_support = 1
+" let g:ale_completion_delay = 1000
 
 " Misc settings {{{2
 let g:c_comment_strings = 1 " I like highlighting strings inside C comments

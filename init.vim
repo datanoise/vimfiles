@@ -68,7 +68,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'jneen/ragel.vim',          { 'for': 'ragel' }
   Plug 'ajf/puppet-vim',           { 'for': 'puppet' }
   Plug 'cespare/vim-toml',         { 'for': 'toml' }
-  Plug 'vim-scripts/ag.vim'
   Plug 'datanoise/bufexplorer'
   Plug 'datanoise/vim-elixir',     { 'for': ['elixir', 'eelixir'] }
   Plug 'datanoise/vim-crystal',    { 'for': ['crystal', 'html'] }
@@ -120,7 +119,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'mbbill/undotree',              { 'on': 'UndotreeToggle' }
   Plug 'airblade/vim-gitgutter',       { 'on': ['GitGutterToggle', 'GitGutterEnable'] }
 
-  Plug 'mileszs/ack.vim'
   Plug 'Raimondi/delimitMate'
   Plug 'majutsushi/tagbar'
   Plug 'racer-rust/vim-racer', { 'for': 'rust' }
@@ -130,6 +128,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-localvimrc'
   Plug 'datanoise/vim-cmdline-complete'
   Plug 'rhysd/conflict-marker.vim'
+  Plug 'mhinz/vim-grepper'
 
   if !has('gui_running') && isdirectory('/usr/local/opt/fzf')
     Plug '/usr/local/opt/fzf'
@@ -451,8 +450,6 @@ nnoremap <F1> <C-w><C-w>
 inoremap <F1> <Esc><C-w><C-w>
 inoremap <S-Tab> <Esc><C-w><C-w>
 nnoremap <F4> :sil make %<CR><C-l>:cr<CR>
-nnoremap [F :exe ':Ag ' . expand('<cword>')<CR><CR>
-nnoremap ]F :exe ':Ag ' . matchstr(getline('.'), '\%'.virtcol('.').'v\w*')<CR><CR>
 nnoremap <silent> <C-tab> :call <SID>switch_prev_buf()<CR>
 nnoremap <silent> <C-^> :call <SID>switch_prev_buf()<CR>
 nnoremap <silent> <C-6> :call <SID>switch_prev_buf()<CR>
@@ -471,7 +468,6 @@ nnoremap <silent> <leader>gl :Git pull<CR>
 " quick search in visual mode
 xnoremap <silent> * :<C-u>call <SID>vset_search()<CR>/<C-R>=@/<CR><CR>
 xnoremap <silent> # :<C-u>call <SID>vset_search()<CR>?<C-R>=@/<CR><CR>
-nnoremap <silent> <leader>sc :SyntasticCheck<CR>
 
 " some handful command-mode bindings
 cnoremap <M-q> qa!
@@ -485,8 +481,6 @@ set wildcharm=<C-Z>
 cnoremap <expr> <Tab> wildmenumode() ? "\<Right>" : "\<C-Z>"
 " abbreviations
 cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
-call CommandAlias('ack', 'Ack')
-call CommandAlias('ag', 'Ag')
 call CommandAlias('pu', 'PlugUpdate')
 call CommandAlias('pi', 'PlugInstall')
 
@@ -685,24 +679,27 @@ let g:rubycomplete_classes_in_global = 1
 " syntastic settings {{{2
 " puppet is too slow, html/tidy doesn't support HTML5, vim-go provides its own
 " checker
-let g:syntastic_mode_map = { 'mode': 'active',
-      \  'active_filetypes':  [],
-      \  'passive_filetypes': ['cpp', 'c', 'scss', 'puppet', 'html', 'cucumber', 'java', 'go']
-      \  }
-let g:syntastic_auto_loc_list       = 0
-let g:syntastic_enable_signs        = 1
-let g:syntastic_stl_format          = '[ERR:%F(%t)]'
-let g:syntastic_javascript_jsl_conf = '~/.jsl.conf'
-let g:syntastic_echo_current_error  = 1
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_coffee_checkers = ['coffeelint']
-let g:syntastic_coffee_lint_options = '-f ~/.coffeelint.json'
-" let g:syntastic_rust_checkers = ['cargo']
-let g:syntastic_error_symbol='✗'
-let g:syntastic_warning_symbol='⚠'
-let g:syntastic_go_checkers = ['gofmt']
-let g:syntastic_enable_elixir_checker = 0
-let g:syntastic_elixir_checkers = ['elixir']
+if has_key(g:plugs, 'syntastic')
+  let g:syntastic_mode_map = { 'mode': 'active',
+        \  'active_filetypes':  [],
+        \  'passive_filetypes': ['cpp', 'c', 'scss', 'puppet', 'html', 'cucumber', 'java', 'go']
+        \  }
+  let g:syntastic_auto_loc_list       = 0
+  let g:syntastic_enable_signs        = 1
+  let g:syntastic_stl_format          = '[ERR:%F(%t)]'
+  let g:syntastic_javascript_jsl_conf = '~/.jsl.conf'
+  let g:syntastic_echo_current_error  = 1
+  let g:syntastic_always_populate_loc_list = 1
+  let g:syntastic_coffee_checkers = ['coffeelint']
+  let g:syntastic_coffee_lint_options = '-f ~/.coffeelint.json'
+  " let g:syntastic_rust_checkers = ['cargo']
+  let g:syntastic_error_symbol='✗'
+  let g:syntastic_warning_symbol='⚠'
+  let g:syntastic_go_checkers = ['gofmt']
+  let g:syntastic_enable_elixir_checker = 0
+  let g:syntastic_elixir_checkers = ['elixir']
+  nnoremap <silent> <leader>sc :SyntasticCheck<CR>
+endif
 
 " A settings {{{2
 let g:alternateExtensions_h = 'c,cpp,cxx,cc,CC,m,mm'
@@ -815,7 +812,6 @@ if has_key(g:plugs, 'vim-airline')
   let g:airline_theme = 'datanoise'
 
   let g:airline#extensions#whitespace#enabled = 0
-  " let g:airline#extensions#fzf#enabled = 1
   let g:airline#extensions#tagbar#enabled = 1
   let g:airline#extensions#tabline#enabled = 0
   let g:airline#extensions#tabline#buffer_idx_mode = 1
@@ -894,12 +890,12 @@ endif
 
 " fzf plugin & settings {{{2
 if !has('gui_running') && isdirectory('/usr/local/opt/fzf')
-  " set rtp+=/usr/local/opt/fzf
   nnoremap <leader>F :Files<CR>
   nnoremap <leader>T :BTag<CR>
   nnoremap <leader>B :Buffers<CR>
   execute 'cnoremap <M-t> FZF '
   execute 'nnoremap <M-t> :FZF '
+  call CommandAlias('fzf', 'FZF')
 
   function! s:fzf_statusline()
     hi! fzf1 ctermfg=darkyellow ctermbg=242 guifg=gold3 guibg=#202020 gui=none
@@ -923,6 +919,18 @@ xmap ac  <Plug>(textobj-between-a)
 omap ac  <Plug>(textobj-between-a)
 xmap ic  <Plug>(textobj-between-i)
 omap ic  <Plug>(textobj-between-i)
+
+" grepper settings {{{2
+let g:grepper = {}
+let g:grepper.tools = ['rg', 'ag', 'grep']
+nmap <leader>gf <Plug>(GrepperOperator)
+xmap <leader>gf <Plug>(GrepperOperator)
+nnoremap <leader>* :Grepper -cword -noprompt<CR>
+nnoremap [F :exe ':GrepperRg ' . expand('<cword>')<CR><CR>
+nnoremap ]F :exe ':GrepperRg ' . matchstr(getline('.'), '\%'.virtcol('.').'v\w*')<CR><CR>
+call CommandAlias('ag', 'GrepperAg')
+call CommandAlias('rg', 'GrepperRg')
+call CommandAlias('grep', 'GrepperGrep')
 
 " ale settings {{{2
 set signcolumn=yes

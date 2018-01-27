@@ -207,6 +207,25 @@ function! s:enableTagComplete()
   imap <silent> <buffer> <expr> > <SID>tagComplete()
 endfunction
 
+function! s:command_alias(input, output, buf_only)
+  if a:buf_only
+    let l:buffer = ' <buffer> '
+  else
+    let l:buffer = ' '
+  endif
+  exec 'cabbrev <expr>'.l:buffer.a:input
+        \ .' ((getcmdtype() is# ":" && getcmdline() is# "'.a:input.'")'
+        \ .'? ("'.a:output.'") : ("'.a:input.'"))'
+endfunction
+
+function! CommandAlias(input, output)
+  call s:command_alias(a:input, a:output, 0)
+endfunction
+
+function! CommandAliasForBuffer(input, output)
+  call s:command_alias(a:input, a:output, 1)
+endfunction
+
 " Section: Options {{{1
 " ------------------------------------------------------------------------------
 " tab options {{{2
@@ -466,10 +485,10 @@ set wildcharm=<C-Z>
 cnoremap <expr> <Tab> wildmenumode() ? "\<Right>" : "\<C-Z>"
 " abbreviations
 cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
-cabbr ack Ack
-cabbr ag Ag
-cabbr pu PlugUpdate
-cabbr pi PlugInstall
+call CommandAlias('ack', 'Ack')
+call CommandAlias('ag', 'Ag')
+call CommandAlias('pu', 'PlugUpdate')
+call CommandAlias('pi', 'PlugInstall')
 
 augroup CmdwinBindings
   au!
@@ -590,7 +609,7 @@ augroup GoSettings
         \ nmap <silent> <buffer> <leader>gok <Plug>(go-doc-tab) |
         \ nmap <silent> <buffer> <leader>gos <Plug>(go-info) |
         \ imap <silent> <buffer> <C-g>i <Esc><Plug>(go-import)a|
-        \ cabbr <buffer> gi GoImport
+        \ call CommandAliasForBuffer('gi', 'GoImport')
   au FileType godoc nnoremap <silent> <buffer> q :bd<CR>
 augroup END
 
@@ -908,12 +927,19 @@ omap ic  <Plug>(textobj-between-i)
 " ale settings {{{2
 set signcolumn=yes
 let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_enter = 0
 let g:ale_rust_cargo_use_check = 1
 let g:ale_rust_rls_toolchain = 'stable'
+let g:ale_set_highlights = 0
 let g:ale_linters = {
       \ 'ruby': ['ruby'],
-      \ 'rust': ['cargo', 'rls']
+      \ 'rust': ['cargo'],
+      \ 'go': ['go build', 'govet'],
       \ }
+nmap <silent> [W <Plug>(ale_first)
+nmap <silent> [w <Plug>(ale_previous)
+nmap <silent> ]w <Plug>(ale_next)
+nmap <silent> ]W <Plug>(ale_last)
 " ale autocompletion is not ready for the prime time yet
 " let g:ale_completion_enabled = 1
 " let g:ale_completion_experimental_lsp_support = 1

@@ -69,7 +69,8 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'ajf/puppet-vim',           { 'for': 'puppet' }
   Plug 'cespare/vim-toml',         { 'for': 'toml' }
   Plug 'datanoise/bufexplorer'
-  Plug 'datanoise/vim-elixir',     { 'for': ['elixir', 'eelixir'] }
+  " Plug 'datanoise/vim-elixir',     { 'for': ['elixir', 'eelixir'] }
+  Plug 'elixir-editors/vim-elixir',{ 'for': ['elixir', 'eelixir'] }
   Plug 'datanoise/vim-crystal',    { 'for': ['crystal', 'html'] }
   Plug 'datanoise/vim-llvm',       { 'for': 'llvm' }
   Plug 'Quramy/tsuquyomi',         { 'for': 'typescript' }
@@ -129,6 +130,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-cmdline-complete'
   Plug 'rhysd/conflict-marker.vim'
   Plug 'mhinz/vim-grepper'
+  Plug 'janko-m/vim-test'
 
   if !has('gui_running') && isdirectory('/usr/local/opt/fzf')
     Plug '/usr/local/opt/fzf'
@@ -396,15 +398,13 @@ if has('nvim')
   augroup TermAutoInsert
     au!
     au TermOpen * startinsert
+    au BufEnter term://* startinsert
   augroup END
-endif
 
-if has('nvim')
-  let $VISUAL = 'nvr -cc split --remote-wait'
+  if executable('nvr')
+    let $EDITOR = "nvr -cc split --remote-wait +'set bufhidden=wipe'"
+  endif
 endif
-" this flag is used in .zshrc/.bashrc to check if the shell is started
-" from within vim
-let $VIM_TERM = 'yes'
 
 "}}}
 
@@ -449,6 +449,17 @@ inoremap <F2> <Esc><C-w><C-w>
 nnoremap <F1> <C-w><C-w>
 inoremap <F1> <Esc><C-w><C-w>
 inoremap <S-Tab> <Esc><C-w><C-w>
+nnoremap <M-h> <C-w>h
+nnoremap <M-j> <C-w>j
+nnoremap <M-k> <C-w>k
+nnoremap <M-l> <C-w>l
+if has('nvim')
+  tnoremap <M-h> <C-\><C-n><C-w>h
+  tnoremap <M-j> <C-\><C-n><C-w>j
+  tnoremap <M-k> <C-\><C-n><C-w>k
+  tnoremap <M-l> <C-\><C-n><C-w>l
+  tnoremap <M-n> <C-\><C-n>
+endif
 nnoremap <F4> :sil make %<CR><C-l>:cr<CR>
 nnoremap <silent> <C-tab> :call <SID>switch_prev_buf()<CR>
 nnoremap <silent> <C-^> :call <SID>switch_prev_buf()<CR>
@@ -961,5 +972,6 @@ let g:vim_jsx_pretty_colorful_config = 1
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
 let g:delimitMate_expand_space = 1
 let g:delimitMate_matchpairs = '(:),[:],{:}'
+let g:test#strategy = 'dispatch'
 
 " }}}

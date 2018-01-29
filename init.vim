@@ -39,6 +39,12 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'junegunn/goyo.vim'
   Plug 'junegunn/limelight.vim',  { 'on': 'Limelight' }
   Plug 'junegunn/gv.vim',         { 'on': 'GV' }
+  Plug 'justinmk/vim-dirvish'
+  Plug 'junegunn/vader.vim'
+  if !has('gui_running') && isdirectory('/usr/local/opt/fzf')
+    Plug '/usr/local/opt/fzf'
+    Plug 'junegunn/fzf.vim'
+  end
 
   Plug 'AndrewRadev/splitjoin.vim', { 'on': ['SplitjoinJoin', 'SplitjoinSplit'] }
   Plug 'AndrewRadev/sideways.vim',  { 'on': ['SidewaysLeft', 'SidewaysRight'] }
@@ -54,6 +60,7 @@ silent! if plug#begin('~/.vim/bundle')
   " anyway, possibly very old version.
   Plug 'tpope/vim-haml',           { 'for': ['haml', 'sass', 'scss'] }
   Plug 'rust-lang/rust.vim',       { 'for': 'rust' }
+  Plug 'racer-rust/vim-racer',     { 'for': 'rust' }
   Plug 'keith/swift.vim',          { 'for': 'swift' }
   Plug 'vim-scripts/nginx.vim',    { 'for': 'nginx' }
   Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
@@ -74,6 +81,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-crystal',    { 'for': ['crystal', 'html'] }
   Plug 'datanoise/vim-llvm',       { 'for': 'llvm' }
   Plug 'Quramy/tsuquyomi',         { 'for': 'typescript' }
+  " Plug 'leafgarland/typescript-vim'
   if $GOPATH !=# ''
     " do not use lazy loading, cause it disables template function
     Plug 'fatih/vim-go'
@@ -122,7 +130,6 @@ silent! if plug#begin('~/.vim/bundle')
 
   Plug 'Raimondi/delimitMate'
   Plug 'majutsushi/tagbar'
-  Plug 'racer-rust/vim-racer', { 'for': 'rust' }
   Plug 'ervandew/supertab'
   Plug 'flazz/vim-colorschemes'
   Plug 'ap/vim-css-color'
@@ -131,11 +138,8 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'rhysd/conflict-marker.vim'
   Plug 'mhinz/vim-grepper'
   Plug 'janko-m/vim-test'
-
-  if !has('gui_running') && isdirectory('/usr/local/opt/fzf')
-    Plug '/usr/local/opt/fzf'
-    Plug 'junegunn/fzf.vim'
-  end
+  Plug 'tweekmonster/exception.vim'
+  " Plug 'easymotion/vim-easymotion'
 
   call plug#end()
 endif
@@ -494,6 +498,7 @@ cnoremap <expr> <Tab> wildmenumode() ? "\<Right>" : "\<C-Z>"
 cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
 call CommandAlias('pu', 'PlugUpdate')
 call CommandAlias('pi', 'PlugInstall')
+call CommandAlias('gv', 'GV')
 
 augroup CmdwinBindings
   au!
@@ -543,6 +548,9 @@ augroup auto_create_directory
         \  endif |
         \  unlet d
 augroup END
+if has_key(g:plugs, 'exception.vim')
+  command! WTF call exception#trace()
+endif
 
 " Section: Language settings {{{1
 " ------------------------------------------------------------------------------

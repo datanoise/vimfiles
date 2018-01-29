@@ -863,7 +863,7 @@ if has_key(g:plugs, 'lightline.vim')
         \   'right': [ [ 'linter_errors', 'linter_warnings', 'linter_ok' ], 
         \              [ 'lineinfo' ],
         \              [ 'percent' ],
-        \              [ 'fileformat', 'filetype' ],
+        \              [ 'current_tag', 'fileformat', 'filetype' ],
         \            ],
         \ },
         \ 'component': {
@@ -873,6 +873,7 @@ if has_key(g:plugs, 'lightline.vim')
         \   'filename': 'LightlineFilename',
         \   'readonly': 'LightlineReadonly',
         \   'ctrlpmark': 'CtrlPMark',
+        \   'current_tag': 'TagbarCurrentTag',
         \ },
         \ 'component_expand': {
         \   'gitbranch': 'LightlineFugitive',
@@ -940,6 +941,26 @@ if has_key(g:plugs, 'lightline.vim')
   function! TagbarStatusFunc(current, sort, fname, ...) abort
     let g:lightline.fname = a:fname
     return lightline#statusline(0)
+  endfunction
+
+  let s:tagbar_init = 0
+  let s:tagbar_last_updated_time = 0
+  let s:tagbar_last_updated_val = ''
+  function! TagbarCurrentTag()
+    if !s:tagbar_init
+      try
+        let l:a = tagbar#currenttag('%', '', '')
+      catch
+        " ignore
+      endtry
+      unlet l:a
+      let s:tagbar_init = 1
+    endif
+    if s:tagbar_last_updated_time !=# localtime() && exists('*tagbar#currenttag')
+      let s:tagbar_last_updated_val = tagbar#currenttag('%s', '', '')
+      let s:tagbar_last_updated_time = localtime()
+    endif
+    return s:tagbar_last_updated_val
   endfunction
 endif
 

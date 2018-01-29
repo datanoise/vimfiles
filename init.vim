@@ -855,7 +855,7 @@ endif
 if has_key(g:plugs, 'lightline.vim')
   set noshowmode
   let g:lightline = {
-        \ 'colorscheme': 'jellybeans',
+        \ 'colorscheme': 'datanoise',
         \ 'active': {
         \   'left': [ [ 'mode', 'paste' ],
         \             [ 'gitbranch', 'readonly', 'filename', 'modified', 'spell' ] ],

@@ -858,7 +858,8 @@ if has_key(g:plugs, 'lightline.vim')
         \ 'colorscheme': 'datanoise',
         \ 'active': {
         \   'left': [ [ 'mode', 'paste' ],
-        \             [ 'gitbranch', 'readonly', 'filename', 'modified', 'spell' ] ],
+        \             [ 'gitbranch', 'readonly', 'filename', 'modified', 'spell'],
+        \             [ 'ctrlpmark' ] ],
         \   'right': [ [ 'linter_errors', 'linter_warnings', 'linter_ok' ], 
         \              [ 'lineinfo' ],
         \              [ 'percent' ],
@@ -866,11 +867,12 @@ if has_key(g:plugs, 'lightline.vim')
         \            ],
         \ },
         \ 'component_function': {
-        \   'gitbranch': 'LightlineFugitive',
         \   'filename': 'LightlineFilename',
         \   'readonly': 'LightlineReadonly',
+        \   'ctrlpmark': 'CtrlPMark',
         \ },
         \ 'component_expand': {
+        \   'gitbranch': 'LightlineFugitive',
         \   'linter_warnings': 'lightline#ale#warnings',
         \   'linter_errors': 'lightline#ale#errors',
         \   'linter_ok': 'lightline#ale#ok'
@@ -879,12 +881,16 @@ if has_key(g:plugs, 'lightline.vim')
         \   'linter_warnings': 'warning',
         \   'linter_errors': 'error',
         \   'linter_ok': 'left',
+        \   'gitbranch': 'branch',
         \ },
         \ }
 
   function! LightlineFilename()
+    let l:fname = expand('%:t')
     return &filetype ==# 'fzf' ? 'fzf' :
-          \ expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
+          \ l:fname ==# 'ControlP' && has_key(g:lightline, 'ctrlp_item') ? g:lightline.ctrlp_item :
+          \ l:fname =~# '__Tagbar__' ? g:lightline.fname :
+          \ l:fname !=# '' ? l:fname : '[No Name]'
   endfunction
 
   function! LightlineFugitive()
@@ -897,6 +903,40 @@ if has_key(g:plugs, 'lightline.vim')
 
   function! LightlineReadonly()
     return &readonly ? '⭤' : ''
+  endfunction
+
+  function! CtrlPMark()
+    if expand('%:t') =~# 'ControlP' && has_key(g:lightline, 'ctrlp_item')
+      call lightline#link('iR'[g:lightline.ctrlp_regex])
+      return lightline#concatenate([g:lightline.ctrlp_prev, g:lightline.ctrlp_item
+            \ , g:lightline.ctrlp_next], 0)
+    else
+      return ''
+    endif
+  endfunction
+
+  let g:ctrlp_status_func = {
+        \ 'main': 'CtrlPStatusFunc_1',
+        \ 'prog': 'CtrlPStatusFunc_2',
+        \ }
+
+  function! CtrlPStatusFunc_1(focus, byfname, regex, prev, item, next, marked)
+    let g:lightline.ctrlp_regex = a:regex
+    let g:lightline.ctrlp_prev = a:prev
+    let g:lightline.ctrlp_item = a:item
+    let g:lightline.ctrlp_next = a:next
+    return lightline#statusline(0)
+  endfunction
+
+  function! CtrlPStatusFunc_2(str)
+    return lightline#statusline(0)
+  endfunction
+
+  let g:tagbar_status_func = 'TagbarStatusFunc'
+
+  function! TagbarStatusFunc(current, sort, fname, ...) abort
+    let g:lightline.fname = a:fname
+    return lightline#statusline(0)
   endfunction
 endif
 

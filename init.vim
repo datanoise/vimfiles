@@ -1,5 +1,5 @@
 " -*- vim -*- vim:set ft=vim et sw=2 sts=2 fdc=3:
-scriptencoding utf8
+scriptencoding utf-8
 
 " Section: Global Setting {{{1
 " ------------------------------------------------------------------------------
@@ -112,10 +112,14 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'lucapette/vim-textobj-underscore'
 
   " airline
-  if $TERM ==# '' || $TERM ==# 'xterm-256color' || $TERM ==# 'screen-256color'
-    Plug 'vim-airline/vim-airline'
-    Plug 'vim-airline/vim-airline-themes'
-  endif
+  " if $TERM ==# '' || $TERM ==# 'xterm-256color' || $TERM ==# 'screen-256color'
+  "   Plug 'vim-airline/vim-airline'
+  "   Plug 'vim-airline/vim-airline-themes'
+  " endif
+
+  " lightline
+  Plug 'itchyny/lightline.vim'
+  Plug 'maximbaz/lightline-ale'
 
   " ultisnips
   Plug 'SirVer/ultisnips'
@@ -270,7 +274,7 @@ set laststatus=2
 set statusline=%m%<%.99f%q\ %h%w%r%y
 set statusline+=%{exists('*CapsLockStatusline')?'\ '.CapsLockStatusline():''}
 set statusline+=\ %{GitBranch()}
-set statusline+=\ %#errormsg#%{exists('*SyntasticStatuslineFlag')?SyntasticStatuslineFlag():''}%*
+" set statusline+=\ %#errormsg#%{exists('*SyntasticStatuslineFlag')?SyntasticStatuslineFlag():''}%*
 set statusline+=%=
 set statusline+=\ %-16(\ %l,%c-%v\ %)%P
 " }}}
@@ -582,7 +586,6 @@ augroup VimSettings
   au FileType qf nmap <silent> <buffer> q :q<CR>
   au FileType help setlocal nospell iskeyword+=_
   au VimResized * wincmd =
-  au VimEnter :sil AirlineRefresh
 augroup END
 
 augroup RubySettings
@@ -848,6 +851,55 @@ if has_key(g:plugs, 'vim-airline')
   nmap <silent> <leader>9 <Plug>AirlineSelectTab9
 endif
 
+" lightline settings {{{2
+if has_key(g:plugs, 'lightline.vim')
+  set noshowmode
+  let g:lightline = {
+        \ 'colorscheme': 'jellybeans',
+        \ 'active': {
+        \   'left': [ [ 'mode', 'paste' ],
+        \             [ 'gitbranch', 'readonly', 'filename', 'modified', 'spell' ] ],
+        \   'right': [ [ 'linter_errors', 'linter_warnings', 'linter_ok' ], 
+        \              [ 'lineinfo' ],
+        \              [ 'percent' ],
+        \              [ 'fileformat', 'filetype' ],
+        \            ],
+        \ },
+        \ 'component_function': {
+        \   'gitbranch': 'LightlineFugitive',
+        \   'filename': 'LightlineFilename',
+        \   'readonly': 'LightlineReadonly',
+        \ },
+        \ 'component_expand': {
+        \   'linter_warnings': 'lightline#ale#warnings',
+        \   'linter_errors': 'lightline#ale#errors',
+        \   'linter_ok': 'lightline#ale#ok'
+        \ },
+        \ 'component_type': {
+        \   'linter_warnings': 'warning',
+        \   'linter_errors': 'error',
+        \   'linter_ok': 'left',
+        \ },
+        \ }
+
+  function! LightlineFilename()
+    return &filetype ==# 'fzf' ? 'fzf' :
+          \ expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
+  endfunction
+
+  function! LightlineFugitive()
+    if exists('*fugitive#head')
+      let l:branch = fugitive#head()
+      return l:branch !=# '' ? '⭠ '.l:branch : ''
+    endif
+    return ''
+  endfunction
+
+  function! LightlineReadonly()
+    return &readonly ? '⭤' : ''
+  endfunction
+endif
+
 " easy-align settings {{{2
 if has_key(g:plugs, 'vim-easy-align')
   " Start interactive EasyAlign in visual mode (e.g. vipga)
@@ -952,7 +1004,7 @@ call CommandAlias('rg', 'GrepperRg')
 call CommandAlias('grep', 'GrepperGrep')
 
 " ale settings {{{2
-set signcolumn=yes
+" set signcolumn=yes
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_enter = 0
 let g:ale_rust_cargo_use_check = 1

@@ -43,6 +43,11 @@ let g:airline#themes#datanoise#palette.inactive_modified = {
       \ 'airline_c': [ '#875faf' , '#303030' , 97 , '' , '' ] ,
       \ }
 
+let g:airline#themes#datanoise#palette.normal.airline_term = [ '#ca9bff', '#202020', 85, 232]
+let g:airline#themes#datanoise#palette.insert.airline_term  = g:airline#themes#datanoise#palette.normal.airline_term
+let g:airline#themes#datanoise#palette.visual.airline_term  = g:airline#themes#datanoise#palette.normal.airline_term
+let g:airline#themes#datanoise#palette.replace.airline_term = g:airline#themes#datanoise#palette.normal.airline_term
+
 if !get(g:, 'loaded_ctrlp', 0)
   finish
 endif

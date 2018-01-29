@@ -866,6 +866,9 @@ if has_key(g:plugs, 'lightline.vim')
         \              [ 'fileformat', 'filetype' ],
         \            ],
         \ },
+        \ 'component': {
+        \   'lineinfo': '☰ %3l:%-2v',
+        \ },
         \ 'component_function': {
         \   'filename': 'LightlineFilename',
         \   'readonly': 'LightlineReadonly',

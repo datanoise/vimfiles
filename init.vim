@@ -392,7 +392,10 @@ set completeopt=menu,longest
 set clipboard+=unnamed
 augroup CheckFilesForUpdates
   au!
-  au FocusGained * :sil! checktime
+  au FocusGained * :sil! checktime |
+        \ if exists('*lightline#update') |
+        \   call lightline#update() |
+        \ endif
 augroup END
 
 augroup FugitiveAutoCleanup

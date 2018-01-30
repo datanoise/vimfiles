@@ -489,6 +489,8 @@ xnoremap <silent> * :<C-u>call <SID>vset_search()<CR>/<C-R>=@/<CR><CR>
 xnoremap <silent> # :<C-u>call <SID>vset_search()<CR>?<C-R>=@/<CR><CR>
 
 " some handful command-mode bindings
+cmap <unique> <silent> <c-x><c-p> <Plug>CmdlineCompleteBackward
+cmap <unique> <silent> <c-x><c-n> <Plug>CmdlineCompleteForward
 cnoremap <M-q> qa!
 cnoremap <C-a> <Home>
 cnoremap <C-e> <End>

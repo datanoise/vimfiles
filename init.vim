@@ -29,6 +29,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-git'
   Plug 'tpope/vim-unimpaired'
   Plug 'tpope/vim-projectionist'
+  Plug 'tpope/vim-abolish'
   Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
 
   Plug 'scrooloose/nerdtree',  { 'on': 'NERDTreeToggle' }
@@ -489,8 +490,8 @@ xnoremap <silent> * :<C-u>call <SID>vset_search()<CR>/<C-R>=@/<CR><CR>
 xnoremap <silent> # :<C-u>call <SID>vset_search()<CR>?<C-R>=@/<CR><CR>
 
 " some handful command-mode bindings
-cmap <unique> <silent> <c-x><c-p> <Plug>CmdlineCompleteBackward
-cmap <unique> <silent> <c-x><c-n> <Plug>CmdlineCompleteForward
+cmap <silent> <c-x><c-p> <Plug>CmdlineCompleteBackward
+cmap <silent> <c-x><c-n> <Plug>CmdlineCompleteForward
 cnoremap <M-q> qa!
 cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
@@ -952,10 +953,10 @@ if has_key(g:plugs, 'lightline.vim')
     if !s:tagbar_init
       try
         let l:a = tagbar#currenttag('%', '', '')
+        unlet l:a
       catch
         " ignore
       endtry
-      unlet l:a
       let s:tagbar_init = 1
     endif
     if s:tagbar_last_updated_time !=# localtime() && exists('*tagbar#currenttag')

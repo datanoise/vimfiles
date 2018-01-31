@@ -900,7 +900,22 @@ if has_key(g:plugs, 'lightline.vim')
     return &filetype ==# 'fzf' ? 'fzf' :
           \ l:fname ==# 'ControlP' && has_key(g:lightline, 'ctrlp_item') ? g:lightline.ctrlp_item :
           \ l:fname =~# '__Tagbar__' ? g:lightline.fname :
-          \ l:fname !=# '' ? substitute(expand('%f'), '\(.*\)\(.\{50}\)', '<\2', '') : '[No Name]'
+          \ l:fname !=# '' ? s:format_filename() : '[No Name]'
+  endfunction
+
+  function! s:format_filename()
+    let l:r = expand('%f')
+    let l:pwd = getcwd()
+    if match(l:r, l:pwd) ==# 0
+      let l:r = strpart(l:r, strlen(l:pwd))
+      if l:r[0] ==# '/'
+        let l:r = strpart(l:r, 1)
+      endif
+    endif
+    if strlen(l:r) > 80
+      let l:r = pathshorten(l:r)
+    endif
+    return substitute(l:r, '\(.*\)\(.\{50}\)', '<\2', '')
   endfunction
 
   function! LightlineFugitive()

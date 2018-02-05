@@ -8,7 +8,7 @@
 " Colorscheme Option:
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 hi clear
-if exists('syntax on')
+if exists('syntax_on')
     syntax reset
 endif
 let g:colors_name = 'datanoise'
@@ -17,7 +17,7 @@ let g:colors_name = 'datanoise'
 hi Normal   ctermfg=gray guifg=peachpuff3 guibg=black
 hi Conceal  ctermfg=gray guifg=#252525 guibg=black
 hi Directory    term=bold ctermfg=blue guifg=royalblue
-hi ErrorMsg term=standout ctermfg=white ctermbg=red guifg=white guibg=red3
+hi ErrorMsg term=standout ctermfg=red ctermbg=black guifg=red3 guibg=black
 hi SpellBad term=standout ctermfg=red guifg=red3
 hi NonText  term=bold ctermfg=darkgray guibg=black guifg=gray20
 hi SpecialKey   term=bold ctermfg=darkgray guifg=gray30
@@ -29,7 +29,7 @@ hi VisualNOS    term=bold,underline cterm=bold,underline gui=bold,underline
 hi MoreMsg  term=bold ctermfg=green gui=bold guifg=olivedrab1
 hi ModeMsg  term=bold cterm=bold gui=bold
 hi Question term=standout ctermfg=green gui=bold guifg=olivedrab1
-hi WarningMsg   term=standout ctermfg=red gui=bold guifg=red3
+hi WarningMsg   term=standout ctermfg=202 gui=bold guifg=#ff9400
 hi WildMenu term=standout ctermfg=black ctermbg=yellow guifg=yellow guibg=black
 hi Folded   term=standout ctermfg=blue ctermbg=darkgray guifg=royalblue1 guibg=#050505
 hi FoldColumn   term=standout ctermfg=blue ctermbg=black guifg=royalblue3 guibg=black

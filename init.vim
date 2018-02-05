@@ -145,6 +145,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'janko-m/vim-test'
   Plug 'tweekmonster/exception.vim'
   " Plug 'easymotion/vim-easymotion'
+  Plug 'mhinz/vim-randomtag'
 
   call plug#end()
 endif
@@ -983,6 +984,7 @@ if has_key(g:plugs, 'lightline.vim')
     endif
     return s:tagbar_last_updated_val
   endfunction
+  let g:lightline#ale#indicator_ok = '✓'
 endif
 
 " easy-align settings {{{2

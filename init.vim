@@ -27,6 +27,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-unimpaired'
   Plug 'tpope/vim-projectionist'
   Plug 'tpope/vim-abolish'
+  Plug 'tpope/vim-endwise'
   Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
 
   Plug 'scrooloose/nerdtree',  { 'on': 'NERDTreeToggle' }
@@ -119,8 +120,12 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'itchyny/lightline.vim'
   Plug 'maximbaz/lightline-ale'
 
-  " ultisnips
-  Plug 'SirVer/ultisnips'
+  " snippets
+  " ultisnips is very heavy plugin
+  " Plug 'SirVer/ultisnips'
+  Plug 'tomtom/tlib_vim'
+  Plug 'marcweber/vim-addon-mw-utils'
+  Plug 'garbas/vim-snipmate'
   Plug 'honza/vim-snippets'
 
   Plug 'godlygeek/tabular',            { 'on': 'Tabularize' }
@@ -132,7 +137,6 @@ silent! if plug#begin('~/.vim/bundle')
 
   Plug 'Raimondi/delimitMate'
   Plug 'majutsushi/tagbar'
-  Plug 'ervandew/supertab'
   Plug 'flazz/vim-colorschemes'
   Plug 'ap/vim-css-color'
   Plug 'datanoise/vim-localvimrc'
@@ -144,9 +148,21 @@ silent! if plug#begin('~/.vim/bundle')
   " Plug 'easymotion/vim-easymotion'
   Plug 'mhinz/vim-randomtag'
   Plug 'machakann/vim-highlightedyank'
+  Plug 'euclio/vim-markdown-composer'
+
   if has('nvim')
+    Plug 'roxma/nvim-completion-manager'
+    Plug 'roxma/ncm-rct-complete'
+    Plug 'roxma/nvim-cm-racer'
+    Plug 'calebeby/ncm-css'
+    Plug 'fgrsnau/ncm-otherbuf'
+    Plug 'mhartington/nvim-typescript'
+    Plug 'Shougo/neco-vim'
+
     Plug 'bfredl/nvim-miniyank'
     Plug 'datanoise/vim-dispatch-neovim'
+  else
+    Plug 'ervandew/supertab'
   endif
 
   call plug#end()
@@ -237,6 +253,29 @@ endfunction
 
 function! CommandAliasForBuffer(input, output)
   call s:command_alias(a:input, a:output, 1)
+endfunction
+
+function! s:complete_brackets()
+  let l:line = getline('.')
+  let l:c = l:line[col('.')-2]
+  let l:x = l:line[col('.')-1]
+  if l:c =~# '[{\[\(]'
+    if l:c ==# '['
+      let l:b = ']'
+    elseif l:c ==# '('
+      let l:b = ')'
+    elseif l:c ==# '{'
+      let l:b = '}'
+    else
+      return "\<CR>"
+    endif
+    if l:x ==# l:b
+      let l:b = ''
+    endif
+    return "\<CR>".l:b."\<C-O>O"
+  else
+    return "\<CR>"
+  endif
 endfunction
 
 " Section: Options {{{1
@@ -410,7 +449,6 @@ augroup FugitiveAutoCleanup
 augroup END
 
 " terminal settings
-" tnoremap <Esc> <C-\><C-n>
 tmap <F2> <C-\><C-n><F2>
 if has('nvim')
   augroup TermAutoInsert
@@ -476,7 +514,8 @@ if has('nvim')
   tnoremap <M-j> <C-\><C-n><C-w>j
   tnoremap <M-k> <C-\><C-n><C-w>k
   tnoremap <M-l> <C-\><C-n><C-w>l
-  tnoremap <M-n> <C-\><C-n>
+  tnoremap <Esc> <C-\><C-n>
+  tnoremap <M-[> <Esc>
 endif
 nnoremap <F4> :sil make %<CR><C-l>:cr<CR>
 nnoremap <silent> <C-tab> :call <SID>switch_prev_buf()<CR>
@@ -497,6 +536,11 @@ nnoremap <silent> <leader>gl :Git pull<CR>
 " quick search in visual mode
 xnoremap <silent> * :<C-u>call <SID>vset_search()<CR>/<C-R>=@/<CR><CR>
 xnoremap <silent> # :<C-u>call <SID>vset_search()<CR>?<C-R>=@/<CR><CR>
+
+" endwise bindings
+let g:endwise_no_mappings = 1
+imap <C-X><CR>   <CR><Plug>AlwaysEnd
+imap <expr> <CR> (pumvisible() ? "\<C-Y>\<CR>" : <SID>complete_brackets()."\<Plug>DiscretionaryEnd")
 
 " some handful command-mode bindings
 cmap <silent> <c-x><c-p> <Plug>CmdlineCompleteBackward
@@ -609,17 +653,12 @@ augroup RubySettings
   au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F4> :!rspec --format doc -c %<CR>|endif
   au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F5> :exe '!rspec --format doc -c ' . expand('%') . ':' . line('.')<CR>|else|nnoremap <buffer> <F5> :!ruby %<CR>|endif
   au FileType ruby iabbrev <buffer> rb! #!<C-R>=substitute(system('which ruby'),'\n$','','')<CR><C-R>=Eatchar('\s')<CR>
-  au FileType ruby inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "
+  " au FileType ruby inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "
   if has('gui_running')
     au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs\ --no-gems
   else
     au FileType ruby setlocal keywordprg=ri\ --no-gems
   end
-augroup END
-
-augroup PuppetSettings
-  au!
-  au FileType puppet inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "
 augroup END
 
 augroup GoSettings
@@ -644,6 +683,7 @@ augroup END
 augroup MarkdownSettings
   au!
   au FileType markdown command! -nargs=0 -complete=file -buffer Preview :exe "sil !markdown " . expand('%') ."| bcat" | :redraw!
+  au FileType markdown inoremap <buffer> \| \|<C-o>:Tab /\|<CR><End>
 augroup END
 
 augroup CoffeeSettings
@@ -745,79 +785,99 @@ nnoremap <silent> g= :Tabularize assignment<CR>
 xnoremap <silent> g= :Tabularize assignment<CR>
 
 " ctrlp settings {{{2
-let g:ctrlp_extensions = ['buffertag', 'quickfix', 'dir', 'rtscript',
-      \ 'undo', 'line', 'changes', 'mixed', 'bookmarkdir']
-let g:ctrlp_match_window_reversed = 0
-let g:ctrlp_dotfiles = 0
-let g:ctrlp_mruf_relative = 0
-let g:ctrlp_max_files = 10000
-let g:ctrlp_open_multi = 'tr'
-let g:ctrlp_open_new_file = 'h'
-let g:ctrlp_mruf_exclude = '\.git\|\/var\/folders\|' . substitute($VIMRUNTIME, '/', '\\/', 'g')
-let g:ctrlp_buftag_types = {
-      \ 'go'     : '--language-force=Go --Go-types=fvt',
-      \ 'scala'  : '--language-force=scala --scala-types=ctTm',
-      \ 'coffee' : '--language-force=coffee --coffee-types=m',
-      \ 'elixir' : '--language-force=elixir --elixir-types=facdmpr',
-      \ 'crystal': '--language-force=crystal --crystal-types=f'
-      \  }
-if executable('crystal-tags')
-  cal extend(g:ctrlp_buftag_types, { 'crystal': { 'args': '-f - -N --fields nK', 'bin': 'crystal-tags' } })
-en
-if executable('ag') && !exists('&macmeta')
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let s:ignored = ['.git', '.hg', '.svn', '.gif', '.jpg', '.jpeg', '.png']
-  let s:ignored_pattern = join(map(s:ignored, '"\\" . v:val . "$\\|"'), '')
-  let g:ctrlp_user_command =
-    \ 'ag %s --files-with-matches -g "" --nocolor --ignore "' . s:ignored_pattern . '"'
+if has_key(g:plugs, 'ctrlp.vim')
+  let g:ctrlp_extensions = ['buffertag', 'quickfix', 'dir', 'rtscript',
+        \ 'undo', 'line', 'changes', 'mixed', 'bookmarkdir']
+  let g:ctrlp_match_window_reversed = 0
+  let g:ctrlp_dotfiles = 0
+  let g:ctrlp_mruf_relative = 0
+  let g:ctrlp_max_files = 10000
+  let g:ctrlp_open_multi = 'tr'
+  let g:ctrlp_open_new_file = 'h'
+  let g:ctrlp_mruf_exclude = '\.git\|\/var\/folders\|' . substitute($VIMRUNTIME, '/', '\\/', 'g')
+  let g:ctrlp_buftag_types = {
+        \ 'go'     : '--language-force=Go --Go-types=fvt',
+        \ 'scala'  : '--language-force=scala --scala-types=ctTm',
+        \ 'coffee' : '--language-force=coffee --coffee-types=m',
+        \ 'elixir' : '--language-force=elixir --elixir-types=facdmpr',
+        \ 'crystal': '--language-force=crystal --crystal-types=f'
+        \  }
+  if executable('crystal-tags')
+    cal extend(g:ctrlp_buftag_types, { 'crystal': { 'args': '-f - -N --fields nK', 'bin': 'crystal-tags' } })
+  en
+  if executable('ag') && !exists('&macmeta')
+    " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+    let s:ignored = ['.git', '.hg', '.svn', '.gif', '.jpg', '.jpeg', '.png']
+    let s:ignored_pattern = join(map(s:ignored, '"\\" . v:val . "$\\|"'), '')
+    let g:ctrlp_user_command =
+          \ 'ag %s --files-with-matches -g "" --nocolor --ignore "' . s:ignored_pattern . '"'
 
-  " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 0
-else
-  " Fall back to using git ls-files if Ag is not available
-  let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$'
-  let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others']
+    " ag is fast enough that CtrlP doesn't need to cache
+    let g:ctrlp_use_caching = 0
+  else
+    " Fall back to using git ls-files if Ag is not available
+    let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$'
+    let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others']
+  endif
+
+  nnoremap <silent> <leader>m :CtrlPCurWD<CR>
+  nnoremap <silent> <leader>r :CtrlPRoot<CR>
+  nnoremap <silent> <leader>l :CtrlPBuffer<CR>
+  nnoremap <silent> <leader>t :CtrlPBufTag<CR>
+  nnoremap <silent> <leader>e :CtrlPMRUFiles<CR>
+  nnoremap <silent> <leader>x :CtrlPMixed<CR>
+  nnoremap <silent> <leader>cc :ClearCtrlPCache<CR>
+  nnoremap <silent> <leader>ca :ClearAllCtrlPCaches<CR>
+  nnoremap <silent> <leader>kf :CtrlPCurFile<CR>
+  nnoremap <silent> <leader>kb :CtrlPBuffer<CR>
+  nnoremap <silent> <leader>kt :CtrlPTabbed<CR>
+  nnoremap <silent> <leader>kq :CtrlPQuickfix<CR>
+  nnoremap <silent> <leader>kd :CtrlPDir<CR>
+  nnoremap <silent> <leader>kR :CtrlPRTS<CR>
+  nnoremap <silent> <leader>ku :CtrlPUndo<CR>
+  nnoremap <silent> <leader>kl :CtrlPLine<CR>
+  nnoremap <silent> <leader>kc :CtrlPChange<CR>
+  nnoremap <silent> <leader>kx :CtrlPBookmarkDir<CR>
+  nnoremap <silent> <leader>kg :CtrlPTag<CR>
+  nnoremap <silent> <leader>kh :CtrlPCmdHistory<CR>
+  nnoremap <silent> <leader>ks :CtrlPSearchHistory<CR>
+  nnoremap <silent> <leader>kr :CtrlPRegister<CR>
+  nnoremap <silent> <leader>km :CtrlPMark<CR>
+
+  nnoremap <silent> <leader>ky :CtrlPFunky<CR>
+  let g:ctrlp_funky_syntax_highlight = 1
 endif
 
-nnoremap <silent> <leader>m :CtrlPCurWD<CR>
-nnoremap <silent> <leader>r :CtrlPRoot<CR>
-nnoremap <silent> <leader>l :CtrlPBuffer<CR>
-nnoremap <silent> <leader>t :CtrlPBufTag<CR>
-nnoremap <silent> <leader>e :CtrlPMRUFiles<CR>
-nnoremap <silent> <leader>x :CtrlPMixed<CR>
-nnoremap <silent> <leader>cc :ClearCtrlPCache<CR>
-nnoremap <silent> <leader>ca :ClearAllCtrlPCaches<CR>
-nnoremap <silent> <leader>kf :CtrlPCurFile<CR>
-nnoremap <silent> <leader>kb :CtrlPBuffer<CR>
-nnoremap <silent> <leader>kt :CtrlPTabbed<CR>
-nnoremap <silent> <leader>kq :CtrlPQuickfix<CR>
-nnoremap <silent> <leader>kd :CtrlPDir<CR>
-nnoremap <silent> <leader>kR :CtrlPRTS<CR>
-nnoremap <silent> <leader>ku :CtrlPUndo<CR>
-nnoremap <silent> <leader>kl :CtrlPLine<CR>
-nnoremap <silent> <leader>kc :CtrlPChange<CR>
-nnoremap <silent> <leader>kx :CtrlPBookmarkDir<CR>
-nnoremap <silent> <leader>kg :CtrlPTag<CR>
-nnoremap <silent> <leader>kh :CtrlPCmdHistory<CR>
-nnoremap <silent> <leader>ks :CtrlPSearchHistory<CR>
-nnoremap <silent> <leader>kr :CtrlPRegister<CR>
-nnoremap <silent> <leader>km :CtrlPMark<CR>
-
-nnoremap <silent> <leader>ky :CtrlPFunky<CR>
-let g:ctrlp_funky_syntax_highlight = 1
-
 " supertab settings {{{2
-let g:SuperTabCrMapping = 0
-augroup SuperTabSettings
-  au!
-  " au FileType go call SuperTabSetDefaultCompletionType("<c-x><c-o>")
-  au FileType go,rust call SuperTabSetDefaultCompletionType("context")
-augroup END
+if has_key(g:plugs, 'supertab')
+  let g:SuperTabCrMapping = 0
+  augroup SuperTabSettings
+    au!
+    " au FileType go call SuperTabSetDefaultCompletionType("<c-x><c-o>")
+    au FileType go,rust call SuperTabSetDefaultCompletionType("context")
+  augroup END
+endif
 
 " ultisnips settings {{{2
-let g:UltiSnipsExpandTrigger='<tab>'
-let g:UltiSnipsJumpForwardTrigger='<c-b>'
-let g:UltiSnipsJumpBackwardTrigger='<c-z>'
+if has_key(g:plugs, 'ultisnips')
+  let g:UltiSnipsExpandTrigger='<C-u>'
+  " let g:UltiSnipsJumpForwardTrigger='<C-k>'
+  imap <Tab> <C-R>=(pumvisible() ? "\<lt>Tab>" : UltiSnips#JumpForwards())<CR>
+  let g:UltiSnipsJumpBackwardTrigger='<C-b>'
+  let g:UltiSnipsRemoveSelectModeMappings = 0
+endif
+
+" snipmate settings {{{2
+if has_key(g:plugs, 'vim-snipmate')
+  imap <c-u> <Plug>snipMateTrigger
+endif
+
+" nvim-completion-manager {{{2
+if has_key(g:plugs, 'nvim-completion-manager')
+  imap <expr> <Plug>(expand_or_nl) (cm#completed_is_snippet() ? "\<C-U>":"")
+  imap <C-X><CR> <CR><Plug>AlwaysEnd
+  imap <expr> <CR> (pumvisible() ? "\<C-Y>\<Plug>(expand_or_nl)" : <SID>complete_brackets()."\<Plug>DiscretionaryEnd")
+endif
 
 " vim-go settings {{{2
 let g:go_auto_type_info = 0
@@ -1101,25 +1161,31 @@ call CommandAlias('rg', 'GrepperRg')
 call CommandAlias('grep', 'GrepperGrep')
 
 " ale settings {{{2
-" set signcolumn=yes
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_enter = 0
-let g:ale_rust_cargo_use_check = 1
-let g:ale_rust_rls_toolchain = 'stable'
-let g:ale_set_highlights = 0
-let g:ale_linters = {
-      \ 'ruby': ['ruby'],
-      \ 'rust': ['cargo'],
-      \ 'go': ['go build', 'govet'],
-      \ }
-nmap <silent> [W <Plug>(ale_first)
-nmap <silent> [w <Plug>(ale_previous)
-nmap <silent> ]w <Plug>(ale_next)
-nmap <silent> ]W <Plug>(ale_last)
-" ale autocompletion is not ready for the prime time yet
-" let g:ale_completion_enabled = 1
-" let g:ale_completion_experimental_lsp_support = 1
-" let g:ale_completion_delay = 1000
+if has_key(g:plugs, 'ale')
+  " set signcolumn=yes
+  let g:ale_lint_on_text_changed = 'never'
+  let g:ale_lint_on_enter = 0
+  let g:ale_rust_cargo_use_check = 1
+  let g:ale_rust_rls_toolchain = 'stable'
+  let g:ale_set_highlights = 0
+  let g:ale_linters = {
+        \ 'ruby': ['ruby'],
+        \ 'rust': ['cargo'],
+        \ 'go': ['go build', 'govet'],
+        \ }
+  nmap <silent> [W <Plug>(ale_first)
+  nmap <silent> [w <Plug>(ale_previous)
+  nmap <silent> ]w <Plug>(ale_next)
+  nmap <silent> ]W <Plug>(ale_last)
+  " ale autocompletion is not ready for the prime time yet
+  " let g:ale_completion_enabled = 1
+  " let g:ale_completion_experimental_lsp_support = 1
+  " let g:ale_completion_delay = 1000
+endif
+
+" nvim-completion-manager
+let g:cm_complete_start_delay = 200
+let g:cm_complete_popup_delay = 400
 
 " Misc settings {{{2
 let g:c_comment_strings = 1 " I like highlighting strings inside C comments
@@ -1130,5 +1196,6 @@ let g:filetype_m = 'objc' " always open *.m files with objc filetype
 let g:delimitMate_expand_space = 1
 let g:delimitMate_matchpairs = '(:),[:],{:}'
 let g:test#strategy = 'dispatch'
+let g:markdown_composer_autostart = 0
 
 " }}}

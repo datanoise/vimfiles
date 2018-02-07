@@ -874,6 +874,9 @@ endif
 
 " nvim-completion-manager {{{2
 if has_key(g:plugs, 'nvim-completion-manager')
+  let g:cm_complete_start_delay = 200
+  let g:cm_complete_popup_delay = 400
+
   imap <expr> <Plug>(expand_or_nl) (cm#completed_is_snippet() ? "\<C-U>":"")
   imap <C-X><CR> <CR><Plug>AlwaysEnd
   imap <expr> <CR> (pumvisible() ? "\<C-Y>\<Plug>(expand_or_nl)" : <SID>complete_brackets()."\<Plug>DiscretionaryEnd")
@@ -1182,10 +1185,6 @@ if has_key(g:plugs, 'ale')
   " let g:ale_completion_experimental_lsp_support = 1
   " let g:ale_completion_delay = 1000
 endif
-
-" nvim-completion-manager
-let g:cm_complete_start_delay = 200
-let g:cm_complete_popup_delay = 400
 
 " Misc settings {{{2
 let g:c_comment_strings = 1 " I like highlighting strings inside C comments

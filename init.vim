@@ -16,9 +16,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-repeat'
   Plug 'tpope/vim-capslock'
   Plug 'tpope/vim-dispatch'
-  if has('nvim')
-    Plug 'datanoise/vim-dispatch-neovim'
-  endif
   Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-ragtag'
   Plug 'tpope/vim-rails'
@@ -146,6 +143,11 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tweekmonster/exception.vim'
   " Plug 'easymotion/vim-easymotion'
   Plug 'mhinz/vim-randomtag'
+  Plug 'machakann/vim-highlightedyank'
+  if has('nvim')
+    Plug 'bfredl/nvim-miniyank'
+    Plug 'datanoise/vim-dispatch-neovim'
+  endif
 
   call plug#end()
 endif
@@ -402,6 +404,9 @@ augroup END
 augroup FugitiveAutoCleanup
   au!
   au BufReadPost fugitive://* set bufhidden=delete
+  if has('nvim')
+    au TermClose term://*:git\ pull checktime
+  endif
 augroup END
 
 " terminal settings
@@ -906,12 +911,9 @@ if has_key(g:plugs, 'lightline.vim')
 
   function! s:format_filename()
     let l:r = expand('%f')
-    let l:pwd = getcwd()
+    let l:pwd = getcwd() . '/'
     if match(l:r, l:pwd) ==# 0
       let l:r = strpart(l:r, strlen(l:pwd))
-      if l:r[0] ==# '/'
-        let l:r = strpart(l:r, 1)
-      endif
     endif
     if strlen(l:r) > 80
       let l:r = pathshorten(l:r)
@@ -1044,6 +1046,14 @@ endif
 " switch.vim settings {{{2
 if has_key(g:plugs, 'switch.vim')
   nnoremap <silent> gs :Switch<CR>
+endif
+
+" nvim-miniyank settings {{{2
+if has_key(g:plugs, 'nvim-miniyank')
+  map p <Plug>(miniyank-autoput)
+  map P <Plug>(miniyank-autoPut)
+  map <leader>y <Plug>(miniyank-cycle)
+  map <M-y> <Plug>(miniyank-cycle)
 endif
 
 " fzf plugin & settings {{{2

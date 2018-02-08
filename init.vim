@@ -52,7 +52,8 @@ silent! if plug#begin('~/.vim/bundle')
 
   " file types
   Plug 'othree/html5.vim'
-  Plug 'tpope/vim-markdown'
+  " Plug 'tpope/vim-markdown'
+  Plug 'plasticboy/vim-markdown'
   Plug 'vim-ruby/vim-ruby', { 'commit': '84565856e6965' }
   " lazy loading for filetypes makes sense only for those that are not
   " included in the standard Vim distribution. Otherwise, Vim will load them
@@ -514,8 +515,7 @@ if has('nvim')
   tnoremap <M-j> <C-\><C-n><C-w>j
   tnoremap <M-k> <C-\><C-n><C-w>k
   tnoremap <M-l> <C-\><C-n><C-w>l
-  tnoremap <Esc> <C-\><C-n>
-  tnoremap <M-[> <Esc>
+  tnoremap <M-[> <C-\><C-n>
 endif
 nnoremap <F4> :sil make %<CR><C-l>:cr<CR>
 nnoremap <silent> <C-tab> :call <SID>switch_prev_buf()<CR>
@@ -809,8 +809,10 @@ if has_key(g:plugs, 'ctrlp.vim')
     " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
     let s:ignored = ['.git', '.hg', '.svn', '.gif', '.jpg', '.jpeg', '.png']
     let s:ignored_pattern = join(map(s:ignored, '"\\" . v:val . "$\\|"'), '')
+    " let g:ctrlp_user_command =
+    "       \ 'ag %s --files-with-matches -g "" --nocolor --ignore "' . s:ignored_pattern . '"'
     let g:ctrlp_user_command =
-          \ 'ag %s --files-with-matches -g "" --nocolor --ignore "' . s:ignored_pattern . '"'
+          \ 'rg %s --files -m 1000 -g ""'
 
     " ag is fast enough that CtrlP doesn't need to cache
     let g:ctrlp_use_caching = 0
@@ -820,11 +822,11 @@ if has_key(g:plugs, 'ctrlp.vim')
     let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others']
   endif
 
-  nnoremap <silent> <leader>m :CtrlPCurWD<CR>
+  " nnoremap <silent> <leader>m :CtrlPCurWD<CR>
+  " nnoremap <silent> <leader>l :CtrlPBuffer<CR>
+  " nnoremap <silent> <leader>t :CtrlPBufTag<CR>
+  " nnoremap <silent> <leader>e :CtrlPMRUFiles<CR>
   nnoremap <silent> <leader>r :CtrlPRoot<CR>
-  nnoremap <silent> <leader>l :CtrlPBuffer<CR>
-  nnoremap <silent> <leader>t :CtrlPBufTag<CR>
-  nnoremap <silent> <leader>e :CtrlPMRUFiles<CR>
   nnoremap <silent> <leader>x :CtrlPMixed<CR>
   nnoremap <silent> <leader>cc :ClearCtrlPCache<CR>
   nnoremap <silent> <leader>ca :ClearAllCtrlPCaches<CR>
@@ -1127,6 +1129,10 @@ if !has('gui_running') && isdirectory('/usr/local/opt/fzf')
   execute 'cnoremap <M-t> FZF '
   execute 'nnoremap <M-t> :FZF '
   call CommandAlias('fzf', 'FZF')
+  nnoremap <silent> <Leader>m :Files<CR>
+  nnoremap <silent> <Leader>l :Buffers<CR>
+  nnoremap <silent> <Leader>t :BTag<CR>
+  nnoremap <silent> <Leader>e :History<CR>
 
   function! s:fzf_statusline()
     hi! fzf1 ctermfg=darkyellow ctermbg=242 guifg=gold3 guibg=#202020 gui=none

@@ -28,6 +28,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-projectionist'
   Plug 'tpope/vim-abolish'
   Plug 'tpope/vim-endwise'
+  Plug 'tpope/vim-obsession'
   Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
 
   Plug 'scrooloose/nerdtree',  { 'on': 'NERDTreeToggle' }
@@ -54,6 +55,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'othree/html5.vim'
   " Plug 'tpope/vim-markdown'
   Plug 'plasticboy/vim-markdown'
+  Plug 'mzlogin/vim-markdown-toc'
   Plug 'vim-ruby/vim-ruby', { 'commit': '84565856e6965' }
   " lazy loading for filetypes makes sense only for those that are not
   " included in the standard Vim distribution. Otherwise, Vim will load them
@@ -150,21 +152,26 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'mhinz/vim-randomtag'
   Plug 'machakann/vim-highlightedyank'
   Plug 'euclio/vim-markdown-composer'
+  Plug 'cocopon/iceberg.vim'
+  Plug 'rhysd/accelerated-jk'
 
   if has('nvim')
-    Plug 'roxma/nvim-completion-manager'
-    Plug 'roxma/ncm-rct-complete'
-    Plug 'roxma/nvim-cm-racer'
-    Plug 'calebeby/ncm-css'
-    Plug 'fgrsnau/ncm-otherbuf'
-    Plug 'mhartington/nvim-typescript'
-    Plug 'Shougo/neco-vim'
-
     Plug 'bfredl/nvim-miniyank'
     Plug 'datanoise/vim-dispatch-neovim'
-  else
-    Plug 'ervandew/supertab'
   endif
+  Plug 'ervandew/supertab'
+
+  Plug 'roxma/nvim-completion-manager'
+  if !has('nvim')
+    Plug 'roxma/vim-hug-neovim-rpc'
+  endif
+  " ruby completion library. disabling, since it pegs CPU on big rails projects
+  " Plug 'roxma/ncm-rct-complete'
+  Plug 'roxma/nvim-cm-racer'
+  Plug 'calebeby/ncm-css'
+  Plug 'fgrsnau/ncm-otherbuf'
+  Plug 'mhartington/nvim-typescript'
+  Plug 'Shougo/neco-vim'
 
   call plug#end()
 endif
@@ -871,13 +878,16 @@ endif
 
 " snipmate settings {{{2
 if has_key(g:plugs, 'vim-snipmate')
+  let g:snipMate = {}
+  let g:snipMate.snippet_version = 1
   imap <c-u> <Plug>snipMateTrigger
 endif
 
 " nvim-completion-manager {{{2
 if has_key(g:plugs, 'nvim-completion-manager')
-  let g:cm_complete_start_delay = 200
-  let g:cm_complete_popup_delay = 400
+  " let g:cm_complete_start_delay = 200
+  " let g:cm_complete_popup_delay = 400
+  " let g:cm_completeopt = 'menu,noinsert,noselect'
 
   imap <expr> <Plug>(expand_or_nl) (cm#completed_is_snippet() ? "\<C-U>":"")
   imap <C-X><CR> <CR><Plug>AlwaysEnd
@@ -1192,14 +1202,19 @@ if has_key(g:plugs, 'ale')
   " let g:ale_completion_delay = 1000
 endif
 
+" delimitMate settings {{{2
+let g:delimitMate_expand_space = 1
+let g:delimitMate_matchpairs = '(:),[:],{:}'
+
+nmap j <Plug>(accelerated_jk_gj)
+nmap k <Plug>(accelerated_jk_gk)
+
 " Misc settings {{{2
 let g:c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:xml_syntax_folding = 1 " enable folding in xml files
 let g:racer_cmd = 'racer'
 let g:vim_jsx_pretty_colorful_config = 1
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
-let g:delimitMate_expand_space = 1
-let g:delimitMate_matchpairs = '(:),[:],{:}'
 let g:test#strategy = 'dispatch'
 let g:markdown_composer_autostart = 0
 

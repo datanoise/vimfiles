@@ -674,8 +674,8 @@ augroup GoSettings
   au FileType go setlocal shiftwidth=4
   au FileType go setlocal noexpandtab
   au FileType go nnoremap <silent> <buffer> K :GoDoc<CR>
-  au FileType go nnoremap <silent> <buffer> <leader>t :GoDecls<CR>
-  au FileType go nnoremap <silent> <buffer> <leader>gt :GoDeclsDir<CR>
+  au FileType go nnoremap <silent> <buffer> <leader>n :GoDecls<CR>
+  au FileType go nnoremap <silent> <buffer> <leader>gn :GoDeclsDir<CR>
   au FileType go
         \ nmap <silent> <buffer> <leader>goi <Plug>(go-import) |
         \ nmap <silent> <buffer> <leader>goI <Plug>(go-imports) |
@@ -831,7 +831,7 @@ if has_key(g:plugs, 'ctrlp.vim')
 
   " nnoremap <silent> <leader>m :CtrlPCurWD<CR>
   " nnoremap <silent> <leader>l :CtrlPBuffer<CR>
-  " nnoremap <silent> <leader>t :CtrlPBufTag<CR>
+  " nnoremap <silent> <leader>n :CtrlPBufTag<CR>
   " nnoremap <silent> <leader>e :CtrlPMRUFiles<CR>
   nnoremap <silent> <leader>r :CtrlPRoot<CR>
   nnoremap <silent> <leader>x :CtrlPMixed<CR>
@@ -1133,15 +1133,12 @@ endif
 
 " fzf plugin & settings {{{2
 if !has('gui_running') && isdirectory('/usr/local/opt/fzf')
-  nnoremap <leader>F :Files<CR>
-  nnoremap <leader>T :BTag<CR>
-  nnoremap <leader>B :Buffers<CR>
   execute 'cnoremap <M-t> FZF '
   execute 'nnoremap <M-t> :FZF '
   call CommandAlias('fzf', 'FZF')
   nnoremap <silent> <Leader>m :Files<CR>
   nnoremap <silent> <Leader>l :Buffers<CR>
-  nnoremap <silent> <Leader>t :BTag<CR>
+  nnoremap <silent> <Leader>n :BTag<CR>
   nnoremap <silent> <Leader>e :History<CR>
 
   function! s:fzf_statusline()
@@ -1153,7 +1150,6 @@ if !has('gui_running') && isdirectory('/usr/local/opt/fzf')
   augroup Fzf
     au! User FzfStatusLine call <SID>fzf_statusline()
   augroup END
-
 endif
 
 " vim-plug settings {{{2
@@ -1168,16 +1164,28 @@ xmap ic  <Plug>(textobj-between-i)
 omap ic  <Plug>(textobj-between-i)
 
 " grepper settings {{{2
-let g:grepper = {}
-let g:grepper.tools = ['rg', 'ag', 'grep']
-nmap <leader>gf <Plug>(GrepperOperator)
-xmap <leader>gf <Plug>(GrepperOperator)
-nnoremap <leader>* :Grepper -cword -noprompt<CR>
-nnoremap [F :exe ':GrepperRg ' . expand('<cword>')<CR><CR>
-nnoremap ]F :exe ':GrepperRg ' . matchstr(getline('.'), '\%'.virtcol('.').'v\w*')<CR><CR>
-call CommandAlias('ag', 'GrepperAg')
-call CommandAlias('rg', 'GrepperRg')
-call CommandAlias('grep', 'GrepperGrep')
+if has_key(g:plugs, 'vim-grepper')
+  let g:grepper = {}
+  let g:grepper.tools = ['rg', 'ag', 'grep']
+  nmap <leader>gf <Plug>(GrepperOperator)
+  xmap <leader>gf <Plug>(GrepperOperator)
+  nnoremap <leader>* :Grepper -cword -noprompt<CR>
+  nnoremap [F :exe ':GrepperRg ' . expand('<cword>')<CR><CR>
+  nnoremap ]F :exe ':GrepperRg ' . matchstr(getline('.'), '\%'.virtcol('.').'v\w*')<CR><CR>
+  call CommandAlias('ag', 'GrepperAg')
+  call CommandAlias('rg', 'GrepperRg')
+  call CommandAlias('grep', 'GrepperGrep')
+endif
+
+" vim-test settings {{{2
+if has_key(g:plugs, 'vim-test')
+  nnoremap <leader>ts :TestSuite<CR>
+  nnoremap <leader>tt :TestSuite<CR>
+  nnoremap <leader>tn :TestNearest<CR>
+  nnoremap <leader>tl :TestLast<CR>
+  nnoremap <leader>tf :TestFile<CR>
+  nnoremap <leader>tv :TestVisit<CR>
+endif
 
 " ale settings {{{2
 if has_key(g:plugs, 'ale')

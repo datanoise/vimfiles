@@ -165,8 +165,7 @@ silent! if plug#begin('~/.vim/bundle')
   if !has('nvim')
     Plug 'roxma/vim-hug-neovim-rpc'
   endif
-  " ruby completion library. disabling, since it pegs CPU on big rails projects
-  " Plug 'roxma/ncm-rct-complete'
+  Plug 'roxma/ncm-rct-complete'
   Plug 'roxma/nvim-cm-racer'
   Plug 'calebeby/ncm-css'
   Plug 'fgrsnau/ncm-otherbuf'
@@ -1179,6 +1178,7 @@ endif
 
 " vim-test settings {{{2
 if has_key(g:plugs, 'vim-test')
+  let g:test#strategy = 'dispatch'
   nnoremap <leader>ts :TestSuite<CR>
   nnoremap <leader>tt :TestSuite<CR>
   nnoremap <leader>tn :TestNearest<CR>
@@ -1223,7 +1223,6 @@ let g:xml_syntax_folding = 1 " enable folding in xml files
 let g:racer_cmd = 'racer'
 let g:vim_jsx_pretty_colorful_config = 1
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
-let g:test#strategy = 'dispatch'
 let g:markdown_composer_autostart = 0
 
 " }}}

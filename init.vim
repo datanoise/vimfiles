@@ -49,40 +49,39 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'AndrewRadev/splitjoin.vim', { 'on': ['SplitjoinJoin', 'SplitjoinSplit'] }
   Plug 'AndrewRadev/sideways.vim',  { 'on': ['SidewaysLeft', 'SidewaysRight'] }
   Plug 'datanoise/switch.vim',      { 'on': 'Switch',
-        \ 'for': ['ruby', 'eruby', 'php', 'haml', 'slim', 'cpp', 'javascript', 'coffee', 'clojure', 'scala'] }
+        \ 'for': ['ruby', 'eruby', 'php', 'haml', 'slim', 'cpp', 'javascript', 'coffee', 'clojure', 'scala', 'elixir', 'rust'] }
 
   " file types
+  Plug 'pangloss/vim-javascript'  
+  Plug 'datanoise/vim-jsx-pretty'
   Plug 'othree/html5.vim'
-  " Plug 'tpope/vim-markdown'
-  Plug 'plasticboy/vim-markdown'
-  Plug 'mzlogin/vim-markdown-toc'
   Plug 'vim-ruby/vim-ruby', { 'commit': '84565856e6965' }
   " lazy loading for filetypes makes sense only for those that are not
   " included in the standard Vim distribution. Otherwise, Vim will load them
   " anyway, possibly very old version.
-  Plug 'tpope/vim-haml',           { 'for': ['haml', 'sass', 'scss'] }
-  Plug 'rust-lang/rust.vim',       { 'for': 'rust' }
-  Plug 'racer-rust/vim-racer',     { 'for': 'rust' }
-  Plug 'keith/swift.vim',          { 'for': 'swift' }
-  Plug 'vim-scripts/nginx.vim',    { 'for': 'nginx' }
-  Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
-  Plug 'pangloss/vim-javascript'  ",  { 'for': ['javascript', 'vue'] }
-  Plug 'datanoise/vim-jsx-pretty' ", { 'for': 'javascript' }
-  Plug 'datanoise/vim-vue',        { 'for': ['javascript', 'vue'] }
-  Plug 'tmux-plugins/vim-tmux',    { 'for': 'tmux' }
-  Plug 'digitaltoad/vim-pug',      { 'for': ['pug', 'jade'] }
-  Plug 'ekalinin/Dockerfile.vim',  { 'for': 'Dockerfile' }
-  Plug 'hallison/vim-rdoc',        { 'for': 'rdoc' }
-  Plug 'groenewege/vim-less',      { 'for': 'less' }
-  Plug 'jneen/ragel.vim',          { 'for': 'ragel' }
-  Plug 'ajf/puppet-vim',           { 'for': 'puppet' }
-  Plug 'cespare/vim-toml',         { 'for': 'toml' }
-  Plug 'datanoise/bufexplorer'
-  " Plug 'datanoise/vim-elixir',     { 'for': ['elixir', 'eelixir'] }
-  Plug 'elixir-editors/vim-elixir',{ 'for': ['elixir', 'eelixir'] }
-  Plug 'datanoise/vim-crystal',    { 'for': ['crystal', 'html'] }
-  Plug 'datanoise/vim-llvm',       { 'for': 'llvm' }
-  Plug 'Quramy/tsuquyomi',         { 'for': 'typescript' }
+  " Plug 'tpope/vim-markdown'
+  Plug 'plasticboy/vim-markdown'
+  Plug 'mzlogin/vim-markdown-toc',     { 'for': 'markdown' }
+  Plug 'euclio/vim-markdown-composer', { 'for': 'markdown' }
+  Plug 'tpope/vim-haml',               { 'for': ['haml', 'sass', 'scss'] }
+  Plug 'rust-lang/rust.vim',           { 'for': 'rust' }
+  Plug 'racer-rust/vim-racer',         { 'for': 'rust' }
+  Plug 'keith/swift.vim',              { 'for': 'swift' }
+  Plug 'vim-scripts/nginx.vim',        { 'for': 'nginx' }
+  Plug 'kchmck/vim-coffee-script',     { 'for': 'coffee' }
+  Plug 'datanoise/vim-vue',            { 'for': ['javascript', 'vue'] }
+  Plug 'tmux-plugins/vim-tmux',        { 'for': 'tmux' }
+  Plug 'digitaltoad/vim-pug',          { 'for': ['pug', 'jade'] }
+  Plug 'ekalinin/Dockerfile.vim',      { 'for': 'Dockerfile' }
+  Plug 'hallison/vim-rdoc',            { 'for': 'rdoc' }
+  Plug 'groenewege/vim-less',          { 'for': 'less' }
+  Plug 'jneen/ragel.vim',              { 'for': 'ragel' }
+  Plug 'ajf/puppet-vim',               { 'for': 'puppet' }
+  Plug 'cespare/vim-toml',             { 'for': 'toml' }
+  Plug 'elixir-editors/vim-elixir',    { 'for': ['elixir', 'eelixir'] }
+  Plug 'datanoise/vim-crystal',        { 'for': ['crystal', 'html'] }
+  Plug 'datanoise/vim-llvm',           { 'for': 'llvm' }
+  Plug 'Quramy/tsuquyomi',             { 'for': 'typescript' }
   " Plug 'leafgarland/typescript-vim'
   if $GOPATH !=# ''
     " do not use lazy loading, cause it disables template function
@@ -113,15 +112,17 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'thinca/vim-textobj-between'
   Plug 'lucapette/vim-textobj-underscore'
 
-  " airline
-  " if $TERM ==# '' || $TERM ==# 'xterm-256color' || $TERM ==# 'screen-256color'
-  "   Plug 'vim-airline/vim-airline'
-  "   Plug 'vim-airline/vim-airline-themes'
-  " endif
+  " statusline
+  if $TERM ==# '' || $TERM ==# 'xterm-256color' || $TERM ==# 'screen-256color'
+    " airline
+    "   Plug 'vim-airline/vim-airline'
+    "   Plug 'vim-airline/vim-airline-themes'
 
-  " lightline
-  Plug 'itchyny/lightline.vim'
-  Plug 'maximbaz/lightline-ale'
+    " lightline
+    Plug 'itchyny/lightline.vim'
+    Plug 'maximbaz/lightline-ale'
+  endif
+
 
   " snippets
   " ultisnips is very heavy plugin
@@ -151,16 +152,10 @@ silent! if plug#begin('~/.vim/bundle')
   " Plug 'easymotion/vim-easymotion'
   Plug 'mhinz/vim-randomtag'
   Plug 'machakann/vim-highlightedyank'
-  Plug 'euclio/vim-markdown-composer'
-  Plug 'cocopon/iceberg.vim'
   Plug 'rhysd/accelerated-jk'
+  Plug 'datanoise/bufexplorer'
 
-  if has('nvim')
-    Plug 'bfredl/nvim-miniyank'
-    Plug 'datanoise/vim-dispatch-neovim'
-  endif
   Plug 'ervandew/supertab'
-
   Plug 'roxma/nvim-completion-manager'
   if !has('nvim')
     Plug 'roxma/vim-hug-neovim-rpc'
@@ -171,6 +166,11 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'fgrsnau/ncm-otherbuf'
   Plug 'mhartington/nvim-typescript'
   Plug 'Shougo/neco-vim'
+
+  if has('nvim')
+    Plug 'bfredl/nvim-miniyank'
+    Plug 'datanoise/vim-dispatch-neovim'
+  endif
 
   call plug#end()
 endif
@@ -879,7 +879,6 @@ endif
 if has_key(g:plugs, 'vim-snipmate')
   let g:snipMate = {}
   let g:snipMate.snippet_version = 1
-  imap <c-u> <Plug>snipMateTrigger
 endif
 
 " nvim-completion-manager {{{2
@@ -888,7 +887,7 @@ if has_key(g:plugs, 'nvim-completion-manager')
   " let g:cm_complete_popup_delay = 400
   " let g:cm_completeopt = 'menu,noinsert,noselect'
 
-  imap <expr> <Plug>(expand_or_nl) (cm#completed_is_snippet() ? "\<C-U>":"")
+  imap <expr> <Plug>(expand_or_nl) (cm#completed_is_snippet() ? "\<Plug>snipMateTrigger":"")
   imap <C-X><CR> <CR><Plug>AlwaysEnd
   imap <expr> <CR> (pumvisible() ? "\<C-Y>\<Plug>(expand_or_nl)" : <SID>complete_brackets()."\<Plug>DiscretionaryEnd")
 endif
@@ -1073,7 +1072,9 @@ endif
 
 " gitgutter settings {{{2
 if has_key(g:plugs, 'vim-gitgutter')
-  let g:gitgutter_enabled = 0
+  let g:gitgutter_enabled = 1
+  let g:gitgutter_override_sign_column_highlight = 0
+  nnoremap <leader>ge :GitGutterEnable<CR>
   nnoremap <leader>gg :GitGutterToggle<CR>
 endif
 
@@ -1169,8 +1170,8 @@ if has_key(g:plugs, 'vim-grepper')
   nmap <leader>gf <Plug>(GrepperOperator)
   xmap <leader>gf <Plug>(GrepperOperator)
   nnoremap <leader>* :Grepper -cword -noprompt<CR>
-  nnoremap [F :exe ':GrepperRg ' . expand('<cword>')<CR><CR>
-  nnoremap ]F :exe ':GrepperRg ' . matchstr(getline('.'), '\%'.virtcol('.').'v\w*')<CR><CR>
+  nnoremap [F :exe ':GrepperRg ' . expand('<cword>')<CR>
+  nnoremap ]F :exe ':GrepperRg ' . matchstr(getline('.'), '\%'.virtcol('.').'v\w*')<CR>
   call CommandAlias('ag', 'GrepperAg')
   call CommandAlias('rg', 'GrepperRg')
   call CommandAlias('grep', 'GrepperGrep')

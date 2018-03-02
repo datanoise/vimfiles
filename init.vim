@@ -318,6 +318,9 @@ set nohlsearch
 " case-sensitive search when using camel case search criteria
 set smartcase
 set wrapscan
+if has('nvim')
+  set inccommand=split
+endif
 " }}}
 " status line options {{{2
 set laststatus=2
@@ -830,12 +833,10 @@ if has_key(g:plugs, 'ctrlp.vim')
 
   " nnoremap <silent> <leader>m :CtrlPCurWD<CR>
   " nnoremap <silent> <leader>l :CtrlPBuffer<CR>
-  " nnoremap <silent> <leader>n :CtrlPBufTag<CR>
-  " nnoremap <silent> <leader>e :CtrlPMRUFiles<CR>
-  nnoremap <silent> <leader>r :CtrlPRoot<CR>
-  nnoremap <silent> <leader>x :CtrlPMixed<CR>
-  nnoremap <silent> <leader>cc :ClearCtrlPCache<CR>
-  nnoremap <silent> <leader>ca :ClearAllCtrlPCaches<CR>
+  " nnoremap <silent> <leader>r :CtrlPRoot<CR>
+  " nnoremap <silent> <leader>x :CtrlPMixed<CR>
+  nnoremap <silent> <leader>e :CtrlPMRUFiles<CR>
+  nnoremap <silent> <leader>kn :CtrlPBufTag<CR>
   nnoremap <silent> <leader>kf :CtrlPCurFile<CR>
   nnoremap <silent> <leader>kb :CtrlPBuffer<CR>
   nnoremap <silent> <leader>kt :CtrlPTabbed<CR>
@@ -945,7 +946,7 @@ if has_key(g:plugs, 'lightline.vim')
         \   'left': [ [ 'mode', 'paste' ],
         \             [ 'gitbranch', 'readonly', 'filename', 'modified', 'spell'],
         \             [ 'ctrlpmark' ] ],
-        \   'right': [ [ 'linter_errors', 'linter_warnings', 'linter_ok' ], 
+        \   'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ], 
         \              [ 'lineinfo' ],
         \              [ 'percent' ],
         \              [ 'current_tag', 'fileformat', 'filetype' ],
@@ -962,11 +963,13 @@ if has_key(g:plugs, 'lightline.vim')
         \ },
         \ 'component_expand': {
         \   'gitbranch': 'LightlineFugitive',
+        \   'linter_checking': 'lightline#ale#checking',
         \   'linter_warnings': 'lightline#ale#warnings',
         \   'linter_errors': 'lightline#ale#errors',
         \   'linter_ok': 'lightline#ale#ok'
         \ },
         \ 'component_type': {
+        \   'linter_checking': 'warning',
         \   'linter_warnings': 'warning',
         \   'linter_errors': 'error',
         \   'linter_ok': 'left',
@@ -1060,6 +1063,7 @@ if has_key(g:plugs, 'lightline.vim')
     return s:tagbar_last_updated_val
   endfunction
   let g:lightline#ale#indicator_ok = '✓'
+  let g:lightline#ale#indicator_checking = '⦿'
 endif
 
 " easy-align settings {{{2
@@ -1139,7 +1143,7 @@ if !has('gui_running') && isdirectory('/usr/local/opt/fzf')
   nnoremap <silent> <Leader>m :Files<CR>
   nnoremap <silent> <Leader>l :Buffers<CR>
   nnoremap <silent> <Leader>n :BTag<CR>
-  nnoremap <silent> <Leader>e :History<CR>
+  nnoremap <silent> <Leader>E :History<CR>
 
   function! s:fzf_statusline()
     hi! fzf1 ctermfg=darkyellow ctermbg=242 guifg=gold3 guibg=#202020 gui=none

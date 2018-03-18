@@ -9,8 +9,6 @@ filetype on           " Enable filetype detection
 filetype indent on    " Enable filetype-specific indenting
 filetype plugin on    " Enable filetype-specific plugins
 
-" set nocompatible      " We're running Vim, not Vi!
-
 " Section: Plugins {{{1
 silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-repeat'
@@ -30,6 +28,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-endwise'
   Plug 'tpope/vim-obsession'
   Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
+  Plug 'tpope/vim-dadbod', { 'on': 'DB' }
 
   Plug 'scrooloose/nerdtree',  { 'on': 'NERDTreeToggle' }
   Plug 'w0rp/ale'
@@ -55,7 +54,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'pangloss/vim-javascript'  
   Plug 'datanoise/vim-jsx-pretty'
   Plug 'othree/html5.vim'
-  Plug 'vim-ruby/vim-ruby', { 'commit': '84565856e6965' }
+  Plug 'datanoise/vim-ruby'
   " lazy loading for filetypes makes sense only for those that are not
   " included in the standard Vim distribution. Otherwise, Vim will load them
   " anyway, possibly very old version.
@@ -81,8 +80,9 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'elixir-editors/vim-elixir',    { 'for': ['elixir', 'eelixir'] }
   Plug 'datanoise/vim-crystal',        { 'for': ['crystal', 'html'] }
   Plug 'datanoise/vim-llvm',           { 'for': 'llvm' }
-  Plug 'Quramy/tsuquyomi',             { 'for': 'typescript' }
-  " Plug 'leafgarland/typescript-vim'
+  Plug 'HerringtonDarkholme/yats.vim', { 'for': 'typescript' }
+  " Plug 'leafgarland/typescript-vim',   { 'for': 'typescript' }
+
   if $GOPATH !=# ''
     " do not use lazy loading, cause it disables template function
     Plug 'fatih/vim-go'
@@ -154,6 +154,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'machakann/vim-highlightedyank'
   Plug 'rhysd/accelerated-jk'
   Plug 'datanoise/bufexplorer'
+  Plug 'vimwiki/vimwiki'
 
   Plug 'ervandew/supertab'
   Plug 'roxma/nvim-completion-manager'
@@ -164,10 +165,10 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'roxma/nvim-cm-racer'
   Plug 'calebeby/ncm-css'
   Plug 'fgrsnau/ncm-otherbuf'
-  Plug 'mhartington/nvim-typescript'
   Plug 'Shougo/neco-vim'
 
   if has('nvim')
+    Plug 'mhartington/nvim-typescript'
     Plug 'bfredl/nvim-miniyank'
     Plug 'datanoise/vim-dispatch-neovim'
   endif
@@ -464,7 +465,7 @@ if has('nvim')
   augroup TermAutoInsert
     au!
     au TermOpen * startinsert
-    au BufEnter term://* startinsert
+    " au BufEnter term://* startinsert
   augroup END
 
   if executable('nvr')
@@ -663,11 +664,7 @@ augroup RubySettings
   au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F5> :exe '!rspec --format doc -c ' . expand('%') . ':' . line('.')<CR>|else|nnoremap <buffer> <F5> :!ruby %<CR>|endif
   au FileType ruby iabbrev <buffer> rb! #!<C-R>=substitute(system('which ruby'),'\n$','','')<CR><C-R>=Eatchar('\s')<CR>
   " au FileType ruby inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "
-  if has('gui_running')
-    au FileType ruby setlocal keywordprg=ri\ -T\ -f\ bs\ --no-gems
-  else
-    au FileType ruby setlocal keywordprg=ri\ --no-gems
-  end
+  au FileType ruby setlocal keywordprg=ri\ -T\ -f\ markdown\ --no-gems
 augroup END
 
 augroup GoSettings
@@ -711,11 +708,10 @@ augroup END
 augroup JavascriptSettings
   au!
   au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
-  au FileType javascript let b:syntastic_checkers = ["javascript/eslint"]
-  au FileType javascript
-        \ if b:current_syntax == 'javascript.jsx' |
-        \   call s:enableTagComplete() |
-        \ endif
+  " au FileType javascript
+  "       \ if b:current_syntax == 'javascript.jsx' |
+  "       \   call s:enableTagComplete() |
+  "       \ endif
 augroup END
 
 augroup RustSettings
@@ -767,6 +763,7 @@ if has_key(g:plugs, 'syntastic')
         \  'active_filetypes':  [],
         \  'passive_filetypes': ['cpp', 'c', 'scss', 'puppet', 'html', 'cucumber', 'java', 'go']
         \  }
+  let g:syntastic_javascript_checkers = ['eslint']
   let g:syntastic_auto_loc_list       = 0
   let g:syntastic_enable_signs        = 1
   let g:syntastic_stl_format          = '[ERR:%F(%t)]'
@@ -1184,12 +1181,13 @@ endif
 " vim-test settings {{{2
 if has_key(g:plugs, 'vim-test')
   let g:test#strategy = 'dispatch'
-  nnoremap <leader>ts :TestSuite<CR>
-  nnoremap <leader>tt :TestSuite<CR>
-  nnoremap <leader>tn :TestNearest<CR>
-  nnoremap <leader>tl :TestLast<CR>
-  nnoremap <leader>tf :TestFile<CR>
-  nnoremap <leader>tv :TestVisit<CR>
+  " ending this bindings with <Esc> because of TermAutoInsert augroup
+  nnoremap <leader>ts :TestSuite<CR><Esc>
+  nnoremap <leader>tt :TestSuite<CR><Esc>
+  nnoremap <leader>tn :TestNearest<CR><Esc>
+  nnoremap <leader>tl :TestLast<CR><Esc>
+  nnoremap <leader>tf :TestFile<CR><Esc>
+  nnoremap <leader>tv :TestVisit<CR><Esc>
 endif
 
 " ale settings {{{2
@@ -1204,6 +1202,7 @@ if has_key(g:plugs, 'ale')
         \ 'ruby': ['ruby'],
         \ 'rust': ['cargo'],
         \ 'go': ['go build', 'govet'],
+        \ 'javascript': ['eslint'],
         \ }
   nmap <silent> [W <Plug>(ale_first)
   nmap <silent> [w <Plug>(ale_previous)

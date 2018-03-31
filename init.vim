@@ -81,7 +81,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-crystal',        { 'for': ['crystal', 'html'] }
   Plug 'datanoise/vim-llvm',           { 'for': 'llvm' }
   Plug 'HerringtonDarkholme/yats.vim', { 'for': 'typescript' }
-  " Plug 'leafgarland/typescript-vim',   { 'for': 'typescript' }
+  Plug 'python-mode/python-mode',      { 'for': 'python' }
 
   if $GOPATH !=# ''
     " do not use lazy loading, cause it disables template function
@@ -228,6 +228,7 @@ function! s:tagComplete()
   elseif search('</\@!', 'bn', line('.')) != 0
         \ && searchpair('</\@!', '', '>', 'bW') > 0
         \ && l:line[l:col-2] !=# '/'
+        \ && l:line[l:col-2] !=# '='
     call feedkeys("\<C-g>u") " create new undo sequence
     call feedkeys('></', 'n')
     call feedkeys("\<Plug>ragtagHtmlComplete")
@@ -267,7 +268,7 @@ function! s:complete_brackets()
   let l:line = getline('.')
   let l:c = l:line[col('.')-2]
   let l:x = l:line[col('.')-1]
-  if l:c =~# '[{\[\(]'
+  if l:c =~# '[{\[\(]' && match(l:line, '[}\]\)]', col('.')) == -1
     if l:c ==# '['
       let l:b = ']'
     elseif l:c ==# '('
@@ -314,7 +315,7 @@ set backupskip=/tmp/*,/private/tmp/*
 " search options {{{2
 " always use incremental search
 set incsearch
-" no search highlighting by default, use <leader>h if needed
+" no search highlighting by default
 set nohlsearch
 " case-sensitive search when using camel case search criteria
 set smartcase
@@ -462,10 +463,14 @@ augroup END
 " terminal settings
 tmap <F2> <C-\><C-n><F2>
 if has('nvim')
-  augroup TermAutoInsert
+  " augroup TermAutoInsert
+  "   au!
+  "   au TermOpen * startinsert
+  "   " au BufEnter term://* startinsert
+  " augroup END
+  augroup TermEnter
     au!
-    au TermOpen * startinsert
-    " au BufEnter term://* startinsert
+    au TermOpen * nnoremap <buffer> <Enter> i<Enter>
   augroup END
 
   if executable('nvr')
@@ -485,7 +490,6 @@ nnoremap \vg :e ~/.gvimrc
 
 " visual select of the last pasted text
 nnoremap <silent> <leader>v `[v`]
-nnoremap <silent> <leader>h :set hlsearch!<CR>
 nnoremap <silent> <C-l> :noh<CR><C-l>
 nnoremap <silent> \l :setlocal list!<CR>
 nnoremap <silent> \n :set nu!<CR>
@@ -708,10 +712,10 @@ augroup END
 augroup JavascriptSettings
   au!
   au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
-  " au FileType javascript
-  "       \ if b:current_syntax == 'javascript.jsx' |
-  "       \   call s:enableTagComplete() |
-  "       \ endif
+  au FileType javascript
+        \ if b:current_syntax == 'javascript.jsx' |
+        \   call s:enableTagComplete() |
+        \ endif
 augroup END
 
 augroup RustSettings
@@ -1182,12 +1186,12 @@ endif
 if has_key(g:plugs, 'vim-test')
   let g:test#strategy = 'dispatch'
   " ending this bindings with <Esc> because of TermAutoInsert augroup
-  nnoremap <leader>ts :TestSuite<CR><Esc>
-  nnoremap <leader>tt :TestSuite<CR><Esc>
-  nnoremap <leader>tn :TestNearest<CR><Esc>
-  nnoremap <leader>tl :TestLast<CR><Esc>
-  nnoremap <leader>tf :TestFile<CR><Esc>
-  nnoremap <leader>tv :TestVisit<CR><Esc>
+  nnoremap <leader>ts :TestSuite<CR>
+  nnoremap <leader>tt :TestSuite<CR>
+  nnoremap <leader>tn :TestNearest<CR>
+  nnoremap <leader>tl :TestLast<CR>
+  nnoremap <leader>tf :TestFile<CR>
+  nnoremap <leader>tv :TestVisit<CR>
 endif
 
 " ale settings {{{2
@@ -1220,6 +1224,13 @@ let g:delimitMate_matchpairs = '(:),[:],{:}'
 
 nmap j <Plug>(accelerated_jk_gj)
 nmap k <Plug>(accelerated_jk_gk)
+
+" python-mode settings {{{2
+let g:pymode_options = 0
+let g:pymode_python = 'python3'
+let g:pymode_rope = 0
+let g:pymode_lint = 0
+let g:pymode_lint_on_write = 0
 
 " Misc settings {{{2
 let g:c_comment_strings = 1 " I like highlighting strings inside C comments

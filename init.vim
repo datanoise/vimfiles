@@ -54,7 +54,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'pangloss/vim-javascript'  
   Plug 'datanoise/vim-jsx-pretty'
   Plug 'othree/html5.vim'
-  Plug 'datanoise/vim-ruby'
+  Plug 'vim-ruby/vim-ruby'
   " lazy loading for filetypes makes sense only for those that are not
   " included in the standard Vim distribution. Otherwise, Vim will load them
   " anyway, possibly very old version.
@@ -1207,6 +1207,9 @@ if has_key(g:plugs, 'ale')
         \ 'rust': ['cargo'],
         \ 'go': ['go build', 'govet'],
         \ 'javascript': ['eslint'],
+        \ }
+  let g:ale_fixers = {
+        \ 'ruby': ['rubocop']
         \ }
   nmap <silent> [W <Plug>(ale_first)
   nmap <silent> [w <Plug>(ale_previous)

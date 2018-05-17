@@ -15,7 +15,7 @@ let s:cyan = [ '#8fbfdc', 110 ]
 let s:green = [ '#99ad6a', 107 ]
 let s:white = [ '#ffffff', 255 ]
 
-let s:p = {'normal': {}, 'inactive': {}, 'insert': {}, 'replace': {}, 'visual': {}, 'tabline': {}}
+let s:p = {'normal': {}, 'inactive': {}, 'insert': {}, 'replace': {}, 'visual': {}, 'tabline': {}, 'command': {}}
 let s:p.normal.left = [ [ s:base02, s:blue ], [ s:base3, s:base01 ] ]
 let s:p.normal.right = [ [ s:base02, s:base1 ], [ s:base2, s:base01 ] ]
 let s:p.inactive.right = [ [ s:base02, s:base00 ], [ s:base0, s:base02 ] ]
@@ -29,6 +29,8 @@ let s:p.tabline.left = [ [ s:base3, s:base00 ] ]
 let s:p.tabline.tabsel = [ [ s:base3, s:base02 ] ]
 let s:p.tabline.middle = [ [ s:base01, s:base1 ] ]
 let s:p.tabline.right = copy(s:p.normal.right)
+let s:p.command.left = [ [ s:base02, s:cyan ], [ s:base3, s:base01 ] ]
+let s:p.command.right = [ [ s:base02, s:base1 ], [ s:base2, s:base01 ] ]
 let s:p.normal.error = [ [ s:white, s:red ] ]
 let s:p.normal.warning = [ [ s:base02, s:yellow ] ]
 let s:p.normal.branch = [ [ s:orange, s:base00 ] ]

@@ -27,6 +27,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-abolish'
   Plug 'tpope/vim-endwise'
   Plug 'tpope/vim-obsession'
+  Plug 'tpope/vim-apathy'
   Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
   Plug 'tpope/vim-dadbod', { 'on': 'DB' }
 
@@ -1189,6 +1190,7 @@ if has_key(g:plugs, 'vim-test')
   nnoremap <leader>ts :TestSuite<CR>
   nnoremap <leader>tt :TestSuite<CR>
   nnoremap <leader>tn :TestNearest<CR>
+  nnoremap <leader>tt :TestNearest<CR>
   nnoremap <leader>tl :TestLast<CR>
   nnoremap <leader>tf :TestFile<CR>
   nnoremap <leader>tv :TestVisit<CR>

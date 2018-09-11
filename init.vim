@@ -156,17 +156,31 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'rhysd/accelerated-jk'
   Plug 'datanoise/bufexplorer'
   Plug 'vimwiki/vimwiki'
-
   Plug 'ervandew/supertab'
+
   Plug 'roxma/nvim-completion-manager'
-  if !has('nvim')
-    Plug 'roxma/vim-hug-neovim-rpc'
-  endif
   Plug 'roxma/ncm-rct-complete'
   Plug 'roxma/nvim-cm-racer'
   Plug 'calebeby/ncm-css'
   Plug 'fgrsnau/ncm-otherbuf'
   Plug 'Shougo/neco-vim'
+
+  " Plug 'ncm2/ncm2'
+  " Plug 'roxma/nvim-yarp'
+  " Plug 'ncm2/ncm2-bufword'
+  " Plug 'ncm2/ncm2-tmux'
+  " Plug 'ncm2/ncm2-path'
+  " Plug 'ncm2/ncm2-cssomni'
+  " Plug 'ncm2/ncm2-tern'
+  " Plug 'ncm2/ncm2-jedi'
+  " Plug 'ncm2/ncm2-racer'
+  " Plug 'ncm2/ncm2-vim'
+  " Plug 'ncm2/ncm2-go'
+  " Plug 'ncm2/ncm2-snipmate'
+
+  if !has('nvim')
+    Plug 'roxma/vim-hug-neovim-rpc'
+  endif
 
   if has('nvim')
     Plug 'mhartington/nvim-typescript'
@@ -895,6 +909,15 @@ if has_key(g:plugs, 'nvim-completion-manager')
   imap <expr> <CR> (pumvisible() ? "\<C-Y>\<Plug>(expand_or_nl)" : <SID>complete_brackets()."\<Plug>DiscretionaryEnd")
 endif
 
+" ncm2 {{{2
+if has_key(g:plugs, 'ncm2')
+  set completeopt=noinsert,menuone,noselect
+  autocmd BufEnter * call ncm2#enable_for_buffer()
+  imap <expr> <Plug>(expand_or_nl) (ncm2_snipmate#completed_is_snippet() ? "\<Plug>snipMateTrigger":"")
+  imap <C-X><CR> <CR><Plug>AlwaysEnd
+  imap <expr> <CR> (pumvisible() ? "\<C-Y>\<Plug>(expand_or_nl)" : <SID>complete_brackets()."\<Plug>DiscretionaryEnd")
+endif
+
 " vim-go settings {{{2
 let g:go_auto_type_info = 0
 let g:go_def_mode = 'godef'
@@ -1186,7 +1209,6 @@ endif
 " vim-test settings {{{2
 if has_key(g:plugs, 'vim-test')
   let g:test#strategy = 'dispatch'
-  " ending this bindings with <Esc> because of TermAutoInsert augroup
   nnoremap <leader>ts :TestSuite<CR>
   nnoremap <leader>tt :TestSuite<CR>
   nnoremap <leader>tn :TestNearest<CR>
@@ -1244,5 +1266,6 @@ let g:racer_cmd = 'racer'
 let g:vim_jsx_pretty_colorful_config = 1
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
 let g:markdown_composer_autostart = 0
+let g:vimwiki_path = '~/.vimwiki/'
 
 " }}}

@@ -1,6 +1,11 @@
 function! s:qfix_opened()
-  let qf_options = getqflist({'winid': 1})
-  return has_key(qf_options, 'winid') && qf_options['winid'] > 0
+  let windows = getwininfo()
+  for w in windows
+    if w['quickfix']
+      return 1
+    endif
+  endfor
+  return 0
 endfunction
 
 function! s:loclist_opened()

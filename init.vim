@@ -127,10 +127,10 @@ silent! if plug#begin('~/.vim/bundle')
 
   " snippets
   " ultisnips is very heavy plugin
-  " Plug 'SirVer/ultisnips'
-  Plug 'tomtom/tlib_vim'
-  Plug 'marcweber/vim-addon-mw-utils'
-  Plug 'garbas/vim-snipmate'
+  Plug 'SirVer/ultisnips'
+  " Plug 'tomtom/tlib_vim'
+  " Plug 'marcweber/vim-addon-mw-utils'
+  " Plug 'garbas/vim-snipmate'
   Plug 'honza/vim-snippets'
 
   Plug 'godlygeek/tabular',            { 'on': 'Tabularize' }
@@ -158,12 +158,15 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'vimwiki/vimwiki'
   Plug 'ervandew/supertab'
 
-  Plug 'roxma/nvim-completion-manager'
-  Plug 'roxma/ncm-rct-complete'
-  Plug 'roxma/nvim-cm-racer'
-  Plug 'calebeby/ncm-css'
-  Plug 'fgrsnau/ncm-otherbuf'
-  Plug 'Shougo/neco-vim'
+  " Plug 'roxma/nvim-completion-manager'
+  " Plug 'roxma/ncm-rct-complete'
+  " Plug 'roxma/nvim-cm-racer'
+  " Plug 'calebeby/ncm-css'
+  " Plug 'fgrsnau/ncm-otherbuf'
+  " Plug 'Shougo/neco-vim'
+  " if !has('nvim')
+  "   Plug 'roxma/vim-hug-neovim-rpc'
+  " endif
 
   " Plug 'ncm2/ncm2'
   " Plug 'roxma/nvim-yarp'
@@ -178,8 +181,9 @@ silent! if plug#begin('~/.vim/bundle')
   " Plug 'ncm2/ncm2-go'
   " Plug 'ncm2/ncm2-snipmate'
 
+  Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
   if !has('nvim')
-    Plug 'roxma/vim-hug-neovim-rpc'
+    Plug 'neoclide/vim-node-rpc'
   endif
 
   if has('nvim')
@@ -454,6 +458,9 @@ set ttimeoutlen=10  " Make Esc work faster
 " do not search included files and tags, it's a way too slow
 set complete-=i
 set complete-=t
+if has('nvim')
+  set pumblend=25
+endif
 " do not display :intro screen at startup
 set shortmess+=I
 set nofsync " don't spin my disk
@@ -558,8 +565,7 @@ nnoremap <silent> <leader>ct :!ctags --extra=+f -R *<CR><CR>
 " insert modeline
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
 " fugitive commands
-nnoremap <silent> <leader>gc :Gcommit<CR>
-nnoremap <silent> <leader>gs :Gstatus<CR>
+nnoremap <silent> <leader>gc :Gstatus<CR>
 nnoremap <silent> <leader>gh :Git push<CR>
 nnoremap <silent> <leader>gl :Git pull<CR>
 " quick search in visual mode
@@ -916,6 +922,17 @@ if has_key(g:plugs, 'ncm2')
   imap <expr> <Plug>(expand_or_nl) (ncm2_snipmate#completed_is_snippet() ? "\<Plug>snipMateTrigger":"")
   imap <C-X><CR> <CR><Plug>AlwaysEnd
   imap <expr> <CR> (pumvisible() ? "\<C-Y>\<Plug>(expand_or_nl)" : <SID>complete_brackets()."\<Plug>DiscretionaryEnd")
+endif
+
+if has_key(g:plugs, 'coc.nvim')
+  imap <expr> <CR> (pumvisible() ? "\<C-Y>" : <SID>complete_brackets()."\<Plug>DiscretionaryEnd")
+  nmap <silent> <leader>gi <Plug>(coc-implementation)
+  nmap <silent> <leader>gr <Plug>(coc-references)
+  nmap <silent> <leader>gy <Plug>(coc-type-definition)
+  nmap <silent> <leader>gd <Plug>(coc-definition)
+
+  nmap <silent> <leader>rn <Plug>(coc-rename)
+  inoremap <silent><expr> <c-space> coc#refresh()
 endif
 
 " vim-go settings {{{2

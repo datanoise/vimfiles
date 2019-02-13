@@ -127,10 +127,10 @@ silent! if plug#begin('~/.vim/bundle')
 
   " snippets
   " ultisnips is very heavy plugin
-  Plug 'SirVer/ultisnips'
-  " Plug 'tomtom/tlib_vim'
-  " Plug 'marcweber/vim-addon-mw-utils'
-  " Plug 'garbas/vim-snipmate'
+  " Plug 'SirVer/ultisnips'
+  Plug 'tomtom/tlib_vim'
+  Plug 'marcweber/vim-addon-mw-utils'
+  Plug 'garbas/vim-snipmate'
   Plug 'honza/vim-snippets'
 
   Plug 'godlygeek/tabular',            { 'on': 'Tabularize' }
@@ -182,9 +182,6 @@ silent! if plug#begin('~/.vim/bundle')
   " Plug 'ncm2/ncm2-snipmate'
 
   Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
-  if !has('nvim')
-    Plug 'neoclide/vim-node-rpc'
-  endif
 
   if has('nvim')
     Plug 'mhartington/nvim-typescript'

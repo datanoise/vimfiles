@@ -28,6 +28,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-endwise'
   Plug 'tpope/vim-obsession'
   Plug 'tpope/vim-apathy'
+  Plug 'tpope/vim-bundler'
   Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
   Plug 'tpope/vim-dadbod', { 'on': 'DB' }
 
@@ -82,7 +83,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-crystal',        { 'for': ['crystal', 'html'] }
   Plug 'datanoise/vim-llvm',           { 'for': 'llvm' }
   Plug 'HerringtonDarkholme/yats.vim', { 'for': 'typescript' }
-  Plug 'python-mode/python-mode',      { 'for': 'python' }
+  Plug 'python-mode/python-mode',      { 'for': 'python', 'branch': 'develop' }
 
   if $GOPATH !=# ''
     " do not use lazy loading, cause it disables template function
@@ -128,9 +129,11 @@ silent! if plug#begin('~/.vim/bundle')
   " snippets
   " ultisnips is very heavy plugin
   " Plug 'SirVer/ultisnips'
-  Plug 'tomtom/tlib_vim'
-  Plug 'marcweber/vim-addon-mw-utils'
-  Plug 'garbas/vim-snipmate'
+  " Plug 'tomtom/tlib_vim'
+  " Plug 'marcweber/vim-addon-mw-utils'
+  " Plug 'garbas/vim-snipmate'
+  Plug 'Shougo/neosnippet.vim'
+  Plug 'Shougo/neosnippet-snippets'
   Plug 'honza/vim-snippets'
 
   Plug 'godlygeek/tabular',            { 'on': 'Tabularize' }
@@ -144,9 +147,11 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'majutsushi/tagbar'
   Plug 'flazz/vim-colorschemes'
   Plug 'ap/vim-css-color'
+  " Plug 'RRethy/vim-hexokinase'
   Plug 'datanoise/vim-localvimrc'
   Plug 'datanoise/vim-cmdline-complete'
-  Plug 'rhysd/conflict-marker.vim'
+  " Plug 'rhysd/conflict-marker.vim'
+  Plug 'rhysd/git-messenger.vim'
   Plug 'mhinz/vim-grepper'
   Plug 'janko-m/vim-test'
   Plug 'tweekmonster/exception.vim'
@@ -157,6 +162,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/bufexplorer'
   Plug 'vimwiki/vimwiki'
   Plug 'ervandew/supertab'
+  Plug 'lervag/vimtex'
 
   " Plug 'roxma/nvim-completion-manager'
   " Plug 'roxma/ncm-rct-complete'
@@ -168,20 +174,18 @@ silent! if plug#begin('~/.vim/bundle')
   "   Plug 'roxma/vim-hug-neovim-rpc'
   " endif
 
-  " Plug 'ncm2/ncm2'
-  " Plug 'roxma/nvim-yarp'
-  " Plug 'ncm2/ncm2-bufword'
-  " Plug 'ncm2/ncm2-tmux'
-  " Plug 'ncm2/ncm2-path'
-  " Plug 'ncm2/ncm2-cssomni'
-  " Plug 'ncm2/ncm2-tern'
-  " Plug 'ncm2/ncm2-jedi'
-  " Plug 'ncm2/ncm2-racer'
-  " Plug 'ncm2/ncm2-vim'
-  " Plug 'ncm2/ncm2-go'
-  " Plug 'ncm2/ncm2-snipmate'
+  Plug 'neoclide/coc.nvim' " , {'tag': '*', 'do': { -> coc#util#install()}}
 
-  Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
+  " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  " if !has('nvim')
+  "   Plug 'roxma/nvim-yarp'
+  "   Plug 'roxma/vim-hug-neovim-rpc'
+  " endif
+  " Plug 'sebastianmarkow/deoplete-rust'
+  " Plug 'deoplete-plugins/deoplete-go'
+  " Plug 'deoplete-plugins/deoplete-jedi'
+
+  Plug 'wellle/tmux-complete.vim'
 
   if has('nvim')
     Plug 'mhartington/nvim-typescript'
@@ -300,6 +304,14 @@ function! s:complete_brackets()
     return "\<CR>".l:b."\<C-O>O"
   else
     return "\<CR>"
+  endif
+endfunction
+
+function! Wildmenumode()
+  if match(&wildoptions, 'pum') != -1
+    return pumvisible()
+  else
+    return wildmenumode()
   endif
 endfunction
 
@@ -455,9 +467,9 @@ set ttimeoutlen=10  " Make Esc work faster
 " do not search included files and tags, it's a way too slow
 set complete-=i
 set complete-=t
-if has('nvim')
-  set pumblend=25
-endif
+" if has('nvim')
+"   set pumblend=25
+" endif
 " do not display :intro screen at startup
 set shortmess+=I
 set nofsync " don't spin my disk
@@ -563,8 +575,9 @@ nnoremap <silent> <leader>ct :!ctags --extra=+f -R *<CR><CR>
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
 " fugitive commands
 nnoremap <silent> <leader>gc :Gstatus<CR>
-nnoremap <silent> <leader>gh :Git push<CR>
-nnoremap <silent> <leader>gl :Git pull<CR>
+nnoremap <silent> <leader>gh :split<Bar>:terminal git push<CR>
+nnoremap <silent> <leader>gl :split<Bar>:terminal git pull<CR>
+au FileType fugitive nnoremap <buffer> <silent> q :<C-U>if bufnr('$') == 1<Bar>quit<Bar>else<Bar>bdelete<Bar>endif<CR>
 " quick search in visual mode
 xnoremap <silent> * :<C-u>call <SID>vset_search()<CR>/<C-R>=@/<CR><CR>
 xnoremap <silent> # :<C-u>call <SID>vset_search()<CR>?<C-R>=@/<CR><CR>
@@ -585,7 +598,7 @@ cnoremap <C-f> <Right>
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h'). '/' : '%%'
 " better <Tab> handling in wild menu mode
 set wildcharm=<C-Z>
-cnoremap <expr> <Tab> wildmenumode() ? "\<Right>" : "\<C-Z>"
+cnoremap <expr> <Tab> Wildmenumode() ? "\<Right>" : "\<C-Z>"
 " abbreviations
 cabbr vgf noau vimgrep //j<Left><Left><C-R>=Eatchar('\s')<CR>
 call CommandAlias('pu', 'PlugUpdate')
@@ -672,6 +685,7 @@ augroup VimSettings
   au!
   au FileType help nnoremap <silent> <buffer> q :helpclose<CR>
   au FileType qf nmap <silent> <buffer> q :q<CR>
+  au FileType qf set signcolumn=no
   au FileType help setlocal nospell iskeyword+=_
   au VimResized * wincmd =
 augroup END
@@ -901,6 +915,24 @@ if has_key(g:plugs, 'vim-snipmate')
   let g:snipMate.snippet_version = 1
 endif
 
+" neosnippet.vim settings {{{2
+if has_key(g:plugs, 'neosnippet.vim')
+  imap <C-j>     <Plug>(neosnippet_expand_or_jump)
+  smap <C-j>     <Plug>(neosnippet_expand_or_jump)
+  xmap <C-j>     <Plug>(neosnippet_expand_target)
+  " smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+  "       \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+  " For conceal markers.
+  if has('conceal')
+    set conceallevel=2 concealcursor=niv
+  endif
+
+  " Enable snipMate compatibility feature.
+  let g:neosnippet#enable_snipmate_compatibility = 1
+  " Tell Neosnippet about the other snippets
+  let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets'
+endif
+
 " nvim-completion-manager {{{2
 if has_key(g:plugs, 'nvim-completion-manager')
   " let g:cm_complete_start_delay = 200
@@ -930,6 +962,15 @@ if has_key(g:plugs, 'coc.nvim')
 
   nmap <silent> <leader>rn <Plug>(coc-rename)
   inoremap <silent><expr> <c-space> coc#refresh()
+endif
+
+if has_key(g:plugs, 'deoplete.nvim')
+  let g:deoplete#enable_at_startup = 1
+  imap <expr> <Plug>(expand_or_nl) (neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)":"")
+  imap <expr> <CR> (pumvisible() ? "\<C-Y>\<Plug>(expand_or_nl)" : <SID>complete_brackets()."\<Plug>DiscretionaryEnd")
+
+  call deoplete#custom#var('buffer', { 'require_same_filetype': 0 })
+  call deoplete#custom#option('auto_complete_delay', 600)
 endif
 
 " vim-go settings {{{2
@@ -1212,7 +1253,7 @@ if has_key(g:plugs, 'vim-grepper')
   let g:grepper.tools = ['rg', 'ag', 'grep']
   nmap <leader>gf <Plug>(GrepperOperator)
   xmap <leader>gf <Plug>(GrepperOperator)
-  nnoremap <leader>* :Grepper -cword -noprompt<CR>
+  nnoremap <leader>* :Grepper-buffer -cword -noprompt<CR>
   nnoremap [F :exe ':GrepperRg ' . expand('<cword>')<CR>
   nnoremap ]F :exe ':GrepperRg ' . matchstr(getline('.'), '\%'.virtcol('.').'v\w*')<CR>
   call CommandAlias('ag', 'GrepperAg')
@@ -1281,5 +1322,7 @@ let g:vim_jsx_pretty_colorful_config = 1
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
 let g:markdown_composer_autostart = 0
 let g:vimwiki_path = '~/.vimwiki/'
+let g:vimtex_compiler_progname = 'nvr'
+let g:Hexokinase_ftAutoload = ['css', 'scss', 'html', 'erb']
 
 " }}}

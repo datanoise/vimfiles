@@ -28,7 +28,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-endwise'
   Plug 'tpope/vim-obsession'
   Plug 'tpope/vim-apathy'
-  Plug 'tpope/vim-bundler'
+  " Plug 'tpope/vim-bundler'
   Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
   Plug 'tpope/vim-dadbod', { 'on': 'DB' }
 
@@ -158,7 +158,7 @@ silent! if plug#begin('~/.vim/bundle')
   " Plug 'easymotion/vim-easymotion'
   Plug 'mhinz/vim-randomtag'
   Plug 'machakann/vim-highlightedyank'
-  Plug 'rhysd/accelerated-jk'
+  " Plug 'rhysd/accelerated-jk'
   Plug 'datanoise/bufexplorer'
   Plug 'vimwiki/vimwiki'
   Plug 'ervandew/supertab'
@@ -575,8 +575,10 @@ nnoremap <silent> <leader>ct :!ctags --extra=+f -R *<CR><CR>
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
 " fugitive commands
 nnoremap <silent> <leader>gc :Gstatus<CR>
-nnoremap <silent> <leader>gh :split<Bar>:terminal git push<CR>
-nnoremap <silent> <leader>gl :split<Bar>:terminal git pull<CR>
+" nnoremap <silent> <leader>gh :split<Bar>:terminal git push<CR>
+" nnoremap <silent> <leader>gl :split<Bar>:terminal git pull<CR>
+nnoremap <silent> <leader>gh :Git push<CR>
+nnoremap <silent> <leader>gl :Git pull<CR>
 au FileType fugitive nnoremap <buffer> <silent> q :<C-U>if bufnr('$') == 1<Bar>quit<Bar>else<Bar>bdelete<Bar>endif<CR>
 " quick search in visual mode
 xnoremap <silent> * :<C-u>call <SID>vset_search()<CR>/<C-R>=@/<CR><CR>
@@ -1304,8 +1306,10 @@ endif
 let g:delimitMate_expand_space = 1
 let g:delimitMate_matchpairs = '(:),[:],{:}'
 
-nmap j <Plug>(accelerated_jk_gj)
-nmap k <Plug>(accelerated_jk_gk)
+if has_key(g:plugs, 'accelerated-jk')
+  nmap j <Plug>(accelerated_jk_gj)
+  nmap k <Plug>(accelerated_jk_gk)
+endif
 
 " python-mode settings {{{2
 let g:pymode_options = 0

@@ -76,7 +76,7 @@ cnoremap <silent> <f25> <c-\>e<SID>DoCmdFocusGained()<cr>
 " leaving the active window. I find this quite annoying, so instead we
 " disable this option in tmux for the current window and restore it upon
 " the exit from Vim.
-if exists("$TMUX")
+if 0 && exists("$TMUX")
   let s:g_monitor_activity = 0
   let s:w_monitor_activity = 0
   let s:w_monitor_activity_unset = 0

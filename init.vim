@@ -57,6 +57,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-jsx-pretty'
   Plug 'othree/html5.vim'
   Plug 'vim-ruby/vim-ruby'
+  Plug 'datanoise/vim-ruby-heredoc-syntax'
   " lazy loading for filetypes makes sense only for those that are not
   " included in the standard Vim distribution. Otherwise, Vim will load them
   " anyway, possibly very old version.
@@ -174,7 +175,7 @@ silent! if plug#begin('~/.vim/bundle')
   "   Plug 'roxma/vim-hug-neovim-rpc'
   " endif
 
-  Plug 'neoclide/coc.nvim' " , {'tag': '*', 'do': { -> coc#util#install()}}
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
   " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
   " if !has('nvim')
@@ -188,7 +189,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'wellle/tmux-complete.vim'
 
   if has('nvim')
-    Plug 'mhartington/nvim-typescript'
+    " Plug 'mhartington/nvim-typescript'
     Plug 'bfredl/nvim-miniyank'
     Plug 'datanoise/vim-dispatch-neovim'
   endif
@@ -494,14 +495,10 @@ augroup END
 " terminal settings
 tmap <F2> <C-\><C-n><F2>
 if has('nvim')
-  " augroup TermAutoInsert
-  "   au!
-  "   au TermOpen * startinsert
-  "   " au BufEnter term://* startinsert
-  " augroup END
   augroup TermEnter
     au!
-    au TermOpen * nnoremap <buffer> <Enter> i<Enter>
+    au TermOpen * nnoremap <buffer> <Enter> i
+    au TermOpen * set signcolumn=no
   augroup END
 
   if executable('nvr')
@@ -688,6 +685,7 @@ augroup VimSettings
   au FileType help nnoremap <silent> <buffer> q :helpclose<CR>
   au FileType qf nmap <silent> <buffer> q :q<CR>
   au FileType qf set signcolumn=no
+  au FileType fugitive set signcolumn=no
   au FileType help setlocal nospell iskeyword+=_
   au VimResized * wincmd =
 augroup END
@@ -1277,7 +1275,7 @@ endif
 
 " ale settings {{{2
 if has_key(g:plugs, 'ale')
-  " set signcolumn=yes
+  set signcolumn=yes
   let g:ale_lint_on_text_changed = 'never'
   let g:ale_lint_on_enter = 0
   let g:ale_rust_cargo_use_check = 1
@@ -1328,5 +1326,16 @@ let g:markdown_composer_autostart = 0
 let g:vimwiki_path = '~/.vimwiki/'
 let g:vimtex_compiler_progname = 'nvr'
 let g:Hexokinase_ftAutoload = ['css', 'scss', 'html', 'erb']
+let g:ruby_heredoc_syntax_filetypes = {
+      \ "xml": {
+      \   "start": "XML"
+      \ },
+      \ "html": {
+      \   "start": "HTML"
+      \ },
+      \ "sql": {
+      \   "start": "SQL"
+      \ },
+      \}
 
 " }}}

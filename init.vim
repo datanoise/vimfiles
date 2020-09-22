@@ -3,7 +3,8 @@ scriptencoding utf-8
 
 " Section: Global Setting {{{1
 " ------------------------------------------------------------------------------
-runtime! macros/matchit.vim
+packadd cfilter
+packadd matchit
 syntax on             " Enable syntax highlighting
 filetype on           " Enable filetype detection
 filetype indent on    " Enable filetype-specific indenting
@@ -48,7 +49,7 @@ silent! if plug#begin('~/.vim/bundle')
   end
 
   Plug 'AndrewRadev/splitjoin.vim', { 'on': ['SplitjoinJoin', 'SplitjoinSplit'] }
-  Plug 'AndrewRadev/sideways.vim',  { 'on': ['SidewaysLeft', 'SidewaysRight'] }
+  Plug 'AndrewRadev/sideways.vim' ",  { 'on': ['SidewaysLeft', 'SidewaysRight'] }
   Plug 'datanoise/switch.vim',      { 'on': 'Switch',
         \ 'for': ['ruby', 'eruby', 'php', 'haml', 'slim', 'cpp', 'javascript', 'coffee', 'clojure', 'scala', 'elixir', 'rust'] }
 
@@ -78,13 +79,14 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'hallison/vim-rdoc',            { 'for': 'rdoc' }
   Plug 'groenewege/vim-less',          { 'for': 'less' }
   Plug 'jneen/ragel.vim',              { 'for': 'ragel' }
-  Plug 'ajf/puppet-vim',               { 'for': 'puppet' }
+  " Plug 'ajf/puppet-vim',               { 'for': 'puppet' }
   Plug 'cespare/vim-toml',             { 'for': 'toml' }
   Plug 'elixir-editors/vim-elixir',    { 'for': ['elixir', 'eelixir'] }
   Plug 'datanoise/vim-crystal',        { 'for': ['crystal', 'html'] }
   Plug 'datanoise/vim-llvm',           { 'for': 'llvm' }
   Plug 'HerringtonDarkholme/yats.vim', { 'for': 'typescript' }
   Plug 'python-mode/python-mode',      { 'for': 'python', 'branch': 'develop' }
+  Plug 'JuliaEditorSupport/julia-vim', { 'for': 'julia' }
 
   if $GOPATH !=# ''
     " do not use lazy loading, cause it disables template function
@@ -192,6 +194,7 @@ silent! if plug#begin('~/.vim/bundle')
     " Plug 'mhartington/nvim-typescript'
     Plug 'bfredl/nvim-miniyank'
     Plug 'datanoise/vim-dispatch-neovim'
+    Plug 'neovim/nvim-lsp'
   endif
 
   call plug#end()
@@ -1188,6 +1191,14 @@ endif
 if has_key(g:plugs, 'sideways.vim')
   nnoremap <silent> <leader>< :<C-u>SidewaysLeft<CR>
   nnoremap <silent> <leader>> :<C-u>SidewaysRight<CR>
+  nmap <silent> <leader>si <Plug>SidewaysArgumentInsertBefore
+  nmap <silent> <leader>sa <Plug>SidewaysArgumentAppendAfter
+  nmap <silent> <leader>sI <Plug>SidewaysArgumentInsertFirst
+  nmap <silent> <leader>sA <Plug>SidewaysArgumentAppendLast
+  omap aa <Plug>SidewaysArgumentTextobjA
+  xmap aa <Plug>SidewaysArgumentTextobjA
+  omap ia <Plug>SidewaysArgumentTextobjI
+  xmap ia <Plug>SidewaysArgumentTextobjI
 endif
 
 " vim-surround settings {{{2
@@ -1275,7 +1286,7 @@ endif
 
 " ale settings {{{2
 if has_key(g:plugs, 'ale')
-  set signcolumn=yes
+  " set signcolumn=yes
   let g:ale_lint_on_text_changed = 'never'
   let g:ale_lint_on_enter = 0
   let g:ale_rust_cargo_use_check = 1
@@ -1325,6 +1336,7 @@ let g:filetype_m = 'objc' " always open *.m files with objc filetype
 let g:markdown_composer_autostart = 0
 let g:vimwiki_path = '~/.vimwiki/'
 let g:vimtex_compiler_progname = 'nvr'
+let g:tex_flavor = 'latex'
 let g:Hexokinase_ftAutoload = ['css', 'scss', 'html', 'erb']
 let g:ruby_heredoc_syntax_filetypes = {
       \ "xml": {

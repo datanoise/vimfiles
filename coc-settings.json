@@ -1,4 +1,5 @@
 {
   "diagnostic.displayByAle": true,
-  "coc.source.tag.priority": 0
+  "coc.source.tag.priority": 0,
+  "coc.source.buffer.priority": 10
 }

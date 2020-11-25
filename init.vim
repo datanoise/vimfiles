@@ -84,7 +84,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'elixir-editors/vim-elixir',    { 'for': ['elixir', 'eelixir'] }
   Plug 'datanoise/vim-crystal',        { 'for': ['crystal', 'html'] }
   Plug 'datanoise/vim-llvm',           { 'for': 'llvm' }
-  Plug 'HerringtonDarkholme/yats.vim', { 'for': 'typescript' }
+  " Plug 'HerringtonDarkholme/yats.vim', { 'for': 'typescript' }
   Plug 'python-mode/python-mode',      { 'for': 'python', 'branch': 'develop' }
   Plug 'JuliaEditorSupport/julia-vim', { 'for': 'julia' }
 
@@ -194,7 +194,7 @@ silent! if plug#begin('~/.vim/bundle')
     " Plug 'mhartington/nvim-typescript'
     Plug 'bfredl/nvim-miniyank'
     Plug 'datanoise/vim-dispatch-neovim'
-    Plug 'neovim/nvim-lsp'
+    " Plug 'neovim/nvim-lsp'
   endif
 
   call plug#end()
@@ -501,7 +501,7 @@ if has('nvim')
   augroup TermEnter
     au!
     au TermOpen * nnoremap <buffer> <Enter> i
-    au TermOpen * set signcolumn=no
+    au TermOpen * setlocal signcolumn=no
   augroup END
 
   if executable('nvr')
@@ -687,8 +687,7 @@ augroup VimSettings
   au!
   au FileType help nnoremap <silent> <buffer> q :helpclose<CR>
   au FileType qf nmap <silent> <buffer> q :q<CR>
-  au FileType qf set signcolumn=no
-  au FileType fugitive set signcolumn=no
+  au FileType fugitive,qf,gitcommit setlocal signcolumn=no
   au FileType help setlocal nospell iskeyword+=_
   au VimResized * wincmd =
 augroup END
@@ -1228,6 +1227,7 @@ endif
 
 " fzf plugin & settings {{{2
 if !has('gui_running') && isdirectory('/usr/local/opt/fzf')
+  let g:fzf_preview_window = ''
   execute 'cnoremap <M-t> FZF '
   execute 'nnoremap <M-t> :FZF '
   call CommandAlias('fzf', 'FZF')
@@ -1286,7 +1286,7 @@ endif
 
 " ale settings {{{2
 if has_key(g:plugs, 'ale')
-  " set signcolumn=yes
+  set signcolumn=yes
   let g:ale_lint_on_text_changed = 'never'
   let g:ale_lint_on_enter = 0
   let g:ale_rust_cargo_use_check = 1

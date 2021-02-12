@@ -43,10 +43,8 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'junegunn/gv.vim',         { 'on': 'GV' }
   Plug 'justinmk/vim-dirvish'
   Plug 'junegunn/vader.vim'
-  if !has('gui_running') && isdirectory('/usr/local/opt/fzf')
-    Plug '/usr/local/opt/fzf'
-    Plug 'junegunn/fzf.vim'
-  end
+  Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+  Plug 'junegunn/fzf.vim'
 
   Plug 'AndrewRadev/splitjoin.vim', { 'on': ['SplitjoinJoin', 'SplitjoinSplit'] }
   Plug 'AndrewRadev/sideways.vim' ",  { 'on': ['SidewaysLeft', 'SidewaysRight'] }
@@ -1226,7 +1224,7 @@ if has_key(g:plugs, 'nvim-miniyank')
 endif
 
 " fzf plugin & settings {{{2
-if !has('gui_running') && isdirectory('/usr/local/opt/fzf')
+if has_key(g:plugs, 'fzf.vim')
   let g:fzf_preview_window = ''
   execute 'cnoremap <M-t> FZF '
   execute 'nnoremap <M-t> :FZF '

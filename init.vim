@@ -574,7 +574,7 @@ nnoremap <silent> <leader>ct :!ctags --extra=+f -R *<CR><CR>
 " insert modeline
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
 " fugitive commands
-nnoremap <silent> <leader>gc :Gstatus<CR>
+nnoremap <silent> <leader>gc :Git<CR>
 " nnoremap <silent> <leader>gh :split<Bar>:terminal git push<CR>
 " nnoremap <silent> <leader>gl :split<Bar>:terminal git pull<CR>
 nnoremap <silent> <leader>gh :Git push<CR>
@@ -1209,7 +1209,7 @@ endif
 " undotree settings {{{2
 if has_key(g:plugs, 'undotree')
   let g:undotree_WindowLayout = 2
-  nnoremap <silent> U :UndotreeToggle<CR>
+  nnoremap <silent> gU :UndotreeToggle<CR>
 endif
 
 " switch.vim settings {{{2
@@ -1269,6 +1269,7 @@ if has_key(g:plugs, 'vim-grepper')
   nnoremap ]F :exe ':GrepperRg ' . matchstr(getline('.'), '\%'.virtcol('.').'v\w*')<CR>
   call CommandAlias('ag', 'GrepperAg')
   call CommandAlias('rg', 'GrepperRg')
+  call CommandAlias('rgr', 'GrepperRg -t ruby')
   call CommandAlias('grep', 'GrepperGrep')
 endif
 

@@ -77,7 +77,7 @@ hi PreProc  term=underline ctermfg=darkblue guifg=dodgerblue4
 hi Constant term=underline ctermfg=213 guifg=#bc6c9c
 hi Type     term=underline ctermfg=darkgreen gui=none guifg=chartreuse3
 hi Statement    term=bold ctermfg=darkyellow gui=none guifg=gold3
-hi Operator     term=bold ctermfg=magenta gui=none guifg=LawnGreen
+hi Operator     term=bold ctermfg=magenta gui=none guifg=bisque1
 hi Identifier   term=underline ctermfg=darkgreen guifg=darkolivegreen4
 hi Ignore   term=bold ctermfg=darkgray guifg=gray45
 hi Special  term=underline ctermfg=brown guifg=sienna
@@ -86,6 +86,9 @@ hi Todo     term=standout ctermfg=black ctermbg=yellow gui=bold guifg=gray10 gui
 hi Underlined   term=underline cterm=underline ctermfg=darkblue gui=underline guifg=slateblue
 hi Number   term=underline ctermfg=darkred guifg=red2
 hi Symbol guifg=#ff6050 guibg=NONE gui=NONE
+
+hi ALEVirtualTextWarning  term=underline cterm=underline ctermfg=208 gui=underline guifg=orange
+hi ALEVirtualTextError  term=underline cterm=underline ctermfg=202 gui=underline guifg=red
 " syntax hi links
 hi link String      Constant
 hi link Character   Constant

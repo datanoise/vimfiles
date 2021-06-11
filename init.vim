@@ -35,7 +35,6 @@ silent! if plug#begin('~/.vim/bundle')
 
   Plug 'scrooloose/nerdtree',  { 'on': 'NERDTreeToggle' }
   Plug 'w0rp/ale'
-  " Plug 'vim-syntastic/syntastic'
 
   Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign'] }
   Plug 'junegunn/goyo.vim'
@@ -47,8 +46,8 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'junegunn/fzf.vim'
 
   Plug 'AndrewRadev/splitjoin.vim', { 'on': ['SplitjoinJoin', 'SplitjoinSplit'] }
-  Plug 'AndrewRadev/sideways.vim' ",  { 'on': ['SidewaysLeft', 'SidewaysRight'] }
-  Plug 'datanoise/switch.vim',      { 'on': 'Switch',
+  Plug 'AndrewRadev/sideways.vim' ", { 'on': ['SidewaysLeft', 'SidewaysRight'] }
+  Plug 'datanoise/switch.vim', { 'on': 'Switch',
         \ 'for': ['ruby', 'eruby', 'php', 'haml', 'slim', 'cpp', 'javascript', 'coffee', 'clojure', 'scala', 'elixir', 'rust'] }
 
   " file types
@@ -165,34 +164,20 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'ervandew/supertab'
   Plug 'lervag/vimtex'
 
-  " Plug 'roxma/nvim-completion-manager'
-  " Plug 'roxma/ncm-rct-complete'
-  " Plug 'roxma/nvim-cm-racer'
-  " Plug 'calebeby/ncm-css'
-  " Plug 'fgrsnau/ncm-otherbuf'
-  " Plug 'Shougo/neco-vim'
-  " if !has('nvim')
-  "   Plug 'roxma/vim-hug-neovim-rpc'
-  " endif
-
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
-  " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-  " if !has('nvim')
-  "   Plug 'roxma/nvim-yarp'
-  "   Plug 'roxma/vim-hug-neovim-rpc'
-  " endif
-  " Plug 'sebastianmarkow/deoplete-rust'
-  " Plug 'deoplete-plugins/deoplete-go'
-  " Plug 'deoplete-plugins/deoplete-jedi'
-
   Plug 'wellle/tmux-complete.vim'
 
   if has('nvim')
     " Plug 'mhartington/nvim-typescript'
     Plug 'bfredl/nvim-miniyank'
     Plug 'datanoise/vim-dispatch-neovim'
-    " Plug 'neovim/nvim-lsp'
+
+    " Plug 'neovim/nvim-lspconfig'
+    " Plug 'kabouzeid/nvim-lspinstall'
+
+    " Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+    " Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+    " Plug 'nvim-treesitter/playground'
   endif
 
   call plug#end()
@@ -1292,7 +1277,7 @@ if has_key(g:plugs, 'ale')
   let g:ale_rust_rls_toolchain = 'stable'
   let g:ale_set_highlights = 0
   let g:ale_linters = {
-        \ 'ruby': ['ruby'],
+        \ 'ruby': ['ruby', 'rubocop'],
         \ 'rust': ['cargo'],
         \ 'go': ['go build', 'govet'],
         \ 'javascript': ['eslint'],
@@ -1308,6 +1293,8 @@ if has_key(g:plugs, 'ale')
   " let g:ale_completion_enabled = 1
   " let g:ale_completion_experimental_lsp_support = 1
   " let g:ale_completion_delay = 1000
+  let g:ale_virtualtext_cursor = 1
+  let g:ale_virtualtext_delay = 5
 endif
 
 " delimitMate settings {{{2
@@ -1326,7 +1313,47 @@ let g:pymode_rope = 0
 let g:pymode_lint = 0
 let g:pymode_lint_on_write = 0
 
+" treesitter settings {{{2
+if has_key(g:plugs, 'nvim-treesitter')
+lua <<EOF
+  require'nvim-treesitter.configs'.setup {
+    ensure_installed = "maintained",
+    highlight = {
+      enable = true,
+      disable = {"ruby"}
+    },
+    incremental_selection = {
+      enable = true,
+      keymaps = {
+        init_selection = "gnn",
+        node_incremental = "grn",
+        scope_incremental = "grc",
+        node_decremental = "grm",
+      },
+    },
+    indent = {
+      enable = true,
+      disable = {"ruby"}
+    },
+  }
+EOF
+endif
+
+" lspconfig settings {{{2
+if has_key(g:plugs, 'nvim-lspconfig')
+lua <<EOF
+  require'lspconfig'.pyright.setup{}
+
+  require'lspinstall'.setup()
+  local servers = require'lspinstall'.installed_servers()
+  for _, server in pairs(servers) do
+    require'lspconfig'[server].setup{}
+  end
+EOF
+endif
+
 " Misc settings {{{2
+let ruby_pseudo_operators = 1
 let g:c_comment_strings = 1 " I like highlighting strings inside C comments
 let g:xml_syntax_folding = 1 " enable folding in xml files
 let g:racer_cmd = 'racer'

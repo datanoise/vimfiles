@@ -76,14 +76,13 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'hallison/vim-rdoc',            { 'for': 'rdoc' }
   Plug 'groenewege/vim-less',          { 'for': 'less' }
   Plug 'jneen/ragel.vim',              { 'for': 'ragel' }
-  " Plug 'ajf/puppet-vim',               { 'for': 'puppet' }
   Plug 'cespare/vim-toml',             { 'for': 'toml' }
   Plug 'elixir-editors/vim-elixir',    { 'for': ['elixir', 'eelixir'] }
   Plug 'datanoise/vim-crystal',        { 'for': ['crystal', 'html'] }
   Plug 'datanoise/vim-llvm',           { 'for': 'llvm' }
-  " Plug 'HerringtonDarkholme/yats.vim', { 'for': 'typescript' }
   Plug 'python-mode/python-mode',      { 'for': 'python', 'branch': 'develop' }
   Plug 'JuliaEditorSupport/julia-vim', { 'for': 'julia' }
+  Plug 'easymotion/vim-easymotion'
 
   if $GOPATH !=# ''
     " do not use lazy loading, cause it disables template function
@@ -147,18 +146,14 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'majutsushi/tagbar'
   Plug 'flazz/vim-colorschemes'
   Plug 'ap/vim-css-color'
-  " Plug 'RRethy/vim-hexokinase'
   Plug 'datanoise/vim-localvimrc'
   Plug 'datanoise/vim-cmdline-complete'
-  " Plug 'rhysd/conflict-marker.vim'
   Plug 'rhysd/git-messenger.vim'
   Plug 'mhinz/vim-grepper'
   Plug 'janko-m/vim-test'
   Plug 'tweekmonster/exception.vim'
-  " Plug 'easymotion/vim-easymotion'
   Plug 'mhinz/vim-randomtag'
   Plug 'machakann/vim-highlightedyank'
-  " Plug 'rhysd/accelerated-jk'
   Plug 'datanoise/bufexplorer'
   Plug 'vimwiki/vimwiki'
   Plug 'ervandew/supertab'
@@ -1149,7 +1144,7 @@ endif
 
 " splitjoin settings {{{2
 if has_key(g:plugs, 'splitjoin.vim')
-  nnoremap <silent> <leader>ss :SplitjoinSplit<CR>
+  nnoremap <silent> <leader>sp :SplitjoinSplit<CR>
   nnoremap <silent> <leader>sj :SplitjoinJoin<CR>
 endif
 
@@ -1277,7 +1272,7 @@ if has_key(g:plugs, 'ale')
   let g:ale_rust_rls_toolchain = 'stable'
   let g:ale_set_highlights = 0
   let g:ale_linters = {
-        \ 'ruby': ['ruby', 'rubocop'],
+        \ 'ruby': ['ruby'],
         \ 'rust': ['cargo'],
         \ 'go': ['go build', 'govet'],
         \ 'javascript': ['eslint'],

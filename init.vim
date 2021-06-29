@@ -1002,6 +1002,10 @@ if has_key(g:plugs, 'lightline.vim')
   set noshowmode
   let g:lightline = {
         \ 'colorscheme': 'datanoise',
+        \ 'enable': {
+        \   'statusline': 1,
+        \   'tabline': 1,
+        \ },
         \ 'active': {
         \   'left': [ [ 'mode', 'paste' ],
         \             [ 'gitbranch', 'readonly', 'filename', 'modified', 'spell'],

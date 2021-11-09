@@ -747,6 +747,11 @@ augroup XmlSettings
   au FileType xml setlocal foldmethod=syntax
 augroup END
 
+augroup JsonSettings
+  au!
+  au FileType json setlocal conceallevel=0
+augroup END
+
 " Section: Plugin settings {{{1
 " ------------------------------------------------------------------------------
 " Tagbar settings  {{{2

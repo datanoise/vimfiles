@@ -10,6 +10,10 @@ filetype on           " Enable filetype detection
 filetype indent on    " Enable filetype-specific indenting
 filetype plugin on    " Enable filetype-specific plugins
 
+if has('nvim') && exists('$SYSTEM_PYTHON')
+  let g:python3_host_prog = $SYSTEM_PYTHON
+endif
+
 " Section: Plugins {{{1
 silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-repeat'
@@ -316,7 +320,11 @@ else
   set backupdir=/tmp
   set directory=/tmp
 endif
-set undodir=~/tmp/undofile
+if has('nvim')
+  set undodir=~/tmp/vimundo/nvim
+else
+  set undodir=~/tmp/vimundo/vim
+end
 set undofile
 set history=1000
 " to avoid error with crontab -e
@@ -1161,6 +1169,8 @@ endif
 if has_key(g:plugs, 'vim-commentary')
   map  gc  <Plug>Commentary
   nmap gcc <Plug>CommentaryLine
+  map  g/  <Plug>Commentary
+  nmap g/ <Plug>CommentaryLine
 end
 
 " bufexplorer settings {{{2
@@ -1222,6 +1232,8 @@ if has_key(g:plugs, 'fzf.vim')
   nnoremap <silent> <Leader>l :Buffers<CR>
   nnoremap <silent> <Leader>n :BTag<CR>
   nnoremap <silent> <Leader>E :History<CR>
+  nnoremap <silent> <Leader>B :BCommits<CR>
+  nnoremap <silent> <Leader>C :Commits<CR>
 
   function! s:fzf_statusline()
     hi! fzf1 ctermfg=darkyellow ctermbg=242 guifg=gold3 guibg=#202020 gui=none

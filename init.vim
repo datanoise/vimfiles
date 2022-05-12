@@ -164,7 +164,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'lervag/vimtex'
 
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
-  Plug 'wellle/tmux-complete.vim'
+  " Plug 'wellle/tmux-complete.vim'
 
   if has('nvim')
     " Plug 'mhartington/nvim-typescript'
@@ -1075,8 +1075,8 @@ if has_key(g:plugs, 'lightline.vim')
   endfunction
 
   function! LightlineFugitive()
-    if exists('*fugitive#head')
-      let l:branch = fugitive#head()
+    if exists('*FugitiveHead')
+      let l:branch = FugitiveHead()
       return l:branch !=# '' ? '⭠ '.l:branch : ''
     endif
     return ''

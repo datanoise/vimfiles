@@ -20,9 +20,9 @@ endif
 " change the cursor shape based on the current mode
 " unfortunately, any mappings in the insert mode that change mode
 " will cause annoying cursor flickering. so disabling it for now.
-if 0 && has('cursorshape')
-  let &t_SI = "\<Esc>[3 q"
-  let &t_EI = "\<Esc>[0 q"
+if !has('nvim') && has('cursorshape')
+  let &t_SI = "\e[6 q"
+  let &t_EI = "\e[2 q"
 endif
 
 " allow iTerm to report FocusGained FocusLost events

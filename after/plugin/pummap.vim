@@ -1,4 +1,8 @@
 " keyword completion on <Tab>
+if has_key(g:plugs, 'coc.nvim')
+  finish
+endif
+
 if maparg('<Tab>','i') !=# ''
   exe 'imap <Plug>NoPumTab ' . maparg('<Tab>', 'i')
   exe 'imap <Plug>NoPumSTab ' . maparg('<S-Tab>', 'i')

@@ -135,7 +135,7 @@ silent! if plug#begin('~/.vim/bundle')
   " Plug 'tomtom/tlib_vim'
   " Plug 'marcweber/vim-addon-mw-utils'
   " Plug 'garbas/vim-snipmate'
-  Plug 'Shougo/neosnippet.vim'
+  " Plug 'Shougo/neosnippet.vim'
   Plug 'Shougo/neosnippet-snippets'
   Plug 'honza/vim-snippets'
 
@@ -160,7 +160,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'machakann/vim-highlightedyank'
   Plug 'datanoise/bufexplorer'
   Plug 'vimwiki/vimwiki'
-  Plug 'ervandew/supertab'
+  " Plug 'ervandew/supertab'
   Plug 'lervag/vimtex'
 
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -493,6 +493,10 @@ if has('nvim')
   if executable('nvr')
     let $EDITOR = "nvr -cc split --remote-wait +'set bufhidden=wipe'"
   endif
+endif
+if !has('nvim') && has('cursorshape')
+  let &t_SI = "\e[6 q"
+  let &t_EI = "\e[2 q"
 endif
 
 "}}}
@@ -861,7 +865,7 @@ if has_key(g:plugs, 'ctrlp.vim')
   " nnoremap <silent> <leader>l :CtrlPBuffer<CR>
   " nnoremap <silent> <leader>r :CtrlPRoot<CR>
   " nnoremap <silent> <leader>x :CtrlPMixed<CR>
-  nnoremap <silent> <leader>e :CtrlPMRUFiles<CR>
+  nnoremap <silent> <leader>ke :CtrlPMRUFiles<CR>
   nnoremap <silent> <leader>kn :CtrlPBufTag<CR>
   nnoremap <silent> <leader>kf :CtrlPCurFile<CR>
   nnoremap <silent> <leader>kb :CtrlPBuffer<CR>
@@ -947,7 +951,22 @@ if has_key(g:plugs, 'ncm2')
 endif
 
 if has_key(g:plugs, 'coc.nvim')
-  imap <expr> <CR> (pumvisible() ? "\<C-Y>" : <SID>complete_brackets()."\<Plug>DiscretionaryEnd")
+  imap <expr> <CR> (coc#pum#visible() ? coc#_select_confirm() : <SID>complete_brackets()."\<Plug>DiscretionaryEnd")
+
+  inoremap <silent><expr> <TAB>
+    \ coc#pum#visible() ? coc#pum#next(0) :
+    \ coc#expandableOrJumpable() ?
+    \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+    \ <SID>check_back_space() ? "\<TAB>" :
+    \ coc#refresh()
+  inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(0) : "\<C-h>"
+  let g:coc_snippet_next = '<tab>'
+
+  function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
+  endfunction
+
   nmap <silent> <leader>gi <Plug>(coc-implementation)
   nmap <silent> <leader>gr <Plug>(coc-references)
   nmap <silent> <leader>gy <Plug>(coc-type-definition)
@@ -1229,9 +1248,10 @@ if has_key(g:plugs, 'fzf.vim')
   execute 'nnoremap <M-t> :FZF '
   call CommandAlias('fzf', 'FZF')
   nnoremap <silent> <Leader>m :Files<CR>
+  nnoremap <silent> <Leader>F :Files %:h<CR>
   nnoremap <silent> <Leader>l :Buffers<CR>
   nnoremap <silent> <Leader>n :BTag<CR>
-  nnoremap <silent> <Leader>E :History<CR>
+  nnoremap <silent> <Leader>e :History<CR>
   nnoremap <silent> <Leader>B :BCommits<CR>
   nnoremap <silent> <Leader>C :Commits<CR>
 

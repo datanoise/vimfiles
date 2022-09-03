@@ -65,7 +65,7 @@ hi PmenuSbar    guifg=NONE          guibg=#555555       gui=NONE
             \   ctermfg=black       ctermbg=black       cterm=NONE
 hi PmenuThumb   guifg=NONE          guibg=#cccccc       gui=NONE
             \   ctermfg=gray        ctermbg=gray        cterm=NONE
-hi Pmenu        guifg=#f6f3e8       guibg=#444444       gui=NONE
+hi Pmenu        guifg=#f6f3e8       guibg=#202020       gui=NONE
             \   ctermfg=NONE        ctermbg=NONE        cterm=NONE
 hi PmenuSel     guifg=#000000       guibg=#cae682       gui=NONE
             \   ctermfg=NONE        ctermbg=NONE        cterm=NONE
@@ -90,26 +90,28 @@ hi Symbol guifg=#ff6050 guibg=NONE gui=NONE
 hi ALEVirtualTextWarning  term=underline cterm=underline ctermfg=208 gui=underline guifg=orange
 hi ALEVirtualTextError  term=underline cterm=underline ctermfg=202 gui=underline guifg=red
 " syntax hi links
-hi link String      Constant
-hi link Character   Constant
-hi link Number      Constant
-hi link Boolean     Constant
-hi link Float       Number
-hi link Function    Identifier
-hi link Conditional Statement
-hi link Repeat      Statement
-hi link Label       Statement
-hi link Keyword     Statement
-hi link Exception   Statement
-hi link Include     PreProc
-hi link Define      PreProc
-hi link Macro       PreProc
-hi link PreCondit   PreProc
-hi link StorageClass    Type
-hi link Structure   Type
-hi link Typedef     Type
-hi link Tag     Special
-hi link SpecialChar Special
-hi link Delimiter   Special
-hi link SpecialComment  Special
-hi link Debug       Special
+hi link String         Constant
+hi link Character      Constant
+hi link Number         Constant
+hi link Boolean        Constant
+hi link Float          Number
+hi link Function       Identifier
+hi link Conditional    Statement
+hi link Repeat         Statement
+hi link Label          Statement
+hi link Keyword        Statement
+hi link Exception      Statement
+hi link Include        PreProc
+hi link Define         PreProc
+hi link Macro          PreProc
+hi link PreCondit      PreProc
+hi link StorageClass   Type
+hi link Structure      Type
+hi link Typedef        Type
+hi link Tag            Special
+hi link SpecialChar    Special
+hi link Delimiter      Special
+hi link SpecialComment Special
+hi link Debug          Special
+hi link CocPumMenu     Pmenu
+hi link CocMenuSel     PmenuSel

@@ -86,7 +86,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-llvm',           { 'for': 'llvm' }
   Plug 'python-mode/python-mode',      { 'for': 'python', 'branch': 'develop' }
   Plug 'JuliaEditorSupport/julia-vim', { 'for': 'julia' }
-  Plug 'easymotion/vim-easymotion'
 
   if $GOPATH !=# ''
     " do not use lazy loading, cause it disables template function
@@ -147,7 +146,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'airblade/vim-gitgutter',       { 'on': ['GitGutterToggle', 'GitGutterEnable'] }
 
   Plug 'Raimondi/delimitMate'
-  Plug 'majutsushi/tagbar'
   Plug 'flazz/vim-colorschemes'
   Plug 'ap/vim-css-color'
   Plug 'datanoise/vim-localvimrc'
@@ -160,6 +158,8 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'machakann/vim-highlightedyank'
   Plug 'datanoise/bufexplorer'
   Plug 'vimwiki/vimwiki'
+  Plug 'easymotion/vim-easymotion'
+  Plug 'junegunn/seoul256.vim'
   " Plug 'ervandew/supertab'
   Plug 'lervag/vimtex'
 
@@ -174,9 +174,22 @@ silent! if plug#begin('~/.vim/bundle')
     " Plug 'neovim/nvim-lspconfig'
     " Plug 'kabouzeid/nvim-lspinstall'
 
-    " Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-    " Plug 'nvim-treesitter/nvim-treesitter-textobjects'
-    " Plug 'nvim-treesitter/playground'
+    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+    Plug 'nvim-treesitter/nvim-treesitter-context'
+    Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+    Plug 'nvim-treesitter/playground'
+    Plug 'p00f/nvim-ts-rainbow'
+    Plug 'folke/twilight.nvim'
+    " Plug 'windwp/nvim-ts-autotag'
+
+    " Plug 'liuchengxu/vista.vim'
+    " Plug 'numToStr/Comment.nvim'
+
+    " Plug 'nvim-lua/plenary.nvim'
+    " Plug 'nvim-telescope/telescope.nvim'
+  else
+    Plug 'majutsushi/tagbar'
+    Plug 'tmux-plugins/vim-tmux-focus-events'
   endif
 
   call plug#end()
@@ -394,6 +407,13 @@ set fillchars+=vert:\|
 set wildmenu
 set wildmode=longest:full
 set wildignore=*.o,*.bundle,*.png,*.jpg,*.gif,*.class,*.log,*.beam,*.a,*.rlib,*.iml
+if exists('&wildoptions')
+  if has('nvim')
+    set wildoptions=pum
+  else
+    set wildoptions=pum,fuzzy
+  endif
+endif
 set showcmd
 " }}}
 " mouse options {{{2
@@ -668,10 +688,10 @@ augroup SpellSettings
   au FileType gitcommit,markdown,mkd,text setlocal spell
 augroup END
 
-augroup TabCompletion
-  au!
-  au FileType xml,html,vue,eruby call s:enableTagComplete()
-augroup END
+" augroup TabCompletion
+"   au!
+"   au FileType xml,html,vue,eruby call s:enableTagComplete()
+" augroup END
 
 augroup VimSettings
   au!
@@ -767,21 +787,25 @@ augroup END
 " Section: Plugin settings {{{1
 " ------------------------------------------------------------------------------
 " Tagbar settings  {{{2
-let g:tagbar_left      = 1
-let g:tagbar_width     = 30
-let g:tagbar_autoclose = 1
-let g:tagbar_autofocus = 1
-let g:tagbar_sort = 0
-nnoremap <silent> \t  :TagbarToggle<CR>
+if has_key(g:plugs, 'tagbar')
+  let g:tagbar_left      = 1
+  let g:tagbar_width     = 30
+  let g:tagbar_autoclose = 1
+  let g:tagbar_autofocus = 1
+  let g:tagbar_sort = 0
+  nnoremap <silent> \t  :TagbarToggle<CR>
+endif
 
 " NERD_tree settings {{{2
-let g:NERDTreeQuitOnOpen        = 1 " Close NERDTree when a file is opened
-let g:NERDTreeHijackNetrw       = 0
-let g:NERDTreeIgnore            = ['\.o$', '\~$', '\.class$']
-let g:NERDTreeMinimalUI         = 0
-let g:NERDTreeDirArrows         = 1
-let g:NERDTreeRespectWildIgnore = 1
-nnoremap <silent> <leader>f  :exec 'NERDTree' . expand('%:p:h')<CR>
+if has_key(g:plugs, 'nerdtree')
+  let g:NERDTreeQuitOnOpen        = 1 " Close NERDTree when a file is opened
+  let g:NERDTreeHijackNetrw       = 0
+  let g:NERDTreeIgnore            = ['\.o$', '\~$', '\.class$']
+  let g:NERDTreeMinimalUI         = 0
+  let g:NERDTreeDirArrows         = 1
+  let g:NERDTreeRespectWildIgnore = 1
+  nnoremap <silent> <leader>f  :exec 'NERDTree' . expand('%:p:h')<CR>
+endif
 
 " rubycomplete plugin settings {{{2
 let g:rubycomplete_buffer_loading    = 1
@@ -950,17 +974,15 @@ if has_key(g:plugs, 'ncm2')
   imap <expr> <CR> (pumvisible() ? "\<C-Y>\<Plug>(expand_or_nl)" : <SID>complete_brackets()."\<Plug>DiscretionaryEnd")
 endif
 
+" coc.nvim {{{2
 if has_key(g:plugs, 'coc.nvim')
-  imap <expr> <CR> (coc#pum#visible() ? coc#_select_confirm() : <SID>complete_brackets()."\<Plug>DiscretionaryEnd")
-
   inoremap <silent><expr> <TAB>
-    \ coc#pum#visible() ? coc#pum#next(0) :
-    \ coc#expandableOrJumpable() ?
-    \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-    \ <SID>check_back_space() ? "\<TAB>" :
-    \ coc#refresh()
-  inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(0) : "\<C-h>"
-  let g:coc_snippet_next = '<tab>'
+        \ coc#pum#visible() ? coc#pum#next(1):
+        \ <SID>check_back_space() ? "\<Tab>" :
+        \ coc#refresh()
+  inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+  let g:coc_snippet_next = '<c-j>'
+  imap <expr> <CR> (coc#pum#visible() ? coc#pum#confirm() : <SID>complete_brackets()."\<Plug>DiscretionaryEnd")
 
   function! s:check_back_space() abort
     let col = col('.') - 1
@@ -976,6 +998,15 @@ if has_key(g:plugs, 'coc.nvim')
   inoremap <silent><expr> <c-space> coc#refresh()
 endif
 
+" vista.vim {{{2
+if has_key(g:plugs, 'vista.vim')
+  if has_key(g:plugs, 'coc.nvim')
+    let g:vista_default_executive = 'coc'
+  endif
+  autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
+endif
+
+" deoplete.nvim  {{{2
 if has_key(g:plugs, 'deoplete.nvim')
   let g:deoplete#enable_at_startup = 1
   imap <expr> <Plug>(expand_or_nl) (neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)":"")
@@ -1055,7 +1086,7 @@ if has_key(g:plugs, 'lightline.vim')
         \   'filename': 'LightlineFilename',
         \   'readonly': 'LightlineReadonly',
         \   'ctrlpmark': 'CtrlPMark',
-        \   'current_tag': 'TagbarCurrentTag',
+        \   'current_tag': 'CurrentTag',
         \ },
         \ 'component_expand': {
         \   'gitbranch': 'LightlineFugitive',
@@ -1132,6 +1163,10 @@ if has_key(g:plugs, 'lightline.vim')
     return lightline#statusline(0)
   endfunction
 
+  function! VistaCurrentMethod() abort
+    return get(b:, 'vista_nearest_method_or_function', '')
+  endfunction
+
   let g:tagbar_status_func = 'TagbarStatusFunc'
 
   function! TagbarStatusFunc(current, sort, fname, ...) abort
@@ -1158,6 +1193,42 @@ if has_key(g:plugs, 'lightline.vim')
     endif
     return s:tagbar_last_updated_val
   endfunction
+
+  if has_key(g:plugs, 'tagbar')
+    function! CurrentTag() abort
+      return TagbarCurrentTag()
+    endfunction
+  elseif has_key(g:plugs, 'vista.vim')
+    function! CurrentTag()
+      return VistaCurrentMethod()
+    endfunction
+  elseif has_key(g:plugs, 'nvim-treesitter')
+    function! CurrentTag()
+lua <<EOF
+    local transform_line = function(line)
+      local l = line:gsub("%s*[%[%(%{]*%s*$", "")
+      return l:gsub("%s+", " ")
+    end
+    function _G.current_tag()
+      return require'nvim-treesitter.statusline'.statusline({
+        type_patterns = {"method"},
+        transform_fn = transform_line
+      })
+    end
+EOF
+      let res = v:lua.current_tag()
+      if res == v:null
+        return ''
+      else
+        return res
+      endif
+    endfunction
+  else
+    function! CurrentTag()
+      return ''
+    endfunction
+  endif
+
   let g:lightline#ale#indicator_ok = '✓'
   let g:lightline#ale#indicator_checking = '⦿'
 endif
@@ -1353,7 +1424,7 @@ let g:pymode_lint_on_write = 0
 if has_key(g:plugs, 'nvim-treesitter')
 lua <<EOF
   require'nvim-treesitter.configs'.setup {
-    ensure_installed = "maintained",
+    ensure_installed = { "c", "lua", "rust", "ruby" },
     highlight = {
       enable = true,
       disable = {"ruby"}
@@ -1371,7 +1442,19 @@ lua <<EOF
       enable = true,
       disable = {"ruby"}
     },
+    rainbow = {
+      enable = true,
+      extended_mode = true,
+    },
   }
+  require'treesitter-context'.setup {
+    patterns = {
+      ruby = {
+        'block'
+      }
+    }
+  }
+  require("twilight").setup {}
 EOF
 endif
 
@@ -1385,6 +1468,40 @@ lua <<EOF
   for _, server in pairs(servers) do
     require'lspconfig'[server].setup{}
   end
+EOF
+endif
+
+" telescope settings {{{2
+if has_key(g:plugs, 'telescope.nvim')
+  nnoremap <leader>; :Telescope<CR>
+  nnoremap <leader>l :Telescope buffers<CR>
+  nnoremap <leader>m :Telescope find_files<CR>
+
+lua <<EOF
+  local action_layout = require("telescope.actions.layout")
+  require('telescope').setup {
+    defaults = {
+      mappings = {
+        i = {
+          ["<M-p>"] = action_layout.toggle_preview
+        }
+      },
+      preview = {
+        hide_on_startup = true
+      },
+    },
+    pickers = {
+      find_files = {
+        theme = "dropdown"
+      },
+      buffers = {
+        theme = "dropdown"
+      },
+      tags = {
+        theme = "dropdown"
+      },
+    }
+  }
 EOF
 endif
 
@@ -1412,4 +1529,73 @@ let g:ruby_heredoc_syntax_filetypes = {
       \ },
       \}
 
+" }}}
+
+" Section: TMUX Focus management {{{1
+" if we run in tmux, focus events will trigger monitor-activity when
+" leaving the active window. I find this quite annoying, so instead we
+" disable this option in tmux for the current window and restore it upon
+" the exit from Vim.
+if exists("$TMUX") && !has('nvim')
+  let s:g_monitor_activity = 0
+  let s:w_monitor_activity = 0
+  let s:w_monitor_activity_unset = 0
+
+  if !exists('*job_start')
+    let s:w_monitor_activity_val = system("tmux showw -v monitor-activity")
+    if s:w_monitor_activity_val =~ "on"
+      let s:w_monitor_activity = 1
+    endif
+    if s:w_monitor_activity_val == ""
+      let s:w_monitor_activity_unset = 1
+    endif
+    if system("tmux showw -gv monitor-activity") =~ "on"
+      let s:g_monitor_activity = 1
+    endif
+
+    if s:g_monitor_activity || s:w_monitor_activity
+      call system("tmux setw monitor-activity off")
+    endif
+  else
+    func! s:read_all_channel(channel)
+      let buf = []
+      while ch_status(a:channel) == 'buffered'
+        call add(buf, ch_read(a:channel))
+      endwhile
+      return join(buf)
+    endfunc
+
+    func! s:on_w_monitor(channel)
+      let result = s:read_all_channel(a:channel)
+      if result =~ "on"
+        let s:w_monitor_activity = 1
+      endif
+      if result == ""
+        let s:w_monitor_activity_unset = 1
+      endif
+      call job_start("tmux showw -gv monitor-activity", {'close_cb': function('s:on_g_monitor')})
+    endfunc
+
+    func! s:on_g_monitor(channel)
+      let result = s:read_all_channel(a:channel)
+      if result =~ "on"
+        let s:g_monitor_activity = 1
+      endif
+
+      if s:g_monitor_activity || s:w_monitor_activity
+        call job_start("tmux setw monitor-activity off")
+      endif
+    endfunc
+    call job_start("tmux showw -v monitor-activity", {'close_cb': function('s:on_w_monitor')})
+  end
+
+  au VimLeave *
+        \ if s:g_monitor_activity || s:w_monitor_activity |
+        \   if s:w_monitor_activity_unset |
+        \     call system("tmux setw -u monitor-activity") |
+        \   elseif s:w_monitor_activity |
+        \     call system("tmux setw monitor-activity off") |
+        \   endif |
+        \ endif
+endif
 " }}}

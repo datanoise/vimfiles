@@ -118,10 +118,6 @@ silent! if plug#begin('~/.vim/bundle')
 
   " statusline
   if $TERM ==# '' || $TERM ==# 'xterm-256color' || $TERM ==# 'screen-256color'
-    " airline
-    "   Plug 'vim-airline/vim-airline'
-    "   Plug 'vim-airline/vim-airline-themes'
-
     " lightline
     Plug 'itchyny/lightline.vim'
     Plug 'maximbaz/lightline-ale'
@@ -131,8 +127,6 @@ silent! if plug#begin('~/.vim/bundle')
   " snippets
   " ultisnips is very heavy plugin
   " Plug 'SirVer/ultisnips'
-  " Plug 'tomtom/tlib_vim'
-  " Plug 'marcweber/vim-addon-mw-utils'
   " Plug 'garbas/vim-snipmate'
   " Plug 'Shougo/neosnippet.vim'
   Plug 'Shougo/neosnippet-snippets'
@@ -180,13 +174,15 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'nvim-treesitter/playground'
     Plug 'p00f/nvim-ts-rainbow'
     Plug 'folke/twilight.nvim'
-    " Plug 'windwp/nvim-ts-autotag'
-
+    Plug 'windwp/nvim-ts-autotag'
+    Plug 'stevearc/aerial.nvim'
     " Plug 'liuchengxu/vista.vim'
     " Plug 'numToStr/Comment.nvim'
 
-    " Plug 'nvim-lua/plenary.nvim'
-    " Plug 'nvim-telescope/telescope.nvim'
+    Plug 'nvim-lua/plenary.nvim'
+    Plug 'nvim-telescope/telescope.nvim'
+
+    Plug 'rcarriga/nvim-notify'
   else
     Plug 'majutsushi/tagbar'
     Plug 'tmux-plugins/vim-tmux-focus-events'
@@ -954,26 +950,6 @@ if has_key(g:plugs, 'neosnippet.vim')
   let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets'
 endif
 
-" nvim-completion-manager {{{2
-if has_key(g:plugs, 'nvim-completion-manager')
-  " let g:cm_complete_start_delay = 200
-  " let g:cm_complete_popup_delay = 400
-  " let g:cm_completeopt = 'menu,noinsert,noselect'
-
-  imap <expr> <Plug>(expand_or_nl) (cm#completed_is_snippet() ? "\<Plug>snipMateTrigger":"")
-  imap <C-X><CR> <CR><Plug>AlwaysEnd
-  imap <expr> <CR> (pumvisible() ? "\<C-Y>\<Plug>(expand_or_nl)" : <SID>complete_brackets()."\<Plug>DiscretionaryEnd")
-endif
-
-" ncm2 {{{2
-if has_key(g:plugs, 'ncm2')
-  set completeopt=noinsert,menuone,noselect
-  autocmd BufEnter * call ncm2#enable_for_buffer()
-  imap <expr> <Plug>(expand_or_nl) (ncm2_snipmate#completed_is_snippet() ? "\<Plug>snipMateTrigger":"")
-  imap <C-X><CR> <CR><Plug>AlwaysEnd
-  imap <expr> <CR> (pumvisible() ? "\<C-Y>\<Plug>(expand_or_nl)" : <SID>complete_brackets()."\<Plug>DiscretionaryEnd")
-endif
-
 " coc.nvim {{{2
 if has_key(g:plugs, 'coc.nvim')
   inoremap <silent><expr> <TAB>
@@ -1004,16 +980,6 @@ if has_key(g:plugs, 'vista.vim')
     let g:vista_default_executive = 'coc'
   endif
   autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
-endif
-
-" deoplete.nvim  {{{2
-if has_key(g:plugs, 'deoplete.nvim')
-  let g:deoplete#enable_at_startup = 1
-  imap <expr> <Plug>(expand_or_nl) (neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)":"")
-  imap <expr> <CR> (pumvisible() ? "\<C-Y>\<Plug>(expand_or_nl)" : <SID>complete_brackets()."\<Plug>DiscretionaryEnd")
-
-  call deoplete#custom#var('buffer', { 'require_same_filetype': 0 })
-  call deoplete#custom#option('auto_complete_delay', 600)
 endif
 
 " vim-go settings {{{2
@@ -1202,20 +1168,59 @@ if has_key(g:plugs, 'lightline.vim')
     function! CurrentTag()
       return VistaCurrentMethod()
     endfunction
-  elseif has_key(g:plugs, 'nvim-treesitter')
-    function! CurrentTag()
+  elseif has_key(g:plugs, 'aerial.nvim')
 lua <<EOF
-    local transform_line = function(line)
-      local l = line:gsub("%s*[%[%(%{]*%s*$", "")
-      return l:gsub("%s+", " ")
+  local function format_status(symbols, depth, separator, icons_enabled)
+    local parts = {}
+    depth = depth or #symbols
+
+    if depth > 0 then
+      symbols = { unpack(symbols, 1, depth) }
+    else
+      symbols = { unpack(symbols, #symbols + 1 + depth) }
     end
-    function _G.current_tag()
-      return require'nvim-treesitter.statusline'.statusline({
-        type_patterns = {"method"},
-        transform_fn = transform_line
-      })
+
+    for _, symbol in ipairs(symbols) do
+      if icons_enabled then
+        table.insert(parts, string.format("%s %s", symbol.icon, symbol.name))
+      else
+        table.insert(parts, symbol.name)
+      end
     end
+
+    return table.concat(parts, separator)
+  end
+
+  local aerial = require("aerial")
+
+  function _G.current_tag()
+    local symbols = aerial.get_location(true)
+    local status = format_status(symbols, nil, " ⟩ ", false)
+    return status
+  end
 EOF
+    function! CurrentTag()
+      let res = v:lua.current_tag()
+      if res == v:null
+        return ''
+      else
+        return res
+      endif
+    endfunction
+  elseif has_key(g:plugs, 'nvim-treesitter')
+lua <<EOF
+  local transform_line = function(line)
+    local l = line:gsub("%s*[%[%(%{]*%s*$", "")
+    return l:gsub("%s+", " ")
+  end
+
+  function _G.current_tag()
+    return require'nvim-treesitter.statusline'.statusline({
+      transform_fn = transform_line
+    })
+  end
+EOF
+    function! CurrentTag()
       let res = v:lua.current_tag()
       if res == v:null
         return ''
@@ -1420,22 +1425,31 @@ let g:pymode_rope = 0
 let g:pymode_lint = 0
 let g:pymode_lint_on_write = 0
 
+" vimwiki settings {{{2
+if has_key(g:plugs, 'vimwiki')
+  let g:vimwiki_path = '~/.vimwiki/'
+  let g:vimwiki_key_mappings =
+    \ {
+    \ 'table_mappings': 0,
+    \ }
+endif
+
 " treesitter settings {{{2
 if has_key(g:plugs, 'nvim-treesitter')
 lua <<EOF
   require'nvim-treesitter.configs'.setup {
-    ensure_installed = { "c", "lua", "rust", "ruby" },
+    ensure_installed = { "c", "lua", "rust", "ruby", "python", "javascript", "typescript", "vim" },
     highlight = {
       enable = true,
-      disable = {"ruby"}
+      disable = {"ruby", "vim"}
     },
     incremental_selection = {
       enable = true,
       keymaps = {
         init_selection = "gnn",
-        node_incremental = "grn",
-        scope_incremental = "grc",
-        node_decremental = "grm",
+        node_incremental = "<Tab>",
+        node_decremental = "<S-Tab>",
+        scope_incremental = "<CR>",
       },
     },
     indent = {
@@ -1446,6 +1460,9 @@ lua <<EOF
       enable = true,
       extended_mode = true,
     },
+    autotag = {
+      enable = true,
+    }
   }
   require'treesitter-context'.setup {
     patterns = {
@@ -1455,7 +1472,19 @@ lua <<EOF
     }
   }
   require("twilight").setup {}
+  require('aerial').setup {}
 EOF
+endif
+
+" playground settings {{{2
+if has_key(g:plugs, 'playground')
+  nnoremap <silent> zG :TSPlaygroundToggle<CR>
+  nnoremap <silent> zT :TSHighlightCapturesUnderCursor<CR>
+endif
+
+" aerial.nvim settings {{{2
+if has_key(g:plugs, 'aerial.nvim')
+  nnoremap <silent> \t :AerialToggle<CR>
 endif
 
 " lspconfig settings {{{2
@@ -1473,35 +1502,50 @@ endif
 
 " telescope settings {{{2
 if has_key(g:plugs, 'telescope.nvim')
-  nnoremap <leader>; :Telescope<CR>
-  nnoremap <leader>l :Telescope buffers<CR>
-  nnoremap <leader>m :Telescope find_files<CR>
+  nnoremap <silent> <leader>T :Telescope<CR>
+  nnoremap <silent> <leader>; :Telescope<CR>
+  nnoremap <silent> <leader>l :Telescope buffers<CR>
+  nnoremap <silent> <leader>m :Telescope find_files<CR>
+  nnoremap <silent> <leader>e :Telescope oldfiles<CR>
+  nnoremap <silent> <leader>n :Telescope aerial theme=dropdown<CR>
 
 lua <<EOF
-  local action_layout = require("telescope.actions.layout")
-  require('telescope').setup {
-    defaults = {
-      mappings = {
-        i = {
-          ["<M-p>"] = action_layout.toggle_preview
-        }
-      },
-      preview = {
-        hide_on_startup = true
-      },
+local actions = require("telescope.actions")
+local action_layout = require("telescope.actions.layout")
+require('telescope').load_extension('aerial')
+require('telescope').setup {
+  defaults = {
+    mappings = {
+      i = {
+        ["<M-p>"] = action_layout.toggle_preview,
+        ["<Esc>"] = actions.close
+      }
     },
-    pickers = {
-      find_files = {
-        theme = "dropdown"
-      },
-      buffers = {
-        theme = "dropdown"
-      },
-      tags = {
-        theme = "dropdown"
-      },
+    preview = {
+      hide_on_startup = true
+    },
+  },
+  pickers = {
+    find_files = {
+      theme = "dropdown"
+    },
+    buffers = {
+      theme = "dropdown"
+    },
+    oldfiles = {
+      theme = "dropdown"
+    },
+    aerial = {
+      theme = "dropdown"
+    },
+  },
+  extensions = {
+    aerial = {
+      -- Display symbols as <root>.<parent>.<symbol>
+      show_nesting = true
     }
-  }
+  },
+}
 EOF
 endif
 
@@ -1513,7 +1557,6 @@ let g:racer_cmd = 'racer'
 let g:vim_jsx_pretty_colorful_config = 1
 let g:filetype_m = 'objc' " always open *.m files with objc filetype
 let g:markdown_composer_autostart = 0
-let g:vimwiki_path = '~/.vimwiki/'
 let g:vimtex_compiler_progname = 'nvr'
 let g:tex_flavor = 'latex'
 let g:Hexokinase_ftAutoload = ['css', 'scss', 'html', 'erb']

@@ -141,7 +141,6 @@ silent! if plug#begin('~/.vim/bundle')
 
   Plug 'Raimondi/delimitMate'
   Plug 'flazz/vim-colorschemes'
-  Plug 'ap/vim-css-color'
   Plug 'datanoise/vim-localvimrc'
   Plug 'datanoise/vim-cmdline-complete'
   Plug 'rhysd/git-messenger.vim'
@@ -178,14 +177,15 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'stevearc/aerial.nvim'
     " Plug 'liuchengxu/vista.vim'
     " Plug 'numToStr/Comment.nvim'
+    Plug 'norcalli/nvim-colorizer.lua'
+    Plug 'rcarriga/nvim-notify'
 
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim'
-
-    Plug 'rcarriga/nvim-notify'
   else
     Plug 'majutsushi/tagbar'
     Plug 'tmux-plugins/vim-tmux-focus-events'
+    Plug 'ap/vim-css-color'
   endif
 
   call plug#end()
@@ -1478,7 +1478,7 @@ endif
 
 " playground settings {{{2
 if has_key(g:plugs, 'playground')
-  nnoremap <silent> zG :TSPlaygroundToggle<CR>
+  nnoremap <silent> zB :TSPlaygroundToggle<CR>
   nnoremap <silent> zT :TSHighlightCapturesUnderCursor<CR>
 endif
 
@@ -1546,6 +1546,17 @@ require('telescope').setup {
     }
   },
 }
+EOF
+endif
+
+" nvim-colorizer.lua {{{2
+if has_key(g:plugs, 'nvim-colorizer.lua')
+lua << EOF
+  require'colorizer'.setup {
+    'css';
+    'scss';
+    'html';
+  }
 EOF
 endif
 

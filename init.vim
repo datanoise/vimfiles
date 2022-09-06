@@ -16,7 +16,6 @@ endif
 
 " Section: Plugins {{{1
 silent! if plug#begin('~/.vim/bundle')
-  Plug 'tpope/vim-repeat'
   Plug 'tpope/vim-capslock'
   Plug 'tpope/vim-dispatch'
   Plug 'tpope/vim-fugitive'
@@ -25,16 +24,13 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-scriptease'
   Plug 'tpope/vim-tbone'
   Plug 'tpope/vim-sleuth'
-  Plug 'tpope/vim-surround'
   Plug 'tpope/vim-git'
   Plug 'tpope/vim-unimpaired'
   Plug 'tpope/vim-projectionist'
   Plug 'tpope/vim-abolish'
-  Plug 'tpope/vim-endwise'
   Plug 'tpope/vim-obsession'
   Plug 'tpope/vim-apathy'
   " Plug 'tpope/vim-bundler'
-  Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
   Plug 'tpope/vim-dadbod', { 'on': 'DB' }
 
   Plug 'scrooloose/nerdtree',  { 'on': 'NERDTreeToggle' }
@@ -49,8 +45,8 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
   Plug 'junegunn/fzf.vim'
 
-  Plug 'AndrewRadev/splitjoin.vim', { 'on': ['SplitjoinJoin', 'SplitjoinSplit'] }
-  Plug 'AndrewRadev/sideways.vim' ", { 'on': ['SidewaysLeft', 'SidewaysRight'] }
+  Plug 'AndrewRadev/splitjoin.vim', { 'on': [ 'SplitjoinJoin', 'SplitjoinSplit'] }
+  Plug 'AndrewRadev/sideways.vim'
   Plug 'datanoise/switch.vim', { 'on': 'Switch',
         \ 'for': ['ruby', 'eruby', 'php', 'haml', 'slim', 'cpp', 'javascript', 'coffee', 'clojure', 'scala', 'elixir', 'rust'] }
 
@@ -58,14 +54,9 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'pangloss/vim-javascript'  
   Plug 'datanoise/vim-jsx-pretty'
   Plug 'othree/html5.vim'
-  Plug 'vim-ruby/vim-ruby'
-  Plug 'datanoise/vim-ruby-heredoc-syntax'
   " lazy loading for filetypes makes sense only for those that are not
   " included in the standard Vim distribution. Otherwise, Vim will load them
   " anyway, possibly very old version.
-  " Plug 'tpope/vim-markdown'
-  Plug 'plasticboy/vim-markdown'
-  Plug 'mzlogin/vim-markdown-toc',     { 'for': 'markdown' }
   Plug 'euclio/vim-markdown-composer', { 'for': 'markdown' }
   Plug 'tpope/vim-haml',               { 'for': ['haml', 'sass', 'scss'] }
   Plug 'rust-lang/rust.vim',           { 'for': 'rust' }
@@ -92,14 +83,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'fatih/vim-go'
   endif
 
-  " ctrlp
-  Plug 'ctrlpvim/ctrlp.vim'
-  Plug 'ompugao/ctrlp-history'
-  Plug 'mattn/ctrlp-mark'
-  Plug 'mattn/ctrlp-register'
-  Plug 'kaneshin/ctrlp-tabbed'
-  Plug 'tacahiroy/ctrlp-funky'
-
   " text objects
   Plug 'kana/vim-textobj-user'
   Plug 'kana/vim-textobj-line'
@@ -123,7 +106,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'maximbaz/lightline-ale'
   endif
 
-
   " snippets
   " ultisnips is very heavy plugin
   " Plug 'SirVer/ultisnips'
@@ -137,10 +119,9 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'vim-scripts/searchfold.vim',   { 'on': '<Plug>SearchFoldNormal' }
   Plug 'datanoise/vim-bclose',         { 'on': 'Bclose' }
   Plug 'mbbill/undotree',              { 'on': 'UndotreeToggle' }
-  Plug 'airblade/vim-gitgutter',       { 'on': ['GitGutterToggle', 'GitGutterEnable'] }
+  Plug 'airblade/vim-gitgutter',       { 'on': [ 'GitGutterToggle', 'GitGutterEnable' ] }
 
   Plug 'Raimondi/delimitMate'
-  Plug 'flazz/vim-colorschemes'
   Plug 'datanoise/vim-localvimrc'
   Plug 'datanoise/vim-cmdline-complete'
   Plug 'rhysd/git-messenger.vim'
@@ -152,20 +133,11 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/bufexplorer'
   Plug 'vimwiki/vimwiki'
   Plug 'easymotion/vim-easymotion'
-  Plug 'junegunn/seoul256.vim'
-  " Plug 'ervandew/supertab'
   Plug 'lervag/vimtex'
 
-  Plug 'neoclide/coc.nvim', {'branch': 'release'}
-  " Plug 'wellle/tmux-complete.vim'
-
   if has('nvim')
-    " Plug 'mhartington/nvim-typescript'
     Plug 'bfredl/nvim-miniyank'
     Plug 'datanoise/vim-dispatch-neovim'
-
-    " Plug 'neovim/nvim-lspconfig'
-    " Plug 'kabouzeid/nvim-lspinstall'
 
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'nvim-treesitter/nvim-treesitter-context'
@@ -175,17 +147,56 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'folke/twilight.nvim'
     Plug 'windwp/nvim-ts-autotag'
     Plug 'stevearc/aerial.nvim'
-    " Plug 'liuchengxu/vista.vim'
-    " Plug 'numToStr/Comment.nvim'
+    Plug 'numToStr/Comment.nvim'
     Plug 'norcalli/nvim-colorizer.lua'
     Plug 'rcarriga/nvim-notify'
+    Plug 'folke/which-key.nvim'
+    Plug 'neovim/nvim-lspconfig'
+    Plug 'williamboman/nvim-lsp-installer'
+
+    Plug 'hrsh7th/cmp-buffer'
+    Plug 'hrsh7th/cmp-path'
+    Plug 'hrsh7th/cmp-cmdline'
+    Plug 'hrsh7th/nvim-cmp'
+    Plug 'hrsh7th/cmp-nvim-lsp'
+    Plug 'L3MON4D3/LuaSnip'
+    Plug 'saadparwaiz1/cmp_luasnip'
+
+    Plug 'EdenEast/nightfox.nvim'
+    Plug 'Everblush/everblush.nvim', { 'as': 'everblush' }
+    Plug 'Mofiqul/adwaita.nvim'
+    Plug 'Yazeed1s/minimal.nvim'
+    Plug 'kylechui/nvim-surround'
+    Plug 'RRethy/nvim-treesitter-endwise'
 
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim'
   else
+    Plug 'tpope/vim-repeat'
+    Plug 'tpope/vim-surround'
+    Plug 'tpope/vim-endwise'
+    Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
+
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    Plug 'wellle/tmux-complete.vim'
+
+    Plug 'vim-ruby/vim-ruby'
+    Plug 'datanoise/vim-ruby-heredoc-syntax'
+    " Plug 'tpope/vim-markdown'
+    Plug 'plasticboy/vim-markdown'
+
     Plug 'majutsushi/tagbar'
     Plug 'tmux-plugins/vim-tmux-focus-events'
     Plug 'ap/vim-css-color'
+    Plug 'flazz/vim-colorschemes'
+
+    " ctrlp
+    Plug 'ctrlpvim/ctrlp.vim'
+    Plug 'ompugao/ctrlp-history'
+    Plug 'mattn/ctrlp-mark'
+    Plug 'mattn/ctrlp-register'
+    Plug 'kaneshin/ctrlp-tabbed'
+    Plug 'tacahiroy/ctrlp-funky'
   endif
 
   call plug#end()
@@ -200,7 +211,7 @@ function! s:switch_prev_buf()
     b#
   else
     " echo "No buffer to switch to"
-    CtrlPBuffer
+    Buffers
   endif
 endfunction
 
@@ -433,7 +444,7 @@ augroup ColorSchemeFix
   au ColorScheme * hi! link ColorColumn StatusLine
 augroup END
 set background=dark
-colo datanoise
+colo jellybeans
 if !has('gui_running') && has('termguicolors')
   set termguicolors
   if $TERM ==# 'screen-256color'
@@ -590,11 +601,6 @@ au FileType fugitive nnoremap <buffer> <silent> q :<C-U>if bufnr('$') == 1<Bar>q
 xnoremap <silent> * :<C-u>call <SID>vset_search()<CR>/<C-R>=@/<CR><CR>
 xnoremap <silent> # :<C-u>call <SID>vset_search()<CR>?<C-R>=@/<CR><CR>
 
-" endwise bindings
-let g:endwise_no_mappings = 1
-imap <C-X><CR>   <CR><Plug>AlwaysEnd
-imap <expr> <CR> (pumvisible() ? "\<C-Y>\<CR>" : <SID>complete_brackets()."\<Plug>DiscretionaryEnd")
-
 " some handful command-mode bindings
 cmap <silent> <c-x><c-p> <Plug>CmdlineCompleteBackward
 cmap <silent> <c-x><c-n> <Plug>CmdlineCompleteForward
@@ -703,6 +709,7 @@ augroup RubySettings
   au BufNewFile,BufRead *.prawn set ft=ruby
   au BufNewFile,BufRead *.axlsx set ft=ruby
   au FileType ruby setlocal completefunc=syntaxcomplete#Complete
+  au FileType ruby setlocal indentkeys-=.
   au FileType ruby if has('balloonexpr') | setlocal balloonexpr& | endif
   au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F4> :!rspec --format doc -c %<CR>|endif
   au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F5> :exe '!rspec --format doc -c ' . expand('%') . ':' . line('.')<CR>|else|nnoremap <buffer> <F5> :!ruby %<CR>|endif
@@ -807,32 +814,6 @@ endif
 let g:rubycomplete_buffer_loading    = 1
 let g:rubycomplete_rails             = 0
 let g:rubycomplete_classes_in_global = 1
-
-" syntastic settings {{{2
-" puppet is too slow, html/tidy doesn't support HTML5, vim-go provides its own
-" checker
-if has_key(g:plugs, 'syntastic')
-  let g:syntastic_mode_map = { 'mode': 'active',
-        \  'active_filetypes':  [],
-        \  'passive_filetypes': ['cpp', 'c', 'scss', 'puppet', 'html', 'cucumber', 'java', 'go']
-        \  }
-  let g:syntastic_javascript_checkers = ['eslint']
-  let g:syntastic_auto_loc_list       = 0
-  let g:syntastic_enable_signs        = 1
-  let g:syntastic_stl_format          = '[ERR:%F(%t)]'
-  let g:syntastic_javascript_jsl_conf = '~/.jsl.conf'
-  let g:syntastic_echo_current_error  = 1
-  let g:syntastic_always_populate_loc_list = 1
-  let g:syntastic_coffee_checkers = ['coffeelint']
-  let g:syntastic_coffee_lint_options = '-f ~/.coffeelint.json'
-  " let g:syntastic_rust_checkers = ['cargo']
-  let g:syntastic_error_symbol='✗'
-  let g:syntastic_warning_symbol='⚠'
-  let g:syntastic_go_checkers = ['gofmt']
-  let g:syntastic_enable_elixir_checker = 0
-  let g:syntastic_elixir_checkers = ['elixir']
-  nnoremap <silent> <leader>sc :SyntasticCheck<CR>
-endif
 
 " A settings {{{2
 let g:alternateExtensions_h = 'c,cpp,cxx,cc,CC,m,mm'
@@ -950,6 +931,14 @@ if has_key(g:plugs, 'neosnippet.vim')
   let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets'
 endif
 
+" vim-endwise settings {{{2
+if has_key(g:plugs, 'vim-endwise')
+  " endwise bindings
+  let g:endwise_no_mappings = 1
+  imap <C-X><CR>   <CR><Plug>AlwaysEnd
+  imap <expr> <CR> (pumvisible() ? "\<C-Y>\<CR>" : <SID>complete_brackets()."\<Plug>DiscretionaryEnd")
+endif
+
 " coc.nvim {{{2
 if has_key(g:plugs, 'coc.nvim')
   inoremap <silent><expr> <TAB>
@@ -958,7 +947,11 @@ if has_key(g:plugs, 'coc.nvim')
         \ coc#refresh()
   inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
   let g:coc_snippet_next = '<c-j>'
-  imap <expr> <CR> (coc#pum#visible() ? coc#pum#confirm() : <SID>complete_brackets()."\<Plug>DiscretionaryEnd")
+  if has_key(g:plugs, 'vim-endwise')
+    imap <expr> <CR> (coc#pum#visible() ? coc#pum#confirm() : <SID>complete_brackets()."\<Plug>DiscretionaryEnd")
+  else
+    imap <expr> <CR> (coc#pum#visible() ? coc#pum#confirm() : <SID>complete_brackets())
+  endif
 
   function! s:check_back_space() abort
     let col = col('.') - 1
@@ -1208,7 +1201,7 @@ EOF
       endif
     endfunction
   elseif has_key(g:plugs, 'nvim-treesitter')
-lua <<EOF
+lua << EOF
   local transform_line = function(line)
     local l = line:gsub("%s*[%[%(%{]*%s*$", "")
     return l:gsub("%s+", " ")
@@ -1441,7 +1434,7 @@ lua <<EOF
     ensure_installed = { "c", "lua", "rust", "ruby", "python", "javascript", "typescript", "vim" },
     highlight = {
       enable = true,
-      disable = {"ruby", "vim"}
+      -- disable = {"vim"}
     },
     incremental_selection = {
       enable = true,
@@ -1454,7 +1447,7 @@ lua <<EOF
     },
     indent = {
       enable = true,
-      disable = {"ruby"}
+      -- disable = {"ruby"}
     },
     rainbow = {
       enable = true,
@@ -1462,7 +1455,10 @@ lua <<EOF
     },
     autotag = {
       enable = true,
-    }
+    },
+    endwise = {
+      enable = true,
+    },
   }
   require'treesitter-context'.setup {
     patterns = {
@@ -1479,7 +1475,7 @@ endif
 " playground settings {{{2
 if has_key(g:plugs, 'playground')
   nnoremap <silent> zB :TSPlaygroundToggle<CR>
-  nnoremap <silent> zT :TSHighlightCapturesUnderCursor<CR>
+  nnoremap <silent> zT :TSCaptureUnderCursor<CR>
 endif
 
 " aerial.nvim settings {{{2
@@ -1489,14 +1485,54 @@ endif
 
 " lspconfig settings {{{2
 if has_key(g:plugs, 'nvim-lspconfig')
-lua <<EOF
-  require'lspconfig'.pyright.setup{}
+lua << EOF
+require'lspconfig'.pyright.setup{}
+require("nvim-lsp-installer").setup()
+-- local opts = { noremap=true, silent=true }
+-- vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
+-- vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
+-- vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+-- vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 
-  require'lspinstall'.setup()
-  local servers = require'lspinstall'.installed_servers()
-  for _, server in pairs(servers) do
-    require'lspconfig'[server].setup{}
-  end
+-- Use an on_attach function to only map the following keys
+-- after the language server attaches to the current buffer
+local on_attach = function(client, bufnr)
+  -- Enable completion triggered by <c-x><c-o>
+  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+  -- Mappings.
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  local bufopts = { noremap=true, silent=true, buffer=bufnr }
+  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+  vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+  vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+  vim.keymap.set('n', '<space>wl', function()
+    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  end, bufopts)
+  vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
+  vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
+  vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
+  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+  vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, bufopts)
+end
+require('lspconfig')['pyright'].setup{
+  on_attach = on_attach,
+}
+require('lspconfig')['solargraph'].setup{
+  on_attach = on_attach,
+}
+require('lspconfig')['tsserver'].setup{
+  on_attach = on_attach,
+}
+require('lspconfig')['rust_analyzer'].setup{
+  on_attach = on_attach,
+  settings = {
+    ["rust-analyzer"] = {}
+  }
+}
 EOF
 endif
 
@@ -1506,10 +1542,11 @@ if has_key(g:plugs, 'telescope.nvim')
   nnoremap <silent> <leader>; :Telescope<CR>
   nnoremap <silent> <leader>l :Telescope buffers<CR>
   nnoremap <silent> <leader>m :Telescope find_files<CR>
+  nnoremap <silent> <leader>F :Telescope find_files search_dirs=%:h<CR>
   nnoremap <silent> <leader>e :Telescope oldfiles<CR>
   nnoremap <silent> <leader>n :Telescope aerial theme=dropdown<CR>
 
-lua <<EOF
+lua << EOF
 local actions = require("telescope.actions")
 local action_layout = require("telescope.actions.layout")
 require('telescope').load_extension('aerial')
@@ -1549,7 +1586,7 @@ require('telescope').setup {
 EOF
 endif
 
-" nvim-colorizer.lua {{{2
+" nvim-colorizer.lua settings {{{2
 if has_key(g:plugs, 'nvim-colorizer.lua')
 lua << EOF
   require'colorizer'.setup {
@@ -1557,6 +1594,113 @@ lua << EOF
     'scss';
     'html';
   }
+EOF
+endif
+
+" which-key.nvim settings {{{2
+if has_key(g:plugs, 'which-key.nvim')
+lua << EOF
+require("which-key").setup()
+EOF
+endif
+
+" nvim-surround.nvim settings {{{2
+if has_key(g:plugs, 'nvim-surround')
+lua << EOF
+require("nvim-surround").setup()
+EOF
+endif
+
+" LuaSnip settings {{{2
+if has_key(g:plugs, 'LuaSnip')
+lua << EOF
+require("luasnip.loaders.from_snipmate").lazy_load()
+EOF
+inoremap <silent> <C-j> <cmd>lua require('luasnip').jump(1)<Cr>
+snoremap <silent> <Tab> <cmd>lua require('luasnip').jump(1)<Cr>
+snoremap <silent> <S-Tab> <cmd>lua require('luasnip').jump(-1)<Cr>
+endif
+
+" nvim-cmp settings {{{2
+if has_key(g:plugs, 'nvim-cmp')
+  set completeopt=menu,menuone,noselect
+lua <<EOF
+  local has_words_before = function()
+    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+    return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+  end
+
+  local cmp = require('cmp')
+  local luasnip = require("luasnip")
+
+  cmp.setup({
+    snippet = {
+      expand = function(args)
+        require('luasnip').lsp_expand(args.body)
+      end,
+    },
+    mapping = cmp.mapping.preset.insert({
+      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.abort(),
+      ['<CR>'] = cmp.mapping.confirm({ select = true }),
+      ["<Tab>"] = cmp.mapping(function(fallback)
+        if cmp.visible() then
+          cmp.select_next_item()
+        elseif luasnip.expand_or_jumpable() then
+          luasnip.expand_or_jump()
+        elseif has_words_before() then
+          cmp.complete()
+        else
+          fallback()
+        end
+      end, { "i", "s" }),
+
+      ["<S-Tab>"] = cmp.mapping(function(fallback)
+        if cmp.visible() then
+          cmp.select_prev_item()
+        elseif luasnip.jumpable(-1) then
+          luasnip.jump(-1)
+        else
+          fallback()
+        end
+      end, { "i", "s" }),
+    }),
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      { name = 'luasnip' },
+      { name = 'buffer' },
+      { name = 'path' },
+    }),
+    window = {
+      completion = cmp.config.window.bordered(),
+      documentation = cmp.config.window.bordered(),
+    }
+  })
+
+  -- cmp.setup.cmdline('/', {
+  --   mapping = cmp.mapping.preset.cmdline(),
+  --   sources = {
+  --     { name = 'buffer' }
+  --   }
+  -- })
+  --
+  -- cmp.setup.cmdline(':', {
+  --   mapping = cmp.mapping.preset.cmdline(),
+  --   sources = cmp.config.sources({
+  --     { name = 'path' }
+  --   }, {
+  --     { name = 'cmdline' }
+  --   })
+  -- })
+EOF
+endif
+
+" Comment.nvim settings {{{2
+if has_key(g:plugs, 'Comment.nvim')
+lua << EOF
+require('Comment').setup()
 EOF
 endif
 
@@ -1570,7 +1714,6 @@ let g:filetype_m = 'objc' " always open *.m files with objc filetype
 let g:markdown_composer_autostart = 0
 let g:vimtex_compiler_progname = 'nvr'
 let g:tex_flavor = 'latex'
-let g:Hexokinase_ftAutoload = ['css', 'scss', 'html', 'erb']
 let g:ruby_heredoc_syntax_filetypes = {
       \ "xml": {
       \   "start": "XML"
@@ -1583,73 +1726,4 @@ let g:ruby_heredoc_syntax_filetypes = {
       \ },
       \}
 
-" }}}
-
-" Section: TMUX Focus management {{{1
-" if we run in tmux, focus events will trigger monitor-activity when
-" leaving the active window. I find this quite annoying, so instead we
-" disable this option in tmux for the current window and restore it upon
-" the exit from Vim.
-if exists("$TMUX") && !has('nvim')
-  let s:g_monitor_activity = 0
-  let s:w_monitor_activity = 0
-  let s:w_monitor_activity_unset = 0
-
-  if !exists('*job_start')
-    let s:w_monitor_activity_val = system("tmux showw -v monitor-activity")
-    if s:w_monitor_activity_val =~ "on"
-      let s:w_monitor_activity = 1
-    endif
-    if s:w_monitor_activity_val == ""
-      let s:w_monitor_activity_unset = 1
-    endif
-    if system("tmux showw -gv monitor-activity") =~ "on"
-      let s:g_monitor_activity = 1
-    endif
-
-    if s:g_monitor_activity || s:w_monitor_activity
-      call system("tmux setw monitor-activity off")
-    endif
-  else
-    func! s:read_all_channel(channel)
-      let buf = []
-      while ch_status(a:channel) == 'buffered'
-        call add(buf, ch_read(a:channel))
-      endwhile
-      return join(buf)
-    endfunc
-
-    func! s:on_w_monitor(channel)
-      let result = s:read_all_channel(a:channel)
-      if result =~ "on"
-        let s:w_monitor_activity = 1
-      endif
-      if result == ""
-        let s:w_monitor_activity_unset = 1
-      endif
-      call job_start("tmux showw -gv monitor-activity", {'close_cb': function('s:on_g_monitor')})
-    endfunc
-
-    func! s:on_g_monitor(channel)
-      let result = s:read_all_channel(a:channel)
-      if result =~ "on"
-        let s:g_monitor_activity = 1
-      endif
-
-      if s:g_monitor_activity || s:w_monitor_activity
-        call job_start("tmux setw monitor-activity off")
-      endif
-    endfunc
-    call job_start("tmux showw -v monitor-activity", {'close_cb': function('s:on_w_monitor')})
-  end
-
-  au VimLeave *
-        \ if s:g_monitor_activity || s:w_monitor_activity |
-        \   if s:w_monitor_activity_unset |
-        \     call system("tmux setw -u monitor-activity") |
-        \   elseif s:w_monitor_activity |
-        \     call system("tmux setw monitor-activity off") |
-        \   endif |
-        \ endif
-endif
 " }}}

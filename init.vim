@@ -1,15 +1,6 @@
 " -*- vim -*- vim:set ft=vim et sw=2 sts=2 fdc=3:
 scriptencoding utf-8
 
-" Section: Global Setting {{{1
-" ------------------------------------------------------------------------------
-packadd cfilter
-packadd matchit
-syntax on             " Enable syntax highlighting
-filetype on           " Enable filetype detection
-filetype indent on    " Enable filetype-specific indenting
-filetype plugin on    " Enable filetype-specific plugins
-
 " Section: Plugins {{{1
 silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-capslock'
@@ -42,7 +33,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'junegunn/fzf.vim'
 
   Plug 'AndrewRadev/splitjoin.vim', { 'on': [ 'SplitjoinJoin', 'SplitjoinSplit'] }
-  Plug 'AndrewRadev/sideways.vim'
   Plug 'datanoise/switch.vim', { 'on': 'Switch',
         \ 'for': ['ruby', 'eruby', 'php', 'haml', 'slim', 'cpp', 'javascript', 'coffee', 'clojure', 'scala', 'elixir', 'rust'] }
 
@@ -79,22 +69,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'fatih/vim-go'
   endif
 
-  " text objects
-  Plug 'kana/vim-textobj-user'
-  Plug 'kana/vim-textobj-line'
-  Plug 'kana/vim-textobj-function'
-  Plug 'kana/vim-textobj-indent'
-  Plug 'kana/vim-textobj-entire'
-  Plug 'kana/vim-textobj-fold'
-  Plug 'kana/vim-textobj-diff'
-  Plug 'kana/vim-textobj-lastpat'
-  Plug 'kana/vim-textobj-syntax'
-  Plug 'kana/vim-textobj-datetime'
-  Plug 'datanoise/vim-textobj-quoted'
-  Plug 'nelstrom/vim-textobj-rubyblock'
-  Plug 'thinca/vim-textobj-between'
-  Plug 'lucapette/vim-textobj-underscore'
-
   " statusline
   if $TERM ==# '' || $TERM ==# 'xterm-256color' || $TERM ==# 'screen-256color'
     " lightline
@@ -115,6 +89,20 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'vim-scripts/searchfold.vim',   { 'on': '<Plug>SearchFoldNormal' }
   Plug 'datanoise/vim-bclose',         { 'on': 'Bclose' }
   Plug 'airblade/vim-gitgutter',       { 'on': [ 'GitGutterToggle', 'GitGutterEnable' ] }
+
+  " text objects
+  Plug 'kana/vim-textobj-user'
+  Plug 'kana/vim-textobj-line'
+  Plug 'kana/vim-textobj-indent'
+  Plug 'kana/vim-textobj-entire'
+  Plug 'kana/vim-textobj-fold'
+  Plug 'kana/vim-textobj-lastpat'
+  Plug 'kana/vim-textobj-syntax'
+  Plug 'kana/vim-textobj-datetime'
+  Plug 'datanoise/vim-textobj-quoted'
+  Plug 'nelstrom/vim-textobj-rubyblock'
+  Plug 'thinca/vim-textobj-between'
+  Plug 'lucapette/vim-textobj-underscore'
 
   Plug 'Raimondi/delimitMate'
   Plug 'datanoise/vim-localvimrc'
@@ -150,14 +138,14 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'williamboman/mason.nvim'
     Plug 'mfussenegger/nvim-dap'
 
-    " Plug 'hrsh7th/cmp-buffer'
-    " Plug 'hrsh7th/cmp-path'
-    " Plug 'hrsh7th/cmp-cmdline'
-    " Plug 'hrsh7th/nvim-cmp'
-    " Plug 'hrsh7th/cmp-nvim-lsp'
-    " Plug 'L3MON4D3/LuaSnip'
-    " Plug 'saadparwaiz1/cmp_luasnip'
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    Plug 'hrsh7th/cmp-buffer'
+    Plug 'hrsh7th/cmp-path'
+    Plug 'hrsh7th/cmp-cmdline'
+    Plug 'hrsh7th/nvim-cmp'
+    Plug 'hrsh7th/cmp-nvim-lsp'
+    Plug 'L3MON4D3/LuaSnip'
+    Plug 'saadparwaiz1/cmp_luasnip'
+    " Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
     Plug 'EdenEast/nightfox.nvim'
     Plug 'Everblush/everblush.nvim', { 'as': 'everblush' }
@@ -177,10 +165,12 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     " Plug 'wellle/tmux-complete.vim'
 
+    Plug 'kana/vim-textobj-function'
+
     Plug 'vim-ruby/vim-ruby'
     Plug 'datanoise/vim-ruby-heredoc-syntax'
-    " Plug 'tpope/vim-markdown'
     Plug 'plasticboy/vim-markdown'
+    Plug 'AndrewRadev/sideways.vim'
 
     Plug 'majutsushi/tagbar'
     Plug 'tmux-plugins/vim-tmux-focus-events'
@@ -198,6 +188,16 @@ silent! if plug#begin('~/.vim/bundle')
 
   call plug#end()
 endif
+
+if !has('nvim') || !has_key(g:plugs, 'nvim-treesitter')
+  syntax on           " Enable syntax highlighting
+endif
+filetype on           " Enable filetype detection
+filetype indent on    " Enable filetype-specific indenting
+filetype plugin on    " Enable filetype-specific plugins
+
+packadd cfilter
+packadd matchit
 
 runtime! plugin/options.vim
 runtime! plugin/keybindings.vim

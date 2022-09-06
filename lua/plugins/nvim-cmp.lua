@@ -44,6 +44,7 @@ cmp.setup({
     {
       name = 'buffer',
       option = {
+        keyword_length = 4,
         get_bufnrs = function()
           return vim.api.nvim_list_bufs()
         end
@@ -51,7 +52,7 @@ cmp.setup({
     },
     { name = 'path' },
     { name = 'nvim_lsp' },
-    { name = 'luasnip' },
+    { name = 'luasnip', option = { use_show_condition = false } },
   }),
   window = {
     completion = cmp.config.window.bordered(),

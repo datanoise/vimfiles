@@ -35,13 +35,9 @@ augroup RubySettings
   au!
   au BufNewFile,BufRead *.prawn set ft=ruby
   au BufNewFile,BufRead *.axlsx set ft=ruby
-  au FileType ruby setlocal completefunc=syntaxcomplete#Complete
   au FileType ruby setlocal indentkeys-=.
   au FileType ruby if has('balloonexpr') | setlocal balloonexpr& | endif
-  au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F4> :!rspec --format doc -c %<CR>|endif
-  au FileType ruby if match(expand('<afile>'), '_spec\.rb$') > 0|nnoremap <buffer> <F5> :exe '!rspec --format doc -c ' . expand('%') . ':' . line('.')<CR>|else|nnoremap <buffer> <F5> :!ruby %<CR>|endif
   au FileType ruby iabbrev <buffer> rb! #!<C-R>=substitute(system('which ruby'),'\n$','','')<CR><C-R>=Eatchar('\s')<CR>
-  " au FileType ruby inoremap <buffer> <expr> <c-l> pumvisible() ? "\<lt>c-l>" : " => "
   au FileType ruby setlocal keywordprg=ri\ -T\ -f\ markdown\ --no-gems
 augroup END
 

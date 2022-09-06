@@ -41,10 +41,17 @@ cmp.setup({
     end, { "i", "s" }),
   }),
   sources = cmp.config.sources({
+    {
+      name = 'buffer',
+      option = {
+        get_bufnrs = function()
+          return vim.api.nvim_list_bufs()
+        end
+      }
+    },
+    { name = 'path' },
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
-    { name = 'buffer' },
-    { name = 'path' },
   }),
   window = {
     completion = cmp.config.window.bordered(),

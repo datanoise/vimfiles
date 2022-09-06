@@ -1,5 +1,5 @@
 " vim-commentary settings
-if has_key(g:plugs, 'vim-commentary')
+if !has_key(g:plugs, 'vim-commentary')
   finish
 end
 

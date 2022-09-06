@@ -150,13 +150,14 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'williamboman/mason.nvim'
     Plug 'mfussenegger/nvim-dap'
 
-    Plug 'hrsh7th/cmp-buffer'
-    Plug 'hrsh7th/cmp-path'
-    Plug 'hrsh7th/cmp-cmdline'
-    Plug 'hrsh7th/nvim-cmp'
-    Plug 'hrsh7th/cmp-nvim-lsp'
-    Plug 'L3MON4D3/LuaSnip'
-    Plug 'saadparwaiz1/cmp_luasnip'
+    " Plug 'hrsh7th/cmp-buffer'
+    " Plug 'hrsh7th/cmp-path'
+    " Plug 'hrsh7th/cmp-cmdline'
+    " Plug 'hrsh7th/nvim-cmp'
+    " Plug 'hrsh7th/cmp-nvim-lsp'
+    " Plug 'L3MON4D3/LuaSnip'
+    " Plug 'saadparwaiz1/cmp_luasnip'
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
     Plug 'EdenEast/nightfox.nvim'
     Plug 'Everblush/everblush.nvim', { 'as': 'everblush' }
@@ -174,7 +175,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
 
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
-    Plug 'wellle/tmux-complete.vim'
+    " Plug 'wellle/tmux-complete.vim'
 
     Plug 'vim-ruby/vim-ruby'
     Plug 'datanoise/vim-ruby-heredoc-syntax'
@@ -198,7 +199,6 @@ silent! if plug#begin('~/.vim/bundle')
   call plug#end()
 endif
 
-runtime! plugin/functions.vim
 runtime! plugin/options.vim
 runtime! plugin/keybindings.vim
 runtime! plugin/commands.vim

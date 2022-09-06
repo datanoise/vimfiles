@@ -10,10 +10,6 @@ filetype on           " Enable filetype detection
 filetype indent on    " Enable filetype-specific indenting
 filetype plugin on    " Enable filetype-specific plugins
 
-if has('nvim') && exists('$SYSTEM_PYTHON')
-  let g:python3_host_prog = $SYSTEM_PYTHON
-endif
-
 " Section: Plugins {{{1
 silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-capslock'

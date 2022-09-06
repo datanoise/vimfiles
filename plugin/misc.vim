@@ -45,3 +45,7 @@ let g:ruby_heredoc_syntax_filetypes = {
       \ },
       \}
 
+if has('nvim') && exists('$SYSTEM_PYTHON')
+  let g:python3_host_prog = $SYSTEM_PYTHON
+endif
+

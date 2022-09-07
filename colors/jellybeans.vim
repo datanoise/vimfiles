@@ -715,6 +715,8 @@ hi! link ALEVirtualTextWarning Constant
 hi! link ALEVirtualTextError Error
 
 hi! link markdownError Normal
+hi! HighlightedyankRegion ctermbg=237 guibg=orange guifg=black
+
 
 " Manual overrides for 256-color terminals. Dark colors auto-map badly.
 if !s:low_color

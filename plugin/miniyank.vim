@@ -3,8 +3,8 @@ if !has_key(g:plugs, 'nvim-miniyank')
   finish
 endif
 
-map p <Plug>(miniyank-autoput)
-map P <Plug>(miniyank-autoPut)
-map <leader>y <Plug>(miniyank-cycle)
-map <M-y> <Plug>(miniyank-cycle)
+nmap p <Plug>(miniyank-autoput)
+nmap P <Plug>(miniyank-autoPut)
+imap <leader>y <Plug>(miniyank-cycle)
+nmap <M-y> <Plug>(miniyank-cycle)
 

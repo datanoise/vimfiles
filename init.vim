@@ -26,7 +26,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-dadbod', { 'on': 'DB' }
 
   Plug 'scrooloose/nerdtree',  { 'on': 'NERDTreeToggle' }
-  Plug 'w0rp/ale'
 
   Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign'] }
   Plug 'junegunn/goyo.vim'
@@ -81,7 +80,6 @@ silent! if plug#begin('~/.vim/bundle')
   if $TERM ==# '' || $TERM ==# 'xterm-256color' || $TERM ==# 'screen-256color'
     " lightline
     Plug 'itchyny/lightline.vim'
-    Plug 'maximbaz/lightline-ale'
   endif
 
   " snippets
@@ -146,6 +144,10 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'mfussenegger/nvim-dap'
     Plug 'kylechui/nvim-surround'
     Plug 'RRethy/nvim-treesitter-endwise'
+    Plug 'jose-elias-alvarez/null-ls.nvim'
+    Plug 'folke/trouble.nvim'
+    Plug 'kyazdani42/nvim-web-devicons'
+    Plug 'josa42/nvim-lightline-lsp'
 
     Plug 'EdenEast/nightfox.nvim'
     Plug 'Everblush/everblush.nvim', { 'as': 'everblush' }
@@ -170,12 +172,14 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'tpope/vim-endwise'
     Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
 
+    Plug 'w0rp/ale'
     Plug 'kana/vim-textobj-function'
     Plug 'AndrewRadev/sideways.vim'
     Plug 'majutsushi/tagbar'
     Plug 'tmux-plugins/vim-tmux-focus-events'
     Plug 'ap/vim-css-color'
     Plug 'flazz/vim-colorschemes'
+    Plug 'maximbaz/lightline-ale'
 
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     " Plug 'wellle/tmux-complete.vim'

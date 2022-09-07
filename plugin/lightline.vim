@@ -15,7 +15,8 @@ let g:lightline = {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified', 'spell'],
       \             [ 'ctrlpmark' ] ],
-      \   'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ], 
+      \   'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ],
+      \              [ 'lsp_info', 'lsp_hints', 'lsp_errors', 'lsp_warnings', 'lsp_ok' ], [ 'lsp_status' ],
       \              [ 'lineinfo' ],
       \              [ 'percent' ],
       \              [ 'current_tag', 'fileformat', 'filetype' ],
@@ -69,13 +70,13 @@ endfunction
 function! LightlineFugitive()
   if exists('*FugitiveHead')
     let l:branch = FugitiveHead()
-    return l:branch !=# '' ? '⭠ '.l:branch : ''
+    return l:branch !=# '' ? ' '.l:branch : ''
   endif
   return ''
 endfunction
 
 function! LightlineReadonly()
-  return &readonly ? '⭤' : ''
+  return &readonly ? '' : ''
 endfunction
 
 function! CtrlPMark()
@@ -214,3 +215,7 @@ endif
 
 let g:lightline#ale#indicator_ok = '✓'
 let g:lightline#ale#indicator_checking = '⦿'
+
+if has_key(g:plugs, 'nvim-lightline-lsp')
+  call lightline#lsp#register()
+endif

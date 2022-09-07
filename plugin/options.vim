@@ -170,6 +170,7 @@ set shortmess+=I
 set nofsync " don't spin my disk
 set completeopt=menu,longest
 set clipboard+=unnamed
+set signcolumn=yes
 augroup CheckFilesForUpdates
   au!
   au FocusGained * :sil! checktime |

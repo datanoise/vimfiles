@@ -1,6 +1,11 @@
 " -*- vim -*- vim:set ft=vim et sw=2 sts=2 fdc=3:
 scriptencoding utf-8
 
+syntax on             " Enable syntax highlighting
+filetype on           " Enable filetype detection
+filetype indent on    " Enable filetype-specific indenting
+filetype plugin on    " Enable filetype-specific plugins
+
 " Section: Plugins {{{1
 silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-capslock'
@@ -189,17 +194,10 @@ silent! if plug#begin('~/.vim/bundle')
   call plug#end()
 endif
 
-if !has('nvim') || !has_key(g:plugs, 'nvim-treesitter')
-  syntax on           " Enable syntax highlighting
-endif
-filetype on           " Enable filetype detection
-filetype indent on    " Enable filetype-specific indenting
-filetype plugin on    " Enable filetype-specific plugins
-
 packadd cfilter
 packadd matchit
 
 runtime! plugin/options.vim
 runtime! plugin/keybindings.vim
 runtime! plugin/commands.vim
-runtime! plugin/langs.vim
+runtime! plugin/filetype.vim

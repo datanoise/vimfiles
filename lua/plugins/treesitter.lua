@@ -101,3 +101,5 @@ require'treesitter-context'.setup {
 require("twilight").setup {}
 require('aerial').setup {}
 
+local ft_to_parser = require"nvim-treesitter.parsers".filetype_to_parsername
+ft_to_parser['eruby.yaml'] = "yml"

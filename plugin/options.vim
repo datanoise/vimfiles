@@ -107,6 +107,7 @@ set mouse=a
 " }}}
 " folding options {{{2
 set foldmethod=marker
+set foldlevelstart=99
 set foldlevel=99 " always expand folds
 " }}}
 " input method options {{{2

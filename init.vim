@@ -68,6 +68,9 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-llvm',           { 'for': 'llvm' }
   Plug 'python-mode/python-mode',      { 'for': 'python', 'branch': 'develop' }
   Plug 'JuliaEditorSupport/julia-vim', { 'for': 'julia' }
+  Plug 'vim-ruby/vim-ruby'
+  Plug 'datanoise/vim-ruby-heredoc-syntax'
+  Plug 'plasticboy/vim-markdown'
 
   if $GOPATH !=# ''
     " do not use lazy loading, cause it disables template function
@@ -134,7 +137,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'p00f/nvim-ts-rainbow'
     Plug 'folke/twilight.nvim'
     Plug 'windwp/nvim-ts-autotag'
-    Plug 'stevearc/aerial.nvim'
     Plug 'numToStr/Comment.nvim'
     Plug 'norcalli/nvim-colorizer.lua'
     Plug 'rcarriga/nvim-notify'
@@ -142,6 +144,14 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'neovim/nvim-lspconfig'
     Plug 'williamboman/mason.nvim'
     Plug 'mfussenegger/nvim-dap'
+    Plug 'lewis6991/spellsitter.nvim'
+    Plug 'kylechui/nvim-surround'
+    Plug 'RRethy/nvim-treesitter-endwise'
+
+    Plug 'EdenEast/nightfox.nvim'
+    Plug 'Everblush/everblush.nvim', { 'as': 'everblush' }
+    Plug 'Mofiqul/adwaita.nvim'
+    Plug 'Yazeed1s/minimal.nvim'
 
     Plug 'hrsh7th/cmp-buffer'
     Plug 'hrsh7th/cmp-path'
@@ -152,35 +162,24 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'saadparwaiz1/cmp_luasnip'
     " Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-    Plug 'EdenEast/nightfox.nvim'
-    Plug 'Everblush/everblush.nvim', { 'as': 'everblush' }
-    Plug 'Mofiqul/adwaita.nvim'
-    Plug 'Yazeed1s/minimal.nvim'
-    Plug 'kylechui/nvim-surround'
-    Plug 'RRethy/nvim-treesitter-endwise'
-
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim'
+    Plug 'stevearc/aerial.nvim'
   else
     Plug 'tpope/vim-repeat'
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-endwise'
     Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
 
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}
-    " Plug 'wellle/tmux-complete.vim'
-
     Plug 'kana/vim-textobj-function'
-
-    Plug 'vim-ruby/vim-ruby'
-    Plug 'datanoise/vim-ruby-heredoc-syntax'
-    Plug 'plasticboy/vim-markdown'
     Plug 'AndrewRadev/sideways.vim'
-
     Plug 'majutsushi/tagbar'
     Plug 'tmux-plugins/vim-tmux-focus-events'
     Plug 'ap/vim-css-color'
     Plug 'flazz/vim-colorschemes'
+
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    " Plug 'wellle/tmux-complete.vim'
 
     " ctrlp
     Plug 'ctrlpvim/ctrlp.vim'

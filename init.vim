@@ -144,7 +144,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'neovim/nvim-lspconfig'
     Plug 'williamboman/mason.nvim'
     Plug 'mfussenegger/nvim-dap'
-    Plug 'lewis6991/spellsitter.nvim'
     Plug 'kylechui/nvim-surround'
     Plug 'RRethy/nvim-treesitter-endwise'
 

@@ -19,6 +19,14 @@ if has_key(g:plugs, 'lightline-ale')
   let ale_status = [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ]
 endif
 
+if has_key(g:plugs, 'vim-matchup')
+  let g:matchup_matchparen_offscreen={'method': 'status_manual'}
+else
+  fun! MatchupStatusOffscreen()
+    return ''
+  endfun
+endif
+
 let g:lightline = {
       \ 'colorscheme': 'datanoise',
       \ 'enable': {
@@ -27,13 +35,13 @@ let g:lightline = {
       \ },
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified', 'spell'],
+      \             [ 'gitbranch', 'readonly', 'filename', 'matchup', 'modified', 'spell'],
       \             [ 'ctrlpmark' ] ],
       \   'right': [ ale_status,
       \              lsp_info, lsp_status,
       \              [ 'lineinfo' ],
       \              [ 'percent' ],
-      \              [ 'current_tag', 'fileformat', 'filetype' ],
+      \              [ 'current_tag', 'filetype' ],
       \            ],
       \ },
       \ 'component': {
@@ -44,6 +52,7 @@ let g:lightline = {
       \   'readonly': 'LightlineReadonly',
       \   'ctrlpmark': 'CtrlPMark',
       \   'current_tag': 'CurrentTag',
+      \   'matchup': 'MatchupStatusOffscreen'
       \ },
       \ 'component_expand': {
       \   'gitbranch': 'LightlineFugitive',

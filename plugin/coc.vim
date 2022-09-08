@@ -3,6 +3,29 @@ if !has_key(g:plugs, 'coc.nvim')
   finish
 endif
 
+function! s:complete_brackets()
+  let l:line = getline('.')
+  let l:c = l:line[col('.')-2]
+  let l:x = l:line[col('.')-1]
+  if l:c =~# '[{\[\(]' && match(l:line, '[}\]\)]', col('.')) == -1
+    if l:c ==# '['
+      let l:b = ']'
+    elseif l:c ==# '('
+      let l:b = ')'
+    elseif l:c ==# '{'
+      let l:b = '}'
+    else
+      return "\<CR>"
+    endif
+    if l:x ==# l:b
+      let l:b = ''
+    endif
+    return "\<CR>".l:b."\<C-O>O"
+  else
+    return "\<CR>"
+  endif
+endfunction
+
 inoremap <silent><expr> <TAB>
       \ coc#pum#visible() ? coc#pum#next(1):
       \ <SID>check_back_space() ? "\<Tab>" :

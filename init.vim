@@ -110,7 +110,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'thinca/vim-textobj-between'
   Plug 'lucapette/vim-textobj-underscore'
 
-  Plug 'Raimondi/delimitMate'
   Plug 'datanoise/vim-localvimrc'
   Plug 'datanoise/vim-cmdline-complete'
   Plug 'rhysd/git-messenger.vim'
@@ -148,6 +147,8 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'folke/trouble.nvim'
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'josa42/nvim-lightline-lsp'
+    Plug 'andymass/vim-matchup'
+    Plug 'windwp/nvim-autopairs'
 
     Plug 'EdenEast/nightfox.nvim'
     Plug 'Everblush/everblush.nvim', { 'as': 'everblush' }
@@ -171,6 +172,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-endwise'
     Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
+    Plug 'Raimondi/delimitMate'
 
     Plug 'w0rp/ale'
     Plug 'maximbaz/lightline-ale'

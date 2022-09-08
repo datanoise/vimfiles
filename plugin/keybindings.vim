@@ -85,29 +85,6 @@ function! CommandAliasForBuffer(input, output)
   call s:command_alias(a:input, a:output, 1)
 endfunction
 
-function! s:complete_brackets()
-  let l:line = getline('.')
-  let l:c = l:line[col('.')-2]
-  let l:x = l:line[col('.')-1]
-  if l:c =~# '[{\[\(]' && match(l:line, '[}\]\)]', col('.')) == -1
-    if l:c ==# '['
-      let l:b = ']'
-    elseif l:c ==# '('
-      let l:b = ')'
-    elseif l:c ==# '{'
-      let l:b = '}'
-    else
-      return "\<CR>"
-    endif
-    if l:x ==# l:b
-      let l:b = ''
-    endif
-    return "\<CR>".l:b."\<C-O>O"
-  else
-    return "\<CR>"
-  endif
-endfunction
-
 function! Wildmenumode()
   if match(&wildoptions, 'pum') != -1
     return pumvisible()

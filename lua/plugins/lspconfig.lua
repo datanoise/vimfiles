@@ -35,7 +35,7 @@ require('lspconfig')['pyright'].setup{
 }
 require('lspconfig')['solargraph'].setup{
   on_attach = on_attach,
-  autostart = false,
+  -- autostart = false,
 }
 require('lspconfig')['tsserver'].setup{
   on_attach = on_attach,

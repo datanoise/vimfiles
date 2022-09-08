@@ -5,6 +5,6 @@ endif
 
 nmap p <Plug>(miniyank-autoput)
 nmap P <Plug>(miniyank-autoPut)
-imap <leader>y <Plug>(miniyank-cycle)
+nmap <leader>y <Plug>(miniyank-cycle)
 nmap <M-y> <Plug>(miniyank-cycle)
 

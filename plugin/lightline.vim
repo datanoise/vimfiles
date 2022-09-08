@@ -5,6 +5,20 @@ if !has_key(g:plugs, 'lightline.vim')
 endif
 
 set noshowmode
+
+let lsp_info = []
+let lsp_status = []
+let ale_status = []
+if has_key(g:plugs, 'nvim-lightline-lsp')
+  call lightline#lsp#register()
+  let lsp_info = [ 'lsp_info', 'lsp_hints', 'lsp_errors', 'lsp_warnings', 'lsp_ok' ]
+  let lsp_status = [ 'lsp_status' ]
+endif
+
+if has_key(g:plugs, 'lightline-ale')
+  let ale_status = [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ]
+endif
+
 let g:lightline = {
       \ 'colorscheme': 'datanoise',
       \ 'enable': {
@@ -15,8 +29,8 @@ let g:lightline = {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified', 'spell'],
       \             [ 'ctrlpmark' ] ],
-      \   'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ],
-      \              [ 'lsp_info', 'lsp_hints', 'lsp_errors', 'lsp_warnings', 'lsp_ok' ], [ 'lsp_status' ],
+      \   'right': [ ale_status,
+      \              lsp_info, lsp_status,
       \              [ 'lineinfo' ],
       \              [ 'percent' ],
       \              [ 'current_tag', 'fileformat', 'filetype' ],
@@ -215,7 +229,3 @@ endif
 
 let g:lightline#ale#indicator_ok = '✓'
 let g:lightline#ale#indicator_checking = '⦿'
-
-if has_key(g:plugs, 'nvim-lightline-lsp')
-  call lightline#lsp#register()
-endif

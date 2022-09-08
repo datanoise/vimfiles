@@ -173,13 +173,14 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
 
     Plug 'w0rp/ale'
+    Plug 'maximbaz/lightline-ale'
+
     Plug 'kana/vim-textobj-function'
     Plug 'AndrewRadev/sideways.vim'
     Plug 'majutsushi/tagbar'
     Plug 'tmux-plugins/vim-tmux-focus-events'
     Plug 'ap/vim-css-color'
     Plug 'flazz/vim-colorschemes'
-    Plug 'maximbaz/lightline-ale'
 
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     " Plug 'wellle/tmux-complete.vim'

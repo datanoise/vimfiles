@@ -41,6 +41,9 @@ endif
 " }}}
 " status line options {{{2
 set laststatus=2
+if has('nvim')
+  set laststatus=3
+endif
 set statusline=%m%<%.99f%q\ %h%w%r%y
 set statusline+=%{exists('*CapsLockStatusline')?'\ '.CapsLockStatusline():''}
 set statusline+=\ %{GitBranch()}
@@ -85,7 +88,7 @@ set listchars+=extends:>,precedes:<
 if v:version >= 700
   set listchars+=nbsp:+
 endif
-set fillchars+=vert:\|
+set fillchars+=vert:\│
 " }}}
 " wild options {{{2
 set wildmenu

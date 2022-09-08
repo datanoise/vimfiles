@@ -717,6 +717,10 @@ hi! link ALEVirtualTextError Error
 hi! link markdownError Normal
 hi! HighlightedyankRegion ctermbg=237 guibg=orange guifg=black
 
+if has('nvim')
+  " make window separator transparent
+  hi WinSeparator guibg=none
+endif
 
 " Manual overrides for 256-color terminals. Dark colors auto-map badly.
 if !s:low_color

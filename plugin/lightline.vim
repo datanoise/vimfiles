@@ -22,7 +22,11 @@ if has_key(g:plugs, 'lightline-ale')
 endif
 
 if has_key(g:plugs, 'vim-matchup')
-  let g:matchup_matchparen_offscreen = {'method': 'status_manual'}
+  if has_key(g:plugs, 'nvim-treesitter-context')
+    let g:matchup_matchparen_offscreen = {}
+  else
+    let g:matchup_matchparen_offscreen = {'method': 'status_manual'}
+  endif
 else
   fun! MatchupStatusOffscreen()
     return ''

@@ -18,7 +18,8 @@ require('telescope').setup {
       theme = "dropdown"
     },
     buffers = {
-      theme = "dropdown"
+      theme = "dropdown",
+      sort_lastused = true
     },
     oldfiles = {
       theme = "dropdown"

@@ -17,11 +17,6 @@ augroup SpellSettings
   au FileType gitcommit,markdown,mkd,text setlocal spell
 augroup END
 
-" augroup TabCompletion
-"   au!
-"   au FileType xml,html,vue,eruby call s:enableTagComplete()
-" augroup END
-
 augroup VimSettings
   au!
   au FileType help nnoremap <silent> <buffer> q :helpclose<CR>
@@ -82,10 +77,6 @@ augroup END
 augroup JavascriptSettings
   au!
   au FileType javascript nnoremap <silent> <buffer> <F4> :!node %<CR>
-  au FileType javascript
-        \ if b:current_syntax == 'javascript.jsx' |
-        \   call s:enableTagComplete() |
-        \ endif
 augroup END
 
 augroup RustSettings

@@ -61,11 +61,6 @@ function! s:tagComplete()
   endif
 endfunction
 
-function! s:enableTagComplete()
-  let b:delimitMate_matchpairs = '(:),[:],{:}'
-  imap <silent> <buffer> <expr> > <SID>tagComplete()
-endfunction
-
 function! s:command_alias(input, output, buf_only)
   if a:buf_only
     let l:buffer = ' <buffer> '

@@ -6,21 +6,23 @@ endif
 
 set noshowmode
 
-let lsp_info = []
-let lsp_status = []
-let ale_status = []
+let s:lsp_info = []
+let s:lsp_status = []
+let s:ale_status = []
+
 if has_key(g:plugs, 'nvim-lightline-lsp')
-  call lightline#lsp#register()
-  let lsp_info = [ 'lsp_info', 'lsp_hints', 'lsp_errors', 'lsp_warnings', 'lsp_ok' ]
-  let lsp_status = [ 'lsp_status' ]
+  let s:lsp_info = [ 'lsp_info', 'lsp_hints', 'lsp_errors', 'lsp_warnings', 'lsp_ok' ]
+  let s:lsp_status = [ 'lsp_status' ]
 endif
 
 if has_key(g:plugs, 'lightline-ale')
-  let ale_status = [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ]
+  let s:ale_status = [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ]
+  let g:lightline#ale#indicator_ok = '✓'
+  let g:lightline#ale#indicator_checking = '⦿'
 endif
 
 if has_key(g:plugs, 'vim-matchup')
-  let g:matchup_matchparen_offscreen={'method': 'status_manual'}
+  let g:matchup_matchparen_offscreen = {'method': 'status_manual'}
 else
   fun! MatchupStatusOffscreen()
     return ''
@@ -37,8 +39,7 @@ let g:lightline = {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'matchup', 'modified', 'spell'],
       \             [ 'ctrlpmark' ] ],
-      \   'right': [ ale_status,
-      \              lsp_info, lsp_status,
+      \   'right': [ s:ale_status, s:lsp_info, s:lsp_status,
       \              [ 'lineinfo' ],
       \              [ 'percent' ],
       \              [ 'current_tag', 'filetype' ],
@@ -131,32 +132,32 @@ endfunction
 
 let g:tagbar_status_func = 'TagbarStatusFunc'
 
-function! TagbarStatusFunc(current, sort, fname, ...) abort
-  let g:lightline.fname = a:fname
-  return lightline#statusline(0)
-endfunction
-
-let s:tagbar_init = 0
-let s:tagbar_last_updated_time = 0
-let s:tagbar_last_updated_val = ''
-function! TagbarCurrentTag()
-  if !s:tagbar_init
-    try
-      let l:a = tagbar#currenttag('%', '', '')
-      unlet l:a
-    catch
-      " ignore
-    endtry
-    let s:tagbar_init = 1
-  endif
-  if s:tagbar_last_updated_time !=# localtime() && exists('*tagbar#currenttag')
-    let s:tagbar_last_updated_val = tagbar#currenttag('%s', '', '')
-    let s:tagbar_last_updated_time = localtime()
-  endif
-  return s:tagbar_last_updated_val
-endfunction
-
 if has_key(g:plugs, 'tagbar')
+
+  function! TagbarStatusFunc(current, sort, fname, ...) abort
+    let g:lightline.fname = a:fname
+    return lightline#statusline(0)
+  endfunction
+
+  let s:tagbar_init = 0
+  let s:tagbar_last_updated_time = 0
+  let s:tagbar_last_updated_val = ''
+  function! TagbarCurrentTag()
+    if !s:tagbar_init
+      try
+        let l:a = tagbar#currenttag('%', '', '')
+        unlet l:a
+      catch
+        " ignore
+      endtry
+      let s:tagbar_init = 1
+    endif
+    if s:tagbar_last_updated_time !=# localtime() && exists('*tagbar#currenttag')
+      let s:tagbar_last_updated_val = tagbar#currenttag('%s', '', '')
+      let s:tagbar_last_updated_time = localtime()
+    endif
+    return s:tagbar_last_updated_val
+  endfunction
 
   function! CurrentTag() abort
     return TagbarCurrentTag()
@@ -236,5 +237,6 @@ else
 
 endif
 
-let g:lightline#ale#indicator_ok = '✓'
-let g:lightline#ale#indicator_checking = '⦿'
+if has_key(g:plugs, 'nvim-lightline-lsp')
+  call lightline#lsp#register()
+endif

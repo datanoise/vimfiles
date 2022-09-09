@@ -74,10 +74,6 @@ silent! if plug#begin('~/.vim/bundle')
   endif
 
   " snippets
-  " ultisnips is very heavy plugin
-  " Plug 'SirVer/ultisnips'
-  " Plug 'garbas/vim-snipmate'
-  " Plug 'Shougo/neosnippet.vim'
   Plug 'Shougo/neosnippet-snippets'
   Plug 'honza/vim-snippets'
 
@@ -157,7 +153,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'hrsh7th/cmp-nvim-lsp'
     Plug 'L3MON4D3/LuaSnip'
     Plug 'saadparwaiz1/cmp_luasnip'
-    " Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim'

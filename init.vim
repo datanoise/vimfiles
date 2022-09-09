@@ -196,4 +196,4 @@ packadd matchit
 runtime! plugin/options.vim
 runtime! plugin/keybindings.vim
 runtime! plugin/commands.vim
-runtime! plugin/filetype.vim
+runtime! plugin/filetypes.vim

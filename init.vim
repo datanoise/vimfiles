@@ -25,20 +25,11 @@ silent! if plug#begin('~/.vim/bundle')
   " Plug 'tpope/vim-bundler'
   Plug 'tpope/vim-dadbod', { 'on': 'DB' }
 
-  Plug 'scrooloose/nerdtree',  { 'on': 'NERDTreeToggle' }
-
   Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign'] }
-  Plug 'junegunn/goyo.vim'
-  Plug 'junegunn/limelight.vim',  { 'on': 'Limelight' }
   Plug 'junegunn/gv.vim',         { 'on': 'GV' }
   Plug 'justinmk/vim-dirvish'
-  Plug 'junegunn/vader.vim'
   Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
   Plug 'junegunn/fzf.vim'
-
-  Plug 'AndrewRadev/splitjoin.vim', { 'on': [ 'SplitjoinJoin', 'SplitjoinSplit'] }
-  Plug 'datanoise/switch.vim', { 'on': 'Switch',
-        \ 'for': ['ruby', 'eruby', 'php', 'haml', 'slim', 'cpp', 'javascript', 'coffee', 'clojure', 'scala', 'elixir', 'rust'] }
 
   " file types
   Plug 'pangloss/vim-javascript'  
@@ -94,7 +85,11 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-indexed-search', { 'on': 'ShowSearchIndex' }
   Plug 'vim-scripts/searchfold.vim',   { 'on': '<Plug>SearchFoldNormal' }
   Plug 'datanoise/vim-bclose',         { 'on': 'Bclose' }
-  Plug 'airblade/vim-gitgutter',       { 'on': [ 'GitGutterToggle', 'GitGutterEnable' ] }
+  Plug 'scrooloose/nerdtree',  { 'on': 'NERDTreeToggle' }
+  Plug 'AndrewRadev/splitjoin.vim', { 'on': [ 'SplitjoinJoin', 'SplitjoinSplit'] }
+  Plug 'datanoise/switch.vim', { 'on': 'Switch',
+        \ 'for': ['ruby', 'eruby', 'php', 'haml', 'slim', 'cpp', 'javascript', 'coffee', 'clojure', 'scala', 'elixir', 'rust'] }
+
 
   " text objects
   Plug 'kana/vim-textobj-user'
@@ -124,15 +119,14 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'lervag/vimtex'
 
   if has('nvim')
-    Plug 'bfredl/nvim-miniyank'
-    Plug 'datanoise/vim-dispatch-neovim'
-
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'nvim-treesitter/nvim-treesitter-context'
     Plug 'nvim-treesitter/nvim-treesitter-textobjects'
     Plug 'nvim-treesitter/playground'
+
+    Plug 'bfredl/nvim-miniyank'
+    Plug 'datanoise/vim-dispatch-neovim'
     Plug 'p00f/nvim-ts-rainbow'
-    Plug 'folke/twilight.nvim'
     Plug 'windwp/nvim-ts-autotag'
     Plug 'numToStr/Comment.nvim'
     Plug 'norcalli/nvim-colorizer.lua'
@@ -149,6 +143,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'josa42/nvim-lightline-lsp'
     Plug 'andymass/vim-matchup'
     Plug 'windwp/nvim-autopairs'
+    Plug 'lewis6991/gitsigns.nvim'
 
     Plug 'EdenEast/nightfox.nvim'
     Plug 'Everblush/everblush.nvim', { 'as': 'everblush' }
@@ -173,6 +168,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'tpope/vim-endwise'
     Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
     Plug 'Raimondi/delimitMate'
+    Plug 'airblade/vim-gitgutter', { 'on': [ 'GitGutterToggle', 'GitGutterEnable' ] }
 
     Plug 'w0rp/ale'
     Plug 'maximbaz/lightline-ale'

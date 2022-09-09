@@ -719,7 +719,7 @@ hi! HighlightedyankRegion ctermbg=237 guibg=orange guifg=black
 
 if has('nvim')
   " make window separator transparent
-  hi WinSeparator guibg=none
+  hi WinSeparator guibg=none guifg=gray
 endif
 
 " Manual overrides for 256-color terminals. Dark colors auto-map badly.

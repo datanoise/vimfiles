@@ -130,10 +130,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'lewis6991/gitsigns.nvim'
     Plug 'kyazdani42/nvim-tree.lua'
     Plug 'j-hui/fidget.nvim'
-
     Plug 'EdenEast/nightfox.nvim'
-    Plug 'Everblush/everblush.nvim', { 'as': 'everblush' }
-    Plug 'Mofiqul/adwaita.nvim'
     Plug 'Yazeed1s/minimal.nvim'
 
     Plug 'hrsh7th/cmp-buffer'

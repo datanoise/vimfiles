@@ -131,9 +131,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'kyazdani42/nvim-tree.lua'
     Plug 'j-hui/fidget.nvim'
 
-    " Plug 'WhoIsSethDaniel/lualine-lsp-progress'
-    " Plug 'josa42/nvim-lightline-lsp'
-
     Plug 'EdenEast/nightfox.nvim'
     Plug 'Everblush/everblush.nvim', { 'as': 'everblush' }
     Plug 'Mofiqul/adwaita.nvim'

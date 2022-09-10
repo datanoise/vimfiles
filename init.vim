@@ -81,9 +81,8 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-indexed-search', { 'on': 'ShowSearchIndex' }
   Plug 'vim-scripts/searchfold.vim',   { 'on': '<Plug>SearchFoldNormal' }
   Plug 'datanoise/vim-bclose',         { 'on': 'Bclose' }
-  Plug 'AndrewRadev/splitjoin.vim', { 'on': [ 'SplitjoinJoin', 'SplitjoinSplit'] }
-  Plug 'datanoise/switch.vim', { 'on': 'Switch',
-        \ 'for': ['ruby', 'eruby', 'php', 'haml', 'slim', 'cpp', 'javascript', 'coffee', 'clojure', 'scala', 'elixir', 'rust'] }
+  Plug 'AndrewRadev/splitjoin.vim',    { 'on': [ 'SplitjoinJoin', 'SplitjoinSplit'] }
+  Plug 'datanoise/switch.vim',         { 'on': 'Switch' }
 
 
   " text objects

@@ -128,6 +128,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'folke/which-key.nvim'
     Plug 'neovim/nvim-lspconfig'
     Plug 'williamboman/mason.nvim'
+    Plug 'williamboman/mason-lspconfig.nvim'
     Plug 'mfussenegger/nvim-dap'
     Plug 'kylechui/nvim-surround'
     Plug 'RRethy/nvim-treesitter-endwise'

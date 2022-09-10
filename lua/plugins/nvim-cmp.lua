@@ -41,6 +41,8 @@ cmp.setup({
     end, { "i", "s" }),
   }),
   sources = cmp.config.sources({
+    { name = 'luasnip', option = { use_show_condition = false } },
+    { name = 'nvim_lsp' },
     {
       name = 'buffer',
       option = {
@@ -51,8 +53,6 @@ cmp.setup({
       }
     },
     { name = 'path' },
-    { name = 'nvim_lsp' },
-    { name = 'luasnip', option = { use_show_condition = false } },
   }),
   window = {
     completion = cmp.config.window.bordered(),

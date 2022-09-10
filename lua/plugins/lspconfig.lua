@@ -1,5 +1,4 @@
-require('lspconfig').pyright.setup{}
-require('mason').setup()
+local lspconfig = require('lspconfig')
 
 local opts = { noremap=true, silent=true }
 vim.keymap.set('n', 'gl', vim.diagnostic.open_float, opts)
@@ -9,7 +8,7 @@ vim.keymap.set('n', '<shift-q>', vim.diagnostic.setloclist, opts)
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
-local on_attach = function(_client, bufnr)
+local on_attach = function(_, bufnr)
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
   -- Mappings.
@@ -31,22 +30,49 @@ local on_attach = function(_client, bufnr)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
   vim.keymap.set('n', '<leader>sf', vim.lsp.buf.formatting, bufopts)
 end
-require('lspconfig')['pyright'].setup{
-  on_attach = on_attach,
-}
-require('lspconfig')['solargraph'].setup{
-  on_attach = on_attach,
-  -- autostart = false,
-}
-require('lspconfig')['tsserver'].setup{
-  on_attach = on_attach,
-}
-require('lspconfig')['rust_analyzer'].setup{
-  on_attach = on_attach,
-  settings = {
-    ["rust-analyzer"] = {}
-  }
-}
+
+require('mason').setup()
+require("mason-lspconfig").setup()
+require("mason-lspconfig").setup_handlers({
+  function (server_name)
+    lspconfig[server_name].setup({
+      on_attach = on_attach,
+    })
+  end,
+  ["rust_analyzer"] = function ()
+    lspconfig["rust_analyzer"].setup({
+      on_attach = on_attach,
+      settings = {
+        ["rust-analyzer"] = {}
+      }
+    })
+  end,
+  ["sumneko_lua"] = function ()
+    lspconfig['sumneko_lua'].setup{
+      on_attach = on_attach,
+      settings = {
+        Lua = {
+          runtime = {
+            -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+            version = 'LuaJIT',
+          },
+          diagnostics = {
+            -- Get the language server to recognize the `vim` global
+            globals = {'vim'},
+          },
+          workspace = {
+            -- Make the server aware of Neovim runtime files
+            library = vim.api.nvim_get_runtime_file("", true),
+          },
+          -- Do not send telemetry data containing a randomized but unique identifier
+          telemetry = {
+            enable = false,
+          },
+        },
+      },
+    }
+  end
+})
 
 require('lspconfig.ui.windows').default_options.border = 'single'
 local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }

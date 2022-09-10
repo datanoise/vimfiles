@@ -22,7 +22,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-abolish'
   Plug 'tpope/vim-obsession'
   Plug 'tpope/vim-apathy'
-  " Plug 'tpope/vim-bundler'
+  Plug 'tpope/vim-bundler'
   Plug 'tpope/vim-dadbod', { 'on': 'DB' }
 
   Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign'] }
@@ -35,9 +35,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'pangloss/vim-javascript'  
   Plug 'datanoise/vim-jsx-pretty'
   Plug 'othree/html5.vim'
-  " lazy loading for filetypes makes sense only for those that are not
-  " included in the standard Vim distribution. Otherwise, Vim will load them
-  " anyway, possibly very old version.
   Plug 'euclio/vim-markdown-composer', { 'for': 'markdown' }
   Plug 'tpope/vim-haml',               { 'for': ['haml', 'sass', 'scss'] }
   Plug 'rust-lang/rust.vim',           { 'for': 'rust' }
@@ -63,14 +60,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'plasticboy/vim-markdown'
 
   if $GOPATH !=# ''
-    " do not use lazy loading, cause it disables template function
     Plug 'fatih/vim-go'
-  endif
-
-  " statusline
-  if $TERM ==# '' || $TERM ==# 'xterm-256color' || $TERM ==# 'screen-256color'
-    " lightline
-    Plug 'itchyny/lightline.vim'
   endif
 
   " snippets
@@ -83,7 +73,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-bclose',         { 'on': 'Bclose' }
   Plug 'AndrewRadev/splitjoin.vim',    { 'on': [ 'SplitjoinJoin', 'SplitjoinSplit'] }
   Plug 'datanoise/switch.vim',         { 'on': 'Switch' }
-
 
   " text objects
   Plug 'kana/vim-textobj-user'
@@ -118,6 +107,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'nvim-treesitter/nvim-treesitter-textobjects'
     Plug 'nvim-treesitter/playground'
 
+    Plug 'nvim-lualine/lualine.nvim'
     Plug 'bfredl/nvim-miniyank'
     Plug 'datanoise/vim-dispatch-neovim'
     Plug 'p00f/nvim-ts-rainbow'
@@ -135,11 +125,14 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'jose-elias-alvarez/null-ls.nvim'
     Plug 'folke/trouble.nvim'
     Plug 'kyazdani42/nvim-web-devicons'
-    Plug 'josa42/nvim-lightline-lsp'
     Plug 'andymass/vim-matchup'
     Plug 'windwp/nvim-autopairs'
     Plug 'lewis6991/gitsigns.nvim'
     Plug 'kyazdani42/nvim-tree.lua'
+    Plug 'j-hui/fidget.nvim'
+
+    " Plug 'WhoIsSethDaniel/lualine-lsp-progress'
+    " Plug 'josa42/nvim-lightline-lsp'
 
     Plug 'EdenEast/nightfox.nvim'
     Plug 'Everblush/everblush.nvim', { 'as': 'everblush' }
@@ -176,8 +169,14 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'ap/vim-css-color'
     Plug 'flazz/vim-colorschemes'
 
+    " statusline
+    if $TERM ==# '' || $TERM ==# 'xterm-256color' || $TERM ==# 'screen-256color'
+      " lightline
+      Plug 'itchyny/lightline.vim'
+    endif
+
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
-    " Plug 'wellle/tmux-complete.vim'
+    Plug 'wellle/tmux-complete.vim'
 
     " ctrlp
     Plug 'ctrlpvim/ctrlp.vim'

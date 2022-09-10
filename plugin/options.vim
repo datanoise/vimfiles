@@ -174,13 +174,6 @@ set nofsync " don't spin my disk
 set completeopt=menu,longest
 set clipboard+=unnamed
 set signcolumn=yes
-augroup CheckFilesForUpdates
-  au!
-  au FocusGained * :sil! checktime |
-        \ if exists('*lightline#update') |
-        \   call lightline#update() |
-        \ endif
-augroup END
 
 augroup FugitiveAutoCleanup
   au!
@@ -198,6 +191,11 @@ if has('nvim')
     au!
     au TermOpen * nnoremap <buffer> <Enter> i
     au TermOpen * setlocal signcolumn=no
+  augroup END
+
+  augroup CheckFilesForUpdates
+    au!
+    au FocusGained * :sil! checktime
   augroup END
 
   if executable('nvr')

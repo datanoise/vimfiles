@@ -19,7 +19,8 @@ require('telescope').setup {
     },
     buffers = {
       theme = "dropdown",
-      sort_lastused = true
+      sort_lastused = true,
+      ignore_current_buffer = true,
     },
     oldfiles = {
       theme = "dropdown"

@@ -81,7 +81,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-indexed-search', { 'on': 'ShowSearchIndex' }
   Plug 'vim-scripts/searchfold.vim',   { 'on': '<Plug>SearchFoldNormal' }
   Plug 'datanoise/vim-bclose',         { 'on': 'Bclose' }
-  Plug 'scrooloose/nerdtree',  { 'on': 'NERDTreeToggle' }
   Plug 'AndrewRadev/splitjoin.vim', { 'on': [ 'SplitjoinJoin', 'SplitjoinSplit'] }
   Plug 'datanoise/switch.vim', { 'on': 'Switch',
         \ 'for': ['ruby', 'eruby', 'php', 'haml', 'slim', 'cpp', 'javascript', 'coffee', 'clojure', 'scala', 'elixir', 'rust'] }
@@ -140,6 +139,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'andymass/vim-matchup'
     Plug 'windwp/nvim-autopairs'
     Plug 'lewis6991/gitsigns.nvim'
+    Plug 'kyazdani42/nvim-tree.lua'
 
     Plug 'EdenEast/nightfox.nvim'
     Plug 'Everblush/everblush.nvim', { 'as': 'everblush' }
@@ -161,9 +161,10 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'tpope/vim-repeat'
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-endwise'
-    Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
     Plug 'Raimondi/delimitMate'
+    Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
     Plug 'airblade/vim-gitgutter', { 'on': [ 'GitGutterToggle', 'GitGutterEnable' ] }
+    Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 
     Plug 'w0rp/ale'
     Plug 'maximbaz/lightline-ale'

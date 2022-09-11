@@ -96,7 +96,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'nvim-treesitter/playground'
 
     Plug 'nvim-lualine/lualine.nvim'
-    Plug 'bfredl/nvim-miniyank'
+    Plug 'gbprod/yanky.nvim'
     Plug 'datanoise/vim-dispatch-neovim'
     Plug 'p00f/nvim-ts-rainbow'
     Plug 'windwp/nvim-ts-autotag'

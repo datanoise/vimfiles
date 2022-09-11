@@ -74,20 +74,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'AndrewRadev/splitjoin.vim',    { 'on': [ 'SplitjoinJoin', 'SplitjoinSplit'] }
   Plug 'datanoise/switch.vim',         { 'on': 'Switch' }
 
-  " text objects
-  Plug 'kana/vim-textobj-user'
-  Plug 'kana/vim-textobj-line'
-  Plug 'kana/vim-textobj-indent'
-  Plug 'kana/vim-textobj-entire'
-  Plug 'kana/vim-textobj-fold'
-  Plug 'kana/vim-textobj-lastpat'
-  Plug 'kana/vim-textobj-syntax'
-  Plug 'kana/vim-textobj-datetime'
-  Plug 'datanoise/vim-textobj-quoted'
-  Plug 'nelstrom/vim-textobj-rubyblock'
-  Plug 'thinca/vim-textobj-between'
-  Plug 'lucapette/vim-textobj-underscore'
-
+  Plug 'wellle/targets.vim'
   Plug 'datanoise/vim-localvimrc'
   Plug 'datanoise/vim-cmdline-complete'
   Plug 'rhysd/git-messenger.vim'
@@ -97,9 +84,10 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'mhinz/vim-randomtag'
   Plug 'machakann/vim-highlightedyank'
   Plug 'datanoise/bufexplorer'
-  Plug 'vimwiki/vimwiki'
+  Plug 'vimwiki/vimwiki', { 'on': 'VimwikiIndex' }
   Plug 'easymotion/vim-easymotion'
   Plug 'lervag/vimtex'
+  Plug 'tweekmonster/startuptime.vim'
 
   if has('nvim')
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -156,7 +144,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'w0rp/ale'
     Plug 'maximbaz/lightline-ale'
 
-    Plug 'kana/vim-textobj-function'
     Plug 'AndrewRadev/sideways.vim'
     Plug 'majutsushi/tagbar'
     Plug 'tmux-plugins/vim-tmux-focus-events'

@@ -3,7 +3,7 @@ if exists("g:loaded_tmux_focus")
 endif
 let g:loaded_tmux_focus = 1
 
-if !exists("$TMUX") || has('nvim')
+if !exists("$TMUX")
   finish
 endif
 

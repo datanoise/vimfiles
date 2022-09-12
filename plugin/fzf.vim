@@ -7,13 +7,15 @@ let g:fzf_preview_window = ''
 execute 'cnoremap <M-t> FZF '
 execute 'nnoremap <M-t> :FZF '
 call CommandAlias('fzf', 'FZF')
-nnoremap <silent> <Leader>m :Files<CR>
-nnoremap <silent> <Leader>F :Files %:h<CR>
-nnoremap <silent> <Leader>l :Buffers<CR>
-nnoremap <silent> <Leader>n :BTag<CR>
-nnoremap <silent> <Leader>e :History<CR>
-nnoremap <silent> <Leader>B :BCommits<CR>
-nnoremap <silent> <Leader>C :Commits<CR>
+if !has_key(g:plugs, 'telescope.nvim')
+  nnoremap <silent> <Leader>m :Files<CR>
+  nnoremap <silent> <Leader>F :Files %:h<CR>
+  nnoremap <silent> <Leader>l :Buffers<CR>
+  nnoremap <silent> <Leader>n :BTag<CR>
+  nnoremap <silent> <Leader>e :History<CR>
+  nnoremap <silent> <Leader>B :BCommits<CR>
+  nnoremap <silent> <Leader>C :Commits<CR>
+endif
 
 function! s:fzf_statusline()
   hi! fzf1 ctermfg=darkyellow ctermbg=242 guifg=gold3 guibg=#202020 gui=none

@@ -1,3 +1,7 @@
+if not vim.g.plugs['yanky.nvim'] then
+    return
+end
+
 require'yanky'.setup()
 require("telescope").load_extension("yank_history")
 

@@ -1,9 +1,16 @@
+if not vim.g.plugs['nvim-cmp'] then
+  return
+end
+
+vim.cmd [[set completeopt=menu,menuone,noselect]]
+
 local has_words_before = function()
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 
 local cmp = require('cmp')
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 local luasnip = require("luasnip")
 
 cmp.setup({
@@ -76,8 +83,6 @@ cmp.setup({
 --   })
 -- })
 
-local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-local cmp = require('cmp')
 cmp.event:on(
   'confirm_done',
   cmp_autopairs.on_confirm_done()

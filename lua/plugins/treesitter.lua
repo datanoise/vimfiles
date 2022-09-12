@@ -1,3 +1,12 @@
+if not vim.g.plugs['nvim-treesitter'] then
+  return
+end
+
+vim.cmd [[
+" set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
+]]
+
 require'nvim-treesitter.configs'.setup {
   ensure_installed = { "c", "lua", "rust", "ruby", "python", "javascript", "typescript", "vim" },
   highlight = {

@@ -1,0 +1,7 @@
+require('plugins/lualine')
+require('plugins/null-ls')
+require('plugins/autopairs')
+require('plugins/nvim-cmp')
+require('plugins/nvim-colorizer')
+require('plugins/telescope')
+require('plugins/yanky')

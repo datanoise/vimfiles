@@ -1,3 +1,7 @@
+if not vim.g.plugs['null-ls.nvim'] then
+  return
+end
+
 local null_ls = require("null-ls")
 local helpers = require("null-ls.helpers")
 
@@ -45,7 +49,7 @@ null_ls.setup({
   sources = {
     coffeelint,
     -- null_ls.builtins.diagnostics.luacheck,
-    null_ls.builtins.diagnostics.rubocop,
+    -- null_ls.builtins.diagnostics.rubocop,
   },
 })
 

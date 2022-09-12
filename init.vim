@@ -27,7 +27,6 @@ silent! if plug#begin('~/.vim/bundle')
 
   Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign'] }
   Plug 'junegunn/gv.vim',         { 'on': 'GV' }
-  Plug 'justinmk/vim-dirvish'
   Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
   Plug 'junegunn/fzf.vim'
 
@@ -178,3 +177,6 @@ runtime! plugin/options.vim
 runtime! plugin/keybindings.vim
 runtime! plugin/commands.vim
 runtime! plugin/filetypes.vim
+if has('nvim')
+  lua require('plugins')
+endif

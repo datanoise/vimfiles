@@ -1,3 +1,7 @@
+if not vim.g.plugs['nvim-autopairs'] then
+    return
+end
+
 require("nvim-autopairs").setup {
   ignored_next_char = [=[[%w%%%'%[%"]]=]
 }

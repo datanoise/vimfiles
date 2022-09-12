@@ -81,7 +81,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'janko-m/vim-test'
   Plug 'tweekmonster/exception.vim'
   Plug 'mhinz/vim-randomtag'
-  Plug 'machakann/vim-highlightedyank'
   Plug 'datanoise/bufexplorer'
   Plug 'vimwiki/vimwiki', { 'on': 'VimwikiIndex' }
   Plug 'easymotion/vim-easymotion'
@@ -148,6 +147,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'tmux-plugins/vim-tmux-focus-events'
     Plug 'ap/vim-css-color'
     Plug 'flazz/vim-colorschemes'
+    Plug 'machakann/vim-highlightedyank'
 
     " statusline
     if $TERM ==# '' || $TERM ==# 'xterm-256color' || $TERM ==# 'screen-256color'

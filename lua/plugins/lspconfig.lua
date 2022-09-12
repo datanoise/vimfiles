@@ -1,3 +1,7 @@
+if not vim.g.plugs['nvim-lspconfig'] then
+  return
+end
+
 local lspconfig = require('lspconfig')
 
 local opts = { noremap=true, silent=true }
@@ -96,6 +100,8 @@ vim.diagnostic.config({
     prefix = '',
   },
 })
+
+vim.cmd [[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false, scope="cursor"})]]
 
 vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
   vim.lsp.handlers.hover,

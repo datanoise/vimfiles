@@ -1,3 +1,4 @@
+require('plugins/treesitter')
 require('plugins/lualine')
 require('plugins/null-ls')
 require('plugins/autopairs')

@@ -89,9 +89,10 @@ vim.diagnostic.config({
   underline = {
     severity = { min = vim.diagnostic.severity.ERROR }
   },
-  virtual_text = {
-    severity = { min = vim.diagnostic.severity.WARN }
-  },
+  virtual_text = true,
+  -- virtual_text = {
+  --   severity = { min = vim.diagnostic.severity.WARN }
+  -- },
   severity_sort = true,
   float = {
     border = 'rounded',
@@ -101,7 +102,8 @@ vim.diagnostic.config({
   },
 })
 
-vim.cmd [[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false, scope="cursor"})]]
+-- vim.o.updatetime = 300
+-- vim.cmd [[autocmd! CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})]]
 
 vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
   vim.lsp.handlers.hover,

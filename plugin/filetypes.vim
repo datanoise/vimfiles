@@ -30,7 +30,7 @@ augroup RubySettings
   au!
   au BufNewFile,BufRead *.prawn set ft=ruby
   au BufNewFile,BufRead *.axlsx set ft=ruby
-  au FileType ruby setlocal indentkeys-=. indentkeys-=0{
+  au FileType ruby setlocal indentkeys-=. indentkeys-=0{, indentkeys-==when
   au FileType ruby if has('balloonexpr') | setlocal balloonexpr& | endif
   au FileType ruby iabbrev <buffer> rb! #!<C-R>=substitute(system('which ruby'),'\n$','','')<CR><C-R>=Eatchar('\s')<CR>
   au FileType ruby setlocal keywordprg=ri\ -T\ -f\ markdown\ --no-gems

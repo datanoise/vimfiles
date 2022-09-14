@@ -11,7 +11,7 @@ require'nvim-treesitter.configs'.setup {
   ensure_installed = { "c", "lua", "rust", "ruby", "python", "javascript", "typescript", "vim" },
   highlight = {
     enable = true,
-    -- disable = {"vim"}
+    -- disable = {"vim", "ruby"}
   },
   incremental_selection = {
     enable = true,
@@ -24,6 +24,7 @@ require'nvim-treesitter.configs'.setup {
   },
   indent = {
     enable = true,
+    -- disable = {"ruby"}
   },
   rainbow = {
     enable = true,

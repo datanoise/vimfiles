@@ -1,3 +1,7 @@
+if not vim.g.plugs['fzf-lua'] then
+    return
+end
+
 local fzf = require'fzf-lua'
 
 fzf.setup {

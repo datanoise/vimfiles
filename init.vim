@@ -83,7 +83,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'mhinz/vim-randomtag'
   Plug 'datanoise/bufexplorer'
   Plug 'vimwiki/vimwiki', { 'on': 'VimwikiIndex' }
-  Plug 'easymotion/vim-easymotion'
   Plug 'lervag/vimtex'
   Plug 'tweekmonster/startuptime.vim'
 
@@ -119,6 +118,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'EdenEast/nightfox.nvim'
     Plug 'Yazeed1s/minimal.nvim'
     Plug 'ibhagwan/fzf-lua'
+    Plug 'phaazon/hop.nvim'
 
     Plug 'hrsh7th/cmp-buffer'
     Plug 'hrsh7th/cmp-path'
@@ -136,6 +136,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-endwise'
     Plug 'Raimondi/delimitMate'
+    Plug 'easymotion/vim-easymotion'
     Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
     Plug 'airblade/vim-gitgutter', { 'on': [ 'GitGutterToggle', 'GitGutterEnable' ] }
     Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }

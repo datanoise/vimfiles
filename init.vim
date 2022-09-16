@@ -118,6 +118,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'j-hui/fidget.nvim'
     Plug 'EdenEast/nightfox.nvim'
     Plug 'Yazeed1s/minimal.nvim'
+    Plug 'ibhagwan/fzf-lua'
 
     Plug 'hrsh7th/cmp-buffer'
     Plug 'hrsh7th/cmp-path'

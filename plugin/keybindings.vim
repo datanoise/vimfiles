@@ -108,6 +108,7 @@ nnoremap <silent> <leader>gp "_ddP=`]
 " remove end-line spaces
 nnoremap <silent> <leader>sd mx:%s/\s\+$//<CR>`x
 
+nnoremap vil ^v$
 nnoremap <C-J> <C-D>
 nnoremap <C-K> <C-U>
 nnoremap <C-e> 4<C-e>

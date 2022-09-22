@@ -48,6 +48,6 @@ nnoremap <silent> <leader>T :Telescope<CR>
 " nnoremap <silent> <leader>m :Telescope find_files<CR>
 " nnoremap <silent> <leader>F :Telescope find_files search_dirs=%:h<CR>
 " nnoremap <silent> <leader>e :Telescope oldfiles<CR>
-nnoremap <silent> <leader>n :Telescope aerial theme=dropdown<CR>
+" nnoremap <silent> <leader>n :Telescope aerial theme=dropdown<CR>
 ]])
 

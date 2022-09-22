@@ -713,8 +713,8 @@ call s:X("PreciseJumpTarget","B9ED67","405026","","White","Green")
 
 hi! link ALEVirtualTextWarning Constant
 hi! link ALEVirtualTextError Error
-hi! link YankyPut Visual
-hi! link YankyYanked Visual
+hi YankyPut guifg=black guibg=DarkOrange
+hi! link YankyYanked YankyPut
 
 hi! link markdownError Normal
 hi! HighlightedyankRegion ctermbg=237 guibg=orange guifg=black

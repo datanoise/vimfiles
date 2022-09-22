@@ -114,3 +114,7 @@ require'treesitter-context'.setup {
 
 local ft_to_parser = require"nvim-treesitter.parsers".filetype_to_parsername
 ft_to_parser['eruby.yaml'] = "yml"
+
+require('nvim-ts-autotag').setup({
+  filetypes = { "html" , "xml", "eruby" },
+})

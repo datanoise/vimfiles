@@ -8,7 +8,7 @@ local opts = { noremap=true, silent=true }
 vim.keymap.set('n', 'gl', vim.diagnostic.open_float, opts)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-vim.keymap.set('n', '<shift-q>', vim.diagnostic.setloclist, opts)
+vim.keymap.set('n', '<leader>cl', vim.diagnostic.setloclist, opts)
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
@@ -45,12 +45,32 @@ require("mason-lspconfig").setup_handlers({
     })
   end,
   ["rust_analyzer"] = function ()
-    lspconfig["rust_analyzer"].setup({
-      on_attach = on_attach,
-      settings = {
-        ["rust-analyzer"] = {}
+    local function read_ra_settings()
+      local file = io.open(".rust-analyzer.json", "rb")
+      if not file then
+        return {}
+      end
+      local content = file:read("*a")
+      file:close()
+      return vim.json.decode(content) or {}
+    end
+    local local_config = read_ra_settings()
+
+    require("rust-tools").setup({
+      server = {
+        on_attach = on_attach,
+        settings = {
+          ["rust-analyzer"] = local_config,
+        }
       }
     })
+
+    -- lspconfig["rust_analyzer"].setup({
+    --   on_attach = on_attach,
+    --   settings = {
+    --    ["rust-analyzer"] = local_config,
+    --   }
+    -- })
   end,
   ["sumneko_lua"] = function ()
     lspconfig['sumneko_lua'].setup{

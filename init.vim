@@ -119,6 +119,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'Yazeed1s/minimal.nvim'
     Plug 'ibhagwan/fzf-lua'
     Plug 'phaazon/hop.nvim'
+    Plug 'simrat39/rust-tools.nvim'
 
     Plug 'hrsh7th/cmp-buffer'
     Plug 'hrsh7th/cmp-path'

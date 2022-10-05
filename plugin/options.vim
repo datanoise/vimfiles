@@ -126,7 +126,7 @@ augroup ColorSchemeFix
 augroup END
 set background=dark
 colo jellybeans
-if !has('gui_running') && has('termguicolors')
+if has('termguicolors')
   set termguicolors
   if $TERM ==# 'screen-256color'
     exec "set t_8f=\e[38;2;%lu;%lu;%lum"

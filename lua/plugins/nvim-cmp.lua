@@ -12,6 +12,22 @@ end
 local cmp = require('cmp')
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 local luasnip = require("luasnip")
+local types = require("luasnip.util.types")
+
+luasnip.config.setup({
+  ext_opts = {
+    [types.choiceNode] = {
+      active = {
+        virt_text = {{"●", "GruvboxOrange"}}
+      }
+    },
+    [types.insertNode] = {
+      active = {
+        virt_text = {{"●", "GruvboxBlue"}}
+      }
+    }
+  },
+})
 
 cmp.setup({
   snippet = {
@@ -28,7 +44,7 @@ cmp.setup({
     ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
+      elseif luasnip.expand_or_locally_jumpable() then
         luasnip.expand_or_jump()
       elseif has_words_before() then
         cmp.complete()

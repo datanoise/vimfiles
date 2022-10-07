@@ -110,7 +110,7 @@ vim.diagnostic.config({
   underline = {
     severity = { min = vim.diagnostic.severity.ERROR }
   },
-  virtual_text = true,
+  virtual_text = false,
   -- virtual_text = {
   --   severity = { min = vim.diagnostic.severity.WARN }
   -- },

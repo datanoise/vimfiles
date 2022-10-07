@@ -83,6 +83,7 @@ augroup RustSettings
   au!
   au FileType rust nmap <silent> <buffer> gd <Plug>(rust-def)
   au FileType rust nmap <silent> <buffer> K <Plug>(rust-doc)
+  au FileType rust setlocal indentkeys+=.
   au FileType rustdoc nmap <silent> q :q<CR>
   " ignore target directory for cargo projects
   au VimEnter *

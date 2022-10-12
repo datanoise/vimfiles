@@ -63,7 +63,6 @@ silent! if plug#begin('~/.vim/bundle')
   endif
 
   " snippets
-  Plug 'Shougo/neosnippet-snippets'
   Plug 'honza/vim-snippets'
 
   Plug 'godlygeek/tabular',            { 'on': 'Tabularize' }
@@ -110,6 +109,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'jose-elias-alvarez/null-ls.nvim'
     Plug 'folke/trouble.nvim'
     Plug 'kyazdani42/nvim-web-devicons'
+    Plug 'onsails/lspkind.nvim'
     Plug 'andymass/vim-matchup'
     Plug 'windwp/nvim-autopairs'
     Plug 'lewis6991/gitsigns.nvim'
@@ -121,6 +121,9 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'phaazon/hop.nvim'
     Plug 'simrat39/rust-tools.nvim'
 
+    " Plug 'MunifTanjim/nui.nvim'
+    " Plug 'folke/noice.nvim'
+
     Plug 'hrsh7th/cmp-buffer'
     Plug 'hrsh7th/cmp-path'
     Plug 'hrsh7th/cmp-cmdline'
@@ -128,6 +131,8 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'hrsh7th/cmp-nvim-lsp'
     Plug 'L3MON4D3/LuaSnip'
     Plug 'saadparwaiz1/cmp_luasnip'
+    Plug 'hrsh7th/cmp-nvim-lsp-document-symbol'
+    Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
 
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim'

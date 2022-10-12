@@ -60,6 +60,7 @@ require("mason-lspconfig").setup_handlers({
       server = {
         on_attach = on_attach,
         settings = {
+          -- cmd = "~/.cargo/bin/rust-analyzer",
           ["rust-analyzer"] = local_config,
         }
       }

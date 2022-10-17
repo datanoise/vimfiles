@@ -63,6 +63,12 @@ require("mason-lspconfig").setup_handlers({
           -- cmd = "~/.cargo/bin/rust-analyzer",
           ["rust-analyzer"] = local_config,
         }
+      },
+      tools = {
+        inlay_hints = {
+          highlight = "NonText",
+          only_current_line = true,
+        }
       }
     })
 

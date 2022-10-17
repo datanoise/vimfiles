@@ -564,8 +564,10 @@ hi! link rubyString String
 hi! link rubyStringDelimiter StringDelimiter
 hi! link rubyInterpolationDelimiter Identifier
 
-call s:X("rubyRegexpDelimiter","540063","","","Magenta","")
+call s:X("Regexp","dd0093","","","DarkMagenta","")
+
 call s:X("rubyRegexp","dd0093","","","DarkMagenta","")
+call s:X("rubyRegexpDelimiter","540063","","","Magenta","")
 call s:X("rubyRegexpSpecial","a40073","","","Magenta","")
 
 call s:X("rubyPredefinedIdentifier","de5577","","","Red","")
@@ -586,7 +588,7 @@ hi! link elixirAtom rubySymbol
 " JavaScript
 
 hi! link javaScriptValue Constant
-hi! link javaScriptRegexpString rubyRegexp
+hi! link javaScriptRegexpString Regexp
 hi! link javaScriptTemplateVar StringDelim
 hi! link javaScriptTemplateDelim Identifier
 hi! link javaScriptTemplateString String
@@ -640,57 +642,53 @@ hi! link xmlDocTypeKeyword PreProc
 hi! link xmlProcessingDelim xmlAttrib
 
 " Treesitter
-hi! link TSVariableBuiltin Constant
 if has('nvim-0.8.0')
-  hi! link @annotation TSAnnotation
-  hi! link @attribute TSAttribute
-  hi! link @boolean TSBoolean
-  hi! link @character TSCharacter
-  hi! link @comment TSComment
-  hi! link @conditional TSConditional
-  hi! link @constant TSConstant
-  hi! link @constant.builtin TSConstBuiltin
-  hi! link @constant.macro TSConstMacro
-  hi! link @constructor TSConstructor
-  hi! link @exception TSException
-  hi! link @field TSField
-  hi! link @float TSFloat
-  hi! link @function TSFunction
-  hi! link @function.builtin TSFuncBuiltin
-  hi! link @function.macro TSFuncMacro
-  hi! link @include TSInclude
-  hi! link @keyword TSKeyword
-  hi! link @keyword.function TSKeywordFunction
-  hi! link @keyword.operator TSKeywordOperator
-  hi! link @label TSLabel
-  hi! link @method TSMethod
-  hi! link @namespace TSNamespace
-  hi! link @none TSNone
-  hi! link @number TSNumber
-  hi! link @operator TSOperator
-  hi! link @parameter TSParameter
-  hi! link @parameter.reference TSParameterReference
-  hi! link @property TSProperty
-  hi! link @punctuation.bracket TSPunctBracket
-  hi! link @punctuation.delimiter TSPunctDelimiter
-  hi! link @punctuation.special TSPunctSpecial
-  hi! link @repeat TSRepeat
-  hi! link @storageclass TSStorageClass
-  hi! link @string TSString
-  hi! link @string.escape TSStringEscape
-  hi! link @string.regex TSStringRegex
-  hi! link @structure TSStructure
-  hi! link @symbol TSSymbol
-  hi! link @tag TSTag
-  hi! link @tag.delimiter TSTagDelimiter
-  hi! link @text TSText
-  hi! link @strike TSStrike
-  hi! link @math TSMath
-  hi! link @type TSType
-  hi! link @type.builtin TSTypeBuiltin
-  hi! link @uri TSURI
-  hi! link @variable TSVariable
-  hi! link @variable.builtin TSVariableBuiltin
+  hi! link @annotation PreProc
+  hi! link @attribute PreProc
+  hi! link @boolean Boolean
+  hi! link @character Character
+  hi! link @comment Comment
+  hi! link @conditional Conditional
+  hi! link @constant Constant
+  hi! link @constant.builtin Special
+  hi! link @constant.macro Define
+  hi! link @constructor Special
+  hi! link @exception Exception
+  hi! link @field Identifier
+  hi! link @float Float
+  hi! link @function Function
+  hi! link @function.builtin Special
+  hi! link @funciton.macro Macro
+  hi! link @include Include
+  hi! link @keyword Keyword
+  hi! link @keyword.function Keyword
+  hi! link @keyword.operator Operator
+  hi! link @label Label
+  hi! link @method Method
+  hi! link @namespace Include
+  hi! link @none None
+  hi! link @number Number
+  hi! link @operator Operator
+  hi! link @parameter Identifier
+  hi! link @parameter.reference Identifier
+  hi! link @property Identifier
+  hi! link @punctuation.bracket Delimiter
+  hi! link @punctuation.delimiter Delimiter
+  hi! link @punctuation.special Special
+  hi! link @repeat Repeat
+  hi! link @storageclass StorageClass
+  hi! link @string String
+  hi! link @string.escape SpecialChar
+  hi! link @string.regex Regexp
+  hi! link @symbol Identifier
+  hi! link @tag Label
+  hi! link @tag.delimiter Delimiter
+  hi! link @text SpecialComment
+  hi! link @math Special
+  hi! link @type Type
+  hi! link @url Underlined
+  " hi! link @variable Variable
+  hi! link @variable.builtin Constant
 endif
 
 " Debugger.vim

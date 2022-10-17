@@ -20,7 +20,7 @@ augroup END
 augroup VimSettings
   au!
   au FileType help nnoremap <silent> <buffer> q :helpclose<CR>
-  au FileType help setlocal conceallevel=0
+  au FileType help setlocal conceallevel=1
   au FileType qf nmap <silent> <buffer> q :q<CR>
   au FileType fugitive,qf,gitcommit setlocal signcolumn=no
   au FileType help setlocal nospell iskeyword+=_

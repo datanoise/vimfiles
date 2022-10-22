@@ -488,6 +488,9 @@ call s:X("Function","fad07a","","","Yellow","")
 call s:X("Statement","8197bf","","","DarkBlue","")
 call s:X("PreProc","8fbfdc","","","LightBlue","")
 
+call s:X("JellyBlue","8fbfdc","","","LightBlue","")
+call s:X("JellyYellow","ffb964","","","Yellow","")
+
 hi! link Operator Structure
 hi! link Conceal Operator
 

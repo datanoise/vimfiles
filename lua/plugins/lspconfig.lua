@@ -3,6 +3,7 @@ if not vim.g.plugs['nvim-lspconfig'] then
 end
 
 local lspconfig = require('lspconfig')
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 local opts = { noremap=true, silent=true }
 vim.keymap.set('n', 'gl', vim.diagnostic.open_float, opts)
@@ -44,6 +45,7 @@ require("mason-lspconfig").setup_handlers({
   function (server_name)
     lspconfig[server_name].setup({
       on_attach = on_attach,
+      capabilities = capabilities,
     })
   end,
   ["rust_analyzer"] = function ()
@@ -71,7 +73,8 @@ require("mason-lspconfig").setup_handlers({
           highlight = "NonText",
           only_current_line = true,
         }
-      }
+      },
+      capabilities = capabilities,
     })
 
     -- lspconfig["rust_analyzer"].setup({
@@ -84,6 +87,7 @@ require("mason-lspconfig").setup_handlers({
   ["sumneko_lua"] = function ()
     lspconfig['sumneko_lua'].setup{
       on_attach = on_attach,
+      capabilities = capabilities,
       settings = {
         Lua = {
           runtime = {

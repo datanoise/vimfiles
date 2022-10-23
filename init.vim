@@ -36,7 +36,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'othree/html5.vim'
   Plug 'euclio/vim-markdown-composer', { 'for': 'markdown' }
   Plug 'tpope/vim-haml',               { 'for': ['haml', 'sass', 'scss'] }
-  Plug 'rust-lang/rust.vim',           { 'for': 'rust' }
   Plug 'racer-rust/vim-racer',         { 'for': 'rust' }
   Plug 'keith/swift.vim',              { 'for': 'swift' }
   Plug 'vim-scripts/nginx.vim',        { 'for': 'nginx' }
@@ -146,6 +145,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
     Plug 'airblade/vim-gitgutter', { 'on': [ 'GitGutterToggle', 'GitGutterEnable' ] }
     Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+    Plug 'rust-lang/rust.vim', { 'for': 'rust' }
 
     Plug 'w0rp/ale'
     Plug 'maximbaz/lightline-ale'

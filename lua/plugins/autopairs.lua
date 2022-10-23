@@ -37,5 +37,7 @@ npairs.add_rules {
     Rule('<', '>', {'rust'})
         :with_cr(cond.none())
         :with_pair(cond.not_before_regex('%s', 1))
-        :with_move(cond.done()),
+        :with_move(function (opts)
+            return opts.next_char == '>' and opts.char == '>'
+        end),
 }

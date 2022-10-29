@@ -49,8 +49,7 @@ null_ls.setup({
   sources = {
     coffeelint,
     null_ls.builtins.diagnostics.jsonlint,
-    -- null_ls.builtins.diagnostics.luacheck,
-    -- null_ls.builtins.diagnostics.rubocop,
+    null_ls.builtins.diagnostics.rubocop,
   },
 })
 

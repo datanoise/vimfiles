@@ -12,24 +12,8 @@ end
 local cmp = require('cmp')
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 local luasnip = require("luasnip")
-local types = require("luasnip.util.types")
 local devicons = require('nvim-web-devicons')
 local lspkind = require('lspkind')
-
-luasnip.config.setup({
-  ext_opts = {
-    [types.choiceNode] = {
-      active = {
-        virt_text = {{"●", "JellyYellow"}}
-      }
-    },
-    [types.insertNode] = {
-      active = {
-        virt_text = {{"●", "JellyBlue"}}
-      }
-    }
-  },
-})
 
 cmp.setup({
   preselect = cmp.PreselectMode.None,

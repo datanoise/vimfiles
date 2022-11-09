@@ -52,7 +52,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-crystal',        { 'for': ['crystal', 'html'] }
   Plug 'datanoise/vim-llvm',           { 'for': 'llvm' }
   Plug 'python-mode/python-mode',      { 'for': 'python', 'branch': 'develop' }
-  Plug 'JuliaEditorSupport/julia-vim', { 'for': 'julia' }
+  " Plug 'JuliaEditorSupport/julia-vim', { 'for': 'julia' }
   Plug 'vim-ruby/vim-ruby'
   Plug 'datanoise/vim-ruby-heredoc-syntax'
   Plug 'plasticboy/vim-markdown'
@@ -72,7 +72,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/switch.vim',         { 'on': 'Switch' }
 
   Plug 'wellle/targets.vim'
-  Plug 'datanoise/vim-localvimrc'
   Plug 'datanoise/vim-cmdline-complete'
   Plug 'rhysd/git-messenger.vim'
   Plug 'mhinz/vim-grepper'
@@ -142,6 +141,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'tpope/vim-endwise'
     Plug 'Raimondi/delimitMate'
     Plug 'easymotion/vim-easymotion'
+    Plug 'datanoise/vim-localvimrc'
     Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
     Plug 'airblade/vim-gitgutter', { 'on': [ 'GitGutterToggle', 'GitGutterEnable' ] }
     Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }

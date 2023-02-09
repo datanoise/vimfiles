@@ -52,4 +52,5 @@ nnoremap <silent> <leader>F :FzfLua files cwd=%:h<CR>
 nnoremap <silent> <leader>e :FzfLua oldfiles<CR>
 nnoremap <silent> <leader>n :lua fzf_symbols()<CR>
 nnoremap <silent> <leader>C :FzfLua lsp_code_actions<CR>
+nnoremap <silent> <F5> :FzfLua lsp_code_actions<CR>
 ]])

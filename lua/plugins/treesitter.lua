@@ -28,7 +28,7 @@ require'nvim-treesitter.configs'.setup {
   },
   rainbow = {
     enable = true,
-    extended_mode = true,
+    extended_mode = false,
   },
   autotag = {
     enable = true,
@@ -113,7 +113,7 @@ require'treesitter-context'.setup {
 }
 
 local ft_to_parser = require"nvim-treesitter.parsers".filetype_to_parsername
-ft_to_parser['eruby.yaml'] = "yml"
+ft_to_parser['eruby.yaml'] = "yaml"
 
 require('nvim-ts-autotag').setup({
   filetypes = { "html" , "xml", "eruby" },

@@ -4,3 +4,4 @@ spell
 *.pyc
 .DS_Store
 bundle
+lua/.luarc.json

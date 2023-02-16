@@ -17,7 +17,7 @@ end
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
-local on_attach = function(client, bufnr)
+local on_attach = function(_, bufnr)
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
   -- Mappings.
@@ -40,32 +40,6 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
   vim.keymap.set('n', '<leader>sf', vim.lsp.buf.format, bufopts)
-
-  -- perform diagnostic resolution
-  local callback = function()
-    local params = vim.lsp.util.make_text_document_params(bufnr)
-
-    client.request(
-      'textDocument/diagnostic',
-      { textDocument = params },
-      function(err, result)
-        if err then return end
-
-        vim.lsp.diagnostic.on_publish_diagnostics(
-          nil,
-          vim.tbl_extend('keep', params, { diagnostics = result.items }),
-          { client_id = client.id }
-        )
-      end
-    )
-  end
-
-  callback() -- call on attach
-
-  vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePre', 'BufReadPost', 'InsertLeave', 'TextChanged' }, {
-    buffer = bufnr,
-    callback = callback,
-  })
 end
 
 -- do not install ruby_ls via Mason because it doesn't install rubocop
@@ -105,13 +79,6 @@ require("mason-lspconfig").setup_handlers({
         }
       },
     })
-
-    -- lspconfig["rust_analyzer"].setup({
-    --   on_attach = on_attach,
-    --   settings = {
-    --    ["rust-analyzer"] = local_config,
-    --   }
-    -- })
   end,
   ["sumneko_lua"] = function ()
     lspconfig['sumneko_lua'].setup{
@@ -137,7 +104,63 @@ require("mason-lspconfig").setup_handlers({
         },
       },
     }
-  end
+  end,
+  ["ruby_ls"] = function()
+    lspconfig['ruby_ls'].setup{
+      on_attach = function(client, bufnr)
+        on_attach(client, bufnr)
+
+        -- perform diagnostic resolution
+        local callback = function()
+          local params = vim.lsp.util.make_text_document_params(bufnr)
+
+          local handler = vim.lsp.handlers["$/progress"]
+          local token = 0
+          local send_progress = function (kind, title, message, percentage)
+            if not handler then
+              return
+            end
+
+            vim.schedule(function()
+              handler(nil, {
+                token = token,
+                value = {
+                  kind = kind,
+                  title = title,
+                  message = message,
+                  percentage = percentage,
+                },
+              }, {
+                  client_id = client.id,
+                })
+            end)
+          end
+
+          send_progress("begin", "diagnostics", "Sending request", 0)
+          client.request(
+            'textDocument/diagnostic',
+            { textDocument = params },
+            function(err, result)
+              if err then return end
+
+              send_progress("end", "diagnostics", "Finished", 100)
+              vim.lsp.diagnostic.on_publish_diagnostics(
+                nil,
+                vim.tbl_extend('keep', params, { diagnostics = result.items }),
+                { client_id = client.id }
+              )
+            end
+          )
+        end
+        callback() -- call on attach
+
+        vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePre', 'BufReadPost', 'InsertLeave', 'TextChanged' }, {
+          buffer = bufnr,
+          callback = callback,
+        })
+      end
+    }
+  end,
 })
 
 require('lspconfig.ui.windows').default_options.border = 'single'

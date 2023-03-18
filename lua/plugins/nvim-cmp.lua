@@ -9,6 +9,16 @@ local has_words_before = function()
   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 
+local cmp_buffer_list = function()
+  local bufs = {}
+  for _, v in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(v) then
+      bufs[#bufs+1] = v
+    end
+  end
+  return bufs
+end
+
 local cmp = require('cmp')
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 local luasnip = require("luasnip")
@@ -61,7 +71,8 @@ cmp.setup({
       option = {
         keyword_length = 4,
         get_bufnrs = function()
-          return vim.api.nvim_list_bufs()
+          -- return vim.api.nvim_list_bufs()
+          return cmp_buffer_list()
         end
       }
     },

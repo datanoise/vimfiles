@@ -76,9 +76,12 @@ local ruby_lsp_on_attach = function(client, bufnr)
       'textDocument/diagnostic',
       { textDocument = params },
       function(err, result)
-        if err or not result then return end
+        if err then return end
 
         send_progress("end", "diagnostics", "Finished", 100)
+
+        if not result then return end
+
         vim.lsp.diagnostic.on_publish_diagnostics(
           nil,
           vim.tbl_extend('keep', params, { diagnostics = result.items }),

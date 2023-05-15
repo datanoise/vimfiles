@@ -139,6 +139,8 @@ if has('nvim')
   tnoremap <M-k> <C-\><C-n><C-w>k
   tnoremap <M-l> <C-\><C-n><C-w>l
   tnoremap <M-[> <C-\><C-n>
+else
+  nnoremap <PageDown> <C-d>
 endif
 nnoremap <F4> :sil make %<CR><C-l>:cr<CR>
 nnoremap <silent> <C-tab> :call <SID>switch_prev_buf()<CR>

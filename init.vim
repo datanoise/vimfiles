@@ -92,7 +92,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'nvim-lualine/lualine.nvim'
     Plug 'gbprod/yanky.nvim'
     Plug 'datanoise/vim-dispatch-neovim'
-    Plug 'p00f/nvim-ts-rainbow'
+    " Plug 'p00f/nvim-ts-rainbow'
     Plug 'windwp/nvim-ts-autotag'
     Plug 'numToStr/Comment.nvim'
     Plug 'norcalli/nvim-colorizer.lua'
@@ -118,9 +118,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'ibhagwan/fzf-lua'
     Plug 'phaazon/hop.nvim'
     Plug 'simrat39/rust-tools.nvim'
-
-    " Plug 'MunifTanjim/nui.nvim'
-    " Plug 'folke/noice.nvim'
 
     Plug 'hrsh7th/cmp-buffer'
     Plug 'hrsh7th/cmp-path'

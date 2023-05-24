@@ -569,9 +569,9 @@ hi! link rubyInterpolationDelimiter Identifier
 
 call s:X("Regexp","dd0093","","","DarkMagenta","")
 
-call s:X("rubyRegexp","dd0093","","","DarkMagenta","")
-call s:X("rubyRegexpDelimiter","540063","","","Magenta","")
-call s:X("rubyRegexpSpecial","a40073","","","Magenta","")
+call s:X("rubyRegexp","e4c5fa","","","DarkMagenta","")
+call s:X("rubyRegexpDelimiter","e4c5fa","","","Magenta","")
+call s:X("rubyRegexpSpecial","e4c5fa","","","Magenta","")
 
 call s:X("rubyPredefinedIdentifier","de5577","","","Red","")
 
@@ -715,8 +715,9 @@ call s:X("PreciseJumpTarget","B9ED67","405026","","White","Green")
 
 hi! link ALEVirtualTextWarning Constant
 hi! link ALEVirtualTextError Error
-hi YankyPut guifg=black guibg=DarkOrange
+hi! YankyPut guifg=black guibg=DarkOrange
 hi! link YankyYanked YankyPut
+hi! link CocHighlightText Search
 
 hi! link markdownError Normal
 hi! HighlightedyankRegion ctermbg=237 guibg=orange guifg=black

@@ -50,3 +50,6 @@ nmap <silent> <leader>gd <Plug>(coc-definition)
 
 nmap <silent> <leader>rn <Plug>(coc-rename)
 inoremap <silent><expr> <c-space> coc#refresh()
+nmap <F5> <Plug>(coc-codeaction-line)
+
+autocmd CursorHold * call CocActionAsync('highlight')

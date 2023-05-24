@@ -1,6 +1,34 @@
 {
-  "diagnostic.displayByAle": true,
+  "diagnostic.displayByAle": false,
+  "diagnostic.enable": true,
+  "diagnostic.enableSign": true,
+  "diagnostic.virtualText": false,
+  "semanticTokens.enable": true,
   "coc.source.tag.priority": 0,
   "coc.source.buffer.priority": 10,
-  "suggest.noselect": true
+  "suggest.noselect": true,
+  "languageserver": {
+    "ruby-lsp": {
+      "command": "ruby-lsp",
+      "initializationOptions": {
+        "experimentalFeaturesEnabled": false,
+        "enabledFeatures": [
+          "codeActions",
+          "diagnostics",
+          "documentHighlights",
+          "documentLink",
+          "foldingRanges",
+          "formatting",
+          "hover",
+          "inlayHint",
+          "onTypeFormatting",
+          "selectionRanges",
+          "semanticHighlighting",
+          "completion"
+        ],
+        "formatter": "auto"
+      },
+      "filetypes": ["ruby"]
+    }
+  }
 }

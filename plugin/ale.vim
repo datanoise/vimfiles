@@ -9,8 +9,9 @@ let g:ale_lint_on_enter = 0
 let g:ale_rust_cargo_use_check = 1
 let g:ale_rust_rls_toolchain = 'stable'
 let g:ale_set_highlights = 0
+let g:ale_ruby_rubocop_executable='bundle'
 let g:ale_linters = {
-      \ 'ruby': ['ruby'],
+      \ 'ruby': ['ruby', 'rubocop'],
       \ 'rust': ['cargo'],
       \ 'go': ['go build', 'govet'],
       \ 'javascript': ['eslint'],
@@ -28,4 +29,7 @@ nmap <silent> ]W <Plug>(ale_last)
 " let g:ale_completion_delay = 1000
 let g:ale_virtualtext_cursor = 1
 let g:ale_virtualtext_delay = 5
-
+" disable ruby lint if coc.vim lsp capability is enabled
+let g:ale_pattern_options = {
+\   '.*\.rb$': {'ale_enabled': 0},
+\}

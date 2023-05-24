@@ -25,7 +25,7 @@ let g:lightline = {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified', 'spell'],
       \             [ 'ctrlpmark' ] ],
-      \   'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ],
+      \   'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok', 'cocstatus' ],
       \              [ 'lineinfo' ],
       \              [ 'percent' ],
       \              [ 'current_tag', 'filetype' ],
@@ -38,7 +38,8 @@ let g:lightline = {
       \   'filename': 'LightlineFilename',
       \   'readonly': 'LightlineReadonly',
       \   'ctrlpmark': 'CtrlPMark',
-      \   'current_tag': 'TagbarCurrentTag',
+      \   'cocstatus': 'coc#status',
+      \   'current_tag': 'CocCurrentTag',
       \ },
       \ 'component_expand': {
       \   'gitbranch': 'LightlineFugitive',
@@ -113,6 +114,19 @@ endfunction
 
 function! CtrlPStatusFunc_2(str)
   return lightline#statusline(0)
+endfunction
+
+function! CocCurrentTag()
+  try
+    let sym = CocAction('getCurrentFunctionSymbol')
+    if sym == v:null
+      return ''
+    else
+      return sym
+    endif
+  catch /.*/
+    return ''
+  endtry
 endfunction
 
 let g:tagbar_status_func = 'TagbarStatusFunc'

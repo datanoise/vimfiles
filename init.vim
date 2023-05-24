@@ -149,7 +149,6 @@ silent! if plug#begin('~/.vim/bundle')
 
     Plug 'AndrewRadev/sideways.vim'
     " Plug 'majutsushi/tagbar'
-    Plug 'tmux-plugins/vim-tmux-focus-events'
     Plug 'ap/vim-css-color'
     Plug 'flazz/vim-colorschemes'
     Plug 'machakann/vim-highlightedyank'

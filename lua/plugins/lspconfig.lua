@@ -101,6 +101,17 @@ end
 -- do not install ruby_ls via Mason because it doesn't install rubocop
 require('lspconfig').ruby_ls.setup{
   on_attach = ruby_lsp_on_attach,
+  init_options = {
+    enabledFeatures = {
+      "documentHighlights",
+      "documentSymbols",
+      "foldingRanges",
+      "selectionRanges",
+      "semanticHighlighting",
+      "formatting",
+      "codeActions",
+    }
+  }
 }
 require('mason').setup()
 require("mason-lspconfig").setup()

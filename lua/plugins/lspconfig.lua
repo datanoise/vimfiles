@@ -107,12 +107,13 @@ require('lspconfig').ruby_ls.setup{
       "documentSymbols",
       "foldingRanges",
       "selectionRanges",
-      "semanticHighlighting",
+      -- "semanticHighlighting",
       "formatting",
       "codeActions",
     }
   }
 }
+-- require'lspconfig'.solargraph.setup{}
 require('mason').setup()
 require("mason-lspconfig").setup()
 require("mason-lspconfig").setup_handlers({
@@ -224,3 +225,10 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     vim.lsp.buf.format()
   end
 })
+
+-- buffer symbol highlighting
+vim.cmd [[
+autocmd! CursorHold  *  lua vim.lsp.buf.document_highlight()
+autocmd! CursorHoldI * lua vim.lsp.buf.document_highlight()
+autocmd! CursorMoved * lua vim.lsp.buf.clear_references()
+]]

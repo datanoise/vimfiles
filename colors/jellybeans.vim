@@ -718,6 +718,9 @@ hi! link ALEVirtualTextError Error
 hi! YankyPut guifg=black guibg=DarkOrange
 hi! link YankyYanked YankyPut
 hi! link CocHighlightText Search
+hi! link LspReferenceText Search
+hi! link LspReferenceRead Search
+hi! link LspReferenceWrite Search
 
 hi! link markdownError Normal
 hi! HighlightedyankRegion ctermbg=237 guibg=orange guifg=black

@@ -17,7 +17,7 @@ end
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
-local on_attach = function(_, bufnr)
+local on_attach = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
   -- Mappings.
@@ -40,6 +40,27 @@ local on_attach = function(_, bufnr)
   vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
   vim.keymap.set('n', '<leader>sf', vim.lsp.buf.format, bufopts)
+
+  -- buffer symbol highlighting
+  if client.supports_method "textDocument/documentHighlight" then
+    vim.api.nvim_create_augroup("lsp_document_highlight", {
+      clear = false,
+    })
+    vim.api.nvim_clear_autocmds {
+      buffer = bufnr,
+      group = "lsp_document_highlight",
+    }
+    vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+      group = "lsp_document_highlight",
+      buffer = bufnr,
+      callback = vim.lsp.buf.document_highlight,
+    })
+    vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+      group = "lsp_document_highlight",
+      buffer = bufnr,
+      callback = vim.lsp.buf.clear_references,
+    })
+  end
 end
 
 local ruby_lsp_on_attach = function(client, bufnr)
@@ -150,8 +171,8 @@ require("mason-lspconfig").setup_handlers({
       },
     })
   end,
-  ["sumneko_lua"] = function ()
-    lspconfig['sumneko_lua'].setup{
+  ["lua_ls"] = function ()
+    lspconfig['lus_ls'].setup{
       on_attach = on_attach,
       settings = {
         Lua = {
@@ -225,10 +246,3 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     vim.lsp.buf.format()
   end
 })
-
--- buffer symbol highlighting
-vim.cmd [[
-autocmd! CursorHold  *  lua vim.lsp.buf.document_highlight()
-autocmd! CursorHoldI * lua vim.lsp.buf.document_highlight()
-autocmd! CursorMoved * lua vim.lsp.buf.clear_references()
-]]

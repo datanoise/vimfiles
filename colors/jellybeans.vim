@@ -717,10 +717,12 @@ hi! link ALEVirtualTextWarning Constant
 hi! link ALEVirtualTextError Error
 hi! YankyPut guifg=black guibg=DarkOrange
 hi! link YankyYanked YankyPut
-hi! link CocHighlightText Search
-hi! link LspReferenceText Search
-hi! link LspReferenceRead Search
-hi! link LspReferenceWrite Search
+
+hi! LspHighlight cterm=underline gui=underline guisp=#fb5e2a
+hi! link CocHighlightText LspHighlight
+hi! link LspReferenceText LspHighlight
+hi! link LspReferenceRead LspHighlight
+hi! link LspReferenceWrite LspHighlight
 
 hi! link markdownError Normal
 hi! HighlightedyankRegion ctermbg=237 guibg=orange guifg=black

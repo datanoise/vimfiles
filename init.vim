@@ -112,7 +112,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'windwp/nvim-autopairs'
     Plug 'lewis6991/gitsigns.nvim'
     Plug 'kyazdani42/nvim-tree.lua'
-    Plug 'j-hui/fidget.nvim'
+    Plug 'j-hui/fidget.nvim', { 'tag': 'legacy' }
     Plug 'EdenEast/nightfox.nvim'
     Plug 'Yazeed1s/minimal.nvim'
     Plug 'ibhagwan/fzf-lua'

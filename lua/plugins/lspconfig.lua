@@ -172,7 +172,7 @@ require("mason-lspconfig").setup_handlers({
     })
   end,
   ["lua_ls"] = function ()
-    lspconfig['lus_ls'].setup{
+    lspconfig['lua_ls'].setup{
       on_attach = on_attach,
       settings = {
         Lua = {

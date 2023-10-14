@@ -7,7 +7,8 @@ let g:fzf_preview_window = ''
 execute 'cnoremap <M-t> FZF '
 execute 'nnoremap <M-t> :FZF '
 call CommandAlias('fzf', 'FZF')
-if !has_key(g:plugs, 'telescope.nvim')
+
+if !has_key(g:plugs, 'fzf-lua')
   nnoremap <silent> <Leader>m :Files<CR>
   nnoremap <silent> <Leader>F :Files %:h<CR>
   nnoremap <silent> <Leader>l :Buffers<CR>

@@ -70,6 +70,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-bclose',         { 'on': 'Bclose' }
   Plug 'AndrewRadev/splitjoin.vim',    { 'on': [ 'SplitjoinJoin', 'SplitjoinSplit'] }
   Plug 'datanoise/switch.vim',         { 'on': 'Switch' }
+  Plug 'AndrewRadev/sideways.vim'
 
   Plug 'wellle/targets.vim'
   Plug 'datanoise/vim-cmdline-complete'
@@ -130,7 +131,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
 
     Plug 'nvim-lua/plenary.nvim'
-    Plug 'nvim-telescope/telescope.nvim'
+    " Plug 'nvim-telescope/telescope.nvim'
     Plug 'stevearc/aerial.nvim'
   else
     Plug 'tpope/vim-repeat'
@@ -147,7 +148,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'w0rp/ale'
     Plug 'maximbaz/lightline-ale'
 
-    Plug 'AndrewRadev/sideways.vim'
     " Plug 'majutsushi/tagbar'
     Plug 'ap/vim-css-color'
     Plug 'flazz/vim-colorschemes'
@@ -159,6 +159,7 @@ silent! if plug#begin('~/.vim/bundle')
       Plug 'itchyny/lightline.vim'
     endif
 
+    " coc
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'wellle/tmux-complete.vim'
 

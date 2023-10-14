@@ -3,7 +3,9 @@ if not vim.g.plugs['yanky.nvim'] then
 end
 
 require'yanky'.setup()
-require("telescope").load_extension("yank_history")
+if vim.g.plugs['telescope'] then
+    require("telescope").load_extension("yank_history")
+end
 
 vim.keymap.set({"n","x"}, "p", "<Plug>(YankyPutAfter)")
 vim.keymap.set({"n","x"}, "P", "<Plug>(YankyPutBefore)")

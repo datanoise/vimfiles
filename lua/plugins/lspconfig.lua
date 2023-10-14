@@ -128,7 +128,7 @@ require('lspconfig').ruby_ls.setup{
       "documentSymbols",
       "foldingRanges",
       "selectionRanges",
-      -- "semanticHighlighting",
+      "semanticHighlighting",
       "formatting",
       "codeActions",
     }

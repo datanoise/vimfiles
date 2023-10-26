@@ -112,8 +112,8 @@ require'treesitter-context'.setup {
   }
 }
 
-local language = require"vim.treesitter.language"
-language.register("yaml", "eruby.yaml")
+-- local language = require"vim.treesitter.language"
+-- language.register("yaml", "eruby.yaml")
 
 require('nvim-ts-autotag').setup({
   filetypes = { "html" , "xml", "eruby" },

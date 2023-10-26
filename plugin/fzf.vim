@@ -9,14 +9,14 @@ execute 'nnoremap <M-t> :FZF '
 call CommandAlias('fzf', 'FZF')
 
 if !has_key(g:plugs, 'fzf-lua')
-  nnoremap <silent> <Leader>m :Files<CR>
-  nnoremap <silent> <Leader>F :Files %:h<CR>
-  nnoremap <silent> <Leader>l :Buffers<CR>
   nnoremap <silent> <Leader>n :BTag<CR>
   nnoremap <silent> <Leader>e :History<CR>
   nnoremap <silent> <Leader>B :BCommits<CR>
   nnoremap <silent> <Leader>C :Commits<CR>
 endif
+nnoremap <silent> <Leader>m :Files<CR>
+nnoremap <silent> <Leader>F :Files %:h<CR>
+nnoremap <silent> <Leader>l :Buffers<CR>
 
 function! s:fzf_statusline()
   hi! fzf1 ctermfg=darkyellow ctermbg=242 guifg=gold3 guibg=#202020 gui=none

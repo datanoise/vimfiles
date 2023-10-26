@@ -131,6 +131,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
 
     Plug 'nvim-lua/plenary.nvim'
+    Plug 'gfanto/fzf-lsp.nvim'
     " Plug 'nvim-telescope/telescope.nvim'
     Plug 'stevearc/aerial.nvim'
   else

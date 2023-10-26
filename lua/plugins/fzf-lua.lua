@@ -46,9 +46,9 @@ end
 
 vim.cmd([[
 nnoremap <silent> <leader>; :FzfLua builtin<CR>
-nnoremap <silent> <leader>l :FzfLua buffers<CR>
-nnoremap <silent> <leader>m :FzfLua files<CR>
-nnoremap <silent> <leader>F :FzfLua files cwd=%:h<CR>
+" nnoremap <silent> <leader>l :FzfLua buffers<CR>
+" nnoremap <silent> <leader>m :FzfLua files<CR>
+" nnoremap <silent> <leader>F :FzfLua files cwd=%:h<CR>
 nnoremap <silent> <leader>e :FzfLua oldfiles<CR>
 nnoremap <silent> <leader>n :lua fzf_symbols()<CR>
 nnoremap <silent> <leader>C :FzfLua lsp_code_actions<CR>

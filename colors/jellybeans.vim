@@ -556,6 +556,7 @@ call s:X("rubyClass","447799","","","DarkBlue","")
 call s:X("rubyIdentifier","c6b6fe","","","Cyan","")
 hi! link rubyConstant Type
 hi! link rubyFunction Function
+hi! link rubyRoute Define
 
 call s:X("rubyInstanceVariable","c6b6fe","","","Cyan","")
 call s:X("rubySymbol","7697d6","","","Blue","")

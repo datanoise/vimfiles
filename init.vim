@@ -24,6 +24,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-apathy'
   Plug 'tpope/vim-bundler'
   Plug 'tpope/vim-dadbod', { 'on': 'DB' }
+  Plug 'tpope/vim-rbenv'
 
   Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign'] }
   Plug 'junegunn/gv.vim',         { 'on': 'GV' }
@@ -40,7 +41,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'keith/swift.vim',              { 'for': 'swift' }
   Plug 'vim-scripts/nginx.vim',        { 'for': 'nginx' }
   Plug 'kchmck/vim-coffee-script',     { 'for': 'coffee' }
-  Plug 'datanoise/vim-vue',            { 'for': ['javascript', 'vue'] }
   Plug 'tmux-plugins/vim-tmux',        { 'for': 'tmux' }
   Plug 'digitaltoad/vim-pug',          { 'for': ['pug', 'jade'] }
   Plug 'ekalinin/Dockerfile.vim',      { 'for': 'Dockerfile' }
@@ -98,7 +98,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'numToStr/Comment.nvim'
     Plug 'norcalli/nvim-colorizer.lua'
     Plug 'rcarriga/nvim-notify'
-    Plug 'folke/which-key.nvim'
+    " Plug 'folke/which-key.nvim'
     Plug 'neovim/nvim-lspconfig'
     Plug 'williamboman/mason.nvim'
     Plug 'williamboman/mason-lspconfig.nvim'
@@ -113,7 +113,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'windwp/nvim-autopairs'
     Plug 'lewis6991/gitsigns.nvim'
     Plug 'kyazdani42/nvim-tree.lua'
-    Plug 'j-hui/fidget.nvim', { 'tag': 'legacy' }
+    Plug 'j-hui/fidget.nvim' " , { 'tag': 'legacy' }
     Plug 'EdenEast/nightfox.nvim'
     Plug 'Yazeed1s/minimal.nvim'
     Plug 'ibhagwan/fzf-lua'
@@ -161,7 +161,7 @@ silent! if plug#begin('~/.vim/bundle')
     endif
 
     " coc
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    Plug 'neoclide/coc.nvim' ", {'branch': 'release'}
     Plug 'wellle/tmux-complete.vim'
 
     " ctrlp

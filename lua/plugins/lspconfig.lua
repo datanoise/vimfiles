@@ -124,11 +124,11 @@ require('lspconfig').ruby_ls.setup{
   on_attach = ruby_lsp_on_attach,
   init_options = {
     enabledFeatures = {
-      "documentHighlights",
+      -- "documentHighlights",
       "documentSymbols",
       "foldingRanges",
       "selectionRanges",
-      "semanticHighlighting",
+      -- "semanticHighlighting",
       "formatting",
       "codeActions",
     }

@@ -1,5 +1,12 @@
 " Options
 " ------------------------------------------------------------------------------
+" color theme {{{2
+augroup ColorSchemeFix
+  au!
+  au ColorScheme * hi! link ColorColumn StatusLine
+augroup END
+set background=dark
+colo jellybeans
 " tab options {{{2
 set tabstop=8
 set shiftwidth=2
@@ -120,12 +127,6 @@ set imsearch=0
 set spelllang=ru_yo,en_us
 "}}}
 " uncategorized options {{{2
-augroup ColorSchemeFix
-  au!
-  au ColorScheme * hi! link ColorColumn StatusLine
-augroup END
-set background=dark
-colo jellybeans
 if has('termguicolors')
   set termguicolors
   if $TERM ==# 'screen-256color'

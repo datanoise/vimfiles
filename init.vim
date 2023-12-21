@@ -69,7 +69,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'vim-scripts/searchfold.vim',   { 'on': '<Plug>SearchFoldNormal' }
   Plug 'datanoise/vim-bclose',         { 'on': 'Bclose' }
   Plug 'AndrewRadev/splitjoin.vim',    { 'on': [ 'SplitjoinJoin', 'SplitjoinSplit'] }
-  Plug 'datanoise/switch.vim',         { 'on': 'Switch' }
+  Plug 'datanoise/switch.vim'
   Plug 'AndrewRadev/sideways.vim'
 
   Plug 'wellle/targets.vim'

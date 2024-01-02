@@ -19,7 +19,7 @@ end
 -- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+  vim.api.nvim_set_option_value('omnifunc', 'v:lua.vim.lsp.omnifunc', { buf = bufnr })
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   local bufopts = { noremap=true, silent=true, buffer=bufnr }
@@ -63,6 +63,7 @@ local on_attach = function(client, bufnr)
   end
 end
 
+local ruby_timers = {}
 local ruby_lsp_on_attach = function(client, bufnr)
   on_attach(client, bufnr)
 
@@ -87,6 +88,7 @@ local ruby_lsp_on_attach = function(client, bufnr)
             percentage = percentage,
           },
         }, {
+            method = kind,
             client_id = client.id,
           })
       end)
@@ -106,17 +108,35 @@ local ruby_lsp_on_attach = function(client, bufnr)
         vim.lsp.diagnostic.on_publish_diagnostics(
           nil,
           vim.tbl_extend('keep', params, { diagnostics = result.items }),
-          { client_id = client.id }
+          {
+            method = "end",
+            client_id = client.id
+          },
+          {}
         )
       end
     )
   end
   callback() -- call on attach
 
-  vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePre', 'BufReadPost', 'InsertLeave', 'TextChanged' }, {
-    buffer = bufnr,
-    callback = callback,
-  })
+  -- vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePre', 'BufReadPost', 'InsertLeave', 'TextChanged' }, {
+  --   buffer = bufnr,
+  --   callback = callback,
+  -- })
+
+  vim.api.nvim_buf_attach(bufnr, false, {
+      on_lines = function()
+        if ruby_timers[bufnr] then
+          vim.fn.timer_stop(ruby_timers[bufnr])
+        end
+        ruby_timers[bufnr] = vim.fn.timer_start(200, callback)
+      end,
+      on_detach = function()
+        if ruby_timers[bufnr] then
+          vim.fn.timer_stop(ruby_timers[bufnr])
+        end
+      end,
+    })
 end
 
 -- do not install ruby_ls via Mason because it doesn't install rubocop

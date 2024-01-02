@@ -17,6 +17,7 @@ fzf.setup {
     }
 }
 
+---@diagnostic disable-next-line: duplicate-set-field
 function _G.fzf_aerial(opts)
     opts = opts or {}
     opts.prompt = "Document Symbols"
@@ -28,9 +29,10 @@ function _G.fzf_aerial(opts)
     fzf.fzf_exec(require('aerial.fzf').get_labels(), opts)
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function _G.fzf_symbols()
     local lsp_symbols = false
-    local local_clients = vim.lsp.buf_get_clients(vim.api.nvim_get_current_buf())
+    local local_clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
     for _, client in ipairs(local_clients) do
         if client.server_capabilities.documentSymbolProvider then
             lsp_symbols = true

@@ -8,6 +8,13 @@ execute 'cnoremap <M-t> FZF '
 execute 'nnoremap <M-t> :FZF '
 call CommandAlias('fzf', 'FZF')
 
+let g:fzf_action = {
+      \ 'ctrl-t': 'tab split',
+      \ 'ctrl-x': 'split',
+      \ 'ctrl-s': 'split',
+      \ 'ctrl-v': 'vsplit'
+      \ }
+
 if !has_key(g:plugs, 'fzf-lua')
   nnoremap <silent> <Leader>n :BTag<CR>
   nnoremap <silent> <Leader>e :History<CR>

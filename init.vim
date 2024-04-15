@@ -118,7 +118,10 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'Yazeed1s/minimal.nvim'
     Plug 'ibhagwan/fzf-lua'
     Plug 'phaazon/hop.nvim'
+
     Plug 'simrat39/rust-tools.nvim'
+    " Plug 'lvimuser/lsp-inlayhints.nvim'
+    " Plug 'mrcjkb/rustaceanvim'
 
     Plug 'hrsh7th/cmp-buffer'
     Plug 'hrsh7th/cmp-path'
@@ -161,8 +164,8 @@ silent! if plug#begin('~/.vim/bundle')
     endif
 
     " coc
-    Plug 'neoclide/coc.nvim' ", {'branch': 'release'}
-    Plug 'wellle/tmux-complete.vim'
+    " Plug 'neoclide/coc.nvim' ", {'branch': 'release'}
+    " Plug 'wellle/tmux-complete.vim'
 
     " ctrlp
     Plug 'ctrlpvim/ctrlp.vim'

@@ -691,7 +691,7 @@ if has('nvim-0.8.0')
   hi! link @math Special
   hi! link @type Type
   hi! link @url Underlined
-  " hi! link @variable Variable
+  hi! link @variable Identifier
   hi! link @variable.builtin Constant
   hi! link @symbol.ruby Constant
 endif

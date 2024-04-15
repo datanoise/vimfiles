@@ -140,7 +140,7 @@ local ruby_lsp_on_attach = function(client, bufnr)
 end
 
 -- do not install ruby_ls via Mason because it doesn't install rubocop
-require('lspconfig').ruby_ls.setup{
+require('lspconfig').ruby_lsp.setup{
   on_attach = ruby_lsp_on_attach,
   init_options = {
     enabledFeatures = {
@@ -216,8 +216,8 @@ require("mason-lspconfig").setup_handlers({
       },
     }
   end,
-  ["ruby_ls"] = function()
-    lspconfig['ruby_ls'].setup{
+  ["ruby_lsp"] = function()
+    lspconfig['ruby_lsp'].setup{
       on_attach = ruby_lsp_on_attach,
     }
   end,

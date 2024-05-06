@@ -89,11 +89,12 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'nvim-treesitter/nvim-treesitter-context'
     Plug 'nvim-treesitter/nvim-treesitter-textobjects'
     Plug 'nvim-treesitter/playground'
+    Plug 'RRethy/nvim-treesitter-endwise'
 
     Plug 'nvim-lualine/lualine.nvim'
     Plug 'gbprod/yanky.nvim'
     Plug 'datanoise/vim-dispatch-neovim'
-    " Plug 'p00f/nvim-ts-rainbow'
+    Plug 'p00f/nvim-ts-rainbow'
     Plug 'windwp/nvim-ts-autotag'
     Plug 'numToStr/Comment.nvim'
     Plug 'norcalli/nvim-colorizer.lua'
@@ -104,7 +105,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'williamboman/mason-lspconfig.nvim'
     Plug 'mfussenegger/nvim-dap'
     Plug 'kylechui/nvim-surround'
-    Plug 'RRethy/nvim-treesitter-endwise'
     Plug 'jose-elias-alvarez/null-ls.nvim'
     Plug 'folke/trouble.nvim'
     Plug 'kyazdani42/nvim-web-devicons'
@@ -112,12 +112,14 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'andymass/vim-matchup'
     Plug 'windwp/nvim-autopairs'
     Plug 'lewis6991/gitsigns.nvim'
-    Plug 'kyazdani42/nvim-tree.lua'
-    Plug 'j-hui/fidget.nvim' " , { 'tag': 'legacy' }
+    Plug 'j-hui/fidget.nvim'
     Plug 'EdenEast/nightfox.nvim'
     Plug 'Yazeed1s/minimal.nvim'
     Plug 'ibhagwan/fzf-lua'
     Plug 'phaazon/hop.nvim'
+
+    Plug 'stevearc/oil.nvim'
+    " Plug 'kyazdani42/nvim-tree.lua'
 
     Plug 'simrat39/rust-tools.nvim'
     " Plug 'lvimuser/lsp-inlayhints.nvim'

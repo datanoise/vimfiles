@@ -16,15 +16,16 @@ augroup shebang_chmod
         \   unlet b:chmod_post |
         \ endif
 augroup END
-augroup auto_create_directory
-  au!
-  au BufWritePre *
-        \  let d=expand("<afile>:h") |
-        \  if !isdirectory(d) |
-        \    call mkdir(d, 'p') |
-        \  endif |
-        \  unlet d
-augroup END
+" this incompatible with oil.nvim plugin
+" augroup auto_create_directory
+"   au!
+"   au BufWritePre *
+"         \  let d=expand("<afile>:h") |
+"         \  if !isdirectory(d) |
+"         \    call mkdir(d, 'p') |
+"         \  endif |
+"         \  unlet d
+" augroup END
 if has_key(g:plugs, 'exception.vim')
   command! WTF call exception#trace()
 endif

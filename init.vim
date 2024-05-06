@@ -82,6 +82,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/bufexplorer'
   Plug 'vimwiki/vimwiki', { 'on': 'VimwikiIndex' }
   Plug 'lervag/vimtex'
+  Plug 'datanoise/vim-localvimrc'
   Plug 'tweekmonster/startuptime.vim'
 
   if has('nvim')
@@ -145,7 +146,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'tpope/vim-endwise'
     Plug 'Raimondi/delimitMate'
     Plug 'easymotion/vim-easymotion'
-    Plug 'datanoise/vim-localvimrc'
     Plug 'tpope/vim-commentary', { 'on': '<Plug>Commentary' }
     Plug 'airblade/vim-gitgutter', { 'on': [ 'GitGutterToggle', 'GitGutterEnable' ] }
     Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }

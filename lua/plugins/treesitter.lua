@@ -26,10 +26,6 @@ require'nvim-treesitter.configs'.setup {
     enable = true,
     disable = {"ruby", "rust"}
   },
-  rainbow = {
-    enable = true,
-    extended_mode = false,
-  },
   autotag = {
     enable = true,
   },

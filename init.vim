@@ -95,7 +95,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'nvim-lualine/lualine.nvim'
     Plug 'gbprod/yanky.nvim'
     Plug 'datanoise/vim-dispatch-neovim'
-    Plug 'p00f/nvim-ts-rainbow'
     Plug 'windwp/nvim-ts-autotag'
     Plug 'numToStr/Comment.nvim'
     Plug 'norcalli/nvim-colorizer.lua'

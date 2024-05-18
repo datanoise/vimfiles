@@ -105,7 +105,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'williamboman/mason-lspconfig.nvim'
     Plug 'mfussenegger/nvim-dap'
     Plug 'kylechui/nvim-surround'
-    Plug 'jose-elias-alvarez/null-ls.nvim'
+    Plug 'nvimtools/none-ls.nvim'
     Plug 'folke/trouble.nvim'
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'onsails/lspkind.nvim'
@@ -117,6 +117,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'Yazeed1s/minimal.nvim'
     Plug 'ibhagwan/fzf-lua'
     Plug 'phaazon/hop.nvim'
+    Plug 'echasnovski/mini.nvim'
 
     Plug 'stevearc/oil.nvim'
     " Plug 'kyazdani42/nvim-tree.lua'

@@ -7,8 +7,14 @@ vim.cmd [[
 set foldexpr=nvim_treesitter#foldexpr()
 ]]
 
+
+require('nvim-ts-autotag').setup({
+  filetypes = { "html" , "xml", "eruby" },
+})
+
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "c", "lua", "rust", "ruby", "python", "javascript", "typescript", "vim" },
+  ensure_installed = { "c", "lua", "rust", "ruby", "python", "javascript",
+    "typescript", "vim", "xml", "embedded_template", "html" },
   highlight = {
     enable = true,
     disable = {"ruby", "embedded_template", "vim"}
@@ -26,9 +32,9 @@ require'nvim-treesitter.configs'.setup {
     enable = true,
     disable = {"ruby", "rust"}
   },
-  autotag = {
-    enable = true,
-  },
+  -- autotag = {
+  --   enable = true,
+  -- },
   endwise = {
     enable = true,
   },
@@ -113,7 +119,3 @@ require'treesitter-context'.setup {
 
 -- local language = require"vim.treesitter.language"
 -- language.register("yaml", "eruby.yaml")
-
-require('nvim-ts-autotag').setup({
-  filetypes = { "html" , "xml", "eruby" },
-})

@@ -6,7 +6,7 @@ local fzf = require'fzf-lua'
 
 fzf.setup {
     winopts = {
-        width = 0.6,
+        width = 0.8,
         height = 0.6,
         preview = {
             hidden = "hidden"

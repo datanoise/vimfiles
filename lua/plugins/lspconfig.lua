@@ -142,6 +142,7 @@ end
 -- do not install ruby_ls via Mason because it doesn't install rubocop
 require('lspconfig').ruby_lsp.setup{
   on_attach = ruby_lsp_on_attach,
+  filetypes = { 'ruby' },
   init_options = {
     enabledFeatures = {
       "codeActions",

@@ -527,7 +527,7 @@ hi! link diffAdded String
 " VimDiff
 
 call s:X("DiffAdd","D2EBBE","437019","","White","DarkGreen")
-call s:X("DiffDelete","40000A","700009","","DarkRed","DarkRed")
+call s:X("DiffDelete","914c0f","000000","","DarkBrown","")
 call s:X("DiffChange","","2B5B77","","White","DarkBlue")
 call s:X("DiffText","8fbfdc","000000","reverse","Yellow","")
 

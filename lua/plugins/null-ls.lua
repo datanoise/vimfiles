@@ -1,4 +1,4 @@
-if not vim.g.plugs['null-ls.nvim'] then
+if not vim.g.plugs['none-ls.nvim'] then
   return
 end
 

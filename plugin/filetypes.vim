@@ -58,7 +58,7 @@ augroup END
 augroup MarkdownSettings
   au!
   au FileType markdown command! -nargs=* -complete=file -buffer Preview :exe "sil !markdown " . expand('%') ."| bcat" | :redraw!
-  au FileType markdown inoremap <buffer> \| \|<C-o>:Tab /\|<CR><End>
+  " au FileType markdown inoremap <buffer> \| \|<C-o>:Tabularize /\|<CR><C-o><<<CR><End>
 augroup END
 
 augroup CoffeeSettings

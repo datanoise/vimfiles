@@ -186,21 +186,23 @@ require("mason-lspconfig").setup_handlers({
     end
     local local_config = read_ra_settings()
 
-    require("rust-tools").setup({
-      server = {
-        on_attach = on_attach,
-        settings = {
-          -- cmd = "~/.cargo/bin/rust-analyzer",
-          ["rust-analyzer"] = local_config,
-        }
-      },
-      tools = {
-        inlay_hints = {
-          highlight = "NonText",
-          only_current_line = true,
-        }
-      },
-    })
+    if vim.g.plugs['rust-tools.nvim'] then
+      require("rust-tools").setup({
+        server = {
+          on_attach = on_attach,
+          settings = {
+            -- cmd = "~/.cargo/bin/rust-analyzer",
+            ["rust-analyzer"] = local_config,
+          }
+        },
+        tools = {
+          inlay_hints = {
+            highlight = "NonText",
+            only_current_line = true,
+          }
+        },
+      })
+    end
   end,
   ["lua_ls"] = function ()
     lspconfig['lua_ls'].setup{

@@ -121,9 +121,9 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'stevearc/oil.nvim'
     " Plug 'kyazdani42/nvim-tree.lua'
 
-    Plug 'simrat39/rust-tools.nvim'
+    " Plug 'simrat39/rust-tools.nvim'
     " Plug 'lvimuser/lsp-inlayhints.nvim'
-    " Plug 'mrcjkb/rustaceanvim'
+    Plug 'mrcjkb/rustaceanvim'
 
     Plug 'hrsh7th/cmp-buffer'
     Plug 'hrsh7th/cmp-path'

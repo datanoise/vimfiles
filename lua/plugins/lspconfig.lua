@@ -4,12 +4,6 @@ end
 
 local lspconfig = require('lspconfig')
 
-local opts = { noremap=true, silent=true }
-vim.keymap.set('n', 'gl', vim.diagnostic.open_float, opts)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-vim.keymap.set('n', '<leader>cl', vim.diagnostic.setloclist, opts)
-
 local function hover_twice()
   vim.lsp.buf.hover()
   vim.lsp.buf.hover()
@@ -41,6 +35,9 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
   vim.keymap.set('n', '<leader>sf', vim.lsp.buf.format, bufopts)
 
+  vim.keymap.set('n', 'gl', vim.diagnostic.open_float, bufopts)
+  vim.keymap.set('n', '<leader>cl', vim.diagnostic.setloclist, bufopts)
+
   -- buffer symbol highlighting
   if client.supports_method "textDocument/documentHighlight" then
     vim.api.nvim_create_augroup("lsp_document_highlight", {
@@ -63,85 +60,9 @@ local on_attach = function(client, bufnr)
   end
 end
 
-local ruby_timers = {}
-local ruby_lsp_on_attach = function(client, bufnr)
-  on_attach(client, bufnr)
-
-  -- perform diagnostic resolution
-  local callback = function()
-    local params = vim.lsp.util.make_text_document_params(bufnr)
-
-    local handler = vim.lsp.handlers["$/progress"]
-    local token = 0
-    local send_progress = function (kind, title, message, percentage)
-      if not handler then
-        return
-      end
-
-      vim.schedule(function()
-        handler(nil, {
-          token = token,
-          value = {
-            kind = kind,
-            title = title,
-            message = message,
-            percentage = percentage,
-          },
-        }, {
-            method = kind,
-            client_id = client.id,
-          })
-      end)
-    end
-
-    send_progress("begin", "diagnostics", "Sending request", 0)
-    client.request(
-      'textDocument/diagnostic',
-      { textDocument = params },
-      function(err, result)
-        if err then return end
-
-        send_progress("end", "diagnostics", "Finished", 100)
-
-        if not result then return end
-
-        vim.lsp.diagnostic.on_publish_diagnostics(
-          nil,
-          vim.tbl_extend('keep', params, { diagnostics = result.items }),
-          {
-            method = "end",
-            client_id = client.id
-          },
-          {}
-        )
-      end
-    )
-  end
-  callback() -- call on attach
-
-  -- vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePre', 'BufReadPost', 'InsertLeave', 'TextChanged' }, {
-  --   buffer = bufnr,
-  --   callback = callback,
-  -- })
-
-  vim.api.nvim_buf_attach(bufnr, false, {
-      on_lines = function()
-        if ruby_timers[bufnr] then
-          vim.fn.timer_stop(ruby_timers[bufnr])
-        end
-        ruby_timers[bufnr] = vim.fn.timer_start(200, callback)
-      end,
-      on_detach = function()
-        if ruby_timers[bufnr] then
-          vim.fn.timer_stop(ruby_timers[bufnr])
-        end
-      end,
-    })
-end
-
 -- do not install ruby_ls via Mason because it doesn't install rubocop
 require('lspconfig').ruby_lsp.setup{
-  on_attach = ruby_lsp_on_attach,
+  on_attach = on_attach,
   filetypes = { 'ruby' },
   init_options = {
     enabledFeatures = {
@@ -231,7 +152,7 @@ require("mason-lspconfig").setup_handlers({
   end,
   ["ruby_lsp"] = function()
     lspconfig['ruby_lsp'].setup{
-      on_attach = ruby_lsp_on_attach,
+      on_attach = on_attach,
     }
   end,
 })
@@ -262,9 +183,12 @@ vim.diagnostic.config({
     severity = { min = vim.diagnostic.severity.WARN }
   },
   severity_sort = true,
+  jump = {
+    float = true
+  },
   float = {
     border = 'rounded',
-    source = 'always',
+    source = true,
     header = '',
     prefix = '',
   },
@@ -273,15 +197,15 @@ vim.diagnostic.config({
 -- vim.o.updatetime = 300
 -- vim.cmd [[autocmd! CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})]]
 
-vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
-  vim.lsp.handlers.hover,
-  {border = 'rounded'}
-)
-
-vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
-  vim.lsp.handlers.signature_help,
-  {border = 'rounded'}
-)
+-- vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
+--   vim.lsp.handlers.hover,
+--   {border = 'rounded'}
+-- )
+--
+-- vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
+--   vim.lsp.handlers.signature_help,
+--   {border = 'rounded'}
+-- )
 
 vim.api.nvim_create_autocmd("BufWritePre", {
   pattern = "*.rs",

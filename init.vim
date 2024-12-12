@@ -113,7 +113,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'lewis6991/gitsigns.nvim'
     Plug 'j-hui/fidget.nvim'
     Plug 'EdenEast/nightfox.nvim'
-    Plug 'Yazeed1s/minimal.nvim'
     Plug 'ibhagwan/fzf-lua'
     Plug 'phaazon/hop.nvim'
     Plug 'echasnovski/mini.nvim'

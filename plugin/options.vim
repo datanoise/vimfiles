@@ -176,6 +176,10 @@ set completeopt=menu,longest
 set clipboard+=unnamed
 set signcolumn=yes
 
+" for nvim-matchup to avoid statusline flicker
+" function MatchupStatusOffscreen() can be called from the statusline
+let g:matchup_matchparen_offscreen = {'method': 'status_manual'}
+
 augroup FugitiveAutoCleanup
   au!
   au BufReadPost fugitive://* set bufhidden=delete

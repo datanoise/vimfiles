@@ -68,7 +68,7 @@ require('lspconfig').ruby_lsp.setup{
     enabledFeatures = {
       "codeActions",
       "diagnostics",
-      -- "documentHighlights",
+      "documentHighlights",
       -- "documentLink",
       "documentSymbols",
       "foldingRanges",

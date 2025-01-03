@@ -12,3 +12,4 @@ nnoremap <leader>tl :TestLast<CR>
 nnoremap <leader>tf :TestFile<CR>
 nnoremap <leader>tv :TestVisit<CR>
 
+let g:test#ruby#use_binstubs = 1

@@ -719,7 +719,7 @@ hi! link ALEVirtualTextError Error
 hi! YankyPut guifg=black guibg=DarkOrange
 hi! link YankyYanked YankyPut
 
-hi! LspHighlight cterm=underline gui=underline guisp=#fb5e2a
+hi! LspHighlight cterm=underline gui=underline guisp=gray
 hi! link CocHighlightText LspHighlight
 hi! link LspReferenceText LspHighlight
 hi! link LspReferenceRead LspHighlight

@@ -98,6 +98,8 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'numToStr/Comment.nvim'
     Plug 'norcalli/nvim-colorizer.lua'
     Plug 'rcarriga/nvim-notify'
+    Plug 'folke/noice.nvim'
+    Plug 'MunifTanjim/nui.nvim'
     " Plug 'folke/which-key.nvim'
     Plug 'neovim/nvim-lspconfig'
     Plug 'williamboman/mason.nvim'

@@ -164,6 +164,7 @@ for type, icon in pairs(signs) do
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 vim.diagnostic.config({
+  virtual_lines = false,
   signs = {
     text = {
       [vim.diagnostic.severity.ERROR] = " ",

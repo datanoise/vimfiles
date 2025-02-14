@@ -60,7 +60,7 @@ local on_attach = function(client, bufnr)
   end
 end
 
--- do not install ruby_ls via Mason because it doesn't install rubocop
+-- do not install ruby_lsp via Mason because it doesn't install rubocop
 require('lspconfig').ruby_lsp.setup{
   on_attach = on_attach,
   filetypes = { 'ruby' },
@@ -83,6 +83,11 @@ require('lspconfig').ruby_lsp.setup{
       "definition",
       "workspaceSymbol",
       "signatureHelp",
+    },
+    addonSettings = {
+      ["Ruby LSP Rails"] = {
+        enablePendingMigrationsPrompt = false
+      }
     }
   }
 }

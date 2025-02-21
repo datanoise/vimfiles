@@ -126,14 +126,14 @@ require("noice").setup({
       ["cmp.entry.get_documentation"] = false,
     },
     hover = {
-      enabled = true,
+      enabled = false,
       silent = false, -- set to true to not show a message if hover is not available
       view = nil, -- when nil, use defaults from documentation
       ---@type NoiceViewOptions
       opts = {}, -- merged with defaults from documentation
     },
     signature = {
-      enabled = true,
+      enabled = false,
       auto_open = {
         enabled = true,
         trigger = true, -- Automatically show signature help when typing a trigger character from the LSP

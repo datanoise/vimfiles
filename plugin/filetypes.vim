@@ -63,10 +63,10 @@ augroup END
 
 augroup CoffeeSettings
   au!
-  au FileType coffee nnoremap <buffer> <F3> :CoffeeCompile<CR>
-  au FileType coffee vnoremap <buffer> <F3> :CoffeeCompile<CR>
-  au FileType coffee nnoremap <buffer> <F4> :CoffeeRun<CR>
-  au FileType coffee nnoremap <buffer> <F5> :CoffeeMake<CR><CR>
+  au FileType coffee nnoremap <buffer> <C-F3> :CoffeeCompile<CR>
+  au FileType coffee vnoremap <buffer> <C-F3> :CoffeeCompile<CR>
+  au FileType coffee nnoremap <buffer> <C-F4> :CoffeeRun<CR>
+  au FileType coffee nnoremap <buffer> <C-F5> :CoffeeMake<CR><CR>
 augroup END
 
 augroup PhpSettings

@@ -117,7 +117,6 @@ nmap     <silent> <leader>o A<CR>
 nnoremap Y y$
 nnoremap z- 1z=
 nnoremap L :
-nnoremap <silent> <leader>q :Bclose<CR>
 nnoremap <silent> <leader>Q :bd<CR>
 nnoremap [S [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
 nnoremap <leader>a :let align = input("Align to: ")<Bar>exe ":Tab /" . align<CR>

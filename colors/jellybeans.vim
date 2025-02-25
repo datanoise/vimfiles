@@ -419,7 +419,7 @@ endfun
 call s:X("Normal","e8e8d3",s:background_color,"","White","")
 set background=dark
 
-call s:X("CursorLine","","1c1c1c","","",s:termBlack)
+call s:X("CursorLine","","1f1f1f","","",s:termBlack)
 call s:X("CursorColumn","","1c1c1c","","",s:termBlack)
 
 " Some of Terminal.app's default themes have a cursor color

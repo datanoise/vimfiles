@@ -67,7 +67,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'godlygeek/tabular',            { 'on': 'Tabularize' }
   Plug 'datanoise/vim-indexed-search', { 'on': 'ShowSearchIndex' }
   Plug 'vim-scripts/searchfold.vim',   { 'on': '<Plug>SearchFoldNormal' }
-  Plug 'datanoise/vim-bclose',         { 'on': 'Bclose' }
   Plug 'AndrewRadev/splitjoin.vim',    { 'on': [ 'SplitjoinJoin', 'SplitjoinSplit'] }
   Plug 'datanoise/switch.vim'
   Plug 'AndrewRadev/sideways.vim'
@@ -150,6 +149,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'airblade/vim-gitgutter', { 'on': [ 'GitGutterToggle', 'GitGutterEnable' ] }
     Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
     Plug 'rust-lang/rust.vim', { 'for': 'rust' }
+    Plug 'datanoise/vim-bclose', { 'on': 'Bclose' }
 
     Plug 'w0rp/ale'
     Plug 'maximbaz/lightline-ale'

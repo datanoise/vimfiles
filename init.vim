@@ -83,6 +83,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'lervag/vimtex'
   Plug 'datanoise/vim-localvimrc'
   Plug 'tweekmonster/startuptime.vim'
+  Plug 'github/copilot.vim'
 
   if has('nvim')
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -97,8 +98,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'numToStr/Comment.nvim'
     Plug 'norcalli/nvim-colorizer.lua'
     Plug 'rcarriga/nvim-notify'
-    Plug 'folke/noice.nvim'
-    Plug 'MunifTanjim/nui.nvim'
     " Plug 'folke/which-key.nvim'
     Plug 'neovim/nvim-lspconfig'
     Plug 'williamboman/mason.nvim'
@@ -117,6 +116,11 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'ibhagwan/fzf-lua'
     Plug 'phaazon/hop.nvim'
     Plug 'echasnovski/mini.nvim'
+    Plug 'MeanderingProgrammer/render-markdown.nvim'
+    Plug 'MunifTanjim/nui.nvim'
+
+    " Noice plugin
+    " Plug 'folke/noice.nvim'
 
     Plug 'stevearc/oil.nvim'
     " Plug 'kyazdani42/nvim-tree.lua'
@@ -139,6 +143,11 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'gfanto/fzf-lsp.nvim'
     " Plug 'nvim-telescope/telescope.nvim'
     Plug 'stevearc/aerial.nvim'
+
+    " AI tools
+    Plug 'olimorris/codecompanion.nvim'
+    Plug 'HakonHarnes/img-clip.nvim'
+    Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
   else
     Plug 'tpope/vim-repeat'
     Plug 'tpope/vim-surround'

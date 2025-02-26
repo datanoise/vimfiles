@@ -10,6 +10,7 @@ require('mini.files').setup()
 require('mini.pick').setup()
 require('mini.extra').setup()
 require('mini.splitjoin').setup()
+-- require('mini.diff').setup()
 local miniclue = require('mini.clue')
 miniclue.setup({
  triggers = {

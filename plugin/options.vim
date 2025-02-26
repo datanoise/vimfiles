@@ -96,6 +96,7 @@ if v:version >= 700
   set listchars+=nbsp:+
 endif
 set fillchars+=vert:\│
+set conceallevel=2
 " }}}
 " wild options {{{2
 set wildmenu

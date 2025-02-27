@@ -9,7 +9,13 @@ require('mini.indentscope').setup({
 require('mini.files').setup()
 require('mini.pick').setup()
 require('mini.extra').setup()
-require('mini.splitjoin').setup()
+require('mini.splitjoin').setup({
+    mappings = {
+        toggle = 'gt',
+        split = '',
+        join = '',
+    },
+})
 -- require('mini.diff').setup()
 local miniclue = require('mini.clue')
 miniclue.setup({

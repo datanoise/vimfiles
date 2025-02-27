@@ -5,7 +5,11 @@ end
 require("avante").setup({
   -- The default adapter to use for all strategies
   -- provider = "ollama",
+  -- provider = "claude",
   provider = "copilot",
+  -- claude = {
+  --   api_key_name = "cmd:op read op://personal/Anthropic/credential --no-newline",
+  -- },
   vendors = {
     ollama = {
       __inherited_from = "openai",

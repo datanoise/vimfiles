@@ -61,9 +61,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'fatih/vim-go'
   endif
 
-  " snippets
-  Plug 'honza/vim-snippets'
-
   Plug 'godlygeek/tabular',            { 'on': 'Tabularize' }
   Plug 'datanoise/vim-indexed-search', { 'on': 'ShowSearchIndex' }
   Plug 'vim-scripts/searchfold.vim',   { 'on': '<Plug>SearchFoldNormal' }
@@ -98,7 +95,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'numToStr/Comment.nvim'
     Plug 'norcalli/nvim-colorizer.lua'
     Plug 'rcarriga/nvim-notify'
-    " Plug 'folke/which-key.nvim'
     Plug 'neovim/nvim-lspconfig'
     Plug 'williamboman/mason.nvim'
     Plug 'williamboman/mason-lspconfig.nvim'
@@ -116,38 +112,36 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'ibhagwan/fzf-lua'
     Plug 'phaazon/hop.nvim'
     Plug 'echasnovski/mini.nvim'
-    Plug 'MeanderingProgrammer/render-markdown.nvim'
     Plug 'MunifTanjim/nui.nvim'
-
-    " Noice plugin
-    " Plug 'folke/noice.nvim'
-
     Plug 'stevearc/oil.nvim'
-    " Plug 'kyazdani42/nvim-tree.lua'
-
-    " Plug 'simrat39/rust-tools.nvim'
-    " Plug 'lvimuser/lsp-inlayhints.nvim'
     Plug 'mrcjkb/rustaceanvim'
-
-    Plug 'hrsh7th/cmp-buffer'
-    Plug 'hrsh7th/cmp-path'
-    Plug 'hrsh7th/cmp-cmdline'
-    Plug 'hrsh7th/nvim-cmp'
-    Plug 'hrsh7th/cmp-nvim-lsp'
-    Plug 'L3MON4D3/LuaSnip'
-    Plug 'saadparwaiz1/cmp_luasnip'
-    Plug 'hrsh7th/cmp-nvim-lsp-document-symbol'
-    Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
-
+    Plug 'rafamadriz/friendly-snippets'
+    Plug 'Saghen/blink.cmp'
     Plug 'nvim-lua/plenary.nvim'
-    Plug 'gfanto/fzf-lsp.nvim'
-    " Plug 'nvim-telescope/telescope.nvim'
     Plug 'stevearc/aerial.nvim'
 
+    " Disabled plugins
+    " Plug 'MeanderingProgrammer/render-markdown.nvim'
+    " Plug 'gfanto/fzf-lsp.nvim'
+    " Plug 'folke/noice.nvim'
+    " Plug 'kyazdani42/nvim-tree.lua'
+    " Plug 'simrat39/rust-tools.nvim'
+    " Plug 'lvimuser/lsp-inlayhints.nvim'
+    " Plug 'nvim-telescope/telescope.nvim'
+    " Plug 'folke/which-key.nvim'
+    " Plug 'L3MON4D3/LuaSnip'
+    " Plug 'hrsh7th/cmp-buffer'
+    " Plug 'hrsh7th/cmp-path'
+    " Plug 'hrsh7th/cmp-cmdline'
+    " Plug 'hrsh7th/nvim-cmp'
+    " Plug 'hrsh7th/cmp-nvim-lsp'
+    " Plug 'saadparwaiz1/cmp_luasnip'
+    " Plug 'hrsh7th/cmp-nvim-lsp-document-symbol'
+    " Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
     " AI tools
-    Plug 'olimorris/codecompanion.nvim'
-    Plug 'HakonHarnes/img-clip.nvim'
-    Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
+    " Plug 'olimorris/codecompanion.nvim'
+    " Plug 'HakonHarnes/img-clip.nvim'
+    " Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
   else
     Plug 'tpope/vim-repeat'
     Plug 'tpope/vim-surround'
@@ -163,7 +157,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'w0rp/ale'
     Plug 'maximbaz/lightline-ale'
 
-    " Plug 'majutsushi/tagbar'
     Plug 'ap/vim-css-color'
     Plug 'flazz/vim-colorschemes'
     Plug 'machakann/vim-highlightedyank'
@@ -174,9 +167,8 @@ silent! if plug#begin('~/.vim/bundle')
       Plug 'itchyny/lightline.vim'
     endif
 
-    " coc
-    " Plug 'neoclide/coc.nvim' ", {'branch': 'release'}
-    " Plug 'wellle/tmux-complete.vim'
+    " snippets
+    Plug 'honza/vim-snippets'
 
     " ctrlp
     Plug 'ctrlpvim/ctrlp.vim'

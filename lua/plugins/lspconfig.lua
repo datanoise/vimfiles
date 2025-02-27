@@ -61,8 +61,14 @@ local on_attach = function(client, bufnr)
   end
 end
 
+local capabilities = {}
+if vim.g.plugs['blink.cmp'] then
+  capabilities = require('blink.cmp').get_lsp_capabilities()
+end
+
 -- do not install ruby_lsp via Mason because it doesn't install rubocop
 require('lspconfig').ruby_lsp.setup{
+  capabilities = capabilities,
   on_attach = on_attach,
   filetypes = { 'ruby' },
   init_options = {
@@ -98,6 +104,7 @@ require("mason-lspconfig").setup()
 require("mason-lspconfig").setup_handlers({
   function (server_name)
     lspconfig[server_name].setup({
+      capabilities = capabilities,
       on_attach = on_attach,
     })
   end,
@@ -139,6 +146,7 @@ require("mason-lspconfig").setup_handlers({
           runtime = {
             -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
             version = 'LuaJIT',
+            special = { reload = "require" },
           },
           diagnostics = {
             -- Get the language server to recognize the `vim` global
@@ -146,7 +154,10 @@ require("mason-lspconfig").setup_handlers({
           },
           workspace = {
             checkThirdParty = false,
-            library = { vim.env.VIMRUNTIME },
+            library = {
+              vim.fn.expand "$VIMRUNTIME/lua",
+              vim.fn.expand "$VIMRUNTIME/lua/vim/lsp"
+            },
             -- Make the server aware of Neovim runtime files
             -- library = vim.api.nvim_get_runtime_file("", true),
           },

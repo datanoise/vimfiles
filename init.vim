@@ -116,14 +116,18 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'stevearc/oil.nvim'
     Plug 'mrcjkb/rustaceanvim'
     Plug 'rafamadriz/friendly-snippets'
-    Plug 'Saghen/blink.cmp'
+    Plug 'Saghen/blink.cmp', { 'do': 'cargo build --release' }
     Plug 'nvim-lua/plenary.nvim'
     Plug 'stevearc/aerial.nvim'
+    Plug 'folke/noice.nvim'
 
     " Disabled plugins
+    " Plug 'zbirenbaum/copilot.lua'
+    " Plug 'nvim-neotest/nvim-nio'
+    " Plug 'nvim-neotest/neotest'
+    " Plug 'zidhuss/neotest-minitest'
     " Plug 'MeanderingProgrammer/render-markdown.nvim'
     " Plug 'gfanto/fzf-lsp.nvim'
-    " Plug 'folke/noice.nvim'
     " Plug 'kyazdani42/nvim-tree.lua'
     " Plug 'simrat39/rust-tools.nvim'
     " Plug 'lvimuser/lsp-inlayhints.nvim'

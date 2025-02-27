@@ -121,7 +121,10 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'stevearc/aerial.nvim'
     Plug 'folke/noice.nvim'
 
-    " Disabled plugins
+    " AI tools
+    Plug 'olimorris/codecompanion.nvim'
+
+    " Disabled plugins that could be useful later on
     " Plug 'zbirenbaum/copilot.lua'
     " Plug 'nvim-neotest/nvim-nio'
     " Plug 'nvim-neotest/neotest'
@@ -142,8 +145,6 @@ silent! if plug#begin('~/.vim/bundle')
     " Plug 'saadparwaiz1/cmp_luasnip'
     " Plug 'hrsh7th/cmp-nvim-lsp-document-symbol'
     " Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
-    " AI tools
-    " Plug 'olimorris/codecompanion.nvim'
     " Plug 'HakonHarnes/img-clip.nvim'
     " Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
   else

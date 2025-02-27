@@ -171,6 +171,8 @@ cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
 cnoremap <C-b> <Left>
 cnoremap <C-f> <Right>
+cnoremap <M-b> <S-Left>
+cnoremap <M-f> <S-Right>
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h'). '/' : '%%'
 " better <Tab> handling in wild menu mode
 set wildcharm=<C-Z>

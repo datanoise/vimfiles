@@ -45,7 +45,7 @@ codecompanion.setup({
         },
         stop = {
           modes = {
-            n = "<C-c",
+            n = "<C-s",
           },
           index = 4,
           callback = "keymaps.stop",

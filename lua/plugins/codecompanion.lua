@@ -30,7 +30,7 @@ codecompanion.setup({
   },
   strategies = {
     chat = {
-      adapter = 'ollamalocal',
+      adapter = 'gemini-flash',
       keymaps = {
         close = {
           modes = {
@@ -55,6 +55,13 @@ codecompanion.setup({
           modes = { n = "<M-j>", i = "<M-j>" },
         },
       },
+      slash_commands = {
+        ["help"] = {
+          opts = {
+            provider = "mini_pick",
+          },
+        },
+      },
     },
   },
   adapters = {
@@ -66,6 +73,27 @@ codecompanion.setup({
             default = 'llama3.2:latest',
           },
         },
+      })
+    end,
+    gemini = function()
+      return require('codecompanion.adapters').extend('gemini', {
+        name = 'gemini-flash',
+        schema = {
+          model = {
+            default = 'gemini-2.0-flash',
+          },
+        },
+        env = {
+          api_key = 'cmd:op read op://personal/Gemini/credential --no-newline',
+        }
+      })
+    end,
+    anthropic = function()
+      return require('codecompanion.adapters').extend('anthropic', {
+        name = 'anthropic',
+        env = {
+          api_key = 'cmd:op read op://personal/Anthropic/credential --no-newline',
+        }
       })
     end,
   },

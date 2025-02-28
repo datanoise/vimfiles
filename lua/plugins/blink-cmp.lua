@@ -3,6 +3,11 @@ if not vim.g.plugs['blink.cmp'] then
 end
 
 require('blink.cmp').setup({
+  completion = {
+    list = {
+      selection = { preselect = false }
+    }
+  },
   keymap = {
     preset = 'default',
     ['<CR>'] = { 'accept', 'fallback' },
@@ -50,7 +55,7 @@ require('blink.cmp').setup({
     },
     completion = {
       menu = {
-        auto_show = function(ctx)
+        auto_show = function()
           return vim.fn.getcmdtype() == ':'
           -- enable for inputs as well, with:
           -- or vim.fn.getcmdtype() == '@'

@@ -6,6 +6,8 @@ require('blink.cmp').setup({
   keymap = {
     preset = 'default',
     ['<CR>'] = { 'accept', 'fallback' },
+    ['<C-j>'] = { 'select_next' },
+    ['<C-k>'] = { 'select_prev' },
   },
   appearance = {
       -- Sets the fallback highlight groups to nvim-cmp's highlight groups
@@ -40,8 +42,11 @@ require('blink.cmp').setup({
   -- signature = { enabled = true }
   cmdline = {
     keymap = {
+      preset = 'cmdline',
       -- recommended, as the default keymap will only show and select the next item
       ['<Tab>'] = { 'show', 'accept' },
+      ['<C-j>'] = { 'select_next' },
+      ['<C-k>'] = { 'select_prev' },
     },
     completion = {
       menu = {

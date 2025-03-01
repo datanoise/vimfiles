@@ -101,3 +101,8 @@ augroup JsonSettings
   au!
   au FileType json setlocal conceallevel=0
 augroup END
+
+augroup copilot_fugitive
+  autocmd!
+  autocmd FileType gitcommit let b:copilot_enabled = v:true
+augroup END

@@ -119,12 +119,12 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'Saghen/blink.cmp', { 'do': 'cargo build --release' }
     Plug 'nvim-lua/plenary.nvim'
     Plug 'stevearc/aerial.nvim'
-    Plug 'folke/noice.nvim'
 
     " AI tools
     Plug 'olimorris/codecompanion.nvim'
 
     " Disabled plugins that could be useful later on
+    " Plug 'folke/noice.nvim'
     " Plug 'zbirenbaum/copilot.lua'
     " Plug 'nvim-neotest/nvim-nio'
     " Plug 'nvim-neotest/neotest'

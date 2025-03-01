@@ -51,7 +51,7 @@ require('blink.cmp').setup({
   fuzzy = { implementation = "prefer_rust_with_warning" },
   -- signature = { enabled = true }
   cmdline = {
-    enabled = true,
+    enabled = false,
     keymap = {
       preset = 'cmdline',
       ['<Tab>'] = { 'select_next' },

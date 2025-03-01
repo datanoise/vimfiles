@@ -30,6 +30,7 @@ require('blink.cmp').setup({
     default = { 'snippets', 'buffer', 'lsp', 'path' },
     providers = {
       buffer = {
+        min_keyword_length = 5,
         opts = {
           get_bufnrs = function()
             return vim.tbl_filter(function(bufnr)
@@ -39,28 +40,53 @@ require('blink.cmp').setup({
         }
       },
       lsp = {
+        min_keyword_length = 5,
         fallbacks = {},
-      }
+      },
+      cmdline = {
+        min_keyword_length = 0,
+      },
     },
   },
   fuzzy = { implementation = "prefer_rust_with_warning" },
   -- signature = { enabled = true }
   cmdline = {
+    enabled = true,
     keymap = {
       preset = 'cmdline',
-      -- recommended, as the default keymap will only show and select the next item
-      ['<Tab>'] = { 'show', 'accept' },
+      ['<Tab>'] = { 'select_next' },
       ['<C-j>'] = { 'select_next' },
       ['<C-k>'] = { 'select_prev' },
+      ['<CR>'] = { 'accept', 'fallback' },
     },
+    sources = function()
+      local type = vim.fn.getcmdtype()
+      -- Search forward and backward
+      if type == '/' or type == '?' then return { 'buffer' } end
+      -- Commands
+      if type == ':' or type == '@' then return { 'cmdline' } end
+      return {}
+    end,
     completion = {
-      menu = {
-        auto_show = function()
-          return vim.fn.getcmdtype() == ':'
-          -- enable for inputs as well, with:
-          -- or vim.fn.getcmdtype() == '@'
-        end,
+      list = {
+        selection = {
+          -- When `true`, will automatically select the first item in the completion list
+          preselect = true,
+          -- When `true`, inserts the completion item automatically when selecting it
+          auto_insert = true,
+        },
       },
+      -- Whether to automatically show the window when new completion items are available
+      menu = {
+        auto_show = true,
+        -- auto_show = function()
+        --   return vim.fn.getcmdtype() == ':'
+        --   -- enable for inputs as well, with:
+        --   -- or vim.fn.getcmdtype() == '@'
+        -- end,
+      },
+      -- Displays a preview of the selected item on the current line
+      ghost_text = { enabled = true }
     }
   }
 })

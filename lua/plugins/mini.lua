@@ -6,7 +6,11 @@ require('mini.indentscope').setup({
     draw = {animation = require("mini.indentscope").gen_animation.none() },
     symbol = ''
 })
-require('mini.files').setup()
+require('mini.files').setup({
+    mappings = {
+        go_in = '<CR>',
+    },
+})
 require('mini.pick').setup()
 require('mini.extra').setup()
 require('mini.splitjoin').setup({

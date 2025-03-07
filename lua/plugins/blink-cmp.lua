@@ -2,7 +2,8 @@ if not vim.g.plugs['blink.cmp'] then
   return
 end
 
-require('blink.cmp').setup({
+local blink = require('blink.cmp')
+blink.setup({
   completion = {
     list = {
       selection = { preselect = false }
@@ -10,6 +11,16 @@ require('blink.cmp').setup({
   },
   keymap = {
     preset = 'default',
+    ['<Tab>'] = {
+      function(cmp)
+        local copilot_suggestion = vim.fn['copilot#GetDisplayedSuggestion']
+        if cmp.is_menu_visible() and (copilot_suggestion == nil or copilot_suggestion().text == '') then
+          return cmp.select_next()
+        end
+      end,
+      'snippet_forward',
+      'fallback'
+    },
     ['<CR>'] = { 'accept', 'fallback' },
     ['<C-j>'] = { 'select_next' },
     ['<C-k>'] = { 'select_prev' },

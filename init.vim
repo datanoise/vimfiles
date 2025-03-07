@@ -116,12 +116,14 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'stevearc/oil.nvim'
     Plug 'mrcjkb/rustaceanvim'
     Plug 'rafamadriz/friendly-snippets'
-    Plug 'Saghen/blink.cmp', { 'do': 'cargo build --release' }
     Plug 'nvim-lua/plenary.nvim'
     Plug 'stevearc/aerial.nvim'
 
     " AI tools
     Plug 'olimorris/codecompanion.nvim'
+
+    " Completion
+    Plug 'Saghen/blink.cmp', { 'do': 'cargo build --release' }
 
     " Disabled plugins that could be useful later on
     " Plug 'folke/noice.nvim'
@@ -136,6 +138,10 @@ silent! if plug#begin('~/.vim/bundle')
     " Plug 'lvimuser/lsp-inlayhints.nvim'
     " Plug 'nvim-telescope/telescope.nvim'
     " Plug 'folke/which-key.nvim'
+    "
+    " Plug 'HakonHarnes/img-clip.nvim'
+    " Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
+    "
     " Plug 'L3MON4D3/LuaSnip'
     " Plug 'hrsh7th/cmp-buffer'
     " Plug 'hrsh7th/cmp-path'
@@ -145,8 +151,6 @@ silent! if plug#begin('~/.vim/bundle')
     " Plug 'saadparwaiz1/cmp_luasnip'
     " Plug 'hrsh7th/cmp-nvim-lsp-document-symbol'
     " Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
-    " Plug 'HakonHarnes/img-clip.nvim'
-    " Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
   else
     Plug 'tpope/vim-repeat'
     Plug 'tpope/vim-surround'

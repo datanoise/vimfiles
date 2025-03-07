@@ -38,7 +38,7 @@ blink.setup({
   -- Default list of enabled providers defined so that you can extend it
   -- elsewhere in your config, without redefining it, due to `opts_extend`
   sources = {
-    default = { 'snippets', 'buffer', 'lsp', 'path' },
+    default = { 'snippets', 'lsp', 'buffer', 'path' },
     providers = {
       buffer = {
         min_keyword_length = 5,

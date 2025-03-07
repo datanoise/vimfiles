@@ -93,7 +93,7 @@ endfunction
 let g:mapleader = ','
 nnoremap <leader>sv :source ~/.vimrc
 nnoremap <leader>sg :source ~/.gvimrc
-nnoremap \vv :e ~/.vimrc
+nnoremap \vv :e ~/.vim/init.vim
 nnoremap \vg :e ~/.gvimrc
 
 " visual select of the last pasted text

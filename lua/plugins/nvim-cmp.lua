@@ -25,6 +25,22 @@ local luasnip = require("luasnip")
 local devicons = require('nvim-web-devicons')
 local lspkind = require('lspkind')
 
+local tab_handler = function(fallback)
+  local copilot_suggestion = vim.fn['copilot#GetDisplayedSuggestion']
+  local has_copilit_suggestion = copilot_suggestion ~= nil and copilot_suggestion().text ~= ''
+  if has_copilit_suggestion then
+    fallback()
+  elseif cmp.visible() then
+    cmp.select_next_item()
+  elseif luasnip.expand_or_locally_jumpable() then
+    luasnip.expand_or_jump()
+  elseif has_words_before() then
+    cmp.complete()
+  else
+    fallback()
+  end
+end
+
 cmp.setup({
   preselect = cmp.PreselectMode.None,
   snippet = {
@@ -41,17 +57,8 @@ cmp.setup({
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.abort(),
     ['<CR>'] = cmp.mapping.confirm({ select = false }),
-    ["<C-n>"] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_locally_jumpable() then
-        luasnip.expand_or_jump()
-      elseif has_words_before() then
-        cmp.complete()
-      else
-        fallback()
-      end
-    end, { "i", "s" }),
+    ["<C-n>"] = cmp.mapping(tab_handler, { "i", "s" }),
+    ["<Tab>"] = cmp.mapping(tab_handler, { "i", "s" }),
 
     ["<C-p>"] = cmp.mapping(function(fallback)
       if cmp.visible() then

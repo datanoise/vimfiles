@@ -97,6 +97,7 @@ if v:version >= 700
 endif
 set fillchars+=vert:\│,diff:/,fold:\·,eob:\ ,msgsep:‾
 set conceallevel=2
+set diffopt=internal,filler,closeoff,context:12,indent-heuristic,linematch:60,algorithm:histogram
 " }}}
 " wild options {{{2
 set wildmenu

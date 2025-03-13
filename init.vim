@@ -81,6 +81,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-localvimrc'
   Plug 'tweekmonster/startuptime.vim'
   Plug 'github/copilot.vim'
+  Plug 'sindrets/diffview.nvim'
 
   if has('nvim')
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}

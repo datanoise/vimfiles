@@ -95,7 +95,7 @@ set listchars+=extends:>,precedes:<
 if v:version >= 700
   set listchars+=nbsp:+
 endif
-set fillchars+=vert:\│
+set fillchars+=vert:\│,diff:/,fold:\·,eob:\ ,msgsep:‾
 set conceallevel=2
 " }}}
 " wild options {{{2

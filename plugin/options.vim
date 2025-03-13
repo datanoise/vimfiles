@@ -95,7 +95,11 @@ set listchars+=extends:>,precedes:<
 if v:version >= 700
   set listchars+=nbsp:+
 endif
-set fillchars+=vert:\│,diff:/,fold:\·,eob:\ ,msgsep:‾
+if has('nvim')
+  set fillchars+=vert:\│,diff:/,fold:\·,eob:\ ,msgsep:‾
+else
+  set fillchars+=vert:\│
+endif
 set conceallevel=2
 set diffopt=internal,filler,closeoff,context:12,indent-heuristic,linematch:60,algorithm:histogram
 " }}}

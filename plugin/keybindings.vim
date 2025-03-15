@@ -149,7 +149,7 @@ if has('mac')
   nnoremap <silent> <D-[> :bprev<CR>
   nnoremap <silent> <D-]> :bnext<CR>
 endif
-nnoremap <silent> <leader>ct :!ctags --extra=+f -R *<CR><CR>
+nnoremap <silent> <leader><leader>t :!ctags --extra=+f -R *<CR><CR>
 " insert modeline
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
 " fugitive commands
@@ -162,6 +162,11 @@ au FileType fugitive nnoremap <buffer> <silent> q :<C-U>if bufnr('$') == 1<Bar>q
 " quick search in visual mode
 xnoremap <silent> * :<C-u>call <SID>vset_search()<CR>/<C-R>=@/<CR><CR>
 xnoremap <silent> # :<C-u>call <SID>vset_search()<CR>?<C-R>=@/<CR><CR>
+
+"terminal bindings
+tmap <F2> <C-\><C-n><F2>
+tmap <C-i> <C-\><C-n>
+tmap <Esc><Esc> <C-\><C-n>
 
 " some handful command-mode bindings
 cmap <silent> <c-x><c-p> <Plug>CmdlineCompleteBackward

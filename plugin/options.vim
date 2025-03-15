@@ -195,8 +195,6 @@ augroup FugitiveAutoCleanup
 augroup END
 
 " terminal settings
-tmap <F2> <C-\><C-n><F2>
-tmap <C-i> <C-\><C-n>
 if has('nvim')
   augroup TermEnter
     au!

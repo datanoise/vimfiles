@@ -69,3 +69,4 @@ require('mini.bufremove').setup()
 
 vim.keymap.set("n", "<leader>fd", MiniFiles.open, { desc = "Open file browser" })
 vim.keymap.set("n", "<leader>q", MiniBufremove.delete, { desc = "Delete Buffer" })
+vim.keymap.set("n", "<leader>ss", function() MiniExtra.pickers.lsp({ scope = 'document_symbol'}) end, { desc = "Document Symbols" })

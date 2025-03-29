@@ -9,5 +9,6 @@ let g:vimwiki_key_mappings =
       \ 'table_mappings': 0,
       \ }
 let g:vimwiki_global_ext = 0
+let g:vimwiki_listing_hl = 1
 
 nnoremap <silent> <leader>ww :VimwikiIndex<CR>

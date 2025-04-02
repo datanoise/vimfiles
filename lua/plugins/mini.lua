@@ -15,7 +15,7 @@ require('mini.pick').setup()
 require('mini.extra').setup()
 require('mini.splitjoin').setup({
     mappings = {
-        toggle = 'gt',
+        toggle = 'gT',
         split = '',
         join = '',
     },

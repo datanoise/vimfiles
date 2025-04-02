@@ -11,7 +11,12 @@ end
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
-local on_attach = function(client, bufnr)
+local on_attach = function(args)
+  if not (args.data and args.data.client_id) then
+    return
+  end
+  local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+  local bufnr = args.buf
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_set_option_value('omnifunc', 'v:lua.vim.lsp.omnifunc', { buf = bufnr })
   -- Mappings.
@@ -40,7 +45,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<leader>cl', vim.diagnostic.setloclist, bufopts)
 
   -- buffer symbol highlighting
-  if client.supports_method "textDocument/documentHighlight" then
+  if client:supports_method "textDocument/documentHighlight" then
     vim.api.nvim_create_augroup("lsp_document_highlight", {
       clear = false,
     })
@@ -59,15 +64,39 @@ local on_attach = function(client, bufnr)
       callback = vim.lsp.buf.clear_references,
     })
   end
+
+  if client:supports_method('textDocument/foldingRange') then
+    local win = vim.api.nvim_get_current_win()
+    vim.wo[win][0].foldexpr = 'v:lua.vim.lsp.foldexpr()'
+  end
+
+  vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
 end
 
-local capabilities = {}
+local capabilities = {
+  offsetEncoding = { 'utf-16' },
+  general = {
+    positionEncodings = { 'utf-16' },
+  },
+}
 if vim.g.plugs['blink.cmp'] then
-  capabilities = require('blink.cmp').get_lsp_capabilities()
+  capabilities = vim.tbl_deep_extend('force', capabilities, require('blink.cmp').get_lsp_capabilities())
 end
 
--- do not install ruby_lsp via Mason because it doesn't install rubocop
-require('lspconfig').ruby_lsp.setup{
+vim.lsp.config("*", {
+  capabilities = capabilities,
+  root_markers = { ".git", "Gemfile" },
+})
+
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = vim.api.nvim_create_augroup("lspconfig", { clear = true }),
+  callback = on_attach,
+})
+
+require('mason').setup()
+require("mason-lspconfig").setup()
+
+lspconfig.ruby_lsp.setup{
   capabilities = capabilities,
   on_attach = on_attach,
   filetypes = { 'ruby' },
@@ -98,86 +127,43 @@ require('lspconfig').ruby_lsp.setup{
     }
   }
 }
--- require'lspconfig'.solargraph.setup{}
-require('mason').setup()
-require("mason-lspconfig").setup()
-require("mason-lspconfig").setup_handlers({
-  function (server_name)
-    lspconfig[server_name].setup({
-      capabilities = capabilities,
-      on_attach = on_attach,
-    })
-  end,
-  ["rust_analyzer"] = function ()
-    local function read_ra_settings()
-      local file = io.open(".rust-analyzer.json", "rb")
-      if not file then
-        return {}
-      end
-      local content = file:read("*a")
-      file:close()
-      return vim.json.decode(content) or {}
-    end
-    local local_config = read_ra_settings()
 
-    if vim.g.plugs['rust-tools.nvim'] then
-      require("rust-tools").setup({
-        server = {
-          on_attach = on_attach,
-          settings = {
-            -- cmd = "~/.cargo/bin/rust-analyzer",
-            ["rust-analyzer"] = local_config,
-          }
-        },
-        tools = {
-          inlay_hints = {
-            highlight = "NonText",
-            only_current_line = true,
-          }
-        },
-      })
-    end
-  end,
-  ["lua_ls"] = function ()
-    lspconfig['lua_ls'].setup{
-      on_attach = on_attach,
-      settings = {
-        Lua = {
-          runtime = {
-            -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-            version = 'LuaJIT',
-            special = { reload = "require" },
-          },
-          diagnostics = {
-            -- Get the language server to recognize the `vim` global
-            globals = {'vim'},
-          },
-          workspace = {
-            checkThirdParty = false,
-            library = {
-              vim.fn.expand "$VIMRUNTIME/lua",
-              vim.fn.expand "$VIMRUNTIME/lua/vim/lsp"
-            },
-            -- Make the server aware of Neovim runtime files
-            -- library = vim.api.nvim_get_runtime_file("", true),
-          },
-          -- Do not send telemetry data containing a randomized but unique identifier
-          telemetry = {
-            enable = false,
-          },
-        },
+-- lspconfig.coffeesense.setup {
+--   filetypes = { "coffee" },
+-- }
+
+lspconfig.rust_analyzer.setup{}
+
+lspconfig['lua_ls'].setup{
+  settings = {
+    Lua = {
+      runtime = {
+        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+        version = 'LuaJIT',
+        special = { reload = "require" },
       },
-    }
-  end,
-  ["ruby_lsp"] = function()
-    lspconfig['ruby_lsp'].setup{
-      on_attach = on_attach,
-    }
-  end,
-})
+      diagnostics = {
+        -- Get the language server to recognize the `vim` global
+        globals = {'vim'},
+      },
+      workspace = {
+        checkThirdParty = false,
+        library = {
+          vim.fn.expand "$VIMRUNTIME/lua",
+          vim.fn.expand "$VIMRUNTIME/lua/vim/lsp"
+        },
+        -- Make the server aware of Neovim runtime files
+        -- library = vim.api.nvim_get_runtime_file("", true),
+      },
+      -- Do not send telemetry data containing a randomized but unique identifier
+      telemetry = {
+        enable = false,
+      },
+    },
+  },
+}
 
-require('lspconfig.ui.windows').default_options.border = 'single'
-local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+local signs = { Error = "󰅚 ", Warn = "󰀪 ", Hint = "󰌶 ", Info = " " }
 for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
@@ -186,9 +172,9 @@ vim.diagnostic.config({
   virtual_lines = false,
   signs = {
     text = {
-      [vim.diagnostic.severity.ERROR] = " ",
-      [vim.diagnostic.severity.WARN] = " ",
-      [vim.diagnostic.severity.HINT] = "",
+      [vim.diagnostic.severity.ERROR] = "󰅚 ",
+      [vim.diagnostic.severity.WARN] = "󰀪 ",
+      [vim.diagnostic.severity.HINT] = "󰌶 ",
       [vim.diagnostic.severity.INFO] = " ",
     },
   }
@@ -213,19 +199,6 @@ vim.diagnostic.config({
     prefix = '',
   },
 })
-
--- vim.o.updatetime = 300
--- vim.cmd [[autocmd! CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})]]
-
--- vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
---   vim.lsp.handlers.hover,
---   {border = 'rounded'}
--- )
---
--- vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
---   vim.lsp.handlers.signature_help,
---   {border = 'rounded'}
--- )
 
 vim.api.nvim_create_autocmd("BufWritePre", {
   pattern = "*.rs",

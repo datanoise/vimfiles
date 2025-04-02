@@ -7,7 +7,17 @@ blink.setup({
   completion = {
     list = {
       selection = { preselect = false }
-    }
+    },
+    menu = {
+      auto_show = function()
+        local copilot_suggestion = vim.fn['copilot#GetDisplayedSuggestion']
+        if copilot_suggestion ~= nil and copilot_suggestion().text ~= '' then
+          return false
+        else
+          return true
+        end
+      end,
+    },
   },
   keymap = {
     preset = 'default',
@@ -51,7 +61,7 @@ blink.setup({
         }
       },
       lsp = {
-        min_keyword_length = 5,
+        min_keyword_length = 0,
         fallbacks = {},
       },
       cmdline = {

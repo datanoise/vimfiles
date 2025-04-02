@@ -2,14 +2,10 @@ if not vim.g.plugs['nvim-treesitter'] then
   return
 end
 
-vim.cmd [[
-" set foldmethod=expr
-set foldexpr=nvim_treesitter#foldexpr()
-]]
-
-
 require('nvim-ts-autotag').setup({
-  filetypes = { "html" , "xml", "eruby" },
+  aliases = {
+    ["eruby"] = "html",
+  },
 })
 
 require'nvim-treesitter.configs'.setup {
@@ -17,7 +13,8 @@ require'nvim-treesitter.configs'.setup {
     "typescript", "vim", "xml", "embedded_template", "html" },
   highlight = {
     enable = true,
-    disable = {"ruby", "embedded_template", "vim"}
+    -- disable = {"ruby", "embedded_template", "vim"},
+    additional_vim_regex_highlighting = false,
   },
   incremental_selection = {
     enable = true,
@@ -32,9 +29,6 @@ require'nvim-treesitter.configs'.setup {
     enable = true,
     disable = {"ruby", "rust"}
   },
-  -- autotag = {
-  --   enable = true,
-  -- },
   endwise = {
     enable = true,
   },
@@ -117,5 +111,5 @@ require'treesitter-context'.setup {
   }
 }
 
--- local language = require"vim.treesitter.language"
--- language.register("yaml", "eruby.yaml")
+vim.wo.foldmethod = 'expr'
+vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'

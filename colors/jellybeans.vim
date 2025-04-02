@@ -482,7 +482,8 @@ call s:X("Delimiter","668799","","","Grey","")
 call s:X("String","99ad6a","","","Green","")
 call s:X("StringDelimiter","556633","","","DarkGreen","")
 
-call s:X("Identifier","c6b6ee","","","LightCyan","")
+" call s:X("Identifier","c6b6ee","","","LightCyan","")
+call s:X("Identifier", "d6c6ff", "","", "LightCyan", "")
 call s:X("Structure","8fbfdc","","","LightCyan","")
 call s:X("Function","fad07a","","","Yellow","")
 call s:X("Statement","8197bf","","","DarkBlue","")
@@ -558,6 +559,7 @@ hi! link rubyConstant Type
 hi! link rubyFunction Function
 hi! link rubyRoute Define
 
+call s:X("rubyVariable", "b6a6ee", "","", "LightCyan", "") " Ruby variable (local)
 call s:X("rubyInstanceVariable","c6b6fe","","","Cyan","")
 call s:X("rubySymbol","7697d6","","","Blue","")
 hi! link rubyGlobalVariable rubyInstanceVariable
@@ -662,7 +664,9 @@ if has('nvim-0.8.0')
   hi! link @float Float
   hi! link @function Function
   hi! link @function.builtin Special
-  hi! link @funciton.macro Macro
+  hi! link @function.macro Macro
+  hi! link @function.call.ruby Normal
+  hi! link @lsp.type.method.ruby Normal
   hi! link @include Include
   hi! link @keyword Keyword
   hi! link @keyword.function Keyword
@@ -683,6 +687,7 @@ if has('nvim-0.8.0')
   hi! link @storageclass StorageClass
   hi! link @string String
   hi! link @string.escape SpecialChar
+  hi! link @string.special.symbol.ruby rubySymbol
   hi! link @string.regex Regexp
   hi! link @symbol Identifier
   hi! link @tag Label
@@ -692,6 +697,7 @@ if has('nvim-0.8.0')
   hi! link @type Type
   hi! link @url Underlined
   hi! link @variable Identifier
+  hi! link @variable.member.ruby rubyIdentifier
   hi! link @variable.builtin Constant
   hi! link @symbol.ruby Constant
 endif

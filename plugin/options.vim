@@ -181,6 +181,9 @@ set nofsync " don't spin my disk
 set completeopt=menu,longest
 set clipboard+=unnamed
 set signcolumn=yes
+if has('nvim')
+  set winborder=rounded " use single line border for windows
+endif
 
 " for nvim-matchup to avoid statusline flicker
 " function MatchupStatusOffscreen() can be called from the statusline

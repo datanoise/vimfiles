@@ -94,7 +94,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'datanoise/vim-dispatch-neovim'
     Plug 'windwp/nvim-ts-autotag'
     Plug 'numToStr/Comment.nvim'
-    Plug 'norcalli/nvim-colorizer.lua'
     Plug 'rcarriga/nvim-notify'
     Plug 'neovim/nvim-lspconfig'
     Plug 'williamboman/mason.nvim'
@@ -121,7 +120,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'stevearc/aerial.nvim'
 
     " AI tools
-    Plug 'olimorris/codecompanion.nvim'
+    " Plug 'olimorris/codecompanion.nvim'
 
     " Completion
     Plug 'Saghen/blink.cmp', { 'do': 'cargo build --release' }

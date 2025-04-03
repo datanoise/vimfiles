@@ -34,6 +34,7 @@ augroup RubySettings
   au FileType ruby if has('balloonexpr') | setlocal balloonexpr& | endif
   au FileType ruby iabbrev <buffer> rb! #!<C-R>=substitute(system('which ruby'),'\n$','','')<CR><C-R>=Eatchar('\s')<CR>
   au FileType ruby setlocal keywordprg=ri\ -T\ -f\ markdown\ --no-gems
+  au FileType eruby.yaml setlocal filetype=yaml
 augroup END
 
 augroup GoSettings

@@ -30,7 +30,7 @@ codecompanion.setup({
   },
   strategies = {
     chat = {
-      adapter = 'gemini-flash',
+      adapter = 'copilot',
       keymaps = {
         close = {
           modes = {

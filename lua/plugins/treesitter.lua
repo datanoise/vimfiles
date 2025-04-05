@@ -14,7 +14,7 @@ require'nvim-treesitter.configs'.setup {
   highlight = {
     enable = true,
     -- disable = {"ruby", "embedded_template", "vim"},
-    additional_vim_regex_highlighting = false,
+    additional_vim_regex_highlighting = {"embedded_template", "ruby", "vim", "yaml"},
   },
   incremental_selection = {
     enable = true,

@@ -112,12 +112,14 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'ibhagwan/fzf-lua'
     Plug 'phaazon/hop.nvim'
     Plug 'echasnovski/mini.nvim'
-    Plug 'MunifTanjim/nui.nvim'
     Plug 'stevearc/oil.nvim'
     Plug 'mrcjkb/rustaceanvim'
     Plug 'rafamadriz/friendly-snippets'
     Plug 'nvim-lua/plenary.nvim'
     Plug 'stevearc/aerial.nvim'
+
+    " Plug 'MunifTanjim/nui.nvim'
+    " Plug 'folke/noice.nvim'
 
     " AI tools
     Plug 'olimorris/codecompanion.nvim'
@@ -126,7 +128,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'Saghen/blink.cmp', { 'do': 'cargo build --release' }
 
     " Disabled plugins that could be useful later on
-    " Plug 'folke/noice.nvim'
     " Plug 'zbirenbaum/copilot.lua'
     " Plug 'nvim-neotest/nvim-nio'
     " Plug 'nvim-neotest/neotest'

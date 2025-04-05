@@ -120,7 +120,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'stevearc/aerial.nvim'
 
     " AI tools
-    " Plug 'olimorris/codecompanion.nvim'
+    Plug 'olimorris/codecompanion.nvim'
 
     " Completion
     Plug 'Saghen/blink.cmp', { 'do': 'cargo build --release' }

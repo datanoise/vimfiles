@@ -165,7 +165,6 @@ xnoremap <silent> # :<C-u>call <SID>vset_search()<CR>?<C-R>=@/<CR><CR>
 
 "terminal bindings
 tmap <F2> <C-\><C-n><F2>
-tmap <C-i> <C-\><C-n>
 tmap <Esc><Esc> <C-\><C-n>
 
 " some handful command-mode bindings

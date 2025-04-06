@@ -700,6 +700,8 @@ if has('nvim-0.8.0')
   hi! link @variable.member.ruby rubyIdentifier
   hi! link @variable.builtin Constant
   hi! link @symbol.ruby Constant
+
+  hi! link @rails.method Define
 endif
 
 " Debugger.vim

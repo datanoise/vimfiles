@@ -127,11 +127,15 @@ silent! if plug#begin('~/.vim/bundle')
     " Completion
     Plug 'Saghen/blink.cmp', { 'do': 'cargo build --release' }
 
+    " Testing
+    Plug 'nvim-neotest/nvim-nio'
+    Plug 'nvim-neotest/neotest'
+    Plug 'zidhuss/neotest-minitest'
+    Plug 'nvim-neotest/neotest-vim-test'
+    Plug 'olimorris/neotest-rspec'
+
     " Disabled plugins that could be useful later on
     " Plug 'zbirenbaum/copilot.lua'
-    " Plug 'nvim-neotest/nvim-nio'
-    " Plug 'nvim-neotest/neotest'
-    " Plug 'zidhuss/neotest-minitest'
     " Plug 'MeanderingProgrammer/render-markdown.nvim'
     " Plug 'gfanto/fzf-lsp.nvim'
     " Plug 'kyazdani42/nvim-tree.lua'

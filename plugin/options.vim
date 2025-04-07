@@ -100,7 +100,7 @@ if has('nvim')
 else
   set fillchars+=vert:\│
 endif
-set conceallevel=2
+set conceallevel=1
 set diffopt=internal,filler,closeoff,context:12,indent-heuristic,linematch:60,algorithm:histogram
 " }}}
 " wild options {{{2

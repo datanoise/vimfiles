@@ -666,6 +666,7 @@ if has('nvim-0.8.0')
   hi! link @function.builtin Special
   hi! link @function.macro Macro
   hi! link @function.call.ruby Normal
+  hi! link @function.builtin.ruby Function
   hi! link @lsp.type.method.ruby Normal
   hi! link @include Include
   hi! link @keyword Keyword

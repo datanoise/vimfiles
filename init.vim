@@ -141,7 +141,6 @@ silent! if plug#begin('~/.vim/bundle')
     " Plug 'folke/which-key.nvim'
     " Plug 'EdenEast/nightfox.nvim'
     " Plug 'mfussenegger/nvim-dap'
-    " Plug 'numToStr/Comment.nvim'
     "
     " Plug 'HakonHarnes/img-clip.nvim'
     " Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }

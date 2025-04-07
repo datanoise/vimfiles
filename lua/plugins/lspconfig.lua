@@ -70,19 +70,13 @@ local on_attach = function(args)
     vim.wo[win][0].foldexpr = 'v:lua.vim.lsp.foldexpr()'
   end
 
-  if client:supports_method("textDocument/formatting") then
-    vim.api.nvim_create_augroup("lsp_document_formatting", {
-      clear = false,
-    })
-    vim.api.nvim_clear_autocmds({
-      buffer = bufnr,
-      group = "lsp_document_formatting",
-    })
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      group = "lsp_document_formatting",
+  if not client:supports_method('textDocument/willSaveWaitUntil')
+      and client:supports_method('textDocument/formatting') then
+    vim.api.nvim_create_autocmd('BufWritePre', {
+      group = vim.api.nvim_create_augroup('lsp_document_formatting', { clear = false }),
       buffer = bufnr,
       callback = function()
-        vim.lsp.buf.format({ async = false })
+        vim.lsp.buf.format({ bufnr = bufnr, id = client.id, timeout_ms = 1000 })
       end,
     })
   end
@@ -123,13 +117,13 @@ lspconfig.ruby_lsp.setup {
       "diagnostics",
       "documentHighlights",
       "documentSymbols",
-      "formatting",
       "hover",
       "inlayHint",
       "completion",
       "definition",
       "workspaceSymbol",
       "signatureHelp",
+      -- "formatting",
       -- "documentLink",
       -- "foldingRanges",
       -- "onTypeFormatting",

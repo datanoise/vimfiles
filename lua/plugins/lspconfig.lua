@@ -21,7 +21,7 @@ local on_attach = function(args)
   vim.api.nvim_set_option_value('omnifunc', 'v:lua.vim.lsp.omnifunc', { buf = bufnr })
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
-  local bufopts = { noremap=true, silent=true, buffer=bufnr }
+  local bufopts = { noremap = true, silent = true, buffer = bufnr }
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
   vim.keymap.set('n', 'gH', vim.lsp.buf.hover, bufopts)
@@ -37,7 +37,7 @@ local on_attach = function(args)
   vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
   vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
   vim.keymap.set('n', '<leader><leader>a', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set('n', '<leader><leader>p', function() vim.lsp.buf.code_action({apply = true}) end, bufopts)
+  vim.keymap.set('n', '<leader><leader>p', function() vim.lsp.buf.code_action({ apply = true }) end, bufopts)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
   vim.keymap.set('n', '<leader>sf', vim.lsp.buf.format, bufopts)
 
@@ -70,6 +70,23 @@ local on_attach = function(args)
     vim.wo[win][0].foldexpr = 'v:lua.vim.lsp.foldexpr()'
   end
 
+  if client:supports_method("textDocument/formatting") then
+    vim.api.nvim_create_augroup("lsp_document_formatting", {
+      clear = false,
+    })
+    vim.api.nvim_clear_autocmds({
+      buffer = bufnr,
+      group = "lsp_document_formatting",
+    })
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      group = "lsp_document_formatting",
+      buffer = bufnr,
+      callback = function()
+        vim.lsp.buf.format({ async = false })
+      end,
+    })
+  end
+
   vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
 end
 
@@ -96,7 +113,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 require('mason').setup()
 require("mason-lspconfig").setup()
 
-lspconfig.ruby_lsp.setup{
+lspconfig.ruby_lsp.setup {
   capabilities = capabilities,
   on_attach = on_attach,
   filetypes = { 'ruby' },
@@ -132,9 +149,9 @@ lspconfig.ruby_lsp.setup{
 --   filetypes = { "coffee" },
 -- }
 
-lspconfig.rust_analyzer.setup{}
+lspconfig.rust_analyzer.setup {}
 
-lspconfig['lua_ls'].setup{
+lspconfig['lua_ls'].setup {
   settings = {
     Lua = {
       runtime = {
@@ -144,7 +161,7 @@ lspconfig['lua_ls'].setup{
       },
       diagnostics = {
         -- Get the language server to recognize the `vim` global
-        globals = {'vim'},
+        globals = { 'vim' },
       },
       workspace = {
         checkThirdParty = false,
@@ -198,11 +215,4 @@ vim.diagnostic.config({
     header = '',
     prefix = '',
   },
-})
-
-vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = "*.rs",
-  callback = function ()
-    vim.lsp.buf.format()
-  end
 })

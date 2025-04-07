@@ -34,7 +34,6 @@ silent! if plug#begin('~/.vim/bundle')
   " file types
   Plug 'pangloss/vim-javascript'  
   Plug 'datanoise/vim-jsx-pretty'
-  Plug 'othree/html5.vim'
   Plug 'euclio/vim-markdown-composer', { 'for': 'markdown' }
   Plug 'tpope/vim-haml',               { 'for': ['haml', 'sass', 'scss'] }
   Plug 'racer-rust/vim-racer',         { 'for': 'rust' }
@@ -56,10 +55,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'vim-ruby/vim-ruby'
   Plug 'datanoise/vim-ruby-heredoc-syntax'
   Plug 'plasticboy/vim-markdown'
-
-  if $GOPATH !=# ''
-    Plug 'fatih/vim-go'
-  endif
+  Plug 'fatih/vim-go'
 
   Plug 'godlygeek/tabular',            { 'on': 'Tabularize' }
   Plug 'datanoise/vim-indexed-search', { 'on': 'ShowSearchIndex' }
@@ -166,6 +162,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
     Plug 'rust-lang/rust.vim', { 'for': 'rust' }
     Plug 'datanoise/vim-bclose', { 'on': 'Bclose' }
+    Plug 'othree/html5.vim'
 
     Plug 'w0rp/ale'
     Plug 'maximbaz/lightline-ale'

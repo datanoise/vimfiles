@@ -665,9 +665,6 @@ if has('nvim-0.8.0')
   hi! link @function Function
   hi! link @function.builtin Special
   hi! link @function.macro Macro
-  hi! link @function.call.ruby Normal
-  hi! link @function.builtin.ruby Function
-  hi! link @lsp.type.method.ruby Normal
   hi! link @include Include
   hi! link @keyword Keyword
   hi! link @keyword.function Keyword
@@ -688,7 +685,6 @@ if has('nvim-0.8.0')
   hi! link @storageclass StorageClass
   hi! link @string String
   hi! link @string.escape SpecialChar
-  hi! link @string.special.symbol.ruby rubySymbol
   hi! link @string.regex Regexp
   hi! link @symbol Identifier
   hi! link @tag Label
@@ -698,10 +694,16 @@ if has('nvim-0.8.0')
   hi! link @type Type
   hi! link @url Underlined
   hi! link @variable Identifier
-  hi! link @variable.member.ruby rubyIdentifier
   hi! link @variable.builtin Constant
-  hi! link @symbol.ruby Constant
 
+  " Ruby specific
+  hi! link @function.call.ruby Normal
+  hi! link @variable.member.ruby rubyIdentifier
+  hi! link @string.special.symbol.ruby rubySymbol
+  hi! link @string.special.symbol.custom.ruby rubySymbol
+  hi! link @symbol.ruby rubySymbol
+  hi! link @lsp.type.method.ruby Normal
+  hi! link @function.builtin.ruby Function
   hi! link @rails.method Define
 endif
 

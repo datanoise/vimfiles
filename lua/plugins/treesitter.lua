@@ -8,13 +8,13 @@ require('nvim-ts-autotag').setup({
   },
 })
 
-require'nvim-treesitter.configs'.setup {
+require 'nvim-treesitter.configs'.setup {
   ensure_installed = { "c", "lua", "rust", "ruby", "python", "javascript",
     "typescript", "vim", "xml", "embedded_template", "html" },
   highlight = {
     enable = true,
     -- disable = {"ruby", "embedded_template", "vim"},
-    additional_vim_regex_highlighting = {"embedded_template", "ruby", "vim", "yaml"},
+    additional_vim_regex_highlighting = { "embedded_template", "ruby", "vim", "yaml" },
   },
   incremental_selection = {
     enable = true,
@@ -27,7 +27,7 @@ require'nvim-treesitter.configs'.setup {
   },
   indent = {
     enable = true,
-    disable = {"ruby", "rust", "yaml"}
+    disable = { "ruby", "rust", "yaml" }
   },
   endwise = {
     enable = true,
@@ -54,7 +54,7 @@ require'nvim-treesitter.configs'.setup {
       -- You can choose the select mode (default is charwise 'v')
       selection_modes = {
         ['@parameter.outer'] = 'v', -- charwise
-        ['@function.outer'] = 'V', -- linewise
+        ['@function.outer'] = 'V',  -- linewise
         ['@class.outer'] = '<c-v>', -- blockwise
       },
       -- If you set this to `true` (default is `false`) then any textobject is
@@ -102,7 +102,7 @@ require'nvim-treesitter.configs'.setup {
     },
   },
 }
-require'treesitter-context'.setup {
+require 'treesitter-context'.setup {
   max_lines = 2,
   patterns = {
     ruby = {

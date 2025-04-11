@@ -31,6 +31,15 @@
       (#any-of? @rails.method "queue_as" "retry_on" "discard_on" "limits_concurrency" "sidekiq_locking" "sidekiq_retry_in")
       (#set! "priority" 200))
 
+; Minitest methods
+(call method: (identifier) @rails.method
+      (#any-of? @rails.method "assert" "assert_equal" "assert_not" "assert_presence" "assert_not_nil" "assert_nil"
+       "assert_includes" "assert_difference" "assert_no_difference" "assert_changes" "assert_match" "assert_no_match"
+       "assert_raises" "assert_nothing_raised" "assert_respond_to" "assert_silent" "assert_empty" "assert_not_empty"
+       "assert_predicate" "assert_kind_of" "assert_instance_of" "assert_same" "assert_not_same" "assert_enqueued_with"
+       "assert_no_enqueued_jobs" "assert_in_delta" "assert_media_file")
+      (#set! "priority" 200))
+
 ; Custmom methods
 (call method: (identifier) @rails.method
       (#any-of? @rails.method "def_attribute" "auth" "bool_def_param" "def_param")

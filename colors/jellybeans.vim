@@ -558,24 +558,19 @@ call s:X("rubyIdentifier","c6b6fe","","","Cyan","")
 hi! link rubyConstant Type
 hi! link rubyFunction Function
 hi! link rubyRoute Define
-
 call s:X("rubyVariable", "b6a6ee", "","", "LightCyan", "") " Ruby variable (local)
 call s:X("rubyInstanceVariable","c6b6fe","","","Cyan","")
 call s:X("rubySymbol","7697d6","","","Blue","")
 hi! link rubyGlobalVariable rubyInstanceVariable
 hi! link rubyModule rubyClass
 call s:X("rubyControl","7597c6","","","Blue","")
-
 hi! link rubyString String
 hi! link rubyStringDelimiter StringDelimiter
 hi! link rubyInterpolationDelimiter Identifier
-
 call s:X("Regexp","dd0093","","","DarkMagenta","")
-
 call s:X("rubyRegexp","e4c5fa","","","DarkMagenta","")
 call s:X("rubyRegexpDelimiter","e4c5fa","","","Magenta","")
 call s:X("rubyRegexpSpecial","e4c5fa","","","Magenta","")
-
 call s:X("rubyPredefinedIdentifier","de5577","","","Red","")
 
 " Erlang
@@ -705,6 +700,8 @@ if has('nvim-0.8.0')
   hi! link @lsp.type.method.ruby Normal
   hi! link @function.builtin.ruby Function
   hi! link @rails.method Define
+  hi! link @minitest.method Define
+  hi! link @minitest.name Function
 endif
 
 " Debugger.vim

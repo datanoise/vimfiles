@@ -2,7 +2,10 @@ if not vim.g.plugs['nvim-lspconfig'] then
   return
 end
 
-local lspconfig = require('lspconfig')
+require('lspconfig')
+require('mason').setup()
+require("mason-lspconfig").setup()
+
 
 local function hover_twice()
   vim.lsp.buf.hover()
@@ -65,11 +68,13 @@ local on_attach = function(args)
     })
   end
 
+  -- folding
   if client:supports_method('textDocument/foldingRange') then
     local win = vim.api.nvim_get_current_win()
     vim.wo[win][0].foldexpr = 'v:lua.vim.lsp.foldexpr()'
   end
 
+  -- formatting
   if not client:supports_method('textDocument/willSaveWaitUntil')
       and client:supports_method('textDocument/formatting') then
     vim.api.nvim_create_autocmd('BufWritePre', {
@@ -94,20 +99,16 @@ if vim.g.plugs['blink.cmp'] then
   capabilities = vim.tbl_deep_extend('force', capabilities, require('blink.cmp').get_lsp_capabilities())
 end
 
-vim.lsp.config("*", {
-  capabilities = capabilities,
-  root_markers = { ".git", "Gemfile" },
-})
-
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("lspconfig", { clear = true }),
   callback = on_attach,
 })
 
-require('mason').setup()
-require("mason-lspconfig").setup()
-
-lspconfig.ruby_lsp.setup {
+vim.lsp.config("*", {
+  capabilities = capabilities,
+  root_markers = { ".git", "Gemfile" },
+})
+vim.lsp.config('ruby_lsp', {
   capabilities = capabilities,
   on_attach = on_attach,
   filetypes = { 'ruby' },
@@ -137,15 +138,8 @@ lspconfig.ruby_lsp.setup {
       }
     }
   }
-}
-
--- lspconfig.coffeesense.setup {
---   filetypes = { "coffee" },
--- }
-
-lspconfig.rust_analyzer.setup {}
-
-lspconfig['lua_ls'].setup {
+})
+vim.lsp.config('lua_ls', {
   settings = {
     Lua = {
       runtime = {
@@ -172,7 +166,11 @@ lspconfig['lua_ls'].setup {
       },
     },
   },
-}
+})
+
+vim.lsp.enable('ruby_lsp')
+vim.lsp.enable('rust_analyzer')
+vim.lsp.enable('lua_ls')
 
 local signs = { Error = "󰅚 ", Warn = "󰀪 ", Hint = "󰌶 ", Info = " " }
 for type, icon in pairs(signs) do

@@ -186,6 +186,9 @@ set signcolumn=yes
 if has('nvim')
   set winborder=rounded " use single line border for windows
 endif
+" remove folds from session because they might be loaded dynamically
+" from the lsp server
+set sessionoptions-=folds
 
 " for nvim-matchup to avoid statusline flicker
 " function MatchupStatusOffscreen() can be called from the statusline

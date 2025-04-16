@@ -9,7 +9,8 @@
 (call method: (identifier) @rails.method
       (#any-of? @rails.method "belongs_to" "has_many" "has_one" "has_and_belongs_to_many" "validates"
        "with_options" "has_one_attached" "has_many_attached" "scope" "default_scope" "where" "order"
-       "includes" "joins" "not" "composed_of" "normalizes" "ignored_columns")
+       "includes" "joins" "not" "composed_of" "normalizes" "ignored_columns" "limit" "references" "select"
+       "optimizer_hints")
       (#set! "priority" 200))
 
 (call receiver: (identifier) @rails.method
@@ -18,7 +19,7 @@
 
 ; ActiveRecord callbacks
 (call method: (identifier) @rails.method
-      (#any-of? @rails.method "before_validation" "after_commit" "before_destroy" "before_save")
+      (#any-of? @rails.method "before_validation" "after_commit" "before_destroy" "before_save" "after_save" "after_update")
       (#set! "priority" 200))
 
 ; ActionPack methods
@@ -28,7 +29,7 @@
 
 ; ActionPack callbacks
  (call method: (identifier) @rails.method
-      (#any-of? @rails.method "before_action" "after_action" "around_action" "skip_before_action")
+      (#any-of? @rails.method "before_action" "after_action" "around_action" "skip_before_action" "before_render")
       (#set! "priority" 200))
 
 ; ActionJob methods

@@ -172,6 +172,7 @@ vim.lsp.enable('ruby_lsp')
 vim.lsp.enable('rust_analyzer')
 vim.lsp.enable('lua_ls')
 vim.lsp.enable('gols')
+vim.lsp.enable('bashls')
 
 local signs = { Error = "󰅚 ", Warn = "󰀪 ", Hint = "󰌶 ", Info = " " }
 for type, icon in pairs(signs) do

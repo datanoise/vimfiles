@@ -2,6 +2,11 @@
 " ------------------------------------------------------------------------------
 " NOTE: that doesn't work in MacVim gui mode if sudo requests a password!!!
 command! -bar -nargs=0 SudoW   :exe "write !sudo tee % >/dev/null"|silent edit!
+
+function! s:filter_quickfix(bang, pattern)
+  let l:cmp = a:bang ? '!~#' : '=~#'
+  call setqflist(filter(getqflist(), "bufname(v:val['bufnr']) " . l:cmp . ' a:pattern'))
+endfunction
 command! -bang -nargs=1 -complete=file QFilter call s:filter_quickfix(<bang>0, <q-args>)
 " borrowed from tpope's plugin
 augroup shebang_chmod

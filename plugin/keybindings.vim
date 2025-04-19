@@ -22,11 +22,6 @@ function! s:vset_search()
   let @s = l:tmp
 endfunction
 
-function! s:filter_quickfix(bang, pattern)
-  let l:cmp = a:bang ? '!~#' : '=~#'
-  call setqflist(filter(getqflist(), "bufname(v:val['bufnr']) " . l:cmp . ' a:pattern'))
-endfunction
-
 function! GitBranch()
   if exists('*fugitive#statusline')
     let l:branch = fugitive#statusline()

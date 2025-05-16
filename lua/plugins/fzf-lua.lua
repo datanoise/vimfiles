@@ -2,9 +2,11 @@ if not vim.g.plugs['fzf-lua'] then
     return
 end
 
-local fzf = require'fzf-lua'
+local fzf = require 'fzf-lua'
+fzf.register_ui_select()
 
 fzf.setup {
+    'fzf-native',
     winopts = {
         width = 0.8,
         height = 0.6,
@@ -54,8 +56,6 @@ nnoremap <silent> <leader>; :FzfLua builtin<CR>
 nnoremap <silent> <leader>l :FzfLua buffers previewer=false<CR>
 nnoremap <silent> <leader>m :FzfLua files previewer=false<CR>
 nnoremap <silent> <leader>F :FzfLua files cwd=%:h<CR>
-nnoremap <silent> <leader>e :FzfLua oldfiles previewer=false<CR>
+nnoremap <silent> <leader><leader>e :FzfLua oldfiles previewer=false<CR>
 nnoremap <silent> <leader>n :lua fzf_symbols()<CR>
-nnoremap <silent> <leader>C :FzfLua lsp_code_actions<CR>
-nnoremap <silent> <F3> :FzfLua lsp_code_actions<CR>
 ]])

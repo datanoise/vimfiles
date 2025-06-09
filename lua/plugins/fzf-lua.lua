@@ -56,6 +56,6 @@ nnoremap <silent> <leader>; :FzfLua builtin<CR>
 nnoremap <silent> <leader>l :FzfLua buffers previewer=false<CR>
 nnoremap <silent> <leader>m :FzfLua files previewer=false<CR>
 nnoremap <silent> <leader>F :FzfLua files cwd=%:h<CR>
-nnoremap <silent> <leader><leader>e :FzfLua oldfiles previewer=false<CR>
+nnoremap <silent> <leader>e :FzfLua oldfiles previewer=false<CR>
 nnoremap <silent> <leader>n :lua fzf_symbols()<CR>
 ]])

@@ -2,7 +2,8 @@
 
 ; ActiveSupport methods
 (call method: (identifier) @rails.method
-      (#any-of? @rails.method "delegate")
+      (#any-of? @rails.method "delegate" "class_attribute" "thread_mattr_accessor" "mattr_accessor" "mattr_reader"
+       "mattr_writer")
       (#set! "priority" 200))
 
 ; ActiveRecord methods
@@ -19,7 +20,10 @@
 
 ; ActiveRecord callbacks
 (call method: (identifier) @rails.method
-      (#any-of? @rails.method "before_validation" "after_commit" "before_destroy" "before_save" "after_save" "after_update")
+      (#any-of? @rails.method "before_validation" "after_commit" "before_destroy" "before_save" "after_save"
+       "after_update" "after_destroy" "after_create" "before_create" "before_update"
+       "around_save" "around_create" "around_update" "around_destroy" "after_initialize" "after_find" "after_touch"
+       "before_validation_on_create" "before_validation_on_update")
       (#set! "priority" 200))
 
 ; ActionPack methods

@@ -168,11 +168,20 @@ vim.lsp.config('lua_ls', {
     },
   },
 })
+vim.lsp.config('gopls', {
+  filetypes = { 'go' },
+  root_markers = { '.git', 'go.mod' },
+  init_options = {
+    usePlaceholders = true,
+    completeUnimported = true,
+    staticcheck = true,
+  },
+})
 
 vim.lsp.enable('ruby_lsp')
 vim.lsp.enable('rust_analyzer')
 vim.lsp.enable('lua_ls')
-vim.lsp.enable('gols')
+vim.lsp.enable('gopls')
 vim.lsp.enable('bashls')
 
 local signs = { Error = "󰅚 ", Warn = "󰀪 ", Hint = "󰌶 ", Info = " " }

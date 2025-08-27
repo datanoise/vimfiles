@@ -1,5 +1,5 @@
 if not vim.g.plugs['codecompanion.nvim'] then
-    return
+  return
 end
 
 local codecompanion = require("codecompanion")
@@ -16,10 +16,10 @@ codecompanion.setup({
     action_palette = {
       width = 95,
       height = 10,
-      prompt = "Prompt ", -- Prompt used for interactive LLFidget calls
-      provider = "mini_pick", -- default|telescope|mini_pick
+      prompt = "Prompt ",                   -- Prompt used for interactive LLFidget calls
+      provider = "mini_pick",               -- default|telescope|mini_pick
       opts = {
-        show_default_actions = true, -- Show the default actions in the action palette?
+        show_default_actions = true,        -- Show the default actions in the action palette?
         show_default_prompt_library = true, -- Show the default prompt library in the action palette?
       },
     },
@@ -65,37 +65,39 @@ codecompanion.setup({
     },
   },
   adapters = {
-    ollamalocal = function()
-      return require('codecompanion.adapters').extend('ollama', {
-        name = 'ollamalocal',
-        schema = {
-          model = {
-            default = 'llama3.2:latest',
+    http = {
+      ollamalocal = function()
+        return require('codecompanion.adapters').extend('ollama', {
+          name = 'ollamalocal',
+          schema = {
+            model = {
+              default = 'llama3.2:latest',
+            },
           },
-        },
-      })
-    end,
-    gemini = function()
-      return require('codecompanion.adapters').extend('gemini', {
-        name = 'gemini-flash',
-        schema = {
-          model = {
-            default = 'gemini-2.0-flash',
+        })
+      end,
+      gemini = function()
+        return require('codecompanion.adapters').extend('gemini', {
+          name = 'gemini-flash',
+          schema = {
+            model = {
+              default = 'gemini-2.0-flash',
+            },
           },
-        },
-        env = {
-          api_key = 'cmd:op read op://personal/Gemini/credential --no-newline',
-        }
-      })
-    end,
-    anthropic = function()
-      return require('codecompanion.adapters').extend('anthropic', {
-        name = 'anthropic',
-        env = {
-          api_key = 'cmd:op read op://personal/Anthropic/credential --no-newline',
-        }
-      })
-    end,
+          env = {
+            api_key = 'cmd:op read op://personal/Gemini/credential --no-newline',
+          }
+        })
+      end,
+      anthropic = function()
+        return require('codecompanion.adapters').extend('anthropic', {
+          name = 'anthropic',
+          env = {
+            api_key = 'cmd:op read op://personal/Anthropic/credential --no-newline',
+          }
+        })
+      end,
+    }
   },
   opts = {
     -- Set debug logging
@@ -176,4 +178,3 @@ function Fidget:report_exit_status(handle, request)
 end
 
 Fidget:init()
-

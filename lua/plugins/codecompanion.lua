@@ -66,12 +66,24 @@ codecompanion.setup({
   },
   adapters = {
     http = {
-      ollamalocal = function()
+      qwen3 = function()
         return require('codecompanion.adapters').extend('ollama', {
-          name = 'ollamalocal',
+          name = 'qwen3',
+          opts = {
+            stream = true
+          },
           schema = {
             model = {
-              default = 'llama3.2:latest',
+              default = 'qwen3:14b',
+            },
+            num_ctx = {
+              default = 16384,
+            },
+            think = {
+              default = false,
+            },
+            keep_alive = {
+              default = "5m",
             },
           },
         })

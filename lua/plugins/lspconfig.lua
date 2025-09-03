@@ -49,7 +49,7 @@ local on_attach = function(args)
   vim.keymap.set('n', '<leader>cl', vim.diagnostic.setloclist, bufopts)
 
   -- buffer symbol highlighting
-  if client:supports_method "textDocument/documentHighlight" then
+  if client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
     vim.api.nvim_create_augroup("lsp_document_highlight", {
       clear = false,
     })
@@ -70,14 +70,14 @@ local on_attach = function(args)
   end
 
   -- folding
-  if client:supports_method('textDocument/foldingRange') then
+  if client:supports_method(vim.lsp.protocol.Methods.textDocument_foldingRange) then
     local win = vim.api.nvim_get_current_win()
     vim.wo[win][0].foldexpr = 'v:lua.vim.lsp.foldexpr()'
   end
 
   -- formatting
-  if not client:supports_method('textDocument/willSaveWaitUntil')
-      and client:supports_method('textDocument/formatting') then
+  if not client:supports_method(vim.lsp.protocol.Methods.textDocument_willSaveWaitUntil)
+      and client:supports_method(vim.lsp.protocol.Methods.textDocument_formatting) then
     vim.api.nvim_create_autocmd('BufWritePre', {
       group = vim.api.nvim_create_augroup('lsp_document_formatting', { clear = false }),
       buffer = bufnr,
@@ -86,6 +86,24 @@ local on_attach = function(args)
       end,
     })
   end
+
+  -- if client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
+  --   vim.opt.completeopt = { 'menu', 'menuone', 'noselect', 'fuzzy', 'popup' }
+  --   vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+  --   vim.keymap.set('i', '<C-Space>', vim.lsp.completion.get, bufopts)
+  -- end
+  --
+  -- if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlineCompletion) then
+  --   vim.opt.completeopt = { 'menu', 'menuone', 'noselect', 'fuzzy', 'popup' }
+  --   vim.lsp.inline_completion.enable(true)
+  --   vim.keymap.set('i', '<Tab>',
+  --     function()
+  --       if not vim.lsp.inline_completion.get() then
+  --         return "<Tab>"
+  --       end
+  --     end,
+  --     { expr = true, replace_keycodes = true, buffer = bufnr })
+  -- end
 
   vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
 end
@@ -125,10 +143,10 @@ vim.lsp.config('ruby_lsp', {
       "definition",
       "workspaceSymbol",
       "signatureHelp",
+      "onTypeFormatting",
       -- "formatting",
       -- "documentLink",
       -- "foldingRanges",
-      -- "onTypeFormatting",
       -- "selectionRanges",
       -- "semanticHighlighting",
       -- "codeLens",
@@ -177,12 +195,21 @@ vim.lsp.config('gopls', {
     staticcheck = true,
   },
 })
+vim.lsp.config('copilot', {
+  settings = {
+    telemetry = {
+      enable = false,
+    },
+  },
+})
 
 vim.lsp.enable('ruby_lsp')
 vim.lsp.enable('rust_analyzer')
 vim.lsp.enable('lua_ls')
 vim.lsp.enable('gopls')
 vim.lsp.enable('bashls')
+-- for now using copilot.vim
+-- vim.lsp.enable('copilot')
 
 local signs = { Error = "󰅚 ", Warn = "󰀪 ", Hint = "󰌶 ", Info = " " }
 for type, icon in pairs(signs) do

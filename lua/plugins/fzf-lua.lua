@@ -10,6 +10,9 @@ fzf.setup {
     winopts = {
         width = 0.8,
         height = 0.6,
+        preview = {
+            hidden = true,
+        }
     },
     btags = {
         ctags_gen = true
@@ -53,9 +56,9 @@ end
 
 vim.cmd([[
 nnoremap <silent> <leader>; :FzfLua builtin<CR>
-nnoremap <silent> <leader>l :FzfLua buffers previewer=false<CR>
-nnoremap <silent> <leader>m :FzfLua files previewer=false<CR>
+nnoremap <silent> <leader>l :FzfLua buffers<CR>
+nnoremap <silent> <leader>m :FzfLua files<CR>
 nnoremap <silent> <leader>F :FzfLua files cwd=%:h<CR>
-nnoremap <silent> <leader>e :FzfLua oldfiles previewer=false<CR>
+nnoremap <silent> <leader>e :FzfLua oldfiles<CR>
 nnoremap <silent> <leader>n :lua fzf_symbols()<CR>
 ]])

@@ -6,7 +6,7 @@ function! s:switch_prev_buf()
     b#
   else
     " echo "No buffer to switch to"
-    Buffers
+    Pick buffers
   endif
 endfunction
 
@@ -114,7 +114,7 @@ nnoremap z- 1z=
 nnoremap L :
 nnoremap <silent> <leader>Q :bd<CR>
 nnoremap [S [I:let nr = input("Which one: ") <Bar>exe "normal " . nr . "[\t"<CR>
-nnoremap <leader>a :let align = input("Align to: ")<Bar>exe ":Tab /" . align<CR>
+nnoremap <leader>A :let align = input("Align to: ")<Bar>exe ":Tab /" . align<CR>
 " inoremap <silent> <C-l> <C-\><C-O>:call search('[{("\[\]'')}]', 'Wc', line('.'))<CR><Right>
 " inoremap jj <Esc>
 " imap kk <C-O>A<Enter>
@@ -122,7 +122,6 @@ nnoremap <F2> <C-w><C-w>
 inoremap <F2> <Esc><C-w><C-w>
 " nnoremap <F1> <C-w><C-w>
 inoremap <F1> <Esc><C-w><C-w>
-inoremap <S-Tab> <Esc><C-w><C-w>
 nnoremap <M-h> <C-w>h
 nnoremap <M-j> <C-w>j
 nnoremap <M-k> <C-w>k

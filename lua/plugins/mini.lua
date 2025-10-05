@@ -69,5 +69,11 @@ require('mini.bufremove').setup()
 
 vim.keymap.set("n", "<leader>fd", MiniFiles.open, { desc = "Open file browser" })
 vim.keymap.set("n", "<leader>q", MiniBufremove.delete, { desc = "Delete Buffer" })
-vim.keymap.set("n", "<leader>ss", function() MiniExtra.pickers.lsp({ scope = 'document_symbol' }) end,
+vim.keymap.set("n", "<M-n>", function() MiniExtra.pickers.lsp({ scope = 'document_symbol' }) end,
     { desc = "Document Symbols" })
+vim.keymap.set("n", "<M-,>", MiniPick.builtin.buffers, { desc = "Pick buffers" })
+vim.keymap.set("n", "<M-m>", MiniPick.builtin.files, { desc = "Pick files" })
+vim.keymap.set("n", "<M-o>", MiniExtra.pickers.oldfiles, { desc = "Pick old files" })
+vim.keymap.set("n", "<M-F>",
+    function() require('mini.pick').builtin.files({}, { source = { cwd = vim.fn.expand('%:p:h') } }) end,
+    { desc = "Pick local files" })

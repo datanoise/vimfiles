@@ -171,16 +171,15 @@ set tags+=../tags,../../tags,../../../tags,../../../../tags,./tmp/tags
 set cpoptions+=d
 set timeoutlen=1000 " A little bit more time for macros
 set ttimeoutlen=10  " Make Esc work faster
-" do not search included files and tags, it's a way too slow
-set complete-=i
-set complete-=t
 " if has('nvim')
 "   set pumblend=25
 " endif
 " do not display :intro screen at startup
 set shortmess+=I
 set nofsync " don't spin my disk
-set completeopt=menu,longest
+"set autocomplete
+set complete=.^5,w^5,b^5,u^5
+set completeopt=popup
 set clipboard+=unnamed
 set signcolumn=yes
 if has('nvim')

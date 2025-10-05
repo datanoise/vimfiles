@@ -87,12 +87,12 @@ local on_attach = function(args)
     })
   end
 
-  -- if client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
-  --   vim.opt.completeopt = { 'menu', 'menuone', 'noselect', 'fuzzy', 'popup' }
-  --   vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
-  --   vim.keymap.set('i', '<C-Space>', vim.lsp.completion.get, bufopts)
-  -- end
-  --
+  if client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
+    vim.opt.completeopt = { 'menu', 'menuone', 'noselect', 'fuzzy', 'popup' }
+    vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = false })
+    vim.keymap.set('i', '<C-Space>', vim.lsp.completion.get, bufopts)
+  end
+
   -- if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlineCompletion) then
   --   vim.opt.completeopt = { 'menu', 'menuone', 'noselect', 'fuzzy', 'popup' }
   --   vim.lsp.inline_completion.enable(true)

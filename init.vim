@@ -51,7 +51,6 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'datanoise/vim-crystal',        { 'for': ['crystal', 'html'] }
   Plug 'datanoise/vim-llvm',           { 'for': 'llvm' }
   Plug 'python-mode/python-mode',      { 'for': 'python', 'branch': 'develop' }
-  " Plug 'JuliaEditorSupport/julia-vim', { 'for': 'julia' }
   Plug 'vim-ruby/vim-ruby'
   Plug 'datanoise/vim-ruby-heredoc-syntax'
   Plug 'plasticboy/vim-markdown'
@@ -110,11 +109,9 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'nvim-lua/plenary.nvim'
     Plug 'stevearc/aerial.nvim'
 
-    " Plug 'MunifTanjim/nui.nvim'
-    " Plug 'folke/noice.nvim'
-
     " AI tools
-    Plug 'olimorris/codecompanion.nvim'
+    "Plug 'olimorris/codecompanion.nvim'
+    Plug 'folke/sidekick.nvim'
 
     " Completion
     Plug 'Saghen/blink.cmp', { 'do': 'cargo build --release' }
@@ -125,32 +122,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'zidhuss/neotest-minitest'
     Plug 'nvim-neotest/neotest-vim-test'
     Plug 'olimorris/neotest-rspec'
-
-    " Disabled plugins that could be useful later on
-    " Plug 'zbirenbaum/copilot.lua'
-    " Plug 'MeanderingProgrammer/render-markdown.nvim'
-    " Plug 'gfanto/fzf-lsp.nvim'
-    " Plug 'kyazdani42/nvim-tree.lua'
-    " Plug 'simrat39/rust-tools.nvim'
-    " Plug 'lvimuser/lsp-inlayhints.nvim'
-    " Plug 'nvim-telescope/telescope.nvim'
-    " Plug 'folke/which-key.nvim'
-    " Plug 'EdenEast/nightfox.nvim'
-    " Plug 'mfussenegger/nvim-dap'
-    "
-    " Plug 'HakonHarnes/img-clip.nvim'
-    " Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
-    "
-    " Plug 'L3MON4D3/LuaSnip'
-    " Plug 'onsails/lspkind.nvim'
-    " Plug 'hrsh7th/cmp-buffer'
-    " Plug 'hrsh7th/cmp-path'
-    " Plug 'hrsh7th/cmp-cmdline'
-    " Plug 'hrsh7th/nvim-cmp'
-    " Plug 'hrsh7th/cmp-nvim-lsp'
-    " Plug 'saadparwaiz1/cmp_luasnip'
-    " Plug 'hrsh7th/cmp-nvim-lsp-document-symbol'
-    " Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
   else
     Plug 'tpope/vim-repeat'
     Plug 'tpope/vim-surround'

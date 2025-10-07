@@ -40,6 +40,7 @@ set incsearch
 " no search highlighting by default
 set nohlsearch
 " case-sensitive search when using camel case search criteria
+set ignorecase
 set smartcase
 set wrapscan
 if has('nvim')

@@ -105,7 +105,9 @@ local on_attach = function(args)
   --     { expr = true, replace_keycodes = true, buffer = bufnr })
   -- end
 
-  vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+  if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+    vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+  end
 end
 
 local capabilities = {

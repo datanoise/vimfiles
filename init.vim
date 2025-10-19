@@ -96,7 +96,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'nvimtools/none-ls.nvim'
     Plug 'folke/trouble.nvim'
     Plug 'kyazdani42/nvim-web-devicons'
-    Plug 'andymass/vim-matchup'
+    "Plug 'andymass/vim-matchup'
     Plug 'windwp/nvim-autopairs'
     Plug 'lewis6991/gitsigns.nvim'
     Plug 'j-hui/fidget.nvim'
@@ -108,6 +108,8 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'rafamadriz/friendly-snippets'
     Plug 'nvim-lua/plenary.nvim'
     Plug 'stevearc/aerial.nvim'
+    Plug 'kdheepak/lazygit.nvim'
+    Plug 'kevinhwang91/nvim-bqf'
 
     " AI tools
     "Plug 'olimorris/codecompanion.nvim'

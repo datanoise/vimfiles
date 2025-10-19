@@ -67,13 +67,70 @@ miniclue.setup({
 })
 require('mini.bufremove').setup()
 
+local function buffers_mru()
+    -- Get all listed buffers with their last used time
+    local buffers = vim.tbl_filter(function(buf)
+        return buf.listed == 1
+    end, vim.fn.getbufinfo({ buflisted = 1 }))
+
+    -- Sort by lastused (most recent first)
+    table.sort(buffers, function(a, b)
+        return a.lastused > b.lastused
+    end)
+
+    -- Get current working directory for relative paths
+    local cwd = vim.fn.getcwd()
+    local cur_buf_id = vim.api.nvim_get_current_buf()
+
+    -- Format items like the standard implementation
+    local items = {}
+    for _, buf in ipairs(buffers) do
+        if buf.bufnr ~= cur_buf_id then
+            local name = buf.name
+            if name == '' then
+                name = '[No Name]'
+            else
+                -- Make path relative to cwd if possible
+                if vim.startswith(name, cwd) then
+                    name = vim.fn.fnamemodify(name, ':.')
+                else
+                    name = vim.fn.fnamemodify(name, ':~')
+                end
+            end
+
+            table.insert(items, { text = name, bufnr = buf.bufnr })
+        end
+    end
+
+    -- Get the show function - use show_with_icons like the standard implementation
+    local MiniPick = require('mini.pick')
+    local show = function(buf_id, i, query) MiniPick.default_show(buf_id, i, query, { show_icons = true }) end
+
+    -- Define wipeout function and mappings
+    local wipeout_cur = function()
+        local bufnr = MiniPick.get_picker_matches().current.bufnr
+        vim.api.nvim_buf_delete(bufnr, {})
+
+        -- Refresh by restarting the picker
+        MiniPick.stop()
+        vim.schedule(function()
+            buffers_mru() -- Call the function again to rebuild the list
+        end)
+    end
+    local buffer_mappings = { wipeout = { char = '<C-x>', func = wipeout_cur } }
+
+    local opts = {
+        source = {
+            name = 'Buffers (MRU)',
+            items = items,
+            show = show
+        },
+        mappings = buffer_mappings,
+    }
+
+    return MiniPick.start(opts)
+end
+require('mini.pick').registry.buffers_mru = buffers_mru
+
 vim.keymap.set("n", "<leader>fd", MiniFiles.open, { desc = "Open file browser" })
 vim.keymap.set("n", "<leader>q", MiniBufremove.delete, { desc = "Delete Buffer" })
-vim.keymap.set("n", "<M-n>", function() MiniExtra.pickers.lsp({ scope = 'document_symbol' }) end,
-    { desc = "Document Symbols" })
-vim.keymap.set("n", "<M-,>", MiniPick.builtin.buffers, { desc = "Pick buffers" })
-vim.keymap.set("n", "<M-m>", MiniPick.builtin.files, { desc = "Pick files" })
-vim.keymap.set("n", "<M-o>", MiniExtra.pickers.oldfiles, { desc = "Pick old files" })
-vim.keymap.set("n", "<M-F>",
-    function() require('mini.pick').builtin.files({}, { source = { cwd = vim.fn.expand('%:p:h') } }) end,
-    { desc = "Pick local files" })

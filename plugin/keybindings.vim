@@ -1,15 +1,5 @@
 " Functions
 " ------------------------------------------------------------------------------
-function! s:switch_prev_buf()
-  let l:prev = bufname('#')
-  if l:prev !=# '__InputList__' && bufloaded(l:prev) != 0
-    b#
-  else
-    " echo "No buffer to switch to"
-    Pick buffers
-  endif
-endfunction
-
 function! Eatchar(pat)
    let l:c = nr2char(getchar(0))
    return (l:c =~ a:pat) ? '' : l:c
@@ -38,7 +28,7 @@ function! s:tagComplete()
 
   elseif l:line[l:col-2] ==# '>' && l:line[l:col-1] ==# '<'
     call feedkeys("\<C-g>u") " create new undo sequence
-    call feedkeys("\<CR>\<ESC>O", 'n')
+    call feedkeys("\<CR>\<Esc>O", 'n')
     return ''
 
   elseif search('</\@!', 'bn', line('.')) != 0
@@ -48,7 +38,7 @@ function! s:tagComplete()
     call feedkeys("\<C-g>u") " create new undo sequence
     call feedkeys('></', 'n')
     call feedkeys("\<Plug>ragtagHtmlComplete")
-    call feedkeys("\<ESC>F<i", 'n')
+    call feedkeys("\<Esc>F<i", 'n')
     return ''
 
   else
@@ -136,9 +126,6 @@ else
   nnoremap <PageDown> <C-d>
 endif
 nnoremap <F4> :sil make %<CR><C-l>:cr<CR>
-nnoremap <silent> <C-tab> :call <SID>switch_prev_buf()<CR>
-nnoremap <silent> <C-^> :call <SID>switch_prev_buf()<CR>
-nnoremap <silent> <C-6> :call <SID>switch_prev_buf()<CR>
 if has('mac')
   nnoremap <silent> <D-[> :bprev<CR>
   nnoremap <silent> <D-]> :bnext<CR>
@@ -159,7 +146,8 @@ xnoremap <silent> # :<C-u>call <SID>vset_search()<CR>?<C-R>=@/<CR><CR>
 
 "terminal bindings
 tmap <F2> <C-\><C-n><F2>
-tmap <Esc><Esc> <C-\><C-n>
+"tmap <Esc><Esc> <C-\><C-n>
+tmap <C-o> <C-\><C-n>
 
 " some handful command-mode bindings
 cmap <silent> <c-x><c-p> <Plug>CmdlineCompleteBackward

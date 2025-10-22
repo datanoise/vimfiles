@@ -109,7 +109,9 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'nvim-lua/plenary.nvim'
     Plug 'stevearc/aerial.nvim'
     Plug 'kdheepak/lazygit.nvim'
+    Plug 'dnlhc/glance.nvim'
     Plug 'kevinhwang91/nvim-bqf'
+    Plug 'stevearc/quicker.nvim'
 
     " AI tools
     "Plug 'olimorris/codecompanion.nvim'

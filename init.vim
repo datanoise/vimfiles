@@ -89,12 +89,7 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'datanoise/vim-dispatch-neovim'
     Plug 'windwp/nvim-ts-autotag'
     Plug 'rcarriga/nvim-notify'
-    Plug 'neovim/nvim-lspconfig'
-    Plug 'mason-org/mason.nvim'
-    Plug 'mason-org/mason-lspconfig.nvim'
     Plug 'kylechui/nvim-surround'
-    Plug 'nvimtools/none-ls.nvim'
-    Plug 'folke/trouble.nvim'
     Plug 'kyazdani42/nvim-web-devicons'
     "Plug 'andymass/vim-matchup'
     Plug 'windwp/nvim-autopairs'
@@ -109,9 +104,17 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'nvim-lua/plenary.nvim'
     Plug 'stevearc/aerial.nvim'
     Plug 'kdheepak/lazygit.nvim'
-    Plug 'dnlhc/glance.nvim'
     Plug 'kevinhwang91/nvim-bqf'
     Plug 'stevearc/quicker.nvim'
+
+    " LSP
+    Plug 'neovim/nvim-lspconfig'
+    Plug 'mason-org/mason.nvim'
+    Plug 'mason-org/mason-lspconfig.nvim'
+    Plug 'rachartier/tiny-inline-diagnostic.nvim'
+    Plug 'dnlhc/glance.nvim'
+    Plug 'folke/trouble.nvim'
+    Plug 'nvimtools/none-ls.nvim'
 
     " AI tools
     "Plug 'olimorris/codecompanion.nvim'

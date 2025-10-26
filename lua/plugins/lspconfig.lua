@@ -3,8 +3,12 @@ if not vim.g.plugs['nvim-lspconfig'] then
 end
 
 require('lspconfig')
-require('mason').setup()
-require("mason-lspconfig").setup()
+if vim.g.plugs['mason.nvim'] then
+  require('mason').setup()
+end
+if vim.g.plugs['mason-lspconfig.nvim'] then
+  require("mason-lspconfig").setup()
+end
 
 
 local function hover_twice()
@@ -218,6 +222,7 @@ for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
+
 vim.diagnostic.config({
   virtual_lines = false,
   signs = {
@@ -227,10 +232,7 @@ vim.diagnostic.config({
       [vim.diagnostic.severity.HINT] = "󰌶 ",
       [vim.diagnostic.severity.INFO] = " ",
     },
-  }
-})
-
-vim.diagnostic.config({
+  },
   underline = {
     severity = { min = vim.diagnostic.severity.ERROR }
   },
@@ -249,3 +251,8 @@ vim.diagnostic.config({
     prefix = '',
   },
 })
+
+if vim.g.plugs['tiny-inline-diagnostic.nvim'] then
+  require("tiny-inline-diagnostic").setup()
+  vim.diagnostic.config({ virtual_text = false })
+end

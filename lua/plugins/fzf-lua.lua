@@ -12,6 +12,7 @@ fzf.setup {
         height = 0.6,
         preview = {
             hidden = true,
+            default = 'bat',
         }
     },
     btags = {

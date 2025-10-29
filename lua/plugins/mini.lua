@@ -67,6 +67,8 @@ miniclue.setup({
 })
 require('mini.bufremove').setup()
 
+local MiniPick = require('mini.pick')
+
 local function buffers_mru()
     -- Get all listed buffers with their last used time
     local buffers = vim.tbl_filter(function(buf)
@@ -103,7 +105,6 @@ local function buffers_mru()
     end
 
     -- Get the show function - use show_with_icons like the standard implementation
-    local MiniPick = require('mini.pick')
     local show = function(buf_id, i, query) MiniPick.default_show(buf_id, i, query, { show_icons = true }) end
 
     -- Define wipeout function and mappings
@@ -130,7 +131,38 @@ local function buffers_mru()
 
     return MiniPick.start(opts)
 end
-require('mini.pick').registry.buffers_mru = buffers_mru
+MiniPick.registry.buffers_mru = buffers_mru
+
+local function git_changes()
+    local items = {}
+    local handle = io.popen("git status --porcelain=v1")
+    if handle then
+        for line in handle:lines() do
+            -- The first two characters of `git status --porcelain` indicate file status
+            -- M: Modified, A: Added, D: Deleted, etc.
+            local status = line:sub(1, 2)
+            local filename = line:sub(4)
+            table.insert(items, {
+                path = filename,
+                text = string.format("[%s] %s", status, filename),
+            })
+        end
+        handle:close()
+    end
+
+    -- Get the show function - use show_with_icons like the standard implementation
+    local show = function(buf_id, i, query) MiniPick.default_show(buf_id, i, query, { show_icons = true }) end
+    local opts = {
+        source = {
+            name = 'Git Changes',
+            items = items,
+            show = show
+        },
+    }
+
+    return MiniPick.start(opts)
+end
+MiniPick.registry.git_changes = git_changes
 
 vim.keymap.set("n", "<leader>fd", MiniFiles.open, { desc = "Open file browser" })
 vim.keymap.set("n", "<leader>q", MiniBufremove.delete, { desc = "Delete Buffer" })

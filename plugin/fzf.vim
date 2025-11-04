@@ -4,8 +4,6 @@ if !has_key(g:plugs, 'fzf.vim')
 endif
 
 let g:fzf_preview_window = ''
-execute 'cnoremap <M-t> FZF '
-execute 'nnoremap <M-t> :FZF '
 call CommandAlias('fzf', 'FZF')
 
 let g:fzf_action = {
@@ -14,16 +12,7 @@ let g:fzf_action = {
       \ 'ctrl-s': 'split',
       \ 'ctrl-v': 'vsplit'
       \ }
-
-if !has_key(g:plugs, 'fzf-lua')
-  nnoremap <silent> <Leader>n :BTag<CR>
-  nnoremap <silent> <Leader>e :History<CR>
-  nnoremap <silent> <Leader>B :BCommits<CR>
-  nnoremap <silent> <Leader>C :Commits<CR>
-  nnoremap <silent> <Leader>m :Files<CR>
-  nnoremap <silent> <Leader>F :Files %:h<CR>
-  nnoremap <silent> <Leader>l :Buffers<CR>
-endif
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
 
 function! s:fzf_statusline()
   hi! fzf1 ctermfg=darkyellow ctermbg=242 guifg=gold3 guibg=#202020 gui=none

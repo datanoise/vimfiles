@@ -13,7 +13,7 @@ local cmp_buffer_list = function()
   local bufs = {}
   for _, v in ipairs(vim.api.nvim_list_bufs()) do
     if vim.api.nvim_buf_is_loaded(v) then
-      bufs[#bufs+1] = v
+      bufs[#bufs + 1] = v
     end
   end
   return bufs
@@ -22,7 +22,6 @@ end
 local cmp = require('cmp')
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 local luasnip = require("luasnip")
-local devicons = require('nvim-web-devicons')
 local lspkind = require('lspkind')
 
 local tab_handler = function(fallback)
@@ -57,9 +56,16 @@ cmp.setup({
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.abort(),
     ['<CR>'] = cmp.mapping.confirm({ select = false }),
-    ["<C-n>"] = cmp.mapping(tab_handler, { "i", "s" }),
     ["<Tab>"] = cmp.mapping(tab_handler, { "i", "s" }),
-
+    ["<C-n>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif luasnip.jumpable(1) then
+        luasnip.jump(1)
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
     ["<C-p>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
@@ -87,38 +93,19 @@ cmp.setup({
   }),
   window = {
     completion = cmp.config.window.bordered(),
-    documentation = cmp.config.window.bordered(),
+    documentation = cmp.config.disable,
   },
   formatting = {
-    format = function(entry, vim_item)
-      if vim.tbl_contains({ 'path' }, entry.source.name) then
-        local icon, hl_group = devicons.get_icon(entry:get_completion_item().label)
-        if icon then
-          vim_item.kind = icon
-          vim_item.kind_hl_group = hl_group
-          return vim_item
-        end
-      end
-      return lspkind.cmp_format({ with_text = false })(entry, vim_item)
-    end
-  }
+    format = lspkind.cmp_format({
+      mode = 'text',
+      use_text = false,
+      maxwidth = {
+        menu = 50,
+        abbr = 50,
+      }
+    })
+  },
 })
-
--- cmp.setup.cmdline('/', {
---   mapping = cmp.mapping.preset.cmdline(),
---   sources = {
---     { name = 'buffer' }
---   }
--- })
---
--- cmp.setup.cmdline(':', {
---   mapping = cmp.mapping.preset.cmdline(),
---   sources = cmp.config.sources({
---     { name = 'path' }
---   }, {
---     { name = 'cmdline' }
---   })
--- })
 
 cmp.event:on(
   'confirm_done',

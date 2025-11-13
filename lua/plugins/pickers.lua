@@ -1,5 +1,7 @@
+-- this setting enables fzf-lua keymaps even if mini.nvim is installed
 local force_fzf = false
 
+-- do not change variables below
 local mini_enabled = false
 local fzf_enabled = false
 local use_mini = false
@@ -78,6 +80,12 @@ else
         nnoremap <silent> <M-m> :FzfLua files<CR>
         nnoremap <silent> <M-F> :FzfLua files cwd=%:h<CR>
         nnoremap <silent> <M-o> :FzfLua oldfiles<CR>
+    ]])
+end
+
+if fzf_enabled then
+    vim.cmd([[
+        nnoremap <silent> <M-b> :FzfLua git_branches<CR>
     ]])
 end
 

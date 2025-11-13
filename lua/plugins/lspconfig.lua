@@ -123,6 +123,9 @@ local capabilities = {
 if vim.g.plugs['blink.cmp'] then
   capabilities = vim.tbl_deep_extend('force', capabilities, require('blink.cmp').get_lsp_capabilities())
 end
+if vim.g.plugs['cmp-nvim-lsp'] then
+  capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+end
 
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("lspconfig", { clear = true }),

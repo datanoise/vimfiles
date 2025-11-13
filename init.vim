@@ -121,7 +121,17 @@ silent! if plug#begin('~/.vim/bundle')
     "Plug 'folke/sidekick.nvim'
 
     " Completion
-    Plug 'Saghen/blink.cmp', { 'do': 'cargo build --release' }
+    " Plug 'Saghen/blink.cmp', { 'do': 'cargo build --release' }
+    Plug 'L3MON4D3/LuaSnip'
+    Plug 'hrsh7th/cmp-buffer'
+    Plug 'hrsh7th/cmp-path'
+    Plug 'hrsh7th/cmp-cmdline'
+    Plug 'hrsh7th/nvim-cmp'
+    Plug 'hrsh7th/cmp-nvim-lsp'
+    Plug 'saadparwaiz1/cmp_luasnip'
+    Plug 'hrsh7th/cmp-nvim-lsp-document-symbol'
+    Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
+    Plug 'onsails/lspkind.nvim'
 
     " Testing
     Plug 'nvim-neotest/nvim-nio'

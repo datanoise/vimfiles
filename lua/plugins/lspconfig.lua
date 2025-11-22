@@ -6,10 +6,10 @@ require('lspconfig')
 if vim.g.plugs['mason.nvim'] then
   require('mason').setup()
 end
-if vim.g.plugs['mason-lspconfig.nvim'] then
-  require("mason-lspconfig").setup()
-end
-
+-- if vim.g.plugs['mason-lspconfig.nvim'] then
+--   -- this will automatically enables the servers installed via mason
+--   require("mason-lspconfig").setup()
+-- end
 
 local function hover_twice()
   vim.lsp.buf.hover()
@@ -217,6 +217,10 @@ vim.lsp.enable('rust_analyzer')
 vim.lsp.enable('lua_ls')
 vim.lsp.enable('gopls')
 vim.lsp.enable('bashls')
+vim.lsp.enable('jdtls')
+vim.lsp.enable('kotlin_language_server')
+vim.lsp.enable('pylsp')
+vim.lsp.enable('vimls')
 -- for now using copilot.vim
 -- vim.lsp.enable('copilot')
 

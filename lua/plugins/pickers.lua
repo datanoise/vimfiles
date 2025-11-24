@@ -63,6 +63,7 @@ if fzf_enabled then
 end
 
 vim.keymap.set("n", "<M-.>", pick_symbols, { desc = "Pick symbols" })
+vim.keymap.set("n", "<leader>n", pick_symbols, { desc = "Pick symbols" })
 
 if use_mini then
     vim.keymap.set("n", "<M-n>", function() MiniExtra.pickers.lsp({ scope = 'document_symbol' }) end,
@@ -73,6 +74,8 @@ if use_mini then
     vim.keymap.set("n", "<M-F>",
         function() require('mini.pick').builtin.files({}, { source = { cwd = vim.fn.expand('%:p:h') } }) end,
         { desc = "Pick local files" })
+    vim.keymap.set("n", "<leader>m", MiniPick.builtin.files, { desc = "Pick files" })
+    vim.keymap.set("n", "<leader>l", MiniPick.registry.buffers_mru, { desc = "Pick buffers" })
 else
     vim.cmd([[
         nnoremap <silent> <M-;> :FzfLua builtin<CR>
@@ -80,6 +83,8 @@ else
         nnoremap <silent> <M-m> :FzfLua files<CR>
         nnoremap <silent> <M-F> :FzfLua files cwd=%:h<CR>
         nnoremap <silent> <M-o> :FzfLua oldfiles<CR>
+        nnoremap <silent> <leader>m :FzfLua files<CR>
+        nnoremap <silent> <leader>l :FzfLua buffers<CR>
     ]])
 end
 

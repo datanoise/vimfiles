@@ -10,7 +10,7 @@ require('nvim-ts-autotag').setup({
 
 require 'nvim-treesitter.configs'.setup {
   ensure_installed = { "c", "lua", "rust", "ruby", "python", "javascript",
-    "typescript", "vim", "xml", "embedded_template", "html" },
+    "typescript", "vim", "xml", "embedded_template", "html", "sql" },
   highlight = {
     enable = true,
     -- disable = {"ruby", "embedded_template", "vim"},

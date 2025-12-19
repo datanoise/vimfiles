@@ -48,7 +48,8 @@
        "assert_includes" "assert_difference" "assert_no_difference" "assert_changes" "assert_match" "assert_no_match"
        "assert_raises" "assert_nothing_raised" "assert_respond_to" "assert_silent" "assert_empty" "assert_not_empty"
        "assert_predicate" "assert_not_predicate" "assert_kind_of" "assert_instance_of" "assert_same" "assert_not_same"
-       "assert_enqueued_with" "assert_no_enqueued_jobs" "assert_in_delta" "assert_media_file" "assert_response")
+       "assert_enqueued_with" "assert_no_enqueued_jobs" "assert_in_delta" "assert_media_file" "assert_response" 
+       "assert_operator")
       (#set! "priority" 200))
 
 (call method: (identifier) @minitest.method

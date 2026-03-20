@@ -118,7 +118,10 @@ local function buffers_mru()
             buffers_mru() -- Call the function again to rebuild the list
         end)
     end
-    local buffer_mappings = { wipeout = { char = '<C-x>', func = wipeout_cur } }
+    local buffer_mappings = {
+        wipeout = { char = '<C-x>', func = wipeout_cur },
+        mark = '<C-d>',
+    }
 
     local opts = {
         source = {

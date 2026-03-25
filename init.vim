@@ -79,9 +79,9 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'sindrets/diffview.nvim'
 
   if has('nvim')
-    Plug 'nvim-treesitter/nvim-treesitter', { 'branch': 'master', 'do': ':TSUpdate' }
+    Plug 'nvim-treesitter/nvim-treesitter', { 'branch': 'main', 'do': ':TSUpdate' }
     Plug 'nvim-treesitter/nvim-treesitter-context', { 'branch': 'master' }
-    Plug 'nvim-treesitter/nvim-treesitter-textobjects', { 'branch': 'master' }
+    Plug 'nvim-treesitter/nvim-treesitter-textobjects', { 'branch': 'main' }
     Plug 'RRethy/nvim-treesitter-endwise'
 
     Plug 'nvim-lualine/lualine.nvim'

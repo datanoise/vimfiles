@@ -8,7 +8,7 @@ require('nvim-ts-autotag').setup({
   },
 })
 
-require 'nvim-treesitter.configs'.setup {
+require 'nvim-treesitter'.setup {
   ensure_installed = { "c", "lua", "rust", "ruby", "python", "javascript",
     "typescript", "vim", "xml", "embedded_template", "html", "sql" },
   highlight = {

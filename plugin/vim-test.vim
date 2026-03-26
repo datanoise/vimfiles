@@ -3,7 +3,22 @@ if !has_key(g:plugs, 'vim-test')
   finish
 endif
 
-let g:test#strategy = 'dispatch'
+" Custom terminal strategy:
+" - runs tests in a bottom Neovim terminal split
+" - keeps output scrolling while the job runs
+" - closes the terminal on exit
+" - echoes "Success" on pass
+" - opens quickfix on failure
+let g:test#strategy = 'nvim_term_autoclose'
+let g:test#custom_strategies = get(g:, 'test#custom_strategies', {})
+let g:test#custom_strategies.nvim_term_autoclose = function('test#datanoise#vim_test_strategy')
+
+" To switch back to the old dispatch-backed behavior:
+" unlet! g:test#custom_strategies.nvim_term_autoclose
+" let g:test#strategy = 'dispatch'
+
+let g:test#neovim#term_position = 'botright 10'
+
 nnoremap <leader>ts :TestSuite<CR>
 nnoremap <leader>tt :TestSuite<CR>
 nnoremap <leader>tn :TestNearest<CR>

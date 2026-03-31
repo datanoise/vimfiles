@@ -16,6 +16,70 @@ local function hover_twice()
   vim.lsp.buf.hover()
 end
 
+local function apply_code_action(action, client, bufnr)
+  if action.edit then
+    vim.lsp.util.apply_workspace_edit(action.edit, client.offset_encoding)
+  end
+
+  local command = action.command
+  if command then
+    client:exec_cmd(type(command) == 'table' and command or action, { bufnr = bufnr, client_id = client.id })
+  end
+end
+
+local function ruby_lsp_code_action(bufnr, apply)
+  local client = vim.lsp.get_clients({ bufnr = bufnr, name = 'ruby_lsp' })[1]
+  if not client then
+    vim.lsp.buf.code_action({ apply = apply })
+    return
+  end
+
+  local lnum = vim.api.nvim_win_get_cursor(0)[1] - 1
+  local diagnostics = vim.tbl_map(function(diagnostic)
+    return diagnostic.user_data and diagnostic.user_data.lsp or nil
+  end, vim.diagnostic.get(bufnr, { lnum = lnum }))
+  diagnostics = vim.tbl_filter(function(diagnostic)
+    return diagnostic ~= nil
+  end, diagnostics)
+
+  ---@type lsp.CodeActionParams
+  local params = vim.lsp.util.make_range_params(0, client.offset_encoding)
+  params.context = {
+    triggerKind = vim.lsp.protocol.CodeActionTriggerKind.Invoked,
+    diagnostics = diagnostics,
+  }
+
+  client:request('textDocument/codeAction', params, function(err, actions)
+    if err then
+      vim.notify(err.message, vim.log.levels.ERROR)
+      return
+    end
+
+    actions = actions or {}
+    if #actions == 0 then
+      vim.notify('No code actions available', vim.log.levels.INFO)
+      return
+    end
+
+    if apply and #actions == 1 then
+      apply_code_action(actions[1], client, bufnr)
+      return
+    end
+
+    vim.ui.select(actions, {
+      prompt = 'Code actions:',
+      kind = 'codeaction',
+      format_item = function(action)
+        return action.title
+      end,
+    }, function(choice)
+      if choice then
+        apply_code_action(choice, client, bufnr)
+      end
+    end)
+  end, bufnr)
+end
+
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 local on_attach = function(args)
@@ -24,6 +88,7 @@ local on_attach = function(args)
   end
   local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
   local bufnr = args.buf
+
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_set_option_value('omnifunc', 'v:lua.vim.lsp.omnifunc', { buf = bufnr })
   -- Mappings.
@@ -43,9 +108,27 @@ local on_attach = function(args)
   end, bufopts)
   vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
   vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
-  vim.keymap.set('n', '<leader><leader>a', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set('n', '<F3>', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set('n', '<leader><leader>p', function() vim.lsp.buf.code_action({ apply = true }) end, bufopts)
+  vim.keymap.set('n', '<leader><leader>a', function()
+    if client.name == 'ruby_lsp' then
+      ruby_lsp_code_action(bufnr, false)
+    else
+      vim.lsp.buf.code_action()
+    end
+  end, bufopts)
+  vim.keymap.set('n', '<F3>', function()
+    if client.name == 'ruby_lsp' then
+      ruby_lsp_code_action(bufnr, false)
+    else
+      vim.lsp.buf.code_action()
+    end
+  end, bufopts)
+  vim.keymap.set('n', '<leader><leader>p', function()
+    if client.name == 'ruby_lsp' then
+      ruby_lsp_code_action(bufnr, true)
+    else
+      vim.lsp.buf.code_action({ apply = true })
+    end
+  end, bufopts)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
   vim.keymap.set('n', '<leader>sf', vim.lsp.buf.format, bufopts)
 

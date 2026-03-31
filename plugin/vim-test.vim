@@ -9,13 +9,11 @@ endif
 " - closes the terminal on exit
 " - echoes "Success" on pass
 " - opens quickfix on failure
-let g:test#strategy = 'nvim_term_autoclose'
-let g:test#custom_strategies = get(g:, 'test#custom_strategies', {})
-let g:test#custom_strategies.nvim_term_autoclose = function('test#datanoise#vim_test_strategy')
+"let g:test#strategy = 'nvim_term_autoclose'
+"let g:test#custom_strategies = get(g:, 'test#custom_strategies', {})
+"let g:test#custom_strategies.nvim_term_autoclose = function('test#datanoise#vim_test_strategy')
 
-" To switch back to the old dispatch-backed behavior:
-" unlet! g:test#custom_strategies.nvim_term_autoclose
-" let g:test#strategy = 'dispatch'
+let g:test#strategy = 'dispatch'
 
 let g:test#neovim#term_position = 'botright 10'
 

@@ -2,114 +2,131 @@ if not vim.g.plugs['nvim-treesitter'] then
   return
 end
 
+local function add_treesitter_runtime()
+  for _, path in ipairs(vim.opt.runtimepath:get()) do
+    if path:match('/nvim%-treesitter$') then
+      local runtime_path = path .. '/runtime'
+      if vim.fn.isdirectory(runtime_path) == 1 and not vim.tbl_contains(vim.opt.runtimepath:get(), runtime_path) then
+        vim.opt.runtimepath:append(runtime_path)
+      end
+      return
+    end
+  end
+end
+
+add_treesitter_runtime()
+pcall(vim.treesitter.language.register, 'embedded_template', 'eruby')
+
 require('nvim-ts-autotag').setup({
   aliases = {
-    ["eruby"] = "html",
+    eruby = 'html',
   },
 })
 
-require 'nvim-treesitter'.setup {
-  ensure_installed = { "c", "lua", "rust", "ruby", "python", "javascript",
-    "typescript", "vim", "xml", "embedded_template", "html", "sql" },
-  highlight = {
-    enable = true,
-    -- disable = {"ruby", "embedded_template", "vim"},
-    additional_vim_regex_highlighting = { "embedded_template", "ruby", "vim", "yaml" },
-  },
-  incremental_selection = {
-    enable = true,
-    keymaps = {
-      init_selection = "gnn",
-      node_incremental = "<Tab>",
-      node_decremental = "<S-Tab>",
-      scope_incremental = "<CR>",
-    },
-  },
-  indent = {
-    enable = true,
-    disable = { "ruby", "rust", "yaml" }
-  },
-  endwise = {
-    enable = true,
-  },
-  matchup = {
-    enable = true,
-  },
-  textobjects = {
-    select = {
-      enable = true,
-      -- Automatically jump forward to textobj, similar to targets.vim
-      lookahead = true,
+local group = vim.api.nvim_create_augroup('datanoise_treesitter', { clear = true })
 
-      keymaps = {
-        -- You can use the capture groups defined in textobjects.scm
-        ["af"] = "@function.outer",
-        ["if"] = "@function.inner",
-        ["ac"] = "@class.outer",
-        -- you can optionally set descriptions to the mappings (used in the desc parameter of nvim_buf_set_keymap
-        ["ic"] = { query = "@class.inner", desc = "Select inner part of a class region" },
-        -- You can also use captures from other query groups like `locals.scm`
-        ["as"] = { query = "@scope", query_group = "locals", desc = "Select language scope" },
-      },
-      -- You can choose the select mode (default is charwise 'v')
+vim.api.nvim_create_autocmd('FileType', {
+  group = group,
+  pattern = {
+    'c',
+    'eruby',
+    'html',
+    'javascript',
+    'lua',
+    'python',
+    'ruby',
+    'rust',
+    'sql',
+    'typescript',
+    'vim',
+    'xml',
+  },
+  callback = function(args)
+    pcall(vim.treesitter.start, args.buf)
+
+    vim.wo.foldmethod = 'expr'
+    vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+
+    if not vim.tbl_contains({ 'eruby', 'ruby', 'rust', 'vim' }, vim.bo[args.buf].filetype) then
+      vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    end
+  end,
+})
+
+if vim.g.plugs['nvim-treesitter-textobjects'] then
+  require('nvim-treesitter-textobjects').setup({
+    select = {
+      lookahead = true,
       selection_modes = {
-        ['@parameter.outer'] = 'v', -- charwise
-        ['@function.outer'] = 'V',  -- linewise
-        ['@class.outer'] = '<c-v>', -- blockwise
+        ['@parameter.outer'] = 'v',
+        ['@function.outer'] = 'V',
+        ['@class.outer'] = '<c-v>',
       },
-      -- If you set this to `true` (default is `false`) then any textobject is
-      -- extended to include preceding xor succeeding whitespace. Succeeding
-      -- whitespace has priority in order to act similarly to eg the built-in
-      -- `ap`.
       include_surrounding_whitespace = false,
     },
-    swap = {
-      enable = true,
-      swap_next = {
-        ["<leader>>"] = "@parameter.inner",
-      },
-      swap_previous = {
-        ["<leader><"] = "@parameter.inner",
-      },
-    },
     move = {
-      enable = true,
-      set_jumps = true, -- whether to set jumps in the jumplist
-      goto_next_start = {
-        ["]m"] = "@function.outer",
-        ["]]"] = "@class.outer",
-      },
-      goto_next_end = {
-        ["]M"] = "@function.outer",
-        ["]["] = "@class.outer",
-      },
-      goto_previous_start = {
-        ["[m"] = "@function.outer",
-        ["[["] = "@class.outer",
-      },
-      goto_previous_end = {
-        ["[M"] = "@function.outer",
-        ["[]"] = "@class.outer",
-      },
+      set_jumps = true,
     },
-    lsp_interop = {
-      enable = true,
-      border = 'none',
-      peek_definition_code = {
-        ["<leader>df"] = "@function.outer",
-        ["<leader>dF"] = "@class.outer",
-      },
-    },
-  },
-}
-require 'treesitter-context'.setup {
-  max_lines = 2,
-  patterns = {
-    ruby = {
-      'block'
-    }
-  }
-}
+  })
 
-vim.wo.foldmethod = 'expr'
-vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+  local select = require('nvim-treesitter-textobjects.select')
+  local move = require('nvim-treesitter-textobjects.move')
+  local swap = require('nvim-treesitter-textobjects.swap')
+
+  vim.keymap.set({ 'x', 'o' }, 'af', function()
+    select.select_textobject('@function.outer', 'textobjects')
+  end)
+  vim.keymap.set({ 'x', 'o' }, 'if', function()
+    select.select_textobject('@function.inner', 'textobjects')
+  end)
+  vim.keymap.set({ 'x', 'o' }, 'ac', function()
+    select.select_textobject('@class.outer', 'textobjects')
+  end)
+  vim.keymap.set({ 'x', 'o' }, 'ic', function()
+    select.select_textobject('@class.inner', 'textobjects')
+  end)
+  vim.keymap.set({ 'x', 'o' }, 'as', function()
+    select.select_textobject('@local.scope', 'locals')
+  end)
+
+  vim.keymap.set('n', '<leader>>', function()
+    swap.swap_next('@parameter.inner')
+  end)
+  vim.keymap.set('n', '<leader><', function()
+    swap.swap_previous('@parameter.inner')
+  end)
+
+  vim.keymap.set({ 'n', 'x', 'o' }, ']m', function()
+    move.goto_next_start('@function.outer', 'textobjects')
+  end)
+  vim.keymap.set({ 'n', 'x', 'o' }, ']]', function()
+    move.goto_next_start('@class.outer', 'textobjects')
+  end)
+  vim.keymap.set({ 'n', 'x', 'o' }, ']M', function()
+    move.goto_next_end('@function.outer', 'textobjects')
+  end)
+  vim.keymap.set({ 'n', 'x', 'o' }, '][', function()
+    move.goto_next_end('@class.outer', 'textobjects')
+  end)
+  vim.keymap.set({ 'n', 'x', 'o' }, '[m', function()
+    move.goto_previous_start('@function.outer', 'textobjects')
+  end)
+  vim.keymap.set({ 'n', 'x', 'o' }, '[[', function()
+    move.goto_previous_start('@class.outer', 'textobjects')
+  end)
+  vim.keymap.set({ 'n', 'x', 'o' }, '[M', function()
+    move.goto_previous_end('@function.outer', 'textobjects')
+  end)
+  vim.keymap.set({ 'n', 'x', 'o' }, '[]', function()
+    move.goto_previous_end('@class.outer', 'textobjects')
+  end)
+end
+
+if vim.g.plugs['nvim-treesitter-context'] then
+  require('treesitter-context').setup({
+    max_lines = 2,
+    patterns = {
+      ruby = { 'block' },
+    },
+  })
+end

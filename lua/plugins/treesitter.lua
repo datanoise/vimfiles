@@ -2,19 +2,6 @@ if not vim.g.plugs['nvim-treesitter'] then
   return
 end
 
-local function add_treesitter_runtime()
-  for _, path in ipairs(vim.opt.runtimepath:get()) do
-    if path:match('/nvim%-treesitter$') then
-      local runtime_path = path .. '/runtime'
-      if vim.fn.isdirectory(runtime_path) == 1 and not vim.tbl_contains(vim.opt.runtimepath:get(), runtime_path) then
-        vim.opt.runtimepath:append(runtime_path)
-      end
-      return
-    end
-  end
-end
-
-add_treesitter_runtime()
 pcall(vim.treesitter.language.register, 'embedded_template', 'eruby')
 
 require('nvim-ts-autotag').setup({

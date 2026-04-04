@@ -76,6 +76,7 @@ if use_mini then
         { desc = "Pick local files" })
     vim.keymap.set("n", "<leader>m", MiniPick.builtin.files, { desc = "Pick files" })
     vim.keymap.set("n", "<leader>l", MiniPick.registry.buffers_mru, { desc = "Pick buffers" })
+    vim.keymap.set("n", "<M-g>", MiniPick.registry.git_changes, { desc = "Git changes" })
 else
     vim.cmd([[
         nnoremap <silent> <M-;> :FzfLua builtin<CR>

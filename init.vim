@@ -75,7 +75,7 @@ silent! if plug#begin('~/.vim/bundle')
   Plug 'lervag/vimtex'
   Plug 'datanoise/vim-localvimrc'
   Plug 'tweekmonster/startuptime.vim'
-  Plug 'github/copilot.vim'
+  "Plug 'github/copilot.vim'
   Plug 'sindrets/diffview.nvim'
 
   if has('nvim')

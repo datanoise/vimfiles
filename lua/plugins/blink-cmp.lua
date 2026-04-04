@@ -3,6 +3,16 @@ if not vim.g.plugs['blink.cmp'] then
 end
 
 local blink = require('blink.cmp')
+
+local has_copilot_suggestion = function()
+  if vim.fn.exists('*copilot#GetDisplayedSuggestion') == 0 then
+    return false
+  end
+
+  local suggestion = vim.fn['copilot#GetDisplayedSuggestion']()
+  return suggestion ~= nil and suggestion.text ~= ''
+end
+
 blink.setup({
   completion = {
     list = {
@@ -10,11 +20,7 @@ blink.setup({
     },
     menu = {
       auto_show = function()
-        if not vim.g.plugs['copilot.vim'] then
-          return true
-        end
-        local copilot_suggestion = vim.fn['copilot#GetDisplayedSuggestion']
-        if copilot_suggestion ~= nil and copilot_suggestion().text ~= '' then
+        if has_copilot_suggestion() then
           return false
         else
           return true
@@ -26,8 +32,7 @@ blink.setup({
     preset = 'default',
     ['<Tab>'] = {
       function(cmp)
-        local copilot_suggestion = vim.fn['copilot#GetDisplayedSuggestion']
-        if cmp.is_menu_visible() and (copilot_suggestion == nil or copilot_suggestion().text == '') then
+        if cmp.is_menu_visible() and not has_copilot_suggestion() then
           return cmp.select_next()
         end
       end,

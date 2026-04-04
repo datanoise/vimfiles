@@ -24,10 +24,17 @@ local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 local luasnip = require("luasnip")
 local lspkind = require('lspkind')
 
+local has_copilot_suggestion = function()
+  if vim.fn.exists('*copilot#GetDisplayedSuggestion') == 0 then
+    return false
+  end
+
+  local suggestion = vim.fn['copilot#GetDisplayedSuggestion']()
+  return suggestion ~= nil and suggestion.text ~= ''
+end
+
 local tab_handler = function(fallback)
-  local copilot_suggestion = vim.fn['copilot#GetDisplayedSuggestion']
-  local has_copilit_suggestion = copilot_suggestion ~= nil and copilot_suggestion().text ~= ''
-  if has_copilit_suggestion then
+  if has_copilot_suggestion() then
     fallback()
   elseif cmp.visible() then
     cmp.select_next_item()

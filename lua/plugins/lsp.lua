@@ -41,7 +41,6 @@ end
 
 local function configure_lspconfig()
   require('lspconfig')
-  require('mason').setup()
   local function hover_twice()
     vim.lsp.buf.hover()
     vim.lsp.buf.hover()
@@ -270,8 +269,8 @@ return {
   { 'neovim/nvim-lspconfig', dependencies = {
     'mason-org/mason.nvim', 'mason-org/mason-lspconfig.nvim', 'hrsh7th/cmp-nvim-lsp', 'rachartier/tiny-inline-diagnostic.nvim',
   }, config = configure_lspconfig },
-  { 'mason-org/mason.nvim' },
-  { 'mason-org/mason-lspconfig.nvim' },
+  { 'mason-org/mason.nvim', opts = {} },
+  { 'mason-org/mason-lspconfig.nvim', opts = {} },
   { 'rachartier/tiny-inline-diagnostic.nvim' },
   { 'dnlhc/glance.nvim' },
   { 'nvimtools/none-ls.nvim', config = configure_null_ls },

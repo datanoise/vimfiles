@@ -1,7 +1,3 @@
-local function configure_bqf()
-  require("bqf").setup({ preview = { auto_preview = false } })
-end
-
 local function configure_fzf_lua()
   local fzf = require('fzf-lua')
   fzf.register_ui_select()
@@ -213,6 +209,6 @@ return {
   { 'echasnovski/mini.nvim', dependencies = { 'stevearc/aerial.nvim' }, config = configure_mini },
   { 'stevearc/oil.nvim', config = configure_oil },
   { 'stevearc/aerial.nvim' },
-  { 'kevinhwang91/nvim-bqf', config = configure_bqf },
-  { 'stevearc/quicker.nvim' },
+  { 'kevinhwang91/nvim-bqf', ft = 'qf', opts = { preview = { auto_preview = false } } },
+  { 'stevearc/quicker.nvim', ft = 'qf', opts = {} },
 }

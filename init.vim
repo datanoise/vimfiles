@@ -81,7 +81,6 @@ else
     Plug 'datanoise/vim-localvimrc'
     Plug 'tweekmonster/startuptime.vim'
     "Plug 'github/copilot.vim'
-    Plug 'sindrets/diffview.nvim'
 
     Plug 'tpope/vim-repeat'
     Plug 'tpope/vim-surround'

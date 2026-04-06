@@ -1,30 +1,14 @@
-require('plugins/treesitter')
-require('plugins/lualine')
-require('plugins/null-ls')
-require('plugins/autopairs')
-require('plugins/luasnip')
-require('plugins/nvim-cmp')
-require('plugins/nvim-colorizer')
-require('plugins/telescope')
-require('plugins/yanky')
-require('plugins/lspconfig')
-require('plugins/fzf-lua')
-require('plugins/hop')
-require('plugins/nvim-tree')
-require('plugins/trouble')
-require('plugins/oil')
-require('plugins/mini')
-require('plugins/gitsigns')
-require('plugins/notify')
-require('plugins/noice')
-require('plugins/render-markdown')
-require('plugins/codecompanion')
-require('plugins/avante')
-require('plugins/blink-cmp')
-require('plugins/neotest')
-require('plugins/copilot')
-require('plugins/fidget')
-require('plugins/sidekick')
-require('plugins/pickers')
-require('plugins/quicker')
-require('plugins/bqf')
+local specs = {}
+
+for _, module in ipairs({
+  'plugins.core',
+  'plugins.navigation',
+  'plugins.ui',
+  'plugins.lsp',
+  'plugins.completion',
+  'plugins.testing',
+}) do
+  vim.list_extend(specs, require(module))
+end
+
+return specs

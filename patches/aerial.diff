@@ -1,0 +1,33 @@
+diff --git a/queries/ruby/aerial.scm b/queries/ruby/aerial.scm
+index ddfb07e..dface05 100644
+--- a/queries/ruby/aerial.scm
++++ b/queries/ruby/aerial.scm
+@@ -59,6 +59,11 @@
+   (#set! "kind" "Module")) @symbol
+ 
+ ; For Rspec and Rake
++
++;   "describe" "it" ; Rspec
++;   "namespace" "task" "multitask" "file" ; Rake
++;   "test" ; Minitest
++;   "setup" "teardown" "should" "should_not" "should_eventually" "context") ; Shoulda
+ (call
+   method: (identifier) @method @name
+   (#any-of? @method
+@@ -107,3 +112,16 @@
+       (call) @name
+     ]?)
+   (#set! "kind" "Method")) @symbol @selection
++
++; For Rspec
++(call
++  method: (identifier) @spec
++  (#any-of? @spec "describe" "it")
++  block: (do_block
++    body: (body_statement
++      (call
++        method: (identifier) @name
++       (#any-of? @name "before" "after" "setup")) @type
++      ))
++  (#set! "kind" "Method")
++) @symbol @selection

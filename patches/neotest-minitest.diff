@@ -1,0 +1,36 @@
+diff --git a/lua/neotest-minitest/config.lua b/lua/neotest-minitest/config.lua
+index 9ffb93f..2e27f9f 100644
+--- a/lua/neotest-minitest/config.lua
++++ b/lua/neotest-minitest/config.lua
+@@ -1,12 +1,12 @@
+ local M = {}
+ 
+ M.get_test_cmd = function()
+-  return vim.tbl_flatten({
++  return {
+     "bundle",
+     "exec",
+     "ruby",
+     "-Itest",
+-  })
++  }
+ end
+ 
+ M.transform_spec_path = function(path)
+diff --git a/lua/neotest-minitest/init.lua b/lua/neotest-minitest/init.lua
+index 68b2291..e9958ed 100644
+--- a/lua/neotest-minitest/init.lua
++++ b/lua/neotest-minitest/init.lua
+@@ -188,11 +188,7 @@ function NeotestAdapter.build_spec(args)
+ 
+   if position.type == "dir" then run_dir() end
+ 
+-  local command = vim.tbl_flatten({
+-    config.get_test_cmd(),
+-    script_args,
+-    "-v",
+-  })
++  local command = vim.iter({ config.get_test_cmd(), script_args, { "-v" } }):flatten():totable()
+ 
+   if args.strategy == "dap" then
+     return {

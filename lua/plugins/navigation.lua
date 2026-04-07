@@ -16,7 +16,6 @@ end
 
 local function configure_hop()
   require('hop').setup()
-  vim.keymap.set('n', '<leader>fg', '<Cmd>HopWord<CR>', { silent = true })
 end
 
 local function configure_pickers()
@@ -197,18 +196,23 @@ local function configure_oil()
     float = { padding = 2, max_width = 0.5, max_height = 0.5, border = "rounded" },
     keymaps = { ["q"] = { "actions.close", mode = "n" } },
   })
-  vim.keymap.set("n", "-", "<Cmd>Oil<CR>", { desc = "Open parent directory" })
-  vim.keymap.set("n", "g-", function() require('oil').toggle_float() end, { desc = "Toggle parent directory" })
 end
 
 return {
   { 'junegunn/fzf', build = './install --all' },
-  { 'junegunn/fzf.vim' },
+  { 'junegunn/fzf.vim', cmd = { 'Files', 'Buffers', 'GFiles', 'History', 'Helptags', 'Rg', 'Ag', 'BLines', 'Lines' } },
   { 'ibhagwan/fzf-lua', dependencies = { 'junegunn/fzf', 'nvim-lua/plenary.nvim' }, cmd = 'FzfLua', config = configure_fzf_lua },
-  { 'phaazon/hop.nvim', config = configure_hop },
+  { 'phaazon/hop.nvim', keys = { { '<leader>fg', '<Cmd>HopWord<CR>', silent = true, desc = "Hop words" } }, config = configure_hop },
   { 'echasnovski/mini.nvim', dependencies = { 'stevearc/aerial.nvim' }, config = configure_mini },
-  { 'stevearc/oil.nvim', config = configure_oil },
-  { 'stevearc/aerial.nvim' },
+  { 'stevearc/oil.nvim',
+    keys = {
+      { '-', '<Cmd>Oil<CR>', desc = "Open parent directory" },
+      { 'g-', function() require('oil').toggle_float() end, desc = "Toggle parent directory" },
+    },
+    cmd = 'Oil',
+    config = configure_oil,
+  },
+  { 'stevearc/aerial.nvim', cmd = { 'AerialToggle', 'AerialOpen', 'AerialClose', 'AerialNavOpen' }, keys = { { '\\t', '<Cmd>AerialToggle<CR>', silent = true, desc = "Aerial toggle" } }, opts = {} },
   { 'kevinhwang91/nvim-bqf', ft = 'qf', opts = { preview = { auto_preview = false } } },
   { 'stevearc/quicker.nvim', ft = 'qf', opts = {} },
 }

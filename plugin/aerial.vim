@@ -1,8 +1,1 @@
-" aerial.nvim settings
-if !has_key(g:plugs, 'aerial.nvim')
-  finish
-endif
-
-lua require('aerial').setup {}
-nnoremap <silent> \t :AerialToggle<CR>
-
+" aerial.nvim is configured from lazy.nvim specs in lua/plugins/navigation.lua

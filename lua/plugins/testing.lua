@@ -8,14 +8,6 @@ local function configure_neotest()
     },
   })
 
-  vim.keymap.set("n", "<leader>tN", function() require("neotest").run.run() end, { noremap = true, silent = true, desc = "Run nearest test" })
-  vim.keymap.set("n", "<leader>tF", function() require("neotest").run.run(vim.fn.expand("%")) end, { noremap = true, silent = true, desc = "Run test for the current file" })
-  vim.keymap.set("n", "<leader>tS", function() require("neotest").run.run({ suite = true }) end, { noremap = true, silent = true, desc = "Run test suite" })
-  vim.keymap.set("n", "<leader>to", function() require("neotest").output.open({ enter = true }) end, { noremap = true, silent = true, desc = "Show test output" })
-  vim.keymap.set("n", "<leader>tp", function() require("neotest").output_panel.toggle() end, { noremap = true, silent = true, desc = "Toggle test output panel" })
-  vim.keymap.set("n", "<leader>tc", function() require("neotest").output_panel.clear() end, { noremap = true, silent = true, desc = "Clear test output panel" })
-  vim.keymap.set("n", "<leader>ty", function() require("neotest").summary.toggle() end, { noremap = true, silent = true, desc = "Toggle test summary" })
-
   vim.api.nvim_create_autocmd("FileType", {
     pattern = "neotest-summary",
     callback = function()
@@ -34,7 +26,18 @@ return {
   { 'nvim-neotest/nvim-nio' },
   { 'nvim-neotest/neotest', dependencies = {
     'nvim-neotest/nvim-nio', 'zidhuss/neotest-minitest', 'nvim-neotest/neotest-vim-test', 'olimorris/neotest-rspec',
-  }, config = configure_neotest },
+  },
+    keys = {
+      { '<leader>tN', function() require("neotest").run.run() end, desc = "Run nearest test" },
+      { '<leader>tF', function() require("neotest").run.run(vim.fn.expand("%")) end, desc = "Run test for the current file" },
+      { '<leader>tS', function() require("neotest").run.run({ suite = true }) end, desc = "Run test suite" },
+      { '<leader>to', function() require("neotest").output.open({ enter = true }) end, desc = "Show test output" },
+      { '<leader>tp', function() require("neotest").output_panel.toggle() end, desc = "Toggle test output panel" },
+      { '<leader>tc', function() require("neotest").output_panel.clear() end, desc = "Clear test output panel" },
+      { '<leader>ty', function() require("neotest").summary.toggle() end, desc = "Toggle test summary" },
+    },
+    config = configure_neotest,
+  },
   { 'zidhuss/neotest-minitest' },
   { 'nvim-neotest/neotest-vim-test' },
   { 'olimorris/neotest-rspec' },

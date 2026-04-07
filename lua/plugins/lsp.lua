@@ -104,7 +104,7 @@ local function configure_lspconfig()
       vim.keymap.set('i', '<C-Space>', vim.lsp.completion.get, bufopts)
     end
     if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
-      vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+      vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
     end
   end
   local capabilities = { offsetEncoding = { 'utf-16' }, general = { positionEncodings = { 'utf-16' } } }
@@ -160,12 +160,14 @@ local function configure_lspconfig()
   end
   vim.diagnostic.config({
     virtual_lines = false,
-    signs = { text = {
-      [vim.diagnostic.severity.ERROR] = "󰅚 ",
-      [vim.diagnostic.severity.WARN] = "󰀪 ",
-      [vim.diagnostic.severity.HINT] = "󰌶 ",
-      [vim.diagnostic.severity.INFO] = " ",
-    } },
+    signs = {
+      text = {
+        [vim.diagnostic.severity.ERROR] = "󰅚 ",
+        [vim.diagnostic.severity.WARN] = "󰀪 ",
+        [vim.diagnostic.severity.HINT] = "󰌶 ",
+        [vim.diagnostic.severity.INFO] = " ",
+      }
+    },
     underline = { severity = { min = vim.diagnostic.severity.ERROR } },
     virtual_text = { severity = { min = vim.diagnostic.severity.WARN } },
     severity_sort = true,
@@ -280,19 +282,30 @@ local function configure_treesitter()
 end
 
 return {
-  { 'nvim-treesitter/nvim-treesitter', branch = 'main', build = ':TSUpdate', dependencies = {
-    'windwp/nvim-ts-autotag', 'nvim-treesitter/nvim-treesitter-context',
-    'nvim-treesitter/nvim-treesitter-textobjects', 'RRethy/nvim-treesitter-endwise',
-  }, config = configure_treesitter },
+  {
+    'nvim-treesitter/nvim-treesitter',
+    branch = 'main',
+    build = ':TSUpdate',
+    dependencies = {
+      'windwp/nvim-ts-autotag', 'nvim-treesitter/nvim-treesitter-context',
+      'nvim-treesitter/nvim-treesitter-textobjects', 'RRethy/nvim-treesitter-endwise',
+    },
+    config = configure_treesitter
+  },
   { 'lewis6991/gitsigns.nvim', event = { 'BufReadPre', 'BufNewFile' }, dependencies = { 'nvim-lua/plenary.nvim' }, config = configure_gitsigns },
   { 'mrcjkb/rustaceanvim' },
   { 'nvim-lua/plenary.nvim' },
-  { 'neovim/nvim-lspconfig', dependencies = {
-    'mason-org/mason.nvim', 'mason-org/mason-lspconfig.nvim', 'hrsh7th/cmp-nvim-lsp', 'rachartier/tiny-inline-diagnostic.nvim',
-  }, config = configure_lspconfig },
-  { 'mason-org/mason.nvim', opts = {} },
-  { 'mason-org/mason-lspconfig.nvim', opts = {} },
+  {
+    'neovim/nvim-lspconfig',
+    dependencies = {
+      'mason-org/mason.nvim', 'mason-org/mason-lspconfig.nvim', 'hrsh7th/cmp-nvim-lsp',
+      'rachartier/tiny-inline-diagnostic.nvim',
+    },
+    config = configure_lspconfig
+  },
+  { 'mason-org/mason.nvim',                  opts = {} },
+  { 'mason-org/mason-lspconfig.nvim',        opts = {} },
   { 'rachartier/tiny-inline-diagnostic.nvim' },
   { 'dnlhc/glance.nvim' },
-  { 'nvimtools/none-ls.nvim', config = configure_null_ls },
+  { 'nvimtools/none-ls.nvim',                config = configure_null_ls },
 }

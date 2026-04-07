@@ -3,7 +3,7 @@ return {
   { 'tpope/vim-dispatch' },
   { 'tpope/vim-fugitive', cmd = { 'Git', 'G', 'Gdiffsplit', 'Gread', 'Gwrite', 'Ggrep', 'GBrowse', 'Gclog', 'Gvdiffsplit' } },
   { 'tpope/vim-ragtag', ft = { 'html', 'eruby', 'xml', 'javascriptreact', 'typescriptreact' } },
-  { 'tpope/vim-rails', ft = { 'ruby', 'eruby' } },
+  { 'tpope/vim-rails' },
   { 'tpope/vim-scriptease', cmd = { 'Messages', 'Scriptnames', 'Verbose', 'Time', 'Runtime' } },
   { 'tpope/vim-tbone', cmd = { 'Tattach', 'Tdrop', 'Tedit', 'Tabedit', 'Tread', 'Twrite' } },
   { 'tpope/vim-sleuth', event = { 'BufReadPost', 'BufNewFile' } },

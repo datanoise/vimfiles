@@ -235,7 +235,7 @@ return {
     cmd = 'Oil',
     config = configure_oil,
   },
-  { 'stevearc/aerial.nvim', cmd = { 'AerialToggle', 'AerialOpen', 'AerialClose', 'AerialNavOpen' }, keys = { { '\\t', '<Cmd>AerialToggle<CR>', silent = true, desc = "Aerial toggle" } }, opts = {} },
+  { 'stevearc/aerial.nvim', opts = {} },
   { 'kevinhwang91/nvim-bqf', ft = 'qf', opts = { preview = { auto_preview = false } } },
   { 'stevearc/quicker.nvim', ft = 'qf', opts = {} },
 }

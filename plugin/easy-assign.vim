@@ -1,4 +1,8 @@
 " easy-align settings
+if has('nvim')
+  finish
+endif
+
 if !has_key(g:plugs, 'vim-easy-align')
   finish
 endif
@@ -7,4 +11,3 @@ endif
 xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
-

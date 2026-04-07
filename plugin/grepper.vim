@@ -1,4 +1,8 @@
 " grepper settings
+if has('nvim')
+  finish
+endif
+
 if !has_key(g:plugs, 'vim-grepper')
   finish
 endif
@@ -14,4 +18,3 @@ call CommandAlias('ag', 'GrepperAg')
 call CommandAlias('rg', 'GrepperRg')
 call CommandAlias('rgr', 'GrepperRg -t ruby')
 call CommandAlias('grep', 'GrepperGrep')
-

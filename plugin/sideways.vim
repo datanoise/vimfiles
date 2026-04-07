@@ -1,4 +1,8 @@
 " sideways.vim settings
+if has('nvim')
+  finish
+endif
+
 if !has_key(g:plugs, 'sideways.vim')
   finish
 endif
@@ -13,4 +17,3 @@ omap aa <Plug>SidewaysArgumentTextobjA
 xmap aa <Plug>SidewaysArgumentTextobjA
 omap ia <Plug>SidewaysArgumentTextobjI
 xmap ia <Plug>SidewaysArgumentTextobjI
-

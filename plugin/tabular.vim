@@ -1,4 +1,8 @@
 " tabular settings
+if has('nvim')
+  finish
+endif
+
 if !has_key(g:plugs, 'tabular')
   finish
 endif

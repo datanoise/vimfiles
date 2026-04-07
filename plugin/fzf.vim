@@ -1,4 +1,8 @@
 " fzf plugin & settings {{{2
+if has('nvim')
+  finish
+endif
+
 if !has_key(g:plugs, 'fzf.vim')
   finish
 endif

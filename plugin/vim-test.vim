@@ -1,4 +1,8 @@
 " vim-test settings
+if has('nvim')
+  finish
+endif
+
 if !has_key(g:plugs, 'vim-test')
   finish
 endif

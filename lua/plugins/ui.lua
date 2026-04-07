@@ -49,7 +49,7 @@ return {
   { 'nvim-lualine/lualine.nvim', dependencies = { 'stevearc/aerial.nvim', 'kyazdani42/nvim-web-devicons' }, config = configure_lualine },
   { 'gbprod/yanky.nvim', config = configure_yanky },
   { 'rcarriga/nvim-notify', name = 'nvim-notify', config = configure_notify },
-  { 'kylechui/nvim-surround' },
+  { 'kylechui/nvim-surround', opts = {} },
   { 'kyazdani42/nvim-web-devicons' },
   { 'j-hui/fidget.nvim', config = configure_fidget },
   { 'kdheepak/lazygit.nvim' },

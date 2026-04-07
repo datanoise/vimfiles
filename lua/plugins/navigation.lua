@@ -14,6 +14,29 @@ local function configure_fzf_lua()
   })
 end
 
+local function initialize_fzf_vim()
+  vim.g.fzf_preview_window = ''
+  vim.g.fzf_action = {
+    ['ctrl-t'] = 'tab split',
+    ['ctrl-x'] = 'split',
+    ['ctrl-s'] = 'split',
+    ['ctrl-v'] = 'vsplit',
+  }
+  vim.g.fzf_layout = { window = { width = 0.9, height = 0.6 } }
+  vim.cmd([[cnoreabbrev <expr> fzf ((getcmdtype() ==# ":" && getcmdline() ==# "fzf") ? ("FZF") : ("fzf"))]])
+  vim.api.nvim_create_augroup('DatanoiseFzf', { clear = true })
+  vim.api.nvim_create_autocmd('User', {
+    group = 'DatanoiseFzf',
+    pattern = 'FzfStatusLine',
+    callback = function()
+      vim.cmd('hi! fzf1 ctermfg=darkyellow ctermbg=242 guifg=gold3 guibg=#202020 gui=none')
+      vim.cmd('hi! fzf2 ctermfg=23 ctermbg=242 guifg=#CCCCCC guibg=#202020 gui=none')
+      vim.cmd('hi! fzf3 ctermfg=237 ctermbg=242 guifg=#CCCCCC guibg=#202020 gui=none')
+      vim.opt_local.statusline = '%#fzf1#\\ >\\ %#fzf2#fz%#fzf3#f'
+    end,
+  })
+end
+
 local function configure_hop()
   require('hop').setup()
 end
@@ -200,7 +223,7 @@ end
 
 return {
   { 'junegunn/fzf', build = './install --all' },
-  { 'junegunn/fzf.vim', cmd = { 'Files', 'Buffers', 'GFiles', 'History', 'Helptags', 'Rg', 'Ag', 'BLines', 'Lines' } },
+  { 'junegunn/fzf.vim', init = initialize_fzf_vim, cmd = { 'FZF', 'Files', 'Buffers', 'GFiles', 'History', 'Helptags', 'Rg', 'Ag', 'BLines', 'Lines' } },
   { 'ibhagwan/fzf-lua', dependencies = { 'junegunn/fzf', 'nvim-lua/plenary.nvim' }, cmd = 'FzfLua', config = configure_fzf_lua },
   { 'phaazon/hop.nvim', keys = { { '<leader>fg', '<Cmd>HopWord<CR>', silent = true, desc = "Hop words" } }, config = configure_hop },
   { 'echasnovski/mini.nvim', dependencies = { 'stevearc/aerial.nvim' }, config = configure_mini },

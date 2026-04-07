@@ -284,7 +284,7 @@ return {
     'windwp/nvim-ts-autotag', 'nvim-treesitter/nvim-treesitter-context',
     'nvim-treesitter/nvim-treesitter-textobjects', 'RRethy/nvim-treesitter-endwise',
   }, config = configure_treesitter },
-  { 'lewis6991/gitsigns.nvim', dependencies = { 'nvim-lua/plenary.nvim' }, config = configure_gitsigns },
+  { 'lewis6991/gitsigns.nvim', event = { 'BufReadPre', 'BufNewFile' }, dependencies = { 'nvim-lua/plenary.nvim' }, config = configure_gitsigns },
   { 'mrcjkb/rustaceanvim' },
   { 'nvim-lua/plenary.nvim' },
   { 'neovim/nvim-lspconfig', dependencies = {

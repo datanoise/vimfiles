@@ -32,7 +32,6 @@ local function configure_trouble()
       other = " ",
     },
   })
-  vim.keymap.set('n', '<leader>gt', '<Cmd>TroubleToggle<CR>', { silent = true })
 end
 
 local function configure_yanky()
@@ -48,10 +47,10 @@ end
 return {
   { 'nvim-lualine/lualine.nvim', dependencies = { 'stevearc/aerial.nvim', 'kyazdani42/nvim-web-devicons' }, config = configure_lualine },
   { 'gbprod/yanky.nvim', config = configure_yanky },
-  { 'rcarriga/nvim-notify', name = 'nvim-notify', config = configure_notify },
+  { 'rcarriga/nvim-notify', name = 'nvim-notify', event = 'VeryLazy', config = configure_notify },
   { 'kylechui/nvim-surround', opts = {} },
   { 'kyazdani42/nvim-web-devicons' },
-  { 'j-hui/fidget.nvim', config = configure_fidget },
-  { 'kdheepak/lazygit.nvim' },
-  { 'folke/trouble.nvim', config = configure_trouble },
+  { 'j-hui/fidget.nvim', event = 'LspAttach', config = configure_fidget },
+  { 'kdheepak/lazygit.nvim', cmd = 'LazyGit' },
+  { 'folke/trouble.nvim', cmd = { 'Trouble', 'TroubleToggle' }, keys = { { '<leader>gt', '<Cmd>TroubleToggle<CR>', silent = true } }, config = configure_trouble },
 }

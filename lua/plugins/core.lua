@@ -7,12 +7,12 @@ return {
   { 'tpope/vim-scriptease', cmd = { 'Messages', 'Scriptnames', 'Verbose', 'Time', 'Runtime' } },
   { 'tpope/vim-tbone', cmd = { 'Tattach', 'Tdrop', 'Tedit', 'Tabedit', 'Tread', 'Twrite' } },
   { 'tpope/vim-sleuth', event = { 'BufReadPost', 'BufNewFile' } },
-  { 'tpope/vim-git' },
+  { 'tpope/vim-git', event = { 'BufReadPost', 'BufNewFile' } },
   { 'tpope/vim-unimpaired' },
   { 'tpope/vim-projectionist', event = { 'BufReadPost', 'BufNewFile' } },
   { 'tpope/vim-abolish', cmd = { 'Abolish', 'Subvert' } },
   { 'tpope/vim-obsession', cmd = 'Obsession' },
-  { 'tpope/vim-apathy' },
+  { 'tpope/vim-apathy', event = { 'BufReadPost', 'BufNewFile' } },
   { 'tpope/vim-bundler', ft = { 'ruby', 'eruby' } },
   { 'tpope/vim-dadbod', cmd = { 'DB', 'DBUI', 'DBUIToggle', 'DBUIFindBuffer' } },
   { 'tpope/vim-rbenv', ft = { 'ruby', 'eruby' } },
@@ -110,7 +110,7 @@ return {
       end, {})
     end,
   },
-  { 'mhinz/vim-randomtag' },
+  { 'mhinz/vim-randomtag', cmd = 'RandomTag' },
   { 'datanoise/bufexplorer', cmd = 'BufExplorer', keys = {
     { '<leader>be', ':BufExplorer<CR>', mode = 'n', silent = true },
   } },

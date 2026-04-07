@@ -304,6 +304,6 @@ return {
   { 'mason-org/mason.nvim',                  opts = {} },
   { 'mason-org/mason-lspconfig.nvim',        opts = {} },
   { 'rachartier/tiny-inline-diagnostic.nvim' },
-  { 'dnlhc/glance.nvim' },
+  { 'dnlhc/glance.nvim', cmd = { 'Glance', 'GlanceDefinitions', 'GlanceReferences', 'GlanceTypeDefinitions', 'GlanceImplementations' } },
   { 'nvimtools/none-ls.nvim',                ft = 'coffee', config = configure_null_ls },
 }

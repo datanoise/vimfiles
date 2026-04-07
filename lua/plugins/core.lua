@@ -71,7 +71,7 @@ return {
   { 'rhysd/git-messenger.vim', cmd = 'GitMessenger' },
   { 'mhinz/vim-grepper',
     init = function()
-      vim.g.grepper = {}
+      vim.g.grepper = vim.empty_dict()
       vim.g.grepper.tools = { 'rg', 'ag', 'grep' }
       vim.cmd([[cnoreabbrev <expr> ag ((getcmdtype() ==# ":" && getcmdline() ==# "ag") ? ("GrepperAg") : ("ag"))]])
       vim.cmd([[cnoreabbrev <expr> rg ((getcmdtype() ==# ":" && getcmdline() ==# "rg") ? ("GrepperRg") : ("rg"))]])
@@ -82,8 +82,14 @@ return {
     keys = {
       { '<leader>gf', '<Plug>(GrepperOperator)', mode = { 'n', 'x' } },
       { '<leader>*', ':Grepper-buffer -cword -noprompt<CR>', mode = 'n' },
-      { '[F', function() vim.cmd('GrepperRg ' .. vim.fn.expand('<cword>')) end, mode = 'n' },
-      { ']F', function() vim.cmd('GrepperRg ' .. vim.fn.matchstr(vim.fn.getline('.'), '\\%' .. vim.fn.virtcol('.') .. 'v\\w*')) end, mode = 'n' },
+      { '[F', function()
+          require('lazy').load({ plugins = { 'vim-grepper' } })
+          vim.cmd('GrepperRg ' .. vim.fn.expand('<cword>'))
+        end, mode = 'n' },
+      { ']F', function()
+          require('lazy').load({ plugins = { 'vim-grepper' } })
+          vim.cmd('GrepperRg ' .. vim.fn.matchstr(vim.fn.getline('.'), '\\%' .. vim.fn.virtcol('.') .. 'v\\w*'))
+        end, mode = 'n' },
     },
   },
   { 'janko-m/vim-test',

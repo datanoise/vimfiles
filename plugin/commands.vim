@@ -32,6 +32,6 @@ augroup END
 "         \  endif |
 "         \  unlet d
 " augroup END
-if has_key(g:plugs, 'exception.vim')
+if !has('nvim') && has_key(g:plugs, 'exception.vim')
   command! WTF call exception#trace()
 endif

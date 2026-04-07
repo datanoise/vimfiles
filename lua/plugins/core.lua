@@ -51,7 +51,10 @@ return {
   } },
   { 'datanoise/vim-indexed-search' },
   { 'vim-scripts/searchfold.vim', keys = { { '<leader>z', '<Plug>SearchFoldNormal', mode = 'n' } } },
-  { 'AndrewRadev/splitjoin.vim' },
+  { 'AndrewRadev/splitjoin.vim', cmd = { 'SplitjoinSplit', 'SplitjoinJoin' }, keys = {
+    { '<leader>sp', ':SplitjoinSplit<CR>', mode = 'n', silent = true },
+    { '<leader>sj', ':SplitjoinJoin<CR>', mode = 'n', silent = true },
+  } },
   { 'datanoise/switch.vim', keys = { { 'gs', '<Cmd>Switch<CR>', mode = 'n', silent = true } } },
   { 'AndrewRadev/sideways.vim', keys = {
     { '<leader><', ':<C-u>SidewaysLeft<CR>', mode = 'n', silent = true },
@@ -99,9 +102,18 @@ return {
       { '<leader>tv', '<Cmd>TestVisit<CR>', mode = 'n' },
     },
   },
-  { 'tweekmonster/exception.vim' },
+  { 'tweekmonster/exception.vim',
+    cmd = 'WTF',
+    config = function()
+      vim.api.nvim_create_user_command('WTF', function()
+        vim.fn['exception#trace']()
+      end, {})
+    end,
+  },
   { 'mhinz/vim-randomtag' },
-  { 'datanoise/bufexplorer' },
+  { 'datanoise/bufexplorer', cmd = 'BufExplorer', keys = {
+    { '<leader>be', ':BufExplorer<CR>', mode = 'n', silent = true },
+  } },
   { 'vimwiki/vimwiki',
     init = function()
       vim.g.vimwiki_path = '~/.vimwiki/'

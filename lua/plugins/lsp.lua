@@ -210,17 +210,38 @@ local function configure_null_ls()
 end
 
 local function configure_treesitter()
+  local treesitter = require('nvim-treesitter')
+  local install_dir = vim.fn.expand('~/.vim/lazy/treesitter')
+  local managed_parsers = {
+    'bash', 'c', 'embedded_template', 'html', 'javascript', 'lua', 'markdown',
+    'markdown_inline', 'python', 'ruby', 'rust', 'sql', 'typescript', 'vim', 'xml',
+  }
   pcall(vim.treesitter.language.register, 'embedded_template', 'eruby')
+  treesitter.setup({ install_dir = install_dir })
+  local missing = vim.tbl_filter(function(lang)
+    return not vim.list_contains(treesitter.get_installed(), lang)
+  end, managed_parsers)
+  if #missing > 0 then
+    treesitter.install(missing)
+  end
   require('nvim-ts-autotag').setup({ aliases = { eruby = 'html' } })
   local group = vim.api.nvim_create_augroup('datanoise_treesitter', { clear = true })
   vim.api.nvim_create_autocmd('FileType', {
     group = group,
-    pattern = { 'c', 'eruby', 'html', 'javascript', 'lua', 'python', 'ruby', 'rust', 'sql', 'typescript', 'vim', 'xml' },
+    pattern = { 'c', 'eruby', 'html', 'javascript', 'lua', 'markdown', 'python', 'ruby', 'rust', 'sql', 'typescript', 'vim', 'xml', 'zsh' },
     callback = function(args)
-      pcall(vim.treesitter.start, args.buf)
+      local filetype = vim.bo[args.buf].filetype
+      local lang = ({
+        eruby = 'embedded_template',
+        javascriptreact = 'javascript',
+        sh = 'bash',
+        typescriptreact = 'typescript',
+        zsh = 'bash',
+      })[filetype] or filetype
+      pcall(vim.treesitter.start, args.buf, lang)
       vim.wo.foldmethod = 'expr'
       vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-      if not vim.tbl_contains({ 'eruby', 'ruby', 'rust', 'vim' }, vim.bo[args.buf].filetype) then
+      if not vim.tbl_contains({ 'eruby', 'ruby', 'rust', 'vim' }, filetype) then
         vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
       end
     end,

@@ -6,3 +6,4 @@ spell
 bundle
 lua/.luarc.json
 lazy/
+nvim.log

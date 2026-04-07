@@ -291,7 +291,7 @@ return {
     config = configure_treesitter
   },
   { 'lewis6991/gitsigns.nvim', event = { 'BufReadPre', 'BufNewFile' }, dependencies = { 'nvim-lua/plenary.nvim' }, config = configure_gitsigns },
-  { 'mrcjkb/rustaceanvim' },
+  { 'mrcjkb/rustaceanvim', ft = 'rust' },
   { 'nvim-lua/plenary.nvim' },
   {
     'neovim/nvim-lspconfig',
@@ -305,5 +305,5 @@ return {
   { 'mason-org/mason-lspconfig.nvim',        opts = {} },
   { 'rachartier/tiny-inline-diagnostic.nvim' },
   { 'dnlhc/glance.nvim' },
-  { 'nvimtools/none-ls.nvim',                config = configure_null_ls },
+  { 'nvimtools/none-ls.nvim',                ft = 'coffee', config = configure_null_ls },
 }

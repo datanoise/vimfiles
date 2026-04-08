@@ -1,39 +1,3 @@
-local function configure_fidget()
-  require("fidget").setup({
-    notification = {
-      window = { winblend = 0 },
-    },
-  })
-end
-
-local function configure_lualine()
-  require('lualine').setup({
-    sections = {
-      lualine_c = { { 'filename', path = 1 } },
-      lualine_x = { { 'aerial', sep = " ", colored = true } },
-      lualine_y = { 'filetype' },
-      lualine_z = { 'progress', 'location' },
-    },
-    extensions = { 'aerial', 'fzf', 'nvim-tree', 'quickfix', 'fugitive' },
-  })
-end
-
-local function configure_notify()
-  require("notify").setup()
-end
-
-local function configure_trouble()
-  require('trouble').setup({
-    signs = {
-      error = " ",
-      warning = " ",
-      hint = "",
-      information = " ",
-      other = " ",
-    },
-  })
-end
-
 local function configure_yanky()
   require('yanky').setup()
   vim.keymap.set({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
@@ -45,12 +9,39 @@ local function configure_yanky()
 end
 
 return {
-  { 'nvim-lualine/lualine.nvim', dependencies = { 'stevearc/aerial.nvim', 'kyazdani42/nvim-web-devicons' }, config = configure_lualine },
+  { 'nvim-lualine/lualine.nvim',
+    dependencies = { 'stevearc/aerial.nvim', 'kyazdani42/nvim-web-devicons' },
+    opts = {
+      sections = {
+        lualine_c = { { 'filename', path = 1 } },
+        lualine_x = { { 'aerial', sep = " ", colored = true } },
+        lualine_y = { 'filetype' },
+        lualine_z = { 'progress', 'location' },
+      },
+      extensions = { 'aerial', 'fzf', 'nvim-tree', 'quickfix', 'fugitive' },
+    },
+  },
   { 'gbprod/yanky.nvim', config = configure_yanky },
-  { 'rcarriga/nvim-notify', name = 'nvim-notify', event = 'VeryLazy', config = configure_notify },
+  { 'rcarriga/nvim-notify', name = 'nvim-notify', event = 'VeryLazy', opts = {} },
   { 'kylechui/nvim-surround', opts = {} },
   { 'kyazdani42/nvim-web-devicons' },
-  { 'j-hui/fidget.nvim', event = 'LspAttach', config = configure_fidget },
+  { 'j-hui/fidget.nvim', event = 'LspAttach', opts = {
+    notification = {
+      window = { winblend = 0 },
+    },
+  } },
   { 'kdheepak/lazygit.nvim', cmd = 'LazyGit' },
-  { 'folke/trouble.nvim', cmd = { 'Trouble', 'TroubleToggle' }, keys = { { '<leader>gt', '<Cmd>TroubleToggle<CR>', silent = true } }, config = configure_trouble },
+  { 'folke/trouble.nvim',
+    cmd = { 'Trouble', 'TroubleToggle' },
+    keys = { { '<leader>gt', '<Cmd>TroubleToggle<CR>', silent = true } },
+    opts = {
+      signs = {
+        error = " ",
+        warning = " ",
+        hint = "",
+        information = " ",
+        other = " ",
+      },
+    },
+  },
 }

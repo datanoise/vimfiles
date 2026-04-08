@@ -100,20 +100,20 @@ local on_attach = function(args)
     vim.keymap.set('i', '<C-Space>', vim.lsp.completion.get, bufopts)
   end
 
-  -- if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlineCompletion) then
-  --   vim.opt.completeopt = { 'menu', 'menuone', 'noselect', 'fuzzy', 'popup' }
-  --   vim.lsp.inline_completion.enable(true)
-  --   vim.keymap.set('i', '<Tab>',
-  --     function()
-  --       if not vim.lsp.inline_completion.get() then
-  --         return "<Tab>"
-  --       end
-  --     end,
-  --     { expr = true, replace_keycodes = true, buffer = bufnr })
-  -- end
+  if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlineCompletion) then
+    vim.opt.completeopt = { 'menu', 'menuone', 'noselect', 'fuzzy', 'popup' }
+    vim.lsp.inline_completion.enable(true)
+    vim.keymap.set('i', '<Tab>',
+      function()
+        if not vim.lsp.inline_completion.get() then
+          return "<Tab>"
+        end
+      end,
+      { expr = true, replace_keycodes = true, buffer = bufnr })
+  end
 
   if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
-    vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+    vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
   end
 end
 

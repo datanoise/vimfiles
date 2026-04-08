@@ -77,6 +77,13 @@ function M.setup()
     },
     root = root,
     lockfile = vim.fn.expand('~/.vim/lazy-lock.json'),
+    ui = {
+      size = { width = 1, height = 1 },
+      border = 'none',
+      backdrop = 100,
+      wrap = false,
+      pills = false,
+    },
   })
 end
 

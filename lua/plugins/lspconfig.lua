@@ -252,7 +252,9 @@ vim.diagnostic.config({
   },
   severity_sort = true,
   jump = {
-    float = true
+    on_jump = function(_, bufnr)
+      vim.diagnostic.open_float(bufnr)
+    end,
   },
   float = {
     border = 'rounded',

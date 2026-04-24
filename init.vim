@@ -119,6 +119,7 @@ silent! if plug#begin('~/.vim/bundle')
     " AI tools
     "Plug 'olimorris/codecompanion.nvim'
     "Plug 'folke/sidekick.nvim'
+    "Plug 'milanglacier/minuet-ai.nvim'
 
     " Completion
     " Plug 'Saghen/blink.cmp', { 'do': 'cargo build --release' }

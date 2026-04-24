@@ -55,6 +55,26 @@ local on_attach = function(args)
   vim.keymap.set('n', 'gl', vim.diagnostic.open_float, bufopts)
   vim.keymap.set('n', '<leader>cl', vim.diagnostic.setloclist, bufopts)
 
+  vim.keymap.set('i', '<A-x>', function()
+    vim.lsp.inline_completion.get()
+  end, { desc = 'accept' })
+  vim.keymap.set('i', '<A-c>', function()
+    vim.lsp.inline_completion.select { count = 1 }
+  end, { desc = 'cycle to next' })
+  vim.keymap.set('i', '<A-v>', function()
+    vim.lsp.inline_completion.select { count = -1 }
+  end, { desc = 'cycle to prev' })
+  vim.keymap.set('i', '<A-a>', function()
+    return vim.lsp.inline_completion.get({
+      on_accept = function(item)
+        if type(item.insert_text) == 'string' then
+          item.insert_text = item.insert_text:match('^[^\n]*')
+        end
+        return item
+      end,
+    }) and '' or '<A-a>'
+  end, { expr = true, replace_keycodes = true, desc = 'Accept one inline completion line' })
+
   -- buffer symbol highlighting
   if client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
     vim.api.nvim_create_augroup("lsp_document_highlight", {
@@ -98,6 +118,10 @@ local on_attach = function(args)
     vim.opt.completeopt = { 'menu', 'menuone', 'noselect', 'fuzzy', 'popup' }
     vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = false })
     vim.keymap.set('i', '<C-Space>', vim.lsp.completion.get, bufopts)
+  end
+
+  if client.server_capabilities.completionProvider and client.name ~= 'minuet' then
+    vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
   end
 
   if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlineCompletion) then

@@ -96,7 +96,6 @@ silent! if plug#begin('~/.vim/bundle')
     Plug 'lewis6991/gitsigns.nvim'
     Plug 'j-hui/fidget.nvim'
     Plug 'ibhagwan/fzf-lua'
-    Plug 'phaazon/hop.nvim'
     Plug 'echasnovski/mini.nvim'
     Plug 'stevearc/oil.nvim'
     Plug 'mrcjkb/rustaceanvim'

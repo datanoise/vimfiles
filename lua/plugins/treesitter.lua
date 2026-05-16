@@ -112,8 +112,5 @@ end
 if vim.g.plugs['nvim-treesitter-context'] then
   require('treesitter-context').setup({
     max_lines = 2,
-    patterns = {
-      ruby = { 'block' },
-    },
   })
 end

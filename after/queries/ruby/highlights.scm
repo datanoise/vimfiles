@@ -3,7 +3,7 @@
 ; ActiveSupport methods
 (call method: (identifier) @rails.method
       (#any-of? @rails.method "delegate" "class_attribute" "thread_mattr_accessor" "mattr_accessor" "mattr_reader"
-       "mattr_writer")
+       "mattr_writer" "serialize")
       (#set! "priority" 200))
 
 ; ActiveRecord methods

@@ -16,7 +16,8 @@ fzf.setup {
         }
     },
     btags = {
-        ctags_gen = true
+        ctags_autogen = true,
+        ctags_args = "--options=" .. vim.fn.shellescape(vim.fn.expand("~/.ctags")) .. " -f -",
     },
     lsp = {
         code_actions = {

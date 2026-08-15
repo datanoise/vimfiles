@@ -12,6 +12,22 @@ require('nvim-ts-autotag').setup({
 
 local group = vim.api.nvim_create_augroup('datanoise_treesitter', { clear = true })
 
+-- The embedded_template injections query hardcodes `html` for the template
+-- body, so non-HTML ERB (.js.erb, .css.erb, ...) ends up with no highlighting
+-- at all. Vim's syntax/eruby.vim honours b:eruby_subtype, so leave those
+-- buffers to it rather than letting treesitter.start() clear 'syntax'.
+local html_subtypes = { html = true, rhtml = true, xhtml = true, xml = true }
+
+local function eruby_is_html(buf)
+  local subtype = vim.b[buf].eruby_subtype
+  if not subtype or subtype == '' then
+    -- ftplugin/eruby.vim normally sets it; derive it ourselves if not.
+    local name = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ':t')
+    subtype = (name:gsub('%.erb$', '')):match('%.(%w+)$') or 'html'
+  end
+  return html_subtypes[subtype] or false
+end
+
 vim.api.nvim_create_autocmd('FileType', {
   group = group,
   pattern = {
@@ -29,12 +45,18 @@ vim.api.nvim_create_autocmd('FileType', {
     'xml',
   },
   callback = function(args)
+    local ft = vim.bo[args.buf].filetype
+
+    if ft == 'eruby' and not eruby_is_html(args.buf) then
+      return
+    end
+
     pcall(vim.treesitter.start, args.buf)
 
     vim.wo.foldmethod = 'expr'
     vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 
-    if not vim.tbl_contains({ 'eruby', 'ruby', 'rust', 'vim' }, vim.bo[args.buf].filetype) then
+    if not vim.tbl_contains({ 'eruby', 'ruby', 'rust', 'vim' }, ft) then
       vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
     end
   end,

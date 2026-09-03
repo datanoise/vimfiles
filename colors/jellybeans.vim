@@ -692,6 +692,9 @@ if has('nvim-0.8.0')
   hi! link @variable.builtin Constant
 
   " Ruby specific
+  hi! link @keyword.type.ruby Keyword
+  hi! link @keyword.function.ruby Keyword
+  hi! link @type.ruby Type
   hi! link @function.call.ruby Normal
   hi! link @variable.member.ruby rubyIdentifier
   hi! link @string.special.symbol.ruby rubySymbol

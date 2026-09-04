@@ -3,7 +3,7 @@
 ; ActiveSupport methods
 (call method: (identifier) @rails.method
       (#any-of? @rails.method "delegate" "class_attribute" "thread_mattr_accessor" "mattr_accessor" "mattr_reader"
-       "mattr_writer" "serialize")
+       "mattr_writer" "serialize" "private_class_method")
       (#set! "priority" 200))
 
 ; ActiveRecord methods
@@ -39,7 +39,8 @@
 
 ; ActionJob methods
  (call method: (identifier) @rails.method
-      (#any-of? @rails.method "queue_as" "retry_on" "discard_on" "limits_concurrency" "sidekiq_locking" "sidekiq_retry_in")
+      (#any-of? @rails.method "queue_as" "retry_on" "discard_on" "limits_concurrency" "sidekiq_locking" "sidekiq_retry_in"
+       "sidekiq_options" "sidekiq_retries_exhausted")
       (#set! "priority" 200))
 
 ; Minitest methods

@@ -55,6 +55,30 @@ local on_attach = function(args)
   vim.keymap.set('n', 'gl', vim.diagnostic.open_float, bufopts)
   vim.keymap.set('n', '<leader>cl', vim.diagnostic.setloclist, bufopts)
 
+  if client.name == 'ruby_lsp' then
+    -- A surround edit can briefly send an unbalanced expression to Ruby LSP.
+    -- Retry a pull if Prism's syntax error survives the completed buffer edit.
+    vim.api.nvim_buf_attach(bufnr, false, {
+      on_lines = function(_, _, changedtick)
+        vim.defer_fn(function()
+          if not vim.api.nvim_buf_is_valid(bufnr)
+              or not vim.lsp.buf_is_attached(bufnr, client.id)
+              or vim.api.nvim_buf_get_changedtick(bufnr) ~= changedtick then
+            return
+          end
+          for _, diagnostic in ipairs(vim.diagnostic.get(bufnr, { severity = vim.diagnostic.severity.ERROR })) do
+            if diagnostic.source == 'Prism' then
+              client:request('textDocument/diagnostic', {
+                textDocument = vim.lsp.util.make_text_document_params(bufnr),
+              }, nil, bufnr)
+              break
+            end
+          end
+        end, 500)
+      end,
+    })
+  end
+
   vim.keymap.set('i', '<A-x>', function()
     vim.lsp.inline_completion.get()
   end, { desc = 'accept' })
